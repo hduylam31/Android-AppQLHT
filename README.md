@@ -1,6 +1,6 @@
 # Android-AppQLHT
 # Introduction
-Đây là đồ án quản lý app quản lý học tập
+Đây là đồ án app quản lý học tập Triviti
 
 # Referencecs
 Link môi trường:
