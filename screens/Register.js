@@ -11,10 +11,10 @@ import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ClockImage } from "../assets";
 import { AntDesign } from "@expo/vector-icons";
+import auth from "@react-native-firebase/auth";
 import { auth } from "../firebase";
-import {
-  createUserWithEmailAndPassword
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+
 const Register = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
@@ -22,7 +22,7 @@ const Register = () => {
   const [repassword, setrePassword] = useState("");
   const handleRegister = () => {
     if (email && password && repassword) {
-    createUserWithEmailAndPassword(auth, email, password)
+      createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           console.log("Successfully register with", user.email);
@@ -62,14 +62,14 @@ const Register = () => {
           <View className="w-42 h-80 bg-white rounded-2xl mx-5 mt-10 flex justify-center items-center">
             <View className="w-80 h-10 border-b-[#9A999B] border-b-2 my-3">
               <TextInput
-                className="text-lg"
+                className="text-lg pl-4"
                 placeholderTextColor="#9A999B"
                 placeholder="Họ và tên"
               ></TextInput>
             </View>
             <View className="w-80 h-10 border-b-[#9A999B] border-b-2 my-3">
               <TextInput
-                className="text-lg"
+                className="text-lg pl-4"
                 placeholderTextColor="#9A999B"
                 placeholder="Email"
                 value={email}
@@ -78,7 +78,7 @@ const Register = () => {
             </View>
             <View className="w-80 h-10 border-b-[#9A999B] border-b-2 my-3">
               <TextInput
-                className="text-lg"
+                className="text-lg pl-4"
                 placeholderTextColor="#9A999B"
                 placeholder="Mật khẩu"
                 secureTextEntry={true}
@@ -88,7 +88,7 @@ const Register = () => {
             </View>
             <View className="w-80 h-10 border-b-[#9A999B] border-b-2 my-3">
               <TextInput
-                className="text-lg"
+                className="text-lg pl-4"
                 placeholderTextColor="#9A999B"
                 placeholder="Nhập lại mật khẩu"
                 secureTextEntry={true}
