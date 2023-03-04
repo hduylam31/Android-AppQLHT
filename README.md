@@ -30,10 +30,10 @@ npm start -> to run expo
 
 Clone directly this repository, and type:
 
-> **npm install** in root folder 
+- **npm install** in root folder 
 
 to install all dependencies inside backend folder, and type
-> **npm i react-native-animatable
-> **npm i tailwindcss-react-native
+- **npm i react-native-animatable**
+- **npm i tailwindcss-react-native**
 
 Then create new branch and work with that branch.
