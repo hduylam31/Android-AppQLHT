@@ -35,5 +35,7 @@ Clone directly this repository, and type:
 to install all dependencies inside backend folder, and type
 - **npm i react-native-animatable**
 - **npm i tailwindcss-react-native**
+- **npm install @react-native/assets-registry**
+- **npm install firebase**
 
 Then create new branch and work with that branch.

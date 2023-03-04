@@ -12,6 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import { ClockImage } from "../assets";
 import { AntDesign } from "@expo/vector-icons";
 import auth from "@react-native-firebase/auth";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Register = () => {
   const navigation = useNavigation();
@@ -20,11 +22,10 @@ const Register = () => {
   const [repassword, setrePassword] = useState("");
   const handleRegister = () => {
     if (email && password && repassword) {
-      auth()
-        .createUserWithEmailAndPassword(email, password)
+      createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          console.log("Successfully register with", user.email);
         })
         .catch((error) => {
           console.log("Không thể đăng kí", error);
@@ -70,7 +71,7 @@ const Register = () => {
               <TextInput
                 className="text-lg pl-4"
                 placeholderTextColor="#9A999B"
-                placeholder="Tài khoản"
+                placeholder="Email"
                 value={email}
                 onChangeText={(email) => setEmail(email)}
               ></TextInput>
