@@ -4,9 +4,9 @@
 
 # Referencecs
 Link môi trường:
-https://www.npmjs.com/package/react-native-animatable
-https://www.npmjs.com/package/tailwindcss-react-native
-
+- https://www.npmjs.com/package/react-native-animatable
+- https://www.npmjs.com/package/tailwindcss-react-native
+- 
 - Cài đặt môi trường như video:
 https://youtu.be/JqPezeQiwxk
 
@@ -22,11 +22,10 @@ npm start -> to run expo
 
 # Future Status
 
-
 # Link demo
-https://software-subject.herokuapp.com/
 
 # For my team
+
 # How to use (incorperate with team)
 
 Clone directly this repository, and type:
@@ -36,6 +35,5 @@ Clone directly this repository, and type:
 to install all dependencies inside backend folder, and type
 > **npm i react-native-animatable
 > **npm i tailwindcss-react-native
-to install all dependencies in /frontend folder
-> 
+
 Then create new branch and work with that branch.
