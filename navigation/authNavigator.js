@@ -7,6 +7,7 @@ import {
 import Login from "../screens/Login";
 import GetStarted from "../screens/GetStarted";
 import Register from "../screens/Register";
+import ForgotPassword from "../screens/ForgotPassword";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Auth = createNativeStackNavigator();
@@ -35,6 +36,15 @@ export default function AuthStack() {
       <Auth.Screen
         name="Register"
         component={Register}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,
