@@ -14,12 +14,11 @@ const firebaseConfig = {
   storageBucket: "learningmanagement-deb78.appspot.com",
   messagingSenderId: "708241782225",
   appId: "1:708241782225:web:0ba3cb09da067a57999cf0",
-  measurementId: "G-2QT0364P98"
+  measurementId: "G-2QT0364P98",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth()
+const auth = getAuth();
 
 export { auth };
-
