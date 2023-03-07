@@ -50,7 +50,7 @@ const Login = () => {
       })
       .catch((error) => {
         console.log("Fail:");
-        alert(error.message)
+        alert(error.message);
       });
   };
 

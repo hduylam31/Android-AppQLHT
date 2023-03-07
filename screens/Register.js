@@ -12,7 +12,6 @@ import { useNavigation } from "@react-navigation/native";
 import { ClockImage } from "../assets";
 import { AntDesign } from "@expo/vector-icons";
 import auth from "@react-native-firebase/auth";
-import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Register = () => {
