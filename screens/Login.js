@@ -118,7 +118,11 @@ const Login = () => {
                 </Animatable.View>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("ForgotPassword");
+              }}
+            >
               <Text
                 className="font-light italic text-sm text-right underline mr-10"
                 style={{ color: "white" }}

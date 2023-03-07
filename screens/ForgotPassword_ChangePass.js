@@ -11,26 +11,12 @@ import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ClockImage } from "../assets";
 import { AntDesign } from "@expo/vector-icons";
-import auth from "@react-native-firebase/auth";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 
-const Register = () => {
+const ForgotPassword_ChangePass = () => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setrePassword] = useState("");
-  const handleRegister = () => {
-    if (email && password && repassword) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log("Successfully register with", user.email);
-        })
-        .catch((error) => {
-          console.log("Không thể đăng kí", error);
-        });
-    }
-  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -57,24 +43,8 @@ const Register = () => {
             Good to see you here
           </Text>
         </View>
-        <View className="w-42 h-80 bg-white rounded-2xl mx-5 mt-10 flex justify-center items-center">
-          <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 mb-[3%]">
-            <TextInput
-              className="text-lg pl-4"
-              placeholderTextColor="#9A999B"
-              placeholder="Họ và tên"
-            ></TextInput>
-          </View>
-          <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
-            <TextInput
-              className="text-lg pl-4"
-              placeholderTextColor="#9A999B"
-              placeholder="Email"
-              value={email}
-              onChangeText={(email) => setEmail(email)}
-            ></TextInput>
-          </View>
-          <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
+        <View className="w-[90%] h-52 bg-white rounded-2xl mx-[5%] mt-16 flex justify-center items-center">
+          <View className="w-[85%] h-[20%] border-b-[#9A999B] border-b-2">
             <TextInput
               className="text-lg pl-4"
               placeholderTextColor="#9A999B"
@@ -84,7 +54,7 @@ const Register = () => {
               onChangeText={(text) => setPassword(text)}
             ></TextInput>
           </View>
-          <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
+          <View className="w-[85%] h-[20%] border-b-[#9A999B] border-b-2 mt-[10%]">
             <TextInput
               className="text-lg pl-4"
               placeholderTextColor="#9A999B"
@@ -95,17 +65,9 @@ const Register = () => {
             ></TextInput>
           </View>
         </View>
-        <TouchableOpacity
-          className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-10 flex items-center justify-center"
-          onPress={handleRegister}
-        >
+        <TouchableOpacity className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-5 flex items-center justify-center">
           <Text className="text-[#3A4666] text-center font-bold text-xl">
-            Đăng kí
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="w-[80%] h-14 ml-[10%] bg-[#CECECE] rounded-2xl mt-5 flex items-center justify-center">
-          <Text className="text-[#9E9090] text-center font-bold text-xl">
-            Đăng nhập
+            Cập nhật mật khẩu
           </Text>
         </TouchableOpacity>
       </View>
@@ -113,4 +75,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default ForgotPassword_ChangePass;
