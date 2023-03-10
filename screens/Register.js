@@ -57,7 +57,7 @@ const Register = () => {
             Good to see you here
           </Text>
         </View>
-        <View className="w-42 h-80 bg-white rounded-2xl mx-5 mt-10 flex justify-center items-center">
+        <View className="w-[90%] h-80 bg-white rounded-2xl mx-[5%] mt-10 flex justify-center items-center">
           <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 mb-[3%]">
             <TextInput
               className="text-lg pl-4"

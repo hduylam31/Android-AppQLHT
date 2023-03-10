@@ -46,7 +46,7 @@ const GetStarted = () => {
         className="bg-[#FE8668] rounded-tl-3xl ml-[55%] flex items-center justify-center w-48 h-24 "
       >
         <Text className="text-[#3A4666] text-center font-bold text-2xl w-full">
-          Get Started
+          Bắt đầu
         </Text>
       </TouchableOpacity>
     </SafeAreaView>
