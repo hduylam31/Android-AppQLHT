@@ -16,11 +16,13 @@ const ToDoListScreen = ({ id, text, isCompleted, hour }) => {
   const navigation = useNavigation();
   // const [checked, setChecked] = React.useState(isCompleted);
   const [check1, setCheck1] = useState(true);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []);
+
   renderItem = ({ item }) => (
     <View className="w-full h-16 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center">
       <View className="flex flex-row ">
@@ -89,7 +91,7 @@ const ToDoListScreen = ({ id, text, isCompleted, hour }) => {
     <SafeAreaView className="flex-1 bg-[#F1F5F9]">
       <View className=" bg-[#3A4666] w-full h-[25%]">
         <View className="flex-row justify-between my-[7%] mx-[3%] ">
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <MaterialCommunityIcons
               name="dots-vertical"
               size={32}
@@ -119,7 +121,7 @@ const ToDoListScreen = ({ id, text, isCompleted, hour }) => {
         <Text className="text-lg font-semibold ml-[5%] my-[5%]">
           Hoàn thành
         </Text>
-        <View className="w-[90%] h-42 bg-white rounded-2xl mx-[5%] flex flex-row items-center">
+        <View className="w-[90%] h-32 bg-white rounded-2xl mx-[5%] flex flex-row items-center">
           <FlatList
             data={todosData.filter((todo) => todo.isCompleted)}
             renderItem={this.renderItemCompleted}

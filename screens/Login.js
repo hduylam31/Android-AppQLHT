@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
@@ -24,17 +24,22 @@ import {
   Face,
   ClockImage,
 } from "../assets";
+import CredentialService from "../service/CredentialService";
 import { auth } from "../firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
 
 const Login = () => {
   const navigation = useNavigation();
 
-  const [UserName, setUserName] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
+  useEffect(() => {
+    const unsubcribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.navigate("ToDoListScreen");
+      }
+    });
+    return unsubcribe;
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,15 +48,30 @@ const Login = () => {
   });
 
   const handleLogin = () => {
-    signInWithEmailAndPassword(auth, UserName, Password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log("Logged in with ?:", user.email);
-      })
-      .catch((error) => {
-        console.log("Fail:");
-        alert(error.message);
-      });
+    try {
+      CredentialService.handleLoginWithEmail(email, Password);
+      console.log("Login OK");
+    } catch (error) {
+      console.log("Login fail with: ", error);
+    }
+  };
+
+  // const handleGoogleLogin = () => {
+  //   try {
+  //     CredentialService.handleGoogleLogin();
+  //     console.log("Login OK");
+  //   } catch (error) {
+  //     console.log("Login fail with: ", error);
+  //   }
+  // };
+
+  const handleFbLogin = () => {
+    try {
+      CredentialService.handleFbLogin();
+      console.log("Login OK");
+    } catch (error) {
+      console.log("Login fail with: ", error);
+    }
   };
 
   const handlePress = () => {
@@ -89,9 +109,9 @@ const Login = () => {
           >
             <View className="self-center w-[80%] h-[50%] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
               <TextInput
-                placeholder="User Name"
-                value={UserName}
-                onChangeText={(text) => setUserName(text)}
+                placeholder="Email"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
                 className="w-[80%] h-[20%] bg-[#D9D9D9] mt-[20%] self-center pl-4"
               ></TextInput>
               <TextInput
@@ -140,7 +160,7 @@ const Login = () => {
               <View className="w-[25%] h-[1px] bg-[#F8F7FA] items-center"></View>
             </View>
             <View className="self-center w-[40%] h-[10%] bg-[#F8F7FA] mt-[10%] rounded-2xl flex-row justify-center items-center space-x-4">
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleFbLogin}>
                 <View>
                   <Animatable.Image source={Face} />
                 </View>

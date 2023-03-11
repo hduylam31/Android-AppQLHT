@@ -11,6 +11,7 @@ import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ClockImage } from "../assets";
 import { AntDesign } from "@expo/vector-icons";
+import CredentialService from "../service/CredentialService";
 
 const ForgotPassword = () => {
   const navigation = useNavigation();
@@ -21,6 +22,18 @@ const ForgotPassword = () => {
       headerShown: false,
     });
   }, []);
+
+  const handleResetEmail = () => {
+    try {
+      if (email) {
+        CredentialService.handleResetEmail(email);
+        console.log("OK");
+        navigation.navigate("ForgotPassword_CheckMail");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#3A4666]">
@@ -57,9 +70,10 @@ const ForgotPassword = () => {
           </View>
         </View>
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("ForgotPassword_CheckMail");
-          }}
+          onPress={handleResetEmail}
+          // onPress={() => {
+          //
+          // }}
           className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-5 flex items-center justify-center"
         >
           <Text className="text-[#3A4666] text-center font-bold text-xl">

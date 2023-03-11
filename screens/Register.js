@@ -5,32 +5,36 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Alert,
   ScrollView,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ClockImage } from "../assets";
 import { AntDesign } from "@expo/vector-icons";
-import auth from "@react-native-firebase/auth";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import CredentialService from "../service/CredentialService";
 
 const Register = () => {
   const navigation = useNavigation();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setrePassword] = useState("");
+
   const handleRegister = () => {
-    if (email && password && repassword) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log("Successfully register with", user.email);
-        })
-        .catch((error) => {
-          console.log("Không thể đăng kí", error);
-        });
+    try {
+      if (email && password && repassword) {
+        if (password !== repassword) {
+          Alert.alert("Mật khẩu nhập lại không khớp");
+        } else {
+          CredentialService.handleRegister(name, email, password);
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -57,12 +61,14 @@ const Register = () => {
             Good to see you here
           </Text>
         </View>
-        <View className="w-[90%] h-80 bg-white rounded-2xl mx-[5%] mt-10 flex justify-center items-center">
+        <View className="w-42 h-80 bg-white rounded-2xl mx-5 mt-10 flex justify-center items-center">
           <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 mb-[3%]">
             <TextInput
               className="text-lg pl-4"
               placeholderTextColor="#9A999B"
               placeholder="Họ và tên"
+              value={name}
+              onChangeText={(name) => setName(name)}
             ></TextInput>
           </View>
           <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
