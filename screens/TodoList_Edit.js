@@ -110,11 +110,6 @@ const TodoList_Edit = () => {
         <View className="bg-[#F1F5F9] flex-1 px-5 pt-[4%] space-y-4 h-full">
           <View className="space-y-2">
             <Text className="text-base">Tiêu đề</Text>
-            <View className="">
-              <View className="w-[40px] h-[40px] bg-[#DBECF6] items-center justify-center border-2 rounded-full border-black">
-                <AntDesign name="profile" size={25} color="black" />
-              </View>
-            </View>
             <TextInput
               placeholder="Tiêu đề"
               className="w-[100%] h-12 bg-[#FFFFFF] text-base pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"

@@ -50,7 +50,12 @@ const ToDoListScreen = () => {
         </View>
       </View>
       <View className="flex flex-row ">
-        <TouchableOpacity className="mt-4">
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("TodoList_Edit");
+          }}
+          className="mt-4"
+        >
           <MaterialCommunityIcons
             name="pencil-outline"
             size={30}
