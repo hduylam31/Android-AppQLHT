@@ -141,7 +141,12 @@ const ToDoListScreen = () => {
           />
         </View>
       </View>
-      <TouchableOpacity className="w-[80%] h-14 absolute bottom-5 ml-[10%] bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center">
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("TodoList_Add");
+        }}
+        className="w-[80%] h-14 absolute bottom-5 ml-[10%] bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center"
+      >
         <Text className="text-white text-center font-bold text-xl">
           Thêm công việc
         </Text>
