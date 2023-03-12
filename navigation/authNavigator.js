@@ -12,6 +12,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ForgotPassword_CheckMail from "../screens/ForgotPassword_CheckMail";
 import ForgotPassword_ChangePass from "../screens/ForgotPassword_ChangePass";
 import ToDoListScreen from "../screens/ToDoList";
+import BottomBar from "../screens/BottomBar";
 
 const Auth = createNativeStackNavigator();
 
@@ -72,6 +73,14 @@ export default function AuthStack() {
       <Auth.Screen
         name="ToDoListScreen"
         component={ToDoListScreen}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+      <Auth.Screen
+        name="BottomBar"
+        component={BottomBar}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,

@@ -12,10 +12,21 @@ import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { CheckBox } from "@rneui/themed";
 
-const ToDoListScreen = ({ id, text, isCompleted, hour }) => {
+const ToDoListScreen = () => {
   const navigation = useNavigation();
-  // const [checked, setChecked] = React.useState(isCompleted);
-  const [check1, setCheck1] = useState(true);
+  const [todos, setTodos] = useState(todosData);
+
+  const handleToggleCompleted = (id) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, isCompleted: !todo.isCompleted };
+      } else {
+        return todo;
+      }
+    });
+
+    setTodos(updatedTodos);
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -38,19 +49,26 @@ const ToDoListScreen = ({ id, text, isCompleted, hour }) => {
           <Text className={"font-normal "}>{item.hour}</Text>
         </View>
       </View>
-
-      <CheckBox
-        // checked={checked.isCompleted}
-        // onPress={() =>
-        //   setChecked({ checked, isCompleted: !checked.isCompleted })
-        // }
-        // Use ThemeProvider to make change for all checkbox
-        iconType="material-community"
-        checkedIcon="checkbox-marked"
-        uncheckedIcon="checkbox-blank-outline"
-        checkedColor="#4A3780"
-        size={32}
-      />
+      <View className="flex flex-row ">
+        <TouchableOpacity className="mt-4">
+          <MaterialCommunityIcons
+            name="pencil-outline"
+            size={30}
+            color="#4A3780"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleToggleCompleted(item.id)}>
+          <CheckBox
+            checked={item.isCompleted}
+            onPress={() => handleToggleCompleted(item.id)}
+            iconType="material-community"
+            checkedIcon="checkbox-marked"
+            uncheckedIcon="checkbox-blank-outline"
+            checkedColor="#4A3780"
+            size={32}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
   renderItemCompleted = ({ item }) => (
@@ -72,13 +90,8 @@ const ToDoListScreen = ({ id, text, isCompleted, hour }) => {
       </View>
 
       <CheckBox
-        // checked={checked.isCompleted}
-        // onPress={() =>
-        //   setChecked({ checked, isCompleted: !checked.isCompleted })
-        // }
-        // Use ThemeProvider to make change for all checkbox
-        checked={check1}
-        onPress={() => setCheck1(!check1)}
+        checked={item.isCompleted}
+        onPress={() => handleToggleCompleted(item.id)}
         iconType="material-community"
         checkedIcon="checkbox-marked"
         uncheckedIcon="checkbox-blank-outline"
@@ -88,7 +101,7 @@ const ToDoListScreen = ({ id, text, isCompleted, hour }) => {
     </View>
   );
   return (
-    <SafeAreaView className="flex-1 bg-[#F1F5F9]">
+    <SafeAreaView className="flex-1 bg-[#F1F5F9] h-[50%]">
       <View className=" bg-[#3A4666] w-full h-[25%]">
         <View className="flex-row justify-between my-[7%] mx-[3%] ">
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -114,7 +127,7 @@ const ToDoListScreen = ({ id, text, isCompleted, hour }) => {
         </Text>
         <View className="w-[90%] h-60 bg-white rounded-2xl mx-[5%] mt-10 flex flex-row items-center">
           <FlatList
-            data={todosData.filter((todo) => !todo.isCompleted)}
+            data={todos.filter((todo) => !todo.isCompleted)}
             renderItem={this.renderItem}
           />
         </View>
@@ -123,16 +136,16 @@ const ToDoListScreen = ({ id, text, isCompleted, hour }) => {
         </Text>
         <View className="w-[90%] h-32 bg-white rounded-2xl mx-[5%] flex flex-row items-center">
           <FlatList
-            data={todosData.filter((todo) => todo.isCompleted)}
+            data={todos.filter((todo) => todo.isCompleted)}
             renderItem={this.renderItemCompleted}
           />
         </View>
-        <TouchableOpacity className="w-[80%] h-14 ml-[10%] bg-[#3A4666] rounded-2xl mt-6 flex items-center justify-center">
-          <Text className="text-white text-center font-bold text-xl">
-            Thêm công việc
-          </Text>
-        </TouchableOpacity>
       </View>
+      <TouchableOpacity className="w-[80%] h-14 absolute bottom-5 ml-[10%] bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center">
+        <Text className="text-white text-center font-bold text-xl">
+          Thêm công việc
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

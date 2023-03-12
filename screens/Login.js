@@ -35,7 +35,7 @@ const Login = () => {
   useEffect(() => {
     const unsubcribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate("ToDoListScreen");
+        navigation.navigate("BottomBar");
       }
     });
     return unsubcribe;
