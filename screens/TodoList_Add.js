@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import TodolistService from "../service/TodolistService.js";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
@@ -32,10 +33,24 @@ const CategoryButton = ({ label, onPress, selected }) => (
 
 const TodoList_Add = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const handleCategoryPress = (category) => {
     setSelectedCategory(category);
   };
+
+  const handleAddingTodolist = () => {
+    console.log("Start adding");
+    try {
+      TodolistService.addTodolist(title, selectedCategory, textDate, textTime, value);
+      console.log("Done adding")
+      navigation.goBack()
+      console.log("Done navigation")
+    } catch (error) {
+      console.log("Fail due to: ", error);
+    }
+  }
 
   const navigation = useNavigation();
   const [date, setDate] = React.useState(new Date());
@@ -111,6 +126,8 @@ const TodoList_Add = () => {
             <TextInput
               placeholder="Tiêu đề"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
+              value = {title}
+              onChangeText={(text) => setTitle(text)}
             ></TextInput>
           </View>
           {/* Phần phân loại */}
@@ -180,6 +197,16 @@ const TodoList_Add = () => {
               onChangeText={onChangeText}
               textAlignVertical="top"
             ></TextInput>
+
+            {/* Làm tạm nút thêm */}
+            <TouchableOpacity onPress={handleAddingTodolist}
+            className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center">
+              <Text className="text-white text-center font-bold text-xl">
+                Thêm công việc
+              </Text>
+            </TouchableOpacity>
+            {/* Kết thúc Làm tạm nút thêm */}
+
           </View>
         </View>
       </SafeAreaView>
