@@ -11,8 +11,8 @@ Link môi trường:
 - https://www.npmjs.com/package/react-native-animatable
 - https://www.npmjs.com/package/tailwindcss-react-native
 
-- Cài đặt môi trường như video:
-+ https://youtu.be/JqPezeQiwxk
+Cài đặt môi trường như video:
+- https://youtu.be/JqPezeQiwxk
 
 # Enviroment
 
