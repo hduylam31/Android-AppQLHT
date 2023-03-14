@@ -10,9 +10,9 @@ Link môi trường:
 
 - https://www.npmjs.com/package/react-native-animatable
 - https://www.npmjs.com/package/tailwindcss-react-native
--
-- Cài đặt môi trường như video:
-  https://youtu.be/JqPezeQiwxk
+
+Cài đặt môi trường như video:
+- https://youtu.be/JqPezeQiwxk
 
 # Enviroment
 
@@ -44,6 +44,6 @@ to install all dependencies inside backend folder, and type
 - **npm i tailwindcss-react-native**
 - **npm install @react-native/assets-registry**
 - **npm install firebase**
-- \*\*yarn add @react-native-community/datetimepicker
+- **yarn add @react-native-community/datetimepicker**
 
 Then create new branch and work with that branch.
