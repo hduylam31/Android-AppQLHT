@@ -45,11 +45,11 @@ const BottomBar = () => {
         },
       })}
     >
-      <Tab.Screen name="ToDoList" component={ToDoListScreen} />
-      <Tab.Screen name="Account" component={Account} />
-      <Tab.Screen name="NoteList" component={NoteList} />
-      <Tab.Screen name="Pomodoro" component={Pomodoro} />
       <Tab.Screen name="Schedule" component={Schedule} />
+      <Tab.Screen name="NoteList" component={NoteList} />
+      <Tab.Screen name="ToDoList" component={ToDoListScreen} />
+      <Tab.Screen name="Pomodoro" component={Pomodoro} />
+      <Tab.Screen name="Account" component={Account} />
     </Tab.Navigator>
   );
 };
