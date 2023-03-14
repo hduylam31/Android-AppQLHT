@@ -21,7 +21,7 @@ const CategoryButton = ({ label, onPress, selected }) => (
     className={`p-1 mx-2 rounded-[8px] border-2  ${
       selected ? "border-[#3A4666]" : "border-[#FFFFFF]"
     } ${label === "profile" ? "bg-[#DBECF6]" : ""}
-      ${label === "dotchart" ? "bg-[#E7E2F3]" : ""}
+      ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
       ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}`}
     onPress={onPress}
   >
@@ -116,23 +116,32 @@ const TodoList_Edit = () => {
             ></TextInput>
           </View>
           {/* Phần phân loại */}
-          <View className="pt-4 flex-row items-center">
+          <View className="pt-2 flex-row items-center">
             <Text className="text-base mr-8">Phân loại</Text>
-            <CategoryButton
-              label="profile"
-              onPress={() => handleCategoryPress("profile")}
-              selected={selectedCategory === "profile"}
-            />
-            <CategoryButton
-              label="dotchart"
-              onPress={() => handleCategoryPress("dotchart")}
-              selected={selectedCategory === "dotchart"}
-            />
-            <CategoryButton
-              label="Trophy"
-              onPress={() => handleCategoryPress("Trophy")}
-              selected={selectedCategory === "Trophy"}
-            />
+            <View className="justify-center items-center">
+              <CategoryButton
+                label="profile"
+                onPress={() => handleCategoryPress("profile")}
+                selected={selectedCategory === "profile"}
+              />
+              <Text className="text-sm">Học tập</Text>
+            </View>
+            <View className="justify-center items-center">
+              <CategoryButton
+                label="dashboard"
+                onPress={() => handleCategoryPress("dashboard")}
+                selected={selectedCategory === "dashboard"}
+              />
+              <Text className="text-sm">Sự kiện</Text>
+            </View>
+            <View className="justify-center items-center">
+              <CategoryButton
+                label="Trophy"
+                onPress={() => handleCategoryPress("Trophy")}
+                selected={selectedCategory === "Trophy"}
+              />
+              <Text className="text-sm">Giải trí</Text>
+            </View>
             <View className="flex-row space-x-4"></View>
           </View>
           <View className="flex-row items-center">
@@ -182,6 +191,15 @@ const TodoList_Edit = () => {
               onChangeText={onChangeText}
               textAlignVertical="top"
             ></TextInput>
+
+            <TouchableOpacity
+              onPress={{}}
+              className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center"
+            >
+              <Text className="text-white text-center font-bold text-xl">
+                Lưu
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>

@@ -21,7 +21,7 @@ const CategoryButton = ({ label, onPress, selected }) => (
     className={`p-1 mx-2 rounded-[8px] border-2  ${
       selected ? "border-[#3A4666]" : "border-[#FFFFFF]"
     } ${label === "profile" ? "bg-[#DBECF6]" : ""}
-      ${label === "dotchart" ? "bg-[#E7E2F3]" : ""}
+      ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
       ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}`}
     onPress={onPress}
   >
@@ -43,14 +43,20 @@ const TodoList_Add = () => {
   const handleAddingTodolist = () => {
     console.log("Start adding");
     try {
-      TodolistService.addTodolist(title, selectedCategory, textDate, textTime, value);
-      console.log("Done adding")
-      navigation.goBack()
-      console.log("Done navigation")
+      TodolistService.addTodolist(
+        title,
+        selectedCategory,
+        textDate,
+        textTime,
+        value
+      );
+      console.log("Done adding");
+      navigation.goBack();
+      console.log("Done navigation");
     } catch (error) {
       console.log("Fail due to: ", error);
     }
-  }
+  };
 
   const navigation = useNavigation();
   const [date, setDate] = React.useState(new Date());
@@ -113,7 +119,7 @@ const TodoList_Add = () => {
               <AntDesign name="arrowleft" size={30} color="white" />
             </View>
           </TouchableOpacity>
-          <View>
+          <View className="items-center justify-center">
             <Text className="text-white text-xl">Thêm công việc mới</Text>
           </View>
           <View className="w-25 h-25"></View>
@@ -126,28 +132,37 @@ const TodoList_Add = () => {
             <TextInput
               placeholder="Tiêu đề"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
-              value = {title}
+              value={title}
               onChangeText={(text) => setTitle(text)}
             ></TextInput>
           </View>
           {/* Phần phân loại */}
-          <View className="pt-4 flex-row items-center">
+          <View className="pt-2 flex-row items-center">
             <Text className="text-base mr-8">Phân loại</Text>
-            <CategoryButton
-              label="profile"
-              onPress={() => handleCategoryPress("profile")}
-              selected={selectedCategory === "profile"}
-            />
-            <CategoryButton
-              label="dotchart"
-              onPress={() => handleCategoryPress("dotchart")}
-              selected={selectedCategory === "dotchart"}
-            />
-            <CategoryButton
-              label="Trophy"
-              onPress={() => handleCategoryPress("Trophy")}
-              selected={selectedCategory === "Trophy"}
-            />
+            <View className="justify-center items-center">
+              <CategoryButton
+                label="profile"
+                onPress={() => handleCategoryPress("profile")}
+                selected={selectedCategory === "profile"}
+              />
+              <Text className="text-sm">Học tập</Text>
+            </View>
+            <View className="justify-center items-center">
+              <CategoryButton
+                label="dashboard"
+                onPress={() => handleCategoryPress("dashboard")}
+                selected={selectedCategory === "dashboard"}
+              />
+              <Text className="text-sm">Sự kiện</Text>
+            </View>
+            <View className="justify-center items-center">
+              <CategoryButton
+                label="Trophy"
+                onPress={() => handleCategoryPress("Trophy")}
+                selected={selectedCategory === "Trophy"}
+              />
+              <Text className="text-sm">Giải trí</Text>
+            </View>
             <View className="flex-row space-x-4"></View>
           </View>
           <View className="flex-row items-center">
@@ -190,7 +205,7 @@ const TodoList_Add = () => {
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-[55%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
+              className="w-[100%] h-[40%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none mb-4"
               multiline={true}
               value={value}
               numberOfLines={4}
@@ -198,15 +213,15 @@ const TodoList_Add = () => {
               textAlignVertical="top"
             ></TextInput>
 
-            {/* Làm tạm nút thêm */}
-            <TouchableOpacity onPress={handleAddingTodolist}
-            className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center">
+            {/* Button thêm */}
+            <TouchableOpacity
+              onPress={handleAddingTodolist}
+              className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center"
+            >
               <Text className="text-white text-center font-bold text-xl">
-                Thêm công việc
+                Lưu
               </Text>
             </TouchableOpacity>
-            {/* Kết thúc Làm tạm nút thêm */}
-
           </View>
         </View>
       </SafeAreaView>
