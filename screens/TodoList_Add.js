@@ -119,10 +119,10 @@ const TodoList_Add = () => {
               <AntDesign name="arrowleft" size={30} color="white" />
             </View>
           </TouchableOpacity>
-          <View className="items-center justify-center">
+          <View className="pr-8">
             <Text className="text-white text-xl">Thêm công việc mới</Text>
           </View>
-          <View className="w-25 h-25"></View>
+          <View className="w-30 h-25"></View>
           {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên */}
           {/* Phần tiêu đề */}
         </View>

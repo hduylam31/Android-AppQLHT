@@ -9,6 +9,7 @@ import {
   Button,
   Style,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -85,6 +86,30 @@ const TodoList_Edit = () => {
     setMode(currentMode);
   };
 
+  const AlertDelete = () => {
+    Alert.alert(
+      "Xóa doanh mục",
+      "Xóa doanh mục khỏi danh sách công việc này ?",
+      [
+        {
+          text: "Đồng ý",
+          onPress: () => {
+            console.log("Yes Pressed"), navigation.goBack();
+          },
+        },
+        {
+          text: "Hủy",
+          onPress: () => {
+            console.log("No Pressed");
+          },
+        },
+      ]
+      // {
+      //   Style: ""
+      // }
+    );
+  };
+
   const handlePress = () => {
     Keyboard.dismiss();
   };
@@ -102,7 +127,7 @@ const TodoList_Edit = () => {
           <View>
             <Text className="text-white text-xl">Chỉnh sửa công việc</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={AlertDelete}>
             <AntDesign name="delete" size={25} color="white" />
           </TouchableOpacity>
           {/* Phần tiêu đề */}
@@ -184,7 +209,7 @@ const TodoList_Edit = () => {
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-[55%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
+              className="w-[100%] h-[40%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none mb-4"
               multiline={true}
               value={value}
               numberOfLines={4}

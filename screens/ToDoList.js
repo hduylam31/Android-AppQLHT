@@ -20,10 +20,9 @@ function toMinutes(time) {
 
 const CategoryView = ({ label }) => (
   <View
-    className={`ml-5 w-11 h-11 rounded-full mx-3 flex items-center justify-center ${
-      label === "profile" ? "bg-[#DBECF6]" : ""
-    }
-    ${label === "dotchart" ? "bg-[#E7E2F3]" : ""}
+    className={`ml-5 w-11 h-11 rounded-full mx-3 flex items-center justify-center 
+    ${label === "profile" ? "bg-[#DBECF6]" : ""}
+    ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
     ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}`}
   >
     <AntDesign name={label} size={25} color="black" />
@@ -69,7 +68,12 @@ const ToDoListScreen = () => {
         </View>
       </View>
       <View className="flex flex-row ">
-        <TouchableOpacity className="mt-4">
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("TodoList_Edit");
+          }}
+          className="mt-4"
+        >
           <MaterialCommunityIcons
             name="pencil-outline"
             size={30}
