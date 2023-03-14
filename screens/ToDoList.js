@@ -6,12 +6,13 @@ import {
   FlatList,
 } from "react-native";
 import { todosData } from "../data/todos";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { CheckBox } from "@rneui/themed";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
+import TodolistService from "../service/TodolistService";
 
 function toMinutes(time) {
   const [hours, minutes] = time.split(":").map(Number);
@@ -30,15 +31,35 @@ const CategoryView = ({ label }) => (
 );
 const ToDoListScreen = () => {
   const navigation = useNavigation();
-  const [todos, setTodos] = useState(
-    todosData.sort((a, b) => {
-      return toMinutes(a.hour) - toMinutes(b.hour);
-    })
-  );
+  console.log("Set todolist");
 
-  const handleToggleCompleted = (id) => {
+  //======= BE: lấy data todolist của account đang đăng nhập ===========
+  const [todolists, setTodolists] = useState([]);
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    const loadTodolist = async() => {
+      const todolists = await TodolistService.loadTodolist();
+      setTodolists(todolists);
+      console.log("todolist2: ", todolists);
+    };
+
+    loadTodolist();
+  }, []);
+
+  useEffect(() => {
+    const sortedTodos = todolists.sort((a, b) => {
+      return toMinutes(a.hour) - toMinutes(b.hour);
+    });
+    setTodos(sortedTodos);
+  }, [todolists]);
+  
+  // ===========================================================================
+  
+  const handleToggleCompleted = (itemId) => {
+    TodolistService.updateCompletedStatus(itemId);
     const updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
+      if (todo.id === itemId) {
         return { ...todo, isCompleted: !todo.isCompleted };
       } else {
         return todo;
@@ -63,7 +84,7 @@ const ToDoListScreen = () => {
       <View className="flex flex-row ">
         <CategoryView label={item.category} />
         <View>
-          <Text className={"text-lg font-semibold"}>{item.text}</Text>
+          <Text className={"text-lg font-semibold"}>{item.title}</Text>
           <Text className={"font-normal "}>{item.hour}</Text>
         </View>
       </View>
@@ -104,7 +125,7 @@ const ToDoListScreen = () => {
         <CategoryView label={item.category} />
         <View>
           <Text className={"text-lg font-semibold line-through "}>
-            {item.text}
+            {item.title}
           </Text>
           <Text className={"font-normal line-through "}>{item.hour}</Text>
         </View>
