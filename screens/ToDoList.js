@@ -120,7 +120,7 @@ const ToDoListScreen = () => {
   return (
     <SafeAreaView className="flex-1">
       {/* Header */}
-      <View className="flex-1 bg-[#3A4666] w-full h-[25%]">
+      <View className="flex-1 bg-[#3A4666]">
         <View className="flex-row justify-between mt-[7%] mx-[3%] ">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <MaterialCommunityIcons
@@ -148,7 +148,7 @@ const ToDoListScreen = () => {
 
         <View className="flex-1 bg-[#F1F5F9]">
           {/* Công việc hiện có  */}
-          <View className="w-[90%] h-60 bg-white rounded-2xl mx-[5%] mt-10 flex flex-row items-center">
+          <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] mt-[5%] flex flex-row items-center">
             <FlatList
               data={todos.filter((todo) => !todo.isCompleted)}
               keyExtractor={(item) => item.id.toString()}
@@ -159,7 +159,7 @@ const ToDoListScreen = () => {
           <Text className="text-lg font-semibold ml-[5%] my-[5%]">
             Hoàn thành
           </Text>
-          <View className="w-[90%] h-40 bg-white rounded-2xl mx-[5%] flex flex-row items-center">
+          <View className="w-[90%] h-[30%] bg-white rounded-2xl mx-[5%] flex flex-row items-center">
             <FlatList
               data={todos.filter((todo) => todo.isCompleted)}
               keyExtractor={(item) => item.id.toString()}
@@ -172,7 +172,7 @@ const ToDoListScreen = () => {
         onPress={() => {
           navigation.navigate("TodoList_Add");
         }}
-        className="w-[80%] h-14 absolute bottom-5 ml-[10%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+        className="w-[80%] h-[7%] absolute bottom-5 ml-[10%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
       >
         <Text className="text-white text-center font-bold text-xl">
           Thêm công việc
