@@ -4,10 +4,11 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { todosData } from "../data/todos";
 import React, { useLayoutEffect, useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { CheckBox } from "@rneui/themed";
 import { AntDesign } from "@expo/vector-icons";
@@ -31,21 +32,29 @@ const CategoryView = ({ label }) => (
 );
 const ToDoListScreen = () => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+
   console.log("Set todolist");
 
   //======= BE: lấy data todolist của account đang đăng nhập ===========
   const [todolists, setTodolists] = useState([]);
   const [todos, setTodos] = useState([]);
 
-  useEffect(() => {
-    const loadTodolist = async() => {
-      const todolists = await TodolistService.loadTodolist();
-      setTodolists(todolists);
-      console.log("todolist2: ", todolists);
-    };
+  const loadTodolist = async () => {
+    const todolists = await TodolistService.loadTodolist();
+    setTodolists(todolists);
+    console.log("todolist2: ", todolists);
+  };
 
+  useEffect(() => {
     loadTodolist();
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      loadTodolist();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     const sortedTodos = todolists.sort((a, b) => {
@@ -53,9 +62,9 @@ const ToDoListScreen = () => {
     });
     setTodos(sortedTodos);
   }, [todolists]);
-  
+
   // ===========================================================================
-  
+
   const handleToggleCompleted = (itemId) => {
     TodolistService.updateCompletedStatus(itemId);
     const updatedTodos = todos.map((todo) => {
@@ -77,7 +86,7 @@ const ToDoListScreen = () => {
 
   renderItem = ({ item, index }) => (
     <Animatable.View
-      animation={index % 2 === 0 ? "slideInRight" : "slideInLeft"}
+      animation="slideInLeft"
       delay={index * 10}
       className="w-full h-16 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
     >
@@ -116,7 +125,7 @@ const ToDoListScreen = () => {
   );
   renderItemCompleted = ({ item, index }) => (
     <Animatable.View
-      animation={index % 2 === 0 ? "slideInRight" : "slideInLeft"}
+      animation="slideInLeft"
       delay={index * 10}
       style={{ flex: 1 }}
       className="w-full h-16 border-b-[#f3f2f4] border-b-2 my-1 flex-row justify-between content-center"
