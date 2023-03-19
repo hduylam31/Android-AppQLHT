@@ -85,31 +85,23 @@ const ToDoListScreen = () => {
   }, []);
 
   renderItem = ({ item, index }) => (
-    <Animatable.View
-      animation="slideInLeft"
-      delay={index * 10}
-      className="w-full h-16 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("TodoList_Edit");
+      }}
     >
-      <View className="flex flex-row ">
-        <CategoryView label={item.category} />
-        <View>
-          <Text className={"text-lg font-semibold"}>{item.title}</Text>
-          <Text className={"font-normal "}>{item.hour}</Text>
+      <Animatable.View
+        animation="slideInLeft"
+        delay={index * 10}
+        className="w-full h-16 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
+      >
+        <View className="flex flex-row ">
+          <CategoryView label={item.category} />
+          <View>
+            <Text className={"text-lg font-semibold"}>{item.title}</Text>
+            <Text className={"font-normal "}>{item.hour}</Text>
+          </View>
         </View>
-      </View>
-      <View className="flex flex-row ">
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("TodoList_Edit");
-          }}
-          className="mt-4"
-        >
-          <MaterialCommunityIcons
-            name="pencil-outline"
-            size={30}
-            color="#4A3780"
-          />
-        </TouchableOpacity>
 
         <CheckBox
           checked={item.isCompleted}
@@ -120,42 +112,48 @@ const ToDoListScreen = () => {
           checkedColor="#4A3780"
           size={32}
         />
-      </View>
-    </Animatable.View>
+      </Animatable.View>
+    </TouchableOpacity>
   );
   renderItemCompleted = ({ item, index }) => (
-    <Animatable.View
-      animation="slideInLeft"
-      delay={index * 10}
-      style={{ flex: 1 }}
-      className="w-full h-16 border-b-[#f3f2f4] border-b-2 my-1 flex-row justify-between content-center"
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("TodoList_Edit");
+      }}
     >
-      <View className="flex flex-row opacity-50 ">
-        <CategoryView label={item.category} />
-        <View>
-          <Text className={"text-lg font-semibold line-through "}>
-            {item.title}
-          </Text>
-          <Text className={"font-normal line-through "}>{item.hour}</Text>
+      <Animatable.View
+        animation="slideInLeft"
+        delay={index * 10}
+        style={{ flex: 1 }}
+        className="w-full h-16 border-b-[#f3f2f4] border-b-2 my-1 flex-row justify-between content-center"
+      >
+        <View className="flex flex-row opacity-50 ">
+          <CategoryView label={item.category} />
+          <View>
+            <Text className={"text-lg font-semibold line-through "}>
+              {item.title}
+            </Text>
+            <Text className={"font-normal line-through "}>{item.hour}</Text>
+          </View>
         </View>
-      </View>
 
-      <CheckBox
-        checked={item.isCompleted}
-        onPress={() => handleToggleCompleted(item.id)}
-        iconType="material-community"
-        checkedIcon="checkbox-marked"
-        uncheckedIcon="checkbox-blank-outline"
-        checkedColor="#4A3780"
-        size={32}
-      />
-    </Animatable.View>
+        <CheckBox
+          checked={item.isCompleted}
+          onPress={() => handleToggleCompleted(item.id)}
+          iconType="material-community"
+          checkedIcon="checkbox-marked"
+          uncheckedIcon="checkbox-blank-outline"
+          checkedColor="#4A3780"
+          size={32}
+        />
+      </Animatable.View>
+    </TouchableOpacity>
   );
   return (
     <SafeAreaView className="flex-1">
       {/* Header */}
       <View className="flex-1 bg-[#3A4666]">
-        <View className="flex-row justify-between mt-[7%] mx-[3%] ">
+        <View className="flex-row justify-between mt-[7%] mx-[5%] ">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <MaterialCommunityIcons
               name="dots-vertical"
@@ -163,9 +161,6 @@ const ToDoListScreen = () => {
               color="white"
             />
           </TouchableOpacity>
-          <Text className="text-white text-lg font-semibold mt-1">
-            T10 20, 2022
-          </Text>
           <TouchableOpacity>
             <MaterialCommunityIcons
               name="calendar-month-outline"
