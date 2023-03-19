@@ -31,20 +31,18 @@ const CategoryView = ({ label }) => (
 );
 const ToDoListScreen = () => {
   const navigation = useNavigation();
-  console.log("Set todolist");
+  console.log("Load todolist");
 
-  //======= BE: lấy data todolist của account đang đăng nhập ===========
+  //======= BE: lấy data todolist của account đang đăng nhập =========
   const [todolists, setTodolists] = useState([]);
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
     const loadTodolist = async() => {
-      const todolists = await TodolistService.loadTodolist();
-      setTodolists(todolists);
-      console.log("todolist2: ", todolists);
+      const loadedTodolists  = await TodolistService.loadTodolist();
+      setTodolists(loadedTodolists);
     };
-
-    loadTodolist();
+    loadTodolist()
   }, []);
 
   useEffect(() => {

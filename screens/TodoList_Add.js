@@ -15,6 +15,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import TodolistService from "../service/TodolistService.js";
+import ToDoListScreen from "./ToDoList.js";
+import BottomBar from "./BottomBar.js";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
@@ -40,25 +42,6 @@ const TodoList_Add = () => {
     setSelectedCategory(category);
   };
 
-  const handleAddingTodolist = () => {
-    console.log("Start adding");
-    try {
-      // TodolistService.addTodolist
-      TodolistService.addTodolist(
-        title,
-        selectedCategory,
-        textDate,
-        textTime,
-        value
-      );
-      console.log("Done adding");
-      navigation.goBack();
-      console.log("Done navigation");
-    } catch (error) {
-      console.log("Fail due to: ", error);
-    }
-  };
-
   const navigation = useNavigation();
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState("date");
@@ -69,6 +52,25 @@ const TodoList_Add = () => {
   const [textTime, setTimeDate] = React.useState(
     new Date().toLocaleTimeString()
   );
+
+  const handleAddingTodolist = async () => {
+    console.log("Start adding");
+    try {
+      // TodolistService.addTodolist
+      await TodolistService.addTodolist(
+        title,
+        selectedCategory,
+        textDate,
+        textTime,
+        content
+      );
+      console.log("Done adding");
+      navigation.navigate(BottomBar);
+      console.log("Done navigation to BottomBar");
+    } catch (error) {
+      console.log("Fail due to: ", error);
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -208,9 +210,9 @@ const TodoList_Add = () => {
               placeholder="Nội dung"
               className="w-[100%] h-[40%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none mb-4"
               multiline={true}
-              value={value}
+              value={content}
               numberOfLines={4}
-              onChangeText={onChangeText}
+              onChangeText={(text) => setContent(text)}
               textAlignVertical="top"
             ></TextInput>
 

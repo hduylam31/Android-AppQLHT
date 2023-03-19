@@ -6,25 +6,47 @@ import { auth, firestore } from "../firebase";
 import { generateUUID } from "./uid";
 
 class TodolistService{
-    static addTodolist = (vtitle, vselectedCategory, vtextDate, vtextTime, vcontent) => {
+    static addTodolist = async (vtitle, vselectedCategory, vtextDate, vtextTime, vcontent) => {
         console.log("inside function");
         const user = auth.currentUser;
         const documentId = generateUUID(6);
         const timeArray = vtextTime.split(":");
         const hourAndmin = timeArray[0] + ":" + timeArray[1];
         const userRef = doc(collection(firestore, 'todolist'), user.uid);
-        updateDoc(userRef, {
-             todolist: arrayUnion({
-                id: documentId,
-                title: vtitle,
-                category: vselectedCategory,
-                date: vtextDate,
-                hour: hourAndmin,
-                text: vcontent,
-                isCompleted: false
-            })
-        });
-        console.log("done update function");
+        try {
+            const userDoc = await getDoc(userRef);
+            if(userDoc.exists()){
+                //update
+                updateDoc(userRef, {
+                    todolist: arrayUnion({
+                       id: documentId,
+                       title: vtitle,
+                       category: vselectedCategory,
+                       date: vtextDate,
+                       hour: hourAndmin,
+                       text: vcontent,
+                       isCompleted: false
+                   })
+               });
+               console.log("done update function");
+            }else{
+                await setDoc(userRef, { 
+                    todolist: [{
+                        id: documentId,
+                        title: vtitle,
+                        category: vselectedCategory,
+                        date: vtextDate,
+                        hour: hourAndmin,
+                        text: vcontent,
+                        isCompleted: false
+                    }] 
+                });
+                console.log("done add function");
+            }
+        } catch (error) {
+            
+        }
+        
       };
 
     static loadTodolist = async() => {

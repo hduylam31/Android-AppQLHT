@@ -1,6 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { auth } from '../firebase'
 
 const Account = () => {
   const navigation = useNavigation();
@@ -9,10 +10,21 @@ const Account = () => {
       headerShown: false,
     });
   });
+
+  const handleSignOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        console.log("Sign out");
+      })
+      .catch(error => alert(error.message))
+  }
+
   return (
     <SafeAreaView className="flex-1">
       <TouchableOpacity
         onPress={() => {
+          handleSignOut();
           navigation.navigate("Login");
         }}
         className="w-[80%] h-14 absolute bottom-5 ml-[10%] bg-[#c2372de3] rounded-2xl flex items-center justify-center"
