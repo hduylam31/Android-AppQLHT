@@ -4,21 +4,20 @@ import { useNavigation } from "@react-navigation/native";
 import { auth } from '../firebase'
 
 const Account = () => {
+  const handleSignOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        navigation.replace("Login");
+      })
+      .catch((error) => alert(error.message));
+  };
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   });
-
-  const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        console.log("Sign out");
-      })
-      .catch(error => alert(error.message))
-  }
 
   return (
     <SafeAreaView className="flex-1">

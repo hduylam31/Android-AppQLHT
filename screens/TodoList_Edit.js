@@ -5,9 +5,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   TextInput,
-  ScrollView,
-  Button,
-  Style,
+  Switch,
   Platform,
   Alert,
 } from "react-native";
@@ -23,7 +21,8 @@ const CategoryButton = ({ label, onPress, selected }) => (
       selected ? "border-[#3A4666]" : "border-[#FFFFFF]"
     } ${label === "profile" ? "bg-[#DBECF6]" : ""}
       ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
-      ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}`}
+      ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}}
+      ${label === "ellipsis1" ? "bg-[#FEF5D3]" : ""}`}
     onPress={onPress}
   >
     <View className="w-[40px] h-[40px] items-center justify-center">
@@ -32,8 +31,20 @@ const CategoryButton = ({ label, onPress, selected }) => (
   </TouchableOpacity>
 );
 
+const LockedView = ({ isLocked, children }) => {
+  return (
+    <View
+      className={`space-y-2 w-[50%] ${isLocked ? "" : "opacity-40"}`}
+      pointerEvents={isLocked ? "auto" : "none"}
+    >
+      {children}
+    </View>
+  );
+};
+
 const TodoList_Edit = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isLocked, setIsLocked] = useState(false);
 
   const handleCategoryPress = (category) => {
     setSelectedCategory(category);
@@ -167,21 +178,17 @@ const TodoList_Edit = () => {
               />
               <Text className="text-sm">Giải trí</Text>
             </View>
-            <View className="flex-row space-x-4"></View>
+            <View className="justify-center items-center">
+              <CategoryButton
+                label="ellipsis1"
+                onPress={() => handleCategoryPress("ellipsis1")}
+                selected={selectedCategory === "ellipsis1"}
+              />
+              <Text className="text-sm">Khác</Text>
+            </View>
           </View>
           <View className="flex-row items-center">
-            <View className="space-y-2 w-[50%]">
-              <Text className="text-base">Ngày</Text>
-              <TouchableOpacity onPress={() => showMode("date")}>
-                <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                  <View className="flex-row justify-center items-center space-x-4">
-                    <Text className="text-base text-gray-400">{textDate}</Text>
-                    <AntDesign name="calendar" size={25} color="black" />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View className="pl-4 space-y-2 w-[100%]">
+            <LockedView isLocked={isLocked}>
               <Text className="text-base">Giờ</Text>
               <TouchableOpacity onPress={() => showMode("time")}>
                 <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
@@ -191,6 +198,16 @@ const TodoList_Edit = () => {
                   </View>
                 </View>
               </TouchableOpacity>
+            </LockedView>
+            <View className="space-y-2 w-[50%] items-start">
+              <Text className="text-base">Bật thông báo</Text>
+              <Switch
+                trackColor={{ false: "grey", true: "green" }}
+                thumbColor={isLocked ? "#f4f3f4" : "#f4f3f4"}
+                value={isLocked}
+                onValueChange={(newValue) => setIsLocked(newValue)}
+                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+              ></Switch>
             </View>
 
             {show && (
