@@ -25,7 +25,8 @@ const CategoryView = ({ label }) => (
     className={`ml-5 w-11 h-11 rounded-full mx-3 flex items-center justify-center 
     ${label === "profile" ? "bg-[#DBECF6]" : ""}
     ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
-    ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}`}
+    ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}}
+    ${label === "ellipsis1" ? "bg-[#FEF5D3]" : ""}`}
   >
     <AntDesign name={label} size={25} color="black" />
   </View>
@@ -94,7 +95,7 @@ const ToDoListScreen = () => {
           c_isNotified: item.isNotified,
           c_hour: item.hour,
           c_text: item.text,
-          c_isCompleted: item.isCompleted
+          c_isCompleted: item.isCompleted,
         });
       }}
     >
@@ -108,6 +109,15 @@ const ToDoListScreen = () => {
           <View>
             <Text className={"text-lg font-semibold"}>{item.title}</Text>
             <Text className={"font-normal "}>{item.hour}</Text>
+          </View>
+          <View className={"ml-1 mt-2"}>
+            {item.isNotified && (
+              <MaterialCommunityIcons
+                name="bell-ring-outline"
+                size={14}
+                color="black"
+              />
+            )}
           </View>
         </View>
 
@@ -126,14 +136,14 @@ const ToDoListScreen = () => {
   renderItemCompleted = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("TodoList_Edit",{
+        navigation.navigate("TodoList_Edit", {
           id: item.id,
           title: item.title,
           category: item.category,
           isNotified: item.isNotified,
           hour: item.hour,
           text: item.text,
-          isCompleted: item.isCompleted
+          isCompleted: item.isCompleted,
         });
       }}
     >
