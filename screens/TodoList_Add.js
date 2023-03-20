@@ -34,11 +34,11 @@ const CategoryButton = ({ label, onPress, selected }) => (
   </TouchableOpacity>
 );
 
-const LockedView = ({ isLocked, children }) => {
+const LockedView = ({ isNotified, children }) => {
   return (
     <View
-      className={`space-y-2 w-[50%] ${isLocked ? "" : "opacity-40"}`}
-      pointerEvents={isLocked ? "auto" : "none"}
+      className={`space-y-2 w-[50%] ${isNotified ? "" : "opacity-40"}`}
+      pointerEvents={isNotified ? "auto" : "none"}
     >
       {children}
     </View>
@@ -50,7 +50,7 @@ const TodoList_Add = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const [isLocked, setIsLocked] = useState(true);
+  const [isNotified, setIsNotified] = useState(true);
 
   const handleCategoryPress = (category) => {
     setSelectedCategory(category);
@@ -78,13 +78,11 @@ const TodoList_Add = () => {
       await TodolistService.addTodolist(
         title,
         selectedCategory,
-        textDate,
+        isNotified,
         textTime,
         content
       );
-      console.log("Done adding");
       navigation.navigate(BottomBar);
-      console.log("Done navigation to BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -194,7 +192,7 @@ const TodoList_Add = () => {
             </View>
           </View>
           <View className="flex-row items-center">
-            <LockedView isLocked={isLocked}>
+            <LockedView isNotified={isNotified}>
               <Text className="text-base">Giờ</Text>
               <TouchableOpacity onPress={() => showMode("time")}>
                 <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
@@ -209,9 +207,9 @@ const TodoList_Add = () => {
               <Text className="text-base">Bật thông báo</Text>
               <Switch
                 trackColor={{ false: "grey", true: "green" }}
-                thumbColor={isLocked ? "#f4f3f4" : "#f4f3f4"}
-                value={isLocked}
-                onValueChange={(newValue) => setIsLocked(newValue)}
+                thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
+                value={isNotified}
+                onValueChange={(newValue) => setIsNotified(newValue)}
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               ></Switch>
             </View>
