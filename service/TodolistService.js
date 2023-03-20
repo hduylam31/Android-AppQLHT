@@ -19,34 +19,25 @@ class TodolistService{
         console.log("isNotified: ", isNotified);
         console.log("Time: ", vTimeNotified);
         const userRef = doc(collection(firestore, 'todolist'), user.uid);
-        
+        const item = {
+            id: documentId,
+            title: vtitle,
+            category: vselectedCategory,
+            isNotified: isNotified,
+            hour: vTimeNotified,
+            text: vcontent,
+            isCompleted: false
+        };
         try {
             const userDoc = await getDoc(userRef);
             if(userDoc.exists()){
                 //update
                 updateDoc(userRef, {
-                    todolist: arrayUnion({
-                       id: documentId,
-                       title: vtitle,
-                       category: vselectedCategory,
-                       isNotified: isNotified,
-                       hour: vTimeNotified,
-                       text: vcontent,
-                       isCompleted: false
-                   })
-               });
-               console.log("done update function");
+                    todolist: arrayUnion(item)}, {merge: true});
+               console.log("done update function OKK" );
             }else{
                 await setDoc(userRef, { 
-                    todolist: [{
-                        id: documentId,
-                        title: vtitle,
-                        category: vselectedCategory,
-                        isNotified: isNotified,
-                        hour: vTimeNotified,
-                        text: vcontent,
-                        isCompleted: false
-                    }] 
+                    todolist: [item] 
                 });
                 console.log("done add function");
             }
