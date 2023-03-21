@@ -5,8 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import AuthStack from "./navigation/authNavigator";
-import ToDoList from "./screens/ToDoList";
-import ToDoListScreen from "./screens/ToDoList";
+import Schedule from "./screens/Schedule";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +13,10 @@ export default function App() {
   return (
     <TailwindProvider>
       <NavigationContainer>
-        <AuthStack />
+        {/* <AuthStack /> */}
+        <Stack.Navigator>
+          <Stack.Screen name="Schecule" component={Schedule} />
+        </Stack.Navigator>
       </NavigationContainer>
     </TailwindProvider>
   );

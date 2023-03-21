@@ -17,12 +17,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
-    className={`p-1 mx-2 rounded-[8px] border-2  ${
+    className={`p-[1px] mx-2 rounded-[8px] border-2  ${
       selected ? "border-[#3A4666]" : "border-[#FFFFFF]"
     } ${label === "profile" ? "bg-[#DBECF6]" : ""}
       ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
       ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}}
-      ${label === "ellipsis1" ? "bg-[#FEF5D3]" : ""}`}
+      ${label === "ellipsis1" ? "bg-[#D5EFC6]" : ""}`}
     onPress={onPress}
   >
     <View className="w-[40px] h-[40px] items-center justify-center">
@@ -57,9 +57,7 @@ const TodoList_Edit = () => {
   const [textDate, setDateText] = React.useState(
     new Date().toLocaleDateString()
   );
-  const [textTime, setTimeDate] = React.useState(
-    new Date().toLocaleTimeString()
-  );
+  const [textTime, setTimeDate] = React.useState("00:00");
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -153,7 +151,7 @@ const TodoList_Edit = () => {
           </View>
           {/* Phần phân loại */}
           <View className="pt-2 flex-row items-center">
-            <Text className="text-base mr-8">Phân loại</Text>
+            <Text className="text-base mr-4 mb-3">Phân loại</Text>
             <View className="justify-center items-center">
               <CategoryButton
                 label="profile"
@@ -202,7 +200,7 @@ const TodoList_Edit = () => {
             <View className="space-y-2 w-[50%] items-start">
               <Text className="text-base">Bật thông báo</Text>
               <Switch
-                trackColor={{ false: "grey", true: "green" }}
+                trackColor={{ false: "grey", true: "#3A4666" }}
                 thumbColor={isLocked ? "#f4f3f4" : "#f4f3f4"}
                 value={isLocked}
                 onValueChange={(newValue) => setIsLocked(newValue)}
