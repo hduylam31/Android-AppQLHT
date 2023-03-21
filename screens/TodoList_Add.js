@@ -20,12 +20,12 @@ import BottomBar from "./BottomBar.js";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
-    className={`p-1 mx-2 rounded-[8px] border-2  ${
+    className={`p-[1px] mx-2 rounded-[8px] border-2  ${
       selected ? "border-[#3A4666]" : "border-[#FFFFFF]"
     } ${label === "profile" ? "bg-[#DBECF6]" : ""}
       ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
       ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}}
-      ${label === "ellipsis1" ? "bg-[#FEF5D3]" : ""}`}
+      ${label === "ellipsis1" ? "bg-[#D5EFC6]" : ""}`}
     onPress={onPress}
   >
     <View className="w-[40px] h-[40px] items-center justify-center">
@@ -67,9 +67,7 @@ const TodoList_Add = () => {
   const [textDate, setDateText] = React.useState(
     new Date().toLocaleDateString()
   );
-  const [textTime, setTimeDate] = React.useState(
-    new Date().toLocaleTimeString()
-  );
+  const [textTime, setTimeDate] = React.useState("00:00");
 
   const handleAddingTodolist = async () => {
     console.log("Start adding");
@@ -157,7 +155,7 @@ const TodoList_Add = () => {
           </View>
           {/* Phần phân loại */}
           <View className="pt-2 flex-row items-center">
-            <Text className="text-base mr-8">Phân loại</Text>
+            <Text className="text-base mr-4 mb-3">Phân loại</Text>
             <View className="justify-center items-center">
               <CategoryButton
                 label="profile"
@@ -192,7 +190,7 @@ const TodoList_Add = () => {
             </View>
           </View>
           <View className="flex-row items-center">
-            <LockedView isNotified={isNotified}>
+            <LockedView isLocked={isLocked}>
               <Text className="text-base">Giờ</Text>
               <TouchableOpacity onPress={() => showMode("time")}>
                 <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
@@ -207,9 +205,9 @@ const TodoList_Add = () => {
               <Text className="text-base">Bật thông báo</Text>
               <Switch
                 trackColor={{ false: "grey", true: "green" }}
-                thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
-                value={isNotified}
-                onValueChange={(newValue) => setIsNotified(newValue)}
+                thumbColor={isLocked ? "#f4f3f4" : "#f4f3f4"}
+                value={isLocked}
+                onValueChange={(newValue) => setIsLocked(newValue)}
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               ></Switch>
             </View>
