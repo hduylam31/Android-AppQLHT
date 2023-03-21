@@ -9,11 +9,13 @@ import {
   Platform,
   Alert,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import TodolistService from "../service/TodolistService";
+import BottomBar from "./BottomBar";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
@@ -54,10 +56,36 @@ const TodoList_Edit = () => {
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState("date");
   const [show, setShow] = React.useState(false);
+  const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
+
   const [textDate, setDateText] = React.useState(
     new Date().toLocaleDateString()
   );
   const [textTime, setTimeDate] = React.useState("00:00");
+
+  const route = useRoute();
+  const {c_id,c_title,c_category, c_isNotified, c_hour, c_text , c_isCompleted} = route.params;
+
+  useEffect(()=>{
+    setTimeDate(c_hour);
+  }, [c_hour])
+
+  useEffect(()=>{
+    setTitle(c_title);
+  }, [c_title])
+
+  useEffect(()=>{
+    setSelectedCategory(c_category);
+  }, [c_category])
+
+  useEffect(()=>{
+    setValue(c_text);
+  }, [c_text])
+
+  useEffect(()=>{
+    setIsLocked(c_isNotified);
+  }, [c_isNotified])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -65,10 +93,35 @@ const TodoList_Edit = () => {
     });
   });
 
-  const [value, setValue] = useState("");
-
   const onChangeText = (text) => {
     setValue(text);
+  };
+
+  const handleUpdateTodoList = async () => {
+    console.log("Start update");
+    try {
+      // TodolistService.addTodolist
+      await TodolistService.updateTodolist(c_id,title,
+        selectedCategory,
+        isLocked,
+        textTime,
+        value,
+        c_isCompleted
+      );
+      navigation.navigate(BottomBar);
+    } catch (error) {
+      console.log("Fail due to: ", error);
+    }
+  };
+
+  const handleDeleteTodolist = async () => {
+    console.log("Start delete");
+    try {
+      await TodolistService.deleteTodolist(c_id);
+      navigation.navigate(BottomBar);
+    } catch (error) {
+      console.log("Fail due to: ", error);
+    }
   };
 
   const onChange = (event, selectedDate) => {
@@ -102,9 +155,7 @@ const TodoList_Edit = () => {
       [
         {
           text: "Đồng ý",
-          onPress: () => {
-            console.log("Yes Pressed"), navigation.goBack();
-          },
+          onPress: handleDeleteTodolist,
         },
         {
           text: "Hủy",
@@ -146,6 +197,8 @@ const TodoList_Edit = () => {
             <Text className="text-base">Tiêu đề</Text>
             <TextInput
               placeholder="Tiêu đề"
+              value={title}
+              onChangeText={(text) => setTitle(text)}
               className="w-[100%] h-12 bg-[#FFFFFF] text-base pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
             ></TextInput>
           </View>
@@ -233,7 +286,7 @@ const TodoList_Edit = () => {
             ></TextInput>
 
             <TouchableOpacity
-              onPress={{}}
+              onPress={handleUpdateTodoList}
               className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center"
             >
               <Text className="text-white text-center font-bold text-xl">
