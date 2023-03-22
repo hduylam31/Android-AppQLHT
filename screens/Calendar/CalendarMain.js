@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import CalendarService from "../../service/CalendarService";
+import { MoodleIcon } from "../../assets";
 
 const CalendarMain = () => {
   const [markedDates, setMarkedDates] = useState();
@@ -74,22 +75,31 @@ const CalendarMain = () => {
       <SafeAreaView className="bg-[#3A4666] flex-1">
         <View className="flex-row justify-between items-center h-[7%]">
           <TouchableOpacity>
-            <View className="mt-[7%] ml-[3%]">
+            <View className="mt-[7%] ml-4">
               <AntDesign name="bars" size={30} color="white" />
             </View>
           </TouchableOpacity>
           <View>
             <Text className="text-white text-xl">Chỉnh sửa công việc</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Login_Moodle");
+            }}
+            className="mr-4"
+          >
             {/* Chỗ để icon moodle */}
-            {/* <AntDesign name="delete" size={25} color="white" /> */}
+            <Animatable.Image
+              animation="fadeIn"
+              easing="ease-in-out"
+              source={MoodleIcon}
+            />
           </TouchableOpacity>
           {/* Phần tiêu đề */}
         </View>
 
         <Calendar
-          style={{ borderRadius: 10, elevation: 4, margin: 10 }}
+          style={{ borderRadius: 10, elevation: 4, margin: 20 }}
           markingType={"multi-dot"}
           markedDates={markedDates}
           onDayPress={(date) => {
