@@ -7,32 +7,35 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
-import records from "./Data.json";
 import moment from "moment";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
-
-const markedDates = {};
-
-records.forEach((record) => {
-  const date = moment(record.dateString).format("YYYY-MM-DD");
-  markedDates[date] = {
-    marked: true,
-    dots: [{ color: "red" }, { color: "green" }],
-    selected: true,
-    selectedColor: "#DBECF6",
-    selectedTextColor: "black",
-  };
-});
+import CalendarService from "../service/CalendarService";
 
 const Schedule = () => {
+  const [markedDates, setMarkedDates] = useState();
+  const markedDateJson = {};
   const navigation = useNavigation();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   });
+
+  useEffect(() => {
+    const loadCalendar = async () => {
+      try {
+        const calendarData = await CalendarService.loadAndProcessCalendar();
+        setMarkedDates(calendarData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    loadCalendar();
+  }, []);
+
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="bg-[#3A4666]">

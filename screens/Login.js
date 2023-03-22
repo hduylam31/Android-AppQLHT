@@ -49,25 +49,13 @@ const Login = () => {
 
   const handleLogin = () => {
     try {
-      CredentialService.handleLoginWithEmail(email, Password);
-      console.log("Login OK");
-    } catch (error) {
-      console.log("Login fail with: ", error);
-    }
-  };
-
-  // const handleGoogleLogin = () => {
-  //   try {
-  //     CredentialService.handleGoogleLogin();
-  //     console.log("Login OK");
-  //   } catch (error) {
-  //     console.log("Login fail with: ", error);
-  //   }
-  // };
-
-  const handleFbLogin = () => {
-    try {
-      CredentialService.handleFbLogin();
+      let account;
+      if(!email.includes("gmail.com")){
+        account = email + "@gmail.com";
+      }else{
+        account = email;
+      }
+      CredentialService.handleLoginWithEmail(account, Password);
       console.log("Login OK");
     } catch (error) {
       console.log("Login fail with: ", error);
@@ -160,7 +148,7 @@ const Login = () => {
               <View className="w-[25%] h-[1px] bg-[#F8F7FA] items-center"></View>
             </View>
             <View className="self-center w-[40%] h-[10%] bg-[#F8F7FA] mt-[10%] rounded-2xl flex-row justify-center items-center space-x-4">
-              <TouchableOpacity onPress={handleFbLogin}>
+              <TouchableOpacity>
                 <View>
                   <Animatable.Image source={Face} />
                 </View>
