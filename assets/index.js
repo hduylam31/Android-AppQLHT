@@ -7,3 +7,4 @@ export { default as favicon } from "./favicon.png";
 export { default as splash } from "./splash.png";
 export { default as icon2 } from "./icon.png";
 export { default as forgotpw } from "./ForgotPW.png";
+export { default as moodleLogin } from "./moodleLogin.png";

@@ -54,10 +54,11 @@ const Schedule = () => {
           </TouchableOpacity>
           {/* Phần tiêu đề */}
         </View>
+        <View className="h-10"></View>
 
-        <View>
+        <View className="absolute w-full mt-[25%]">
           <Calendar
-            style={{ borderRadius: 10, elevation: 4, margin: 40 }}
+            style={{ borderRadius: 10, elevation: 4, margin: 30 }}
             markingType={"multi-dot"}
             markedDates={markedDates}
             onDayPress={(date) => {

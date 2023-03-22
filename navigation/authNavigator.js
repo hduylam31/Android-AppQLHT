@@ -15,6 +15,7 @@ import ToDoListScreen from "../screens/ToDoList";
 import BottomBar from "../screens/BottomBar";
 import TodoList_Add from "../screens/TodoList_Add";
 import TodoList_Edit from "../screens/TodoList_Edit";
+import LoginMoodle from "../screens/Login_Moodle";
 
 const Auth = createNativeStackNavigator();
 
@@ -99,6 +100,14 @@ export default function AuthStack() {
       <Auth.Screen
         name="BottomBar"
         component={BottomBar}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+      <Auth.Screen
+        name="LoginMoodle"
+        component={LoginMoodle}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,
