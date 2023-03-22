@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { GetStartedImage } from "../assets";
+import { GetStartedImage } from "../../assets";
 
 const GetStarted = () => {
   const navigation = useNavigation();

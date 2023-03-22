@@ -4,17 +4,17 @@ import {
   createStackNavigator,
   TransitionPresets,
 } from "@react-navigation/stack";
-import Login from "../screens/Login";
-import GetStarted from "../screens/GetStarted";
-import Register from "../screens/Register";
-import ForgotPassword from "../screens/ForgotPassword";
+import Login from "../screens/Authentication/Login";
+import GetStarted from "../screens/Authentication/GetStarted";
+import Register from "../screens/Authentication/Register";
+import ForgotPassword from "../screens/Authentication/ForgotPassword";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ForgotPassword_CheckMail from "../screens/ForgotPassword_CheckMail";
-import ForgotPassword_ChangePass from "../screens/ForgotPassword_ChangePass";
-import ToDoListScreen from "../screens/ToDoList";
+import ForgotPassword_CheckMail from "../screens/Authentication/ForgotPassword_CheckMail";
+import ForgotPassword_ChangePass from "../screens/Authentication/ForgotPassword_ChangePass";
+import ToDoListScreen from "../screens/ToDoList/ToDoListMain";
 import BottomBar from "../screens/BottomBar";
-import TodoList_Add from "../screens/TodoList_Add";
-import TodoList_Edit from "../screens/TodoList_Edit";
+import TodoList_Add from "../screens/ToDoList/TodoList_Add";
+import TodoList_Edit from "../screens/ToDoList/TodoList_Edit";
 
 const Auth = createNativeStackNavigator();
 

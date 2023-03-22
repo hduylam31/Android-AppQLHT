@@ -9,7 +9,7 @@ import {
 import React, { useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
-import { forgotpw } from "../assets";
+import { forgotpw } from "../../assets";
 import * as Animatable from "react-native-animatable";
 
 const ForgotPassword_CheckMail = () => {

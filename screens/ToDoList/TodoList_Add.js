@@ -14,9 +14,9 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import TodolistService from "../service/TodolistService.js";
-import ToDoListScreen from "./ToDoList.js";
-import BottomBar from "./BottomBar.js";
+import TodolistService from "../../service/TodolistService.js";
+import ToDoListScreen from "./ToDoListMain.js";
+import BottomBar from "../BottomBar.js";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
@@ -190,7 +190,7 @@ const TodoList_Add = () => {
             </View>
           </View>
           <View className="flex-row items-center">
-            <LockedView isLocked={isLocked}>
+            <LockedView isNotified={isNotified}>
               <Text className="text-base">Giờ</Text>
               <TouchableOpacity onPress={() => showMode("time")}>
                 <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
@@ -205,9 +205,9 @@ const TodoList_Add = () => {
               <Text className="text-base">Bật thông báo</Text>
               <Switch
                 trackColor={{ false: "grey", true: "green" }}
-                thumbColor={isLocked ? "#f4f3f4" : "#f4f3f4"}
-                value={isLocked}
-                onValueChange={(newValue) => setIsLocked(newValue)}
+                thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
+                value={isNotified}
+                onValueChange={(newValue) => setIsNotified(newValue)}
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               ></Switch>
             </View>

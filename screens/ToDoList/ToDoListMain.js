@@ -6,14 +6,14 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import { todosData } from "../data/todos";
+import { todosData } from "../../data/todos";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { CheckBox } from "@rneui/themed";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
-import TodolistService from "../service/TodolistService";
+import TodolistService from "../../service/TodolistService";
 
 function toMinutes(time) {
   const [hours, minutes] = time.split(":").map(Number);

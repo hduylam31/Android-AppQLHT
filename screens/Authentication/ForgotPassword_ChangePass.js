@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { ClockImage } from "../assets";
+import { ClockImage } from "../../assets";
 import { AntDesign } from "@expo/vector-icons";
 
 const ForgotPassword_ChangePass = () => {

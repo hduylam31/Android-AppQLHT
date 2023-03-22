@@ -23,9 +23,9 @@ import {
   Google,
   Face,
   ClockImage,
-} from "../assets";
-import CredentialService from "../service/CredentialService";
-import { auth } from "../firebase";
+} from "../../assets";
+import CredentialService from "../../service/CredentialService";
+import { auth } from "../../firebase";
 
 const Login = () => {
   const navigation = useNavigation();
@@ -50,9 +50,9 @@ const Login = () => {
   const handleLogin = () => {
     try {
       let account;
-      if(!email.includes("gmail.com")){
+      if (!email.includes("gmail.com")) {
         account = email + "@gmail.com";
-      }else{
+      } else {
         account = email;
       }
       CredentialService.handleLoginWithEmail(account, Password);
