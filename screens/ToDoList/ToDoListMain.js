@@ -16,6 +16,9 @@ import * as Animatable from "react-native-animatable";
 import TodolistService from "../../service/TodolistService";
 
 function toMinutes(time) {
+  if (time === "") {
+    return null;
+  }
   const [hours, minutes] = time.split(":").map(Number);
   return hours * 60 + minutes;
 }

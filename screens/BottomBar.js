@@ -7,7 +7,7 @@ import ToDoListScreen from "./ToDoList/ToDoListMain";
 import AccountMain from "./Account/AccountMain";
 import NoteList from "./NoteList/NoteList";
 import Pomodoro from "./Pomodoro/Pomodoro";
-import CalendarMain from "./Calender/CalendarMain";
+import CalendarMain from "./Calendar/CalendarMain";
 
 const Tab = createBottomTabNavigator();
 

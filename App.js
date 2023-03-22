@@ -5,7 +5,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import AuthStack from "./navigation/authNavigator";
-import Calendar from "./screens/Calender/CalendarMain";
 
 const Stack = createNativeStackNavigator();
 
