@@ -5,7 +5,26 @@ import moment from "moment";
 
 class CalendarService{
 
-    static async getToken(username, password) {
+    static async isMoodleActive(){
+      try {
+        const user = auth.currentUser;
+        const userRef = doc(collection(firestore, 'user'), user.uid);
+        const userDoc = await getDoc(userRef);
+        if(userDoc.exists()){
+          const moodleToken = userDoc.data().moodleToken;
+          if(moodleToken){
+            return true;
+          }else{
+            return false;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
+
+    static async getMoodleToken(username, password) {
         console.log('get token');
         url = 'https://courses.fit.hcmus.edu.vn/login/token.php?username='+username
                 +'&password='+password+'&service=moodle_mobile_app';
@@ -19,8 +38,56 @@ class CalendarService{
         if(data.errorcode === "invalidlogin"){
             return "error";
         }
-        console.log("response: ", data);
+
         return data.token;
+    }
+
+    static async processLoginMoodle(username, password){
+      try {
+        const moodleToken = await this.getMoodleToken(username, password);
+        if(moodleToken !== "error"){
+          console.log("Login moodle OK with token: ", moodleToken);
+          //save token to user colection
+          const user = auth.currentUser;
+          const userRef = doc(collection(firestore, 'user'), user.uid);
+          updateDoc(userRef, {moodleToken: moodleToken})
+          //load calendar moodle data
+          await this.saveCalendarData(moodleToken);
+          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+          return 1;
+        }else{
+          alert("Sai thông tin đăng nhập!");
+          return 0;
+        }
+      } catch (error) {
+        console.log(error);
+        alert("Lỗi");
+        return -1;
+      }
+    }
+
+    static async saveCalendarData(token){
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1; 
+      const currentYear = currentDate.getFullYear();
+      const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+      const nextMonthYear = currentMonth === 12 ? currentYear + 1 : currentYear;
+
+      let currentMonthEvent = await this.fetchCalendarData(token, 11, 2022);
+      let nextMonthEvent = await this.fetchCalendarData(token, 12, 2022);
+      const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);
+
+      const user = auth.currentUser;
+      const userRef = doc(collection(firestore, 'calendar'), user.uid);
+      const userDoc = await getDoc(userRef);
+      if(userDoc.exists()){
+        updateDoc(userRef, { "calendar.moodle": twoMonthEvents});
+      }else{
+        setDoc(userRef, { "calendar.moodle": twoMonthEvents});
+      }
+
+      
+      console.log("done save two month calendar function OKK" );
     }
 
     static async fetchCalendarData(token, month, year){

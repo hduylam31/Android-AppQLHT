@@ -29,12 +29,22 @@ const CalendarMain = () => {
 
   const [calendar, setCalendar] = useState([]);
   const [selectDay, setSelectDay] = useState([]);
+  const [isMoodleActive, setIsMoodleActive] = useState();
 
   const loadCalendarData = async () => {
     const calendar = await CalendarService.loadCalendarData();
     setCalendar(calendar);
     console.log("list2: ", calendar);
   };
+
+  useEffect(() => {
+    const isMoodleActive = async () => {
+        const moodleActive = await CalendarService.isMoodleActive();
+        setIsMoodleActive(moodleActive);
+        console.log("Moodle active: ", calendar);
+    };
+    isMoodleActive();
+  }, [])
 
   useEffect(() => {
     loadCalendarData();

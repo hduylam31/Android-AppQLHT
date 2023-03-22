@@ -15,14 +15,21 @@ import { useNavigation } from "@react-navigation/native";
 import { moodleLogin } from "../../assets";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
+import CalendarService from "../../service/CalendarService";
 
 const Login_Moodle = () => {
   const navigation = useNavigation();
 
-  const [email, setEmail] = React.useState("");
-  const [Password, setPassword] = React.useState("");
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
-  const handleLogin = () => {};
+  const handleLogin = async () => {
+    const status = await CalendarService.processLoginMoodle(username, password);
+    console.log("status: ", status);
+    if(status === 1){ //1 = ok, 0 = sai mật khẩu, -1 = lỗi
+      console.log("Navigate giúp t");
+    }
+  };
 
   const handlePress = () => {
     Keyboard.dismiss();
@@ -60,13 +67,13 @@ const Login_Moodle = () => {
           <View className="w-42 h-60 bg-white rounded-2xl mx-6 mt-10 flex justify-center items-center space-y-6">
             <TextInput
               placeholder="Tài khoản"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
+              value={username}
+              onChangeText={(text) => setUsername(text)}
               className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4"
             ></TextInput>
             <TextInput
               placeholder="Mật khẩu"
-              value={Password}
+              value={password}
               onChangeText={(text) => setPassword(text)}
               secureTextEntry
               className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4"
