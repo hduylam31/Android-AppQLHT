@@ -26,8 +26,13 @@ const Login_Moodle = () => {
   const handleLogin = async () => {
     const status = await CalendarService.processLoginMoodle(username, password);
     console.log("status: ", status);
-    if(status === 1){ //1 = ok, 0 = sai mật khẩu, -1 = lỗi
-      console.log("Navigate giúp t");
+    if (status === 1) {
+      //1 = ok, 0 = sai mật khẩu, -1 = lỗi
+      navigation.navigate("BottomBar");
+    } else if (status === 0) {
+      console.log("Sai mat khau");
+    } else {
+      console.log("Loi");
     }
   };
 

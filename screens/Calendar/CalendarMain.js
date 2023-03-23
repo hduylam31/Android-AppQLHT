@@ -39,12 +39,12 @@ const CalendarMain = () => {
 
   useEffect(() => {
     const isMoodleActive = async () => {
-        const moodleActive = await CalendarService.isMoodleActive();
-        setIsMoodleActive(moodleActive);
-        console.log("Moodle active: ", calendar);
+      const moodleActive = await CalendarService.isMoodleActive();
+      setIsMoodleActive(moodleActive);
+      console.log("Moodle active: ", calendar);
     };
     isMoodleActive();
-  }, [])
+  }, []);
 
   useEffect(() => {
     loadCalendarData();
@@ -63,7 +63,19 @@ const CalendarMain = () => {
   }, []);
 
   renderItem = ({ item, index }) => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("Calendar_Edit");
+        //   id: item.id,
+        //   title: item.title,
+        //   category: item.category,
+        //   isNotified: item.isNotified,
+        //   hour: item.hour,
+        //   text: item.text,
+        //   isCompleted: item.isCompleted,
+        // });
+      }}
+    >
       <Animatable.View
         animation="slideInLeft"
         delay={index * 10}
@@ -82,44 +94,45 @@ const CalendarMain = () => {
 
   return (
     <TouchableWithoutFeedback>
-      <SafeAreaView className="bg-[#3A4666] flex-1">
-        <View className="flex-row justify-between items-center h-[7%]">
-          <TouchableOpacity>
-            <View className="mt-[7%] ml-4">
-              <AntDesign name="bars" size={30} color="white" />
+      <SafeAreaView className="flex-1">
+        <View className="bg-[#3A4666] h-[60%]">
+          <View className="flex-row justify-between items-center h-[10%] mt-2">
+            <TouchableOpacity>
+              <View className="ml-4">
+                <AntDesign name="bars" size={32} color="white" />
+              </View>
+            </TouchableOpacity>
+            <View>
+              <Text className="text-white text-xl">Chỉnh sửa công việc</Text>
             </View>
-          </TouchableOpacity>
-          <View>
-            <Text className="text-white text-xl">Chỉnh sửa công việc</Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Login_Moodle");
+              }}
+              className="mr-4"
+            >
+              {/* Chỗ để icon moodle */}
+              <Animatable.Image
+                animation="fadeIn"
+                easing="ease-in-out"
+                source={MoodleIcon}
+              />
+            </TouchableOpacity>
+            {/* Phần tiêu đề */}
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Login_Moodle");
+
+          <Calendar
+            style={{ borderRadius: 10, elevation: 4, margin: 15 }}
+            markingType={"multi-dot"}
+            markedDates={markedDates}
+            onDayPress={(date) => {
+              setSelectDay(date);
+              console.log(date);
             }}
-            className="mr-4"
-          >
-            {/* Chỗ để icon moodle */}
-            <Animatable.Image
-              animation="fadeIn"
-              easing="ease-in-out"
-              source={MoodleIcon}
-            />
-          </TouchableOpacity>
-          {/* Phần tiêu đề */}
+          />
         </View>
-
-        <Calendar
-          style={{ borderRadius: 10, elevation: 4, margin: 20 }}
-          markingType={"multi-dot"}
-          markedDates={markedDates}
-          onDayPress={(date) => {
-            setSelectDay(date);
-            console.log(date);
-          }}
-        />
-
         <View className="flex-1 bg-[#F1F5F9]">
-          <View className="w-[94%] h-[38%] bg-white rounded-2xl mx-[3%] mt-[5%] flex flex-row items-center">
+          <View className="w-[94%] h-[36%] bg-white rounded-2xl mx-[3%] mt-[3%] flex flex-row items-center">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -133,7 +146,7 @@ const CalendarMain = () => {
               renderItem={this.renderItem}
             />
           </View>
-          <View className="w-[94%] h-[38%] bg-white rounded-2xl mx-[3%] mt-[5%] flex flex-row items-center">
+          <View className="w-[94%] h-[36%] bg-white rounded-2xl mx-[3%] mt-[3%] flex flex-row items-center">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -149,13 +162,13 @@ const CalendarMain = () => {
           </View>
         </View>
         <TouchableOpacity
-          // onPress={() => {
-          //   navigation.navigate("TodoList_Add");
-          // }}
+          onPress={() => {
+            navigation.navigate("Calendar_Add");
+          }}
           className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         >
           <Text className="text-white text-center font-bold text-ls">
-            Thêm công việc
+            Thêm sự kiện
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
