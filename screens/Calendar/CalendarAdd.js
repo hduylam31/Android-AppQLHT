@@ -14,12 +14,17 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CalendarService from "../../service/CalendarService";
+import BottomBar from "../BottomBar";
 
 const Calendar_Add = () => {
   const navigation = useNavigation();
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState("date");
   const [show, setShow] = React.useState(false);
+  const [title, setTitle] = useState();
+  const [content, setContent] = useState();
+
   const [textDate, setDateText] = React.useState(
     new Date().toLocaleDateString()
   );
@@ -32,12 +37,6 @@ const Calendar_Add = () => {
       headerShown: false,
     });
   });
-
-  const [value, setValue] = useState("");
-
-  const onChangeText = (text) => {
-    setValue(text);
-  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -67,6 +66,16 @@ const Calendar_Add = () => {
     Keyboard.dismiss();
   };
 
+  const handleAddingUserCalendar = async () => {
+    console.log("Start addingg");
+    try {
+      await CalendarService.addUserCalendar(title,textDate,textTime,content);
+      navigation.navigate(BottomBar);
+    } catch (error) {
+      console.log("Fail due too: ", error);
+    }
+  }
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -90,6 +99,8 @@ const Calendar_Add = () => {
             <TextInput
               placeholder="Tiêu đề"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
+              value={title}
+              onChangeText= {(text) => setTitle(text)}
             ></TextInput>
           </View>
 
@@ -135,13 +146,16 @@ const Calendar_Add = () => {
               placeholder="Nội dung"
               className="w-[100%] h-[55%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
               multiline={true}
-              value={value}
+              value={content}
               numberOfLines={4}
-              onChangeText={onChangeText}
+              onChangeText={(text) => setContent(text)}
               textAlignVertical="top"
             ></TextInput>
             {/* Nút thêm */}
-            <TouchableOpacity className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center">
+            <TouchableOpacity 
+              onPress={handleAddingUserCalendar}
+              className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center"
+            >
               <Text className="text-white text-center font-bold text-xl">
                 Thêm sự kiện
               </Text>

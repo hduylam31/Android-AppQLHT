@@ -31,30 +31,30 @@ const CalendarMain = () => {
   const [selectDay, setSelectDay] = useState([]);
   const [isMoodleActive, setIsMoodleActive] = useState();
 
-  const loadCalendarData = async () => {
-    const calendar = await CalendarService.loadCalendarData();
-    setCalendar(calendar);
-    console.log("list2: ", calendar);
-  };
-
   useEffect(() => {
     const isMoodleActive = async () => {
       const moodleActive = await CalendarService.isMoodleActive();
       setIsMoodleActive(moodleActive);
-      console.log("Moodle active: ", calendar);
+      console.log("Moodle activee: ", moodleActive);
     };
     isMoodleActive();
   }, []);
 
   useEffect(() => {
+    const loadCalendarData = async () => {
+      const calendar = await CalendarService.loadCalendarData();
+      setCalendar(calendar);
+    };
     loadCalendarData();
   }, []);
 
   useEffect(() => {
     const loadCalendar = async () => {
       try {
-        const calendarData = await CalendarService.loadAndProcessCalendar();
-        setMarkedDates(calendarData);
+        const calendar = await CalendarService.loadCalendarData();
+        setCalendar(calendar);
+        const calendarProcess = await CalendarService.processDataForCalendar(calendar);
+        setMarkedDates(calendarProcess);
       } catch (error) {
         console.log(error);
       }
@@ -65,15 +65,15 @@ const CalendarMain = () => {
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Calendar_Edit");
-        //   id: item.id,
-        //   title: item.title,
-        //   category: item.category,
-        //   isNotified: item.isNotified,
-        //   hour: item.hour,
-        //   text: item.text,
-        //   isCompleted: item.isCompleted,
-        // });
+        navigation.navigate("Calendar_Edit", {
+          c_id: item.id,
+          c_title: item.title,
+          c_dateString: item.dateString,
+          c_timeString: item.timeString,
+          c_description: item.description,
+          c_isNotified: item.isNotified,
+          c_isMoodle: item.isMoodle
+        });
       }}
     >
       <Animatable.View
