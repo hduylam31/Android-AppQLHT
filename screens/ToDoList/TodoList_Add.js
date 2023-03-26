@@ -37,7 +37,7 @@ const CategoryButton = ({ label, onPress, selected }) => (
 const LockedView = ({ isNotified, children }) => {
   return (
     <View
-      className={`space-y-2 w-[50%] ${isNotified ? "" : "opacity-40"}`}
+      className={`w-[50%] ${isNotified ? "" : "opacity-40"}`}
       pointerEvents={isNotified ? "auto" : "none"}
     >
       {children}
@@ -189,9 +189,12 @@ const TodoList_Add = () => {
               <Text className="text-sm">Khác</Text>
             </View>
           </View>
+          <View className="flex-row items-center justify-between">
+            <Text className="text-base">Giờ</Text>
+            <Text className="text-base mr-[20%]">Bật thông báo</Text>
+          </View>
           <View className="flex-row items-center">
             <LockedView isNotified={isNotified}>
-              <Text className="text-base">Giờ</Text>
               <TouchableOpacity onPress={() => showMode("time")}>
                 <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
                   <View className="flex-row justify-center items-center space-x-4">
@@ -201,17 +204,15 @@ const TodoList_Add = () => {
                 </View>
               </TouchableOpacity>
             </LockedView>
-            <View className="space-y-2 w-[50%] items-start">
-              <Text className="text-base">Bật thông báo</Text>
+            <View className="items-start w-[50%]">
               <Switch
-                trackColor={{ false: "grey", true: "green" }}
+                trackColor={{ false: "grey", true: "#3A4666" }}
                 thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
                 value={isNotified}
                 onValueChange={(newValue) => setIsNotified(newValue)}
-                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
               ></Switch>
             </View>
-
             {show && (
               <DateTimePicker
                 testID="dateTimePicker"
