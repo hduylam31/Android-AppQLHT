@@ -105,7 +105,7 @@ const ToDoListScreen = () => {
       <Animatable.View
         animation="slideInLeft"
         delay={index * 10}
-        className="w-full h-12 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
+        className="w-full h-14 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
       >
         <View className="flex flex-row ">
           <CategoryView label={item.category} />
@@ -131,7 +131,7 @@ const ToDoListScreen = () => {
           checkedIcon="checkbox-marked"
           uncheckedIcon="checkbox-blank-outline"
           checkedColor="#4A3780"
-          size={19}
+          size={20}
         />
       </Animatable.View>
     </TouchableOpacity>
@@ -154,7 +154,7 @@ const ToDoListScreen = () => {
         animation="slideInLeft"
         delay={index * 10}
         style={{ flex: 1 }}
-        className="w-full h-12 border-b-[#f3f2f4] border-b-2 my-1 flex-row justify-between content-center"
+        className="w-full h-14 border-b-[#f3f2f4] border-b-2 my-1 flex-row justify-between content-center"
       >
         <View className="flex flex-row opacity-50 ">
           <CategoryView label={item.category} />
@@ -175,7 +175,7 @@ const ToDoListScreen = () => {
           checkedIcon="checkbox-marked"
           uncheckedIcon="checkbox-blank-outline"
           checkedColor="#4A3780"
-          size={19}
+          size={20}
         />
       </Animatable.View>
     </TouchableOpacity>

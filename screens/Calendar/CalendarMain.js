@@ -10,7 +10,7 @@ import {
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
 import moment from "moment";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import CalendarService from "../../service/CalendarService";
@@ -18,8 +18,8 @@ import { MoodleIcon } from "../../assets";
 
 const CalendarMain = () => {
   const [markedDates, setMarkedDates] = useState();
-  const markedDateJson = {};
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,27 +40,28 @@ const CalendarMain = () => {
     isMoodleActive();
   }, []);
 
-  useEffect(() => {
-    const loadCalendarData = async () => {
+  const loadCalendar = async () => {
+    try {
       const calendar = await CalendarService.loadCalendarData();
       setCalendar(calendar);
-    };
-    loadCalendarData();
+      const calendarProcess = await CalendarService.processDataForCalendar(
+        calendar
+      );
+      setMarkedDates(calendarProcess);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loadCalendar();
   }, []);
 
   useEffect(() => {
-    const loadCalendar = async () => {
-      try {
-        const calendar = await CalendarService.loadCalendarData();
-        setCalendar(calendar);
-        const calendarProcess = await CalendarService.processDataForCalendar(calendar);
-        setMarkedDates(calendarProcess);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    loadCalendar();
-  }, []);
+    if (isFocused) {
+      loadCalendar();
+    }
+  }, [isFocused]);
 
   renderItem = ({ item, index }) => (
     <TouchableOpacity
@@ -72,7 +73,7 @@ const CalendarMain = () => {
           c_timeString: item.timeString,
           c_description: item.description,
           c_isNotified: item.isNotified,
-          c_isMoodle: item.isMoodle
+          c_isMoodle: item.isMoodle,
         });
       }}
     >
@@ -81,13 +82,15 @@ const CalendarMain = () => {
         delay={index * 10}
         className="w-full h-12 h-min-full border-b-[#f3f2f4] border-b-2 my-1 flex flex-row content-center"
       >
-        <Text className={"text-base font-semibold "}>{item.time}</Text>
+        <View className={"w-[10%] flex ml-[3%]"}>
+          <Text className={"text-sm font-semibold "}>{item.timeString}</Text>
+        </View>
         <View
-          className={`w-[2%] h-[85%] mx-[5%]  ${
+          className={`w-[2%] h-[85%] mx-[3%]  ${
             item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
           }`}
         ></View>
-        <Text className={"text-base font-semibold"}>{item.title}</Text>
+        <Text className={"text-sm font-semibold"}>{item.title}</Text>
       </Animatable.View>
     </TouchableOpacity>
   );
@@ -122,6 +125,7 @@ const CalendarMain = () => {
           </View>
 
           <Calendar
+            enableSwipeMonths={true}
             style={{ borderRadius: 10, elevation: 4, margin: 15 }}
             markingType={"multi-dot"}
             markedDates={markedDates}
