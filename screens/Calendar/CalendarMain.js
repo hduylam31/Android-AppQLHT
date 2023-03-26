@@ -58,27 +58,10 @@ const CalendarMain = () => {
   }, []);
 
   useEffect(() => {
-<<<<<<< HEAD
-    const loadCalendar = async () => {
-      try {
-        const calendar = await CalendarService.loadCalendarData();
-        setCalendar(calendar);
-        const calendarProcess = await CalendarService.processDataForCalendar(
-          calendar
-        );
-        setMarkedDates(calendarProcess);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    loadCalendar();
-  }, []);
-=======
     if (isFocused) {
       loadCalendar();
     }
   }, [isFocused]);
->>>>>>> ee8b994f63a5f90b688a52cbeccb7dfa1d507f08
 
   renderItem = ({ item, index }) => (
     <TouchableOpacity
@@ -124,21 +107,9 @@ const CalendarMain = () => {
           <View>
             <Text className="text-white text-xl">Lịch</Text>
           </View>
-<<<<<<< HEAD
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("Login_Moodle");
-=======
-
-          <Calendar
-            enableSwipeMonths={true}
-            style={{ borderRadius: 10, elevation: 4, margin: 15 }}
-            markingType={"multi-dot"}
-            markedDates={markedDates}
-            onDayPress={(date) => {
-              setSelectDay(date);
-              console.log(date);
->>>>>>> ee8b994f63a5f90b688a52cbeccb7dfa1d507f08
             }}
             className="mr-4"
           >
@@ -151,10 +122,10 @@ const CalendarMain = () => {
           </TouchableOpacity>
           {/* Phần tiêu đề */}
         </View>
-        <View className="h-[15%]"></View>
+        <View className="h-[22%]"></View>
         <View className="flex-1 bg-[#F1F5F9]">
           <View className="h-[35%]"></View>
-          <View className="w-[94%] h-[24%] bg-white rounded-2xl mx-[3%] mt-[7%] flex flex-row items-center">
+          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[7%] flex flex-row items-center">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -168,7 +139,7 @@ const CalendarMain = () => {
               renderItem={this.renderItem}
             />
           </View>
-          <View className="w-[94%] h-[24%] bg-white rounded-2xl mx-[3%] mt-[4%] flex flex-row items-center">
+          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[4%] flex flex-row items-center">
             <FlatList
               data={calendar.filter((item) => {
                 if (
