@@ -5,24 +5,30 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   TextInput,
-  ScrollView,
-  Button,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
-import { useNavigation, useRoute} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
 import BottomBar from "../BottomBar";
 
+const LockedView = ({ isMoodle, children }) => {
+  return (
+    <View pointerEvents={isMoodle === "false" ? "auto" : "none"}>
+      {children}
+    </View>
+  );
+};
+
 const Calendar_Edit = () => {
   const navigation = useNavigation();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isNotified, setIsNotified] = useState("");
-
 
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState("date");
@@ -69,7 +75,15 @@ const Calendar_Edit = () => {
   };
 
   const route = useRoute();
-  const {c_id, c_title, c_dateString, c_timeString, c_description, c_isNotified, c_isMoodle} = route.params;
+  const {
+    c_id,
+    c_title,
+    c_dateString,
+    c_timeString,
+    c_description,
+    c_isNotified,
+    c_isMoodle,
+  } = route.params;
 
   useEffect(() => {
     const loadData = () => {
@@ -80,7 +94,7 @@ const Calendar_Edit = () => {
       setDateText(dateFormat);
       setContent(c_description);
       setIsNotified(c_isNotified);
-    }
+    };
     loadData();
   }, []);
 
@@ -88,14 +102,35 @@ const Calendar_Edit = () => {
     console.log("Start update");
     try {
       // TodolistService.addTodolist
-      await CalendarService.updateUserCalendar(
-        {c_id, title, textDate, textTime,
-        content, isNotified, content, c_isMoodle}
-      );
+      await CalendarService.updateUserCalendar({
+        c_id,
+        title,
+        textDate,
+        textTime,
+        content,
+        isNotified,
+        content,
+        c_isMoodle,
+      });
       navigation.navigate(BottomBar);
     } catch (error) {
       console.log("Fail due to: ", error);
     }
+  };
+
+  const AlertDelete = () => {
+    Alert.alert("Xóa danh mục", "Xóa danh mục khỏi danh sách sự kiện này ?", [
+      {
+        text: "Đồng ý",
+        // onPress: handleDeleteTodolist,
+      },
+      {
+        text: "Hủy",
+        onPress: () => {
+          console.log("No Pressed");
+        },
+      },
+    ]);
   };
 
   return (
@@ -111,58 +146,67 @@ const Calendar_Edit = () => {
           <View>
             <Text className="text-white text-xl">Cập nhật sự kiện</Text>
           </View>
-          <View className="w-25 h-25"></View>
-          {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên */}
-          {/* Phần tiêu đề */}
-        </View>
-        <View className="bg-[#F1F5F9] flex-1 px-5 pt-[4%] space-y-4 h-full">
-          <View className="space-y-2">
-            <Text className="text-base">Tiêu đề</Text>
-            <TextInput
-              placeholder="Tiêu đề"
-              value={title}
-              onChangeText={(text) => setTitle(text)}
-              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
-            ></TextInput>
-          </View>
-
-          <View className="flex-row items-center">
-            <View className="space-y-2 w-[50%]">
-              <Text className="text-base">Ngày</Text>
-              <TouchableOpacity onPress={() => showMode("date")}>
-                <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                  <View className="flex-row justify-center items-center space-x-4">
-                    <Text className="text-base text-gray-400">{textDate}</Text>
-                    <AntDesign name="calendar" size={25} color="black" />
-                  </View>
-                </View>
+          <View className="w-25 h-25">
+            {c_isMoodle === "false" && (
+              <TouchableOpacity onPress={AlertDelete}>
+                <AntDesign name="delete" size={25} color="white" />
               </TouchableOpacity>
-            </View>
-            <View className="pl-4 space-y-2 w-[100%]">
-              <Text className="text-base">Giờ</Text>
-              <TouchableOpacity onPress={() => showMode("time")}>
-                <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                  <View className="flex-row justify-center items-center space-x-4">
-                    <Text className="text-base text-gray-400">{textTime}</Text>
-                    <AntDesign name="clockcircleo" size={25} color="black" />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            {show && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode={mode}
-                is24Hour={true}
-                display="default"
-                onChange={onChange}
-              />
             )}
           </View>
-          {/* Nội dung phần ghi chú */}
-          <View className="space-y-2">
+        </View>
+
+        <View className="bg-[#F1F5F9] flex-1 px-5 pt-[4%] space-y-4 h-full">
+          <LockedView isMoodle={c_isMoodle}>
+            <View className="space-y-2">
+              <Text className="text-base">Tiêu đề</Text>
+              <TextInput
+                placeholder="Tiêu đề"
+                value={title}
+                onChangeText={(text) => setTitle(text)}
+                className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
+              ></TextInput>
+            </View>
+
+            <View className="flex-row items-center">
+              <View className="space-y-2 w-[50%]">
+                <Text className="text-base">Ngày</Text>
+                <TouchableOpacity onPress={() => showMode("date")}>
+                  <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
+                    <View className="flex-row justify-center items-center space-x-4">
+                      <Text className="text-base text-gray-400">
+                        {textDate}
+                      </Text>
+                      <AntDesign name="calendar" size={25} color="black" />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View className="pl-4 space-y-2 w-[100%]">
+                <Text className="text-base">Giờ</Text>
+                <TouchableOpacity onPress={() => showMode("time")}>
+                  <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
+                    <View className="flex-row justify-center items-center space-x-4">
+                      <Text className="text-base text-gray-400">
+                        {textTime}
+                      </Text>
+                      <AntDesign name="clockcircleo" size={25} color="black" />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode={mode}
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChange}
+                />
+              )}
+            </View>
+            {/* Nội dung phần ghi chú */}
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
@@ -170,18 +214,19 @@ const Calendar_Edit = () => {
               multiline={true}
               value={content}
               numberOfLines={4}
-              onChangeText={value => setContent(value)}
+              onChangeText={(value) => setContent(value)}
               textAlignVertical="top"
             ></TextInput>
             {/* Nút thêm */}
-            <TouchableOpacity 
-            onPress={handleUpdateCalendar}
-            className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center">
+            <TouchableOpacity
+              onPress={handleUpdateCalendar}
+              className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center mt-5"
+            >
               <Text className="text-white text-center font-bold text-xl">
                 Lưu
               </Text>
             </TouchableOpacity>
-          </View>
+          </LockedView>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

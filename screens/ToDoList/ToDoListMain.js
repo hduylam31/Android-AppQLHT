@@ -25,13 +25,13 @@ function toMinutes(time) {
 
 const CategoryView = ({ label }) => (
   <View
-    className={`ml-5 w-11 h-11 rounded-full mx-3 flex items-center justify-center 
+    className={`w-8 h-8 rounded-full mx-3 mt-1 flex items-center justify-center 
     ${label === "profile" ? "bg-[#DBECF6]" : ""}
     ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
     ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}}
     ${label === "ellipsis1" ? "bg-[#FEF5D3]" : ""}`}
   >
-    <AntDesign name={label} size={25} color="black" />
+    <AntDesign name={label} size={18} color="black" />
   </View>
 );
 const ToDoListScreen = () => {
@@ -105,15 +105,15 @@ const ToDoListScreen = () => {
       <Animatable.View
         animation="slideInLeft"
         delay={index * 10}
-        className="w-full h-16 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
+        className="w-full h-14 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
       >
         <View className="flex flex-row ">
           <CategoryView label={item.category} />
           <View>
-            <Text className={"text-lg font-semibold"}>{item.title}</Text>
-            <Text className={"font-normal "}>{item.hour}</Text>
+            <Text className={"text-base font-semibold"}>{item.title}</Text>
+            <Text className={"text-xs font-normal "}>{item.hour}</Text>
           </View>
-          <View className={"ml-1 mt-2"}>
+          <View className={"mt-1 ml-1"}>
             {item.isNotified && (
               <MaterialCommunityIcons
                 name="bell-ring-outline"
@@ -131,7 +131,7 @@ const ToDoListScreen = () => {
           checkedIcon="checkbox-marked"
           uncheckedIcon="checkbox-blank-outline"
           checkedColor="#4A3780"
-          size={32}
+          size={20}
         />
       </Animatable.View>
     </TouchableOpacity>
@@ -154,15 +154,17 @@ const ToDoListScreen = () => {
         animation="slideInLeft"
         delay={index * 10}
         style={{ flex: 1 }}
-        className="w-full h-16 border-b-[#f3f2f4] border-b-2 my-1 flex-row justify-between content-center"
+        className="w-full h-14 border-b-[#f3f2f4] border-b-2 my-1 flex-row justify-between content-center"
       >
         <View className="flex flex-row opacity-50 ">
           <CategoryView label={item.category} />
           <View>
-            <Text className={"text-lg font-semibold line-through "}>
+            <Text className={"text-base font-semibold line-through "}>
               {item.title}
             </Text>
-            <Text className={"font-normal line-through "}>{item.hour}</Text>
+            <Text className={"text-xs font-normal line-through "}>
+              {item.hour}
+            </Text>
           </View>
         </View>
 
@@ -173,7 +175,7 @@ const ToDoListScreen = () => {
           checkedIcon="checkbox-marked"
           uncheckedIcon="checkbox-blank-outline"
           checkedColor="#4A3780"
-          size={32}
+          size={20}
         />
       </Animatable.View>
     </TouchableOpacity>
@@ -182,7 +184,7 @@ const ToDoListScreen = () => {
     <SafeAreaView className="flex-1">
       {/* Header */}
       <View className="flex-1 bg-[#3A4666]">
-        <View className="flex-row justify-between mt-[7%] mx-[5%] ">
+        <View className="flex-row justify-between my-[7%] mx-[5%] ">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <MaterialCommunityIcons
               name="dots-vertical"
@@ -190,6 +192,11 @@ const ToDoListScreen = () => {
               color="white"
             />
           </TouchableOpacity>
+          <View className="flex items-center justify-center">
+            <Text className="text-white text-2xl font-bold text-center">
+              Danh sách công việc
+            </Text>
+          </View>
           <TouchableOpacity>
             <MaterialCommunityIcons
               name="calendar-month-outline"
@@ -197,11 +204,6 @@ const ToDoListScreen = () => {
               color="white"
             />
           </TouchableOpacity>
-        </View>
-        <View className="flex items-center justify-center h-[10]%">
-          <Text className="text-white text-3xl font-bold text-center">
-            Danh sách công việc
-          </Text>
         </View>
 
         <View className="flex-1 bg-[#F1F5F9]">
@@ -214,10 +216,10 @@ const ToDoListScreen = () => {
             />
           </View>
           {/* Công việc đã hòan thành */}
-          <Text className="text-lg font-semibold ml-[5%] my-[5%]">
+          <Text className="text-lg font-semibold ml-[5%] my-[3%]">
             Hoàn thành
           </Text>
-          <View className="w-[90%] h-[30%] bg-white rounded-2xl mx-[5%] flex flex-row items-center">
+          <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] flex flex-row items-center">
             <FlatList
               data={todos.filter((todo) => todo.isCompleted)}
               keyExtractor={(item) => item.id.toString()}
@@ -230,9 +232,9 @@ const ToDoListScreen = () => {
         onPress={() => {
           navigation.navigate("TodoList_Add");
         }}
-        className="w-[80%] h-[7%] absolute bottom-5 ml-[10%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+        className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
       >
-        <Text className="text-white text-center font-bold text-xl">
+        <Text className="text-white text-center font-bold text-base">
           Thêm công việc
         </Text>
       </TouchableOpacity>
