@@ -171,7 +171,7 @@ const CalendarMain = () => {
           }}
           className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         >
-          <Text className="text-white text-center font-bold text-ls">
+          <Text className="text-white text-center font-bold text-base">
             Thêm sự kiện
           </Text>
         </TouchableOpacity>

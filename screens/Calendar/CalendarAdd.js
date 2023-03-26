@@ -16,6 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
 import BottomBar from "../BottomBar";
+import moment from "moment";
 
 const Calendar_Add = () => {
   const navigation = useNavigation();
@@ -25,12 +26,12 @@ const Calendar_Add = () => {
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
 
+  const currentDate = new Date().toLocaleDateString();
+
   const [textDate, setDateText] = React.useState(
-    new Date().toLocaleDateString()
+    moment(currentDate, "M/DD/YYYY").format("DD/M/YYYY")
   );
-  const [textTime, setTimeDate] = React.useState(
-    new Date().toLocaleTimeString()
-  );
+  const [textTime, setTimeDate] = React.useState("00:00");
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -69,12 +70,12 @@ const Calendar_Add = () => {
   const handleAddingUserCalendar = async () => {
     console.log("Start addingg");
     try {
-      await CalendarService.addUserCalendar(title,textDate,textTime,content);
+      await CalendarService.addUserCalendar(title, textDate, textTime, content);
       navigation.navigate(BottomBar);
     } catch (error) {
       console.log("Fail due too: ", error);
     }
-  }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
@@ -100,7 +101,7 @@ const Calendar_Add = () => {
               placeholder="Tiêu đề"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
               value={title}
-              onChangeText= {(text) => setTitle(text)}
+              onChangeText={(text) => setTitle(text)}
             ></TextInput>
           </View>
 
@@ -152,7 +153,7 @@ const Calendar_Add = () => {
               textAlignVertical="top"
             ></TextInput>
             {/* Nút thêm */}
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={handleAddingUserCalendar}
               className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center"
             >
