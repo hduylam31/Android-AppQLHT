@@ -97,46 +97,35 @@ const CalendarMain = () => {
 
   return (
     <TouchableWithoutFeedback>
-      <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-[60%]">
-          <View className="flex-row justify-between items-center h-[10%] mt-2">
-            <TouchableOpacity>
-              <View className="ml-4">
-                <AntDesign name="bars" size={32} color="white" />
-              </View>
-            </TouchableOpacity>
-            <View>
-              <Text className="text-white text-xl">Chỉnh sửa công việc</Text>
+      <SafeAreaView className="bg-[#3A4666] flex-1">
+        <View className="flex-row justify-between items-center h-[7%]">
+          <TouchableOpacity>
+            <View className="mt-[7%] ml-4">
+              <AntDesign name="bars" size={30} color="white" />
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Login_Moodle");
-              }}
-              className="mr-4"
-            >
-              {/* Chỗ để icon moodle */}
-              <Animatable.Image
-                animation="fadeIn"
-                easing="ease-in-out"
-                source={MoodleIcon}
-              />
-            </TouchableOpacity>
-            {/* Phần tiêu đề */}
+          </TouchableOpacity>
+          <View>
+            <Text className="text-white text-xl">Lịch</Text>
           </View>
-
-          <Calendar
-            enableSwipeMonths={true}
-            style={{ borderRadius: 10, elevation: 4, margin: 15 }}
-            markingType={"multi-dot"}
-            markedDates={markedDates}
-            onDayPress={(date) => {
-              setSelectDay(date);
-              console.log(date);
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Login_Moodle");
             }}
-          />
+            className="mr-4"
+          >
+            {/* Chỗ để icon moodle */}
+            <Animatable.Image
+              animation="fadeIn"
+              easing="ease-in-out"
+              source={MoodleIcon}
+            />
+          </TouchableOpacity>
+          {/* Phần tiêu đề */}
         </View>
+        <View className="h-[22%]"></View>
         <View className="flex-1 bg-[#F1F5F9]">
-          <View className="w-[94%] h-[36%] bg-white rounded-2xl mx-[3%] mt-[3%] flex flex-row items-center">
+          <View className="h-[35%]"></View>
+          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[7%] flex flex-row items-center">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -150,7 +139,7 @@ const CalendarMain = () => {
               renderItem={this.renderItem}
             />
           </View>
-          <View className="w-[94%] h-[36%] bg-white rounded-2xl mx-[3%] mt-[3%] flex flex-row items-center">
+          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[4%] flex flex-row items-center">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -175,6 +164,22 @@ const CalendarMain = () => {
             Thêm sự kiện
           </Text>
         </TouchableOpacity>
+
+        <View className="absolute w-full mt-[20%]">
+          <Calendar
+            style={{
+              borderRadius: 10,
+              elevation: 4,
+              margin: 20,
+            }}
+            markingType={"multi-dot"}
+            markedDates={markedDates}
+            onDayPress={(date) => {
+              setSelectDay(date);
+              console.log(date);
+            }}
+          />
+        </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
