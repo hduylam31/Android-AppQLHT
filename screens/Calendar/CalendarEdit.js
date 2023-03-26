@@ -9,14 +9,21 @@ import {
   Button,
   Platform,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useLayoutEffect, useState, useEffect } from "react";
+import { useNavigation, useRoute} from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CalendarService from "../../service/CalendarService";
+import BottomBar from "../BottomBar";
 
 const Calendar_Edit = () => {
   const navigation = useNavigation();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [isNotified, setIsNotified] = useState("");
+
+
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState("date");
   const [show, setShow] = React.useState(false);
@@ -32,12 +39,6 @@ const Calendar_Edit = () => {
       headerShown: false,
     });
   });
-
-  const [value, setValue] = useState("");
-
-  const onChangeText = (text) => {
-    setValue(text);
-  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -67,6 +68,36 @@ const Calendar_Edit = () => {
     Keyboard.dismiss();
   };
 
+  const route = useRoute();
+  const {c_id, c_title, c_dateString, c_timeString, c_description, c_isNotified, c_isMoodle} = route.params;
+
+  useEffect(() => {
+    const loadData = () => {
+      setTitle(c_title);
+      setTimeDate(c_timeString);
+      const date = new Date(c_dateString);
+      const dateFormat = date.toLocaleDateString("vi-VN");
+      setDateText(dateFormat);
+      setContent(c_description);
+      setIsNotified(c_isNotified);
+    }
+    loadData();
+  }, []);
+
+  const handleUpdateCalendar = async () => {
+    console.log("Start update");
+    try {
+      // TodolistService.addTodolist
+      await CalendarService.updateUserCalendar(
+        {c_id, title, textDate, textTime,
+        content, isNotified, content, c_isMoodle}
+      );
+      navigation.navigate(BottomBar);
+    } catch (error) {
+      console.log("Fail due to: ", error);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -78,7 +109,7 @@ const Calendar_Edit = () => {
             </View>
           </TouchableOpacity>
           <View>
-            <Text className="text-white text-xl">Thêm sự kiện mới</Text>
+            <Text className="text-white text-xl">Cập nhật sự kiện</Text>
           </View>
           <View className="w-25 h-25"></View>
           {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên */}
@@ -89,6 +120,8 @@ const Calendar_Edit = () => {
             <Text className="text-base">Tiêu đề</Text>
             <TextInput
               placeholder="Tiêu đề"
+              value={title}
+              onChangeText={(text) => setTitle(text)}
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
             ></TextInput>
           </View>
@@ -135,13 +168,15 @@ const Calendar_Edit = () => {
               placeholder="Nội dung"
               className="w-[100%] h-[55%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
               multiline={true}
-              value={value}
+              value={content}
               numberOfLines={4}
-              onChangeText={onChangeText}
+              onChangeText={value => setContent(value)}
               textAlignVertical="top"
             ></TextInput>
             {/* Nút thêm */}
-            <TouchableOpacity className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center">
+            <TouchableOpacity 
+            onPress={handleUpdateCalendar}
+            className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center">
               <Text className="text-white text-center font-bold text-xl">
                 Lưu
               </Text>
