@@ -111,7 +111,7 @@ const CalendarMain = () => {
             onPress={() => {
               navigation.navigate("Login_Moodle");
             }}
-            className="mr-4"
+            className="mr-4 relative"
           >
             {/* Chỗ để icon moodle */}
             <Animatable.Image
@@ -119,13 +119,26 @@ const CalendarMain = () => {
               easing="ease-in-out"
               source={MoodleIcon}
             />
+
+            {/* Phần này là Icon tích xanh và chấm than hãy code thêm trạng thái */}
+
+            {/* {status === "success" && (
+        <View className="absolute right-0 bottom-0">
+              <AntDesign name="checkcircle" size={10} color="green" />
+            </View>
+      )}
+      {status === "failure" && (
+        <View className="absolute right-0 bottom-0">
+              <AntDesign name="exclamationcircle" size={10} color="#FBB500" />
+            </View>
+      )} */}
           </TouchableOpacity>
           {/* Phần tiêu đề */}
         </View>
-        <View className="h-[22%]"></View>
+        <View className="h-[12%]"></View>
         <View className="flex-1 bg-[#F1F5F9]">
-          <View className="h-[35%]"></View>
-          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[7%] flex flex-row items-center">
+          <View className="h-[43%]"></View>
+          <View className="w-[94%] h-[20%] bg-white rounded-2xl mx-[3%] mt-[7%] flex flex-row items-center">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -139,7 +152,7 @@ const CalendarMain = () => {
               renderItem={this.renderItem}
             />
           </View>
-          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[4%] flex flex-row items-center">
+          <View className="w-[94%] h-[20%] bg-white rounded-2xl mx-[3%] mt-[4%] flex flex-row items-center">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -153,17 +166,17 @@ const CalendarMain = () => {
               renderItem={this.renderItem}
             />
           </View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Calendar_Add");
+            }}
+            className="w-[70%] h-[7%] bottom-2 self-center bg-[#3A4666] rounded-2xl items-center justify-center mt-4"
+          >
+            <Text className="text-white text-center font-bold text-ls">
+              Thêm sự kiện
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Calendar_Add");
-          }}
-          className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
-        >
-          <Text className="text-white text-center font-bold text-ls">
-            Thêm sự kiện
-          </Text>
-        </TouchableOpacity>
 
         <View className="absolute w-full mt-[20%]">
           <Calendar
