@@ -37,8 +37,7 @@ const CalendarMain = () => {
         const moodleActive = await CalendarService.isMoodleActive();
         setIsMoodleActive(moodleActive);
         console.log("Moodle activee: ", moodleActive);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     isMoodleActive();
   }, []);
@@ -157,7 +156,7 @@ const CalendarMain = () => {
         </View>
         <View className="h-[12%]"></View>
         <View className="flex-1 bg-[#F1F5F9]">
-          <View className="h-[38%]"></View>
+          <View className="h-[41%]"></View>
           <View className=" bg-white rounded-2xl mx-[3%] mt-[7%] flex-1 flex-row">
             <FlatList
               data={calendar.filter((item) => {
@@ -172,7 +171,7 @@ const CalendarMain = () => {
               renderItem={this.renderItem}
             />
           </View>
-          <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
+          <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row mb-[5%]">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -191,19 +190,19 @@ const CalendarMain = () => {
             onPress={() => {
               navigation.navigate("Calendar_Add");
             }}
-            className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+            className="w-[70%] h-[7%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
           >
-            <Text className="text-white text-center font-bold text-ls">
+            <Text className="text-white text-center font-bold text-base">
               Thêm sự kiện
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="absolute w-full mt-[15%]">
+        <View className="absolute w-full mt-[18%]">
           <Calendar
             style={{
               borderRadius: 10,
               elevation: 4,
-              margin: 15,
+              margin: 20,
             }}
             markingType={"multi-dot"}
             markedDates={markedDates}
