@@ -118,7 +118,6 @@ const ToDoListScreen = () => {
               >
                 {item.title}
               </Text>
-
               <View className={"mt-1 ml-1"}>
                 {item.isNotified && (
                   <MaterialCommunityIcons

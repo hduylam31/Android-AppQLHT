@@ -16,10 +16,10 @@ export default function App() {
   return (
     <TailwindProvider>
       <NavigationContainer>
-        {/* <AuthStack /> */}
-        <Stack.Navigator>
+        <AuthStack />
+        {/* /* <Stack.Navigator>
           <Stack.Screen name="Schecule" component={Login} />
-        </Stack.Navigator>
+        </Stack.Navigator> */}
       </NavigationContainer>
     </TailwindProvider>
   );

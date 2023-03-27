@@ -90,7 +90,7 @@ const CalendarMain = () => {
             item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
           }`}
         ></View>
-        <View className="w-[70%]">
+        <View className="w-[70%] flex-row">
           <Text
             numberOfLines={2}
             ellipsizeMode="tail"
@@ -98,15 +98,15 @@ const CalendarMain = () => {
           >
             {item.title}
           </Text>
-        </View>
-        <View className={"mt-1 ml-1"}>
-          {!item.isNotified && (
-            <MaterialCommunityIcons
-              name="bell-off-outline"
-              size={14}
-              color="black"
-            />
-          )}
+          <View className={"mt-1 ml-1"}>
+            {!item.isNotified && (
+              <MaterialCommunityIcons
+                name="bell-off-outline"
+                size={14}
+                color="black"
+              />
+            )}
+          </View>
         </View>
       </Animatable.View>
     </TouchableOpacity>
@@ -154,8 +154,8 @@ const CalendarMain = () => {
         </View>
         <View className="h-[12%]"></View>
         <View className="flex-1 bg-[#F1F5F9]">
-          <View className="h-[35%]"></View>
-          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[7%] flex flex-row items-center">
+          <View className="h-[38%]"></View>
+          <View className=" bg-white rounded-2xl mx-[3%] mt-[7%] flex-1 flex-row">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -169,7 +169,7 @@ const CalendarMain = () => {
               renderItem={this.renderItem}
             />
           </View>
-          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[4%] flex flex-row items-center">
+          <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -183,19 +183,19 @@ const CalendarMain = () => {
               renderItem={this.renderItem}
             />
           </View>
+          <View className="flex-1 h-[8%]"></View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Calendar_Add");
+            }}
+            className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          >
+            <Text className="text-white text-center font-bold text-ls">
+              Thêm sự kiện
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Calendar_Add");
-          }}
-          className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
-        >
-          <Text className="text-white text-center font-bold text-ls">
-            Thêm sự kiện
-          </Text>
-        </TouchableOpacity>
-
-        <View className="absolute w-full mt-[18%]">
+        <View className="absolute w-full mt-[15%]">
           <Calendar
             style={{
               borderRadius: 10,
