@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   TextInput,
+  Switch,
   ScrollView,
   Button,
   Platform,
@@ -12,6 +13,7 @@ import {
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
@@ -25,6 +27,7 @@ const Calendar_Add = () => {
   const [show, setShow] = React.useState(false);
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
+  const [isNotified, setIsNotified] = useState(true);
 
   const currentDate = new Date().toLocaleDateString();
 
@@ -104,7 +107,6 @@ const Calendar_Add = () => {
               onChangeText={(text) => setTitle(text)}
             ></TextInput>
           </View>
-
           <View className="flex-row items-center">
             <View className="space-y-2 w-[50%]">
               <Text className="text-base">Ngày</Text>
@@ -140,12 +142,22 @@ const Calendar_Add = () => {
               />
             )}
           </View>
+          <Text className="text-base -mb-3">Bật thông báo</Text>
+          <View className="items-start">
+            <Switch
+              trackColor={{ false: "grey", true: "#3A4666" }}
+              thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
+              value={isNotified}
+              onValueChange={(newValue) => setIsNotified(newValue)}
+              style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
+            />
+          </View>
           {/* Nội dung phần ghi chú */}
           <View className="space-y-2">
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-[55%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
+              className="w-[100%] h-[50%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
               multiline={true}
               value={content}
               numberOfLines={4}

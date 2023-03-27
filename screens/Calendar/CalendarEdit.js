@@ -7,6 +7,7 @@ import {
   TextInput,
   Platform,
   Alert,
+  Switch,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -206,11 +207,21 @@ const Calendar_Edit = () => {
                 />
               )}
             </View>
+            <Text className="text-base">Bật thông báo</Text>
+            <View className="items-start">
+              <Switch
+                trackColor={{ false: "grey", true: "#3A4666" }}
+                thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
+                value={isNotified}
+                onValueChange={(newValue) => setIsNotified(newValue)}
+                style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
+              />
+            </View>
             {/* Nội dung phần ghi chú */}
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-[55%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
+              className="w-[100%] h-[40%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
               multiline={true}
               value={content}
               numberOfLines={4}

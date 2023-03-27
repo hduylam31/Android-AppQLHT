@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
-import moment from "moment";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
@@ -80,7 +80,7 @@ const CalendarMain = () => {
       <Animatable.View
         animation="slideInLeft"
         delay={index * 10}
-        className="w-full h-12 h-min-full border-b-[#f3f2f4] border-b-2 my-1 flex flex-row content-center"
+        className="h-12 h-min-full border-b-[#f3f2f4] border-b-2 my-1 flex flex-row content-center"
       >
         <View className={"w-[10%] flex ml-[3%]"}>
           <Text className={"text-sm font-semibold "}>{item.timeString}</Text>
@@ -90,7 +90,24 @@ const CalendarMain = () => {
             item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
           }`}
         ></View>
-        <Text className={"text-sm font-semibold"}>{item.title}</Text>
+        <View className="w-[70%]">
+          <Text
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            className={"text-sm font-semibold"}
+          >
+            {item.title}
+          </Text>
+        </View>
+        <View className={"mt-1 ml-1"}>
+          {!item.isNotified && (
+            <MaterialCommunityIcons
+              name="bell-off-outline"
+              size={14}
+              color="black"
+            />
+          )}
+        </View>
       </Animatable.View>
     </TouchableOpacity>
   );
@@ -125,7 +142,7 @@ const CalendarMain = () => {
         <View className="h-[22%]"></View>
         <View className="flex-1 bg-[#F1F5F9]">
           <View className="h-[35%]"></View>
-          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[7%] flex flex-row items-center">
+          <View className=" bg-white rounded-2xl mx-[3%] mt-[7%] flex-1 flex-row">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -139,7 +156,7 @@ const CalendarMain = () => {
               renderItem={this.renderItem}
             />
           </View>
-          <View className="w-[94%] h-[23%] bg-white rounded-2xl mx-[3%] mt-[4%] flex flex-row items-center">
+          <View className="bg-white rounded-2xl mx-[3%] mt-[4%] mb-[14%] flex-1 flex-row">
             <FlatList
               data={calendar.filter((item) => {
                 if (
@@ -165,12 +182,12 @@ const CalendarMain = () => {
           </Text>
         </TouchableOpacity>
 
-        <View className="absolute w-full mt-[20%]">
+        <View className="absolute w-full mt-[18%]">
           <Calendar
             style={{
               borderRadius: 10,
               elevation: 4,
-              margin: 20,
+              margin: 15,
             }}
             markingType={"multi-dot"}
             markedDates={markedDates}

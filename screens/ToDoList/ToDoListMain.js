@@ -105,22 +105,32 @@ const ToDoListScreen = () => {
       <Animatable.View
         animation="slideInLeft"
         delay={index * 10}
-        className="w-full h-14 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
+        className="h-14 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
       >
-        <View className="flex flex-row ">
+        <View className="flex flex-row w-[82%]">
           <CategoryView label={item.category} />
-          <View>
-            <Text className={"text-base font-semibold"}>{item.title}</Text>
+          <View className="w-[70%]">
+            <View className="flex-row">
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                className={"text-base font-semibold"}
+              >
+                {item.title}
+              </Text>
+
+              <View className={"mt-1 ml-1"}>
+                {item.isNotified && (
+                  <MaterialCommunityIcons
+                    name="bell-ring-outline"
+                    size={14}
+                    color="black"
+                  />
+                )}
+              </View>
+            </View>
+
             <Text className={"text-xs font-normal "}>{item.hour}</Text>
-          </View>
-          <View className={"mt-1 ml-1"}>
-            {item.isNotified && (
-              <MaterialCommunityIcons
-                name="bell-ring-outline"
-                size={14}
-                color="black"
-              />
-            )}
           </View>
         </View>
 
@@ -156,13 +166,18 @@ const ToDoListScreen = () => {
         style={{ flex: 1 }}
         className="w-full h-14 border-b-[#f3f2f4] border-b-2 my-1 flex-row justify-between content-center"
       >
-        <View className="flex flex-row opacity-50 ">
+        <View className="flex flex-row w-[82%] opacity-50">
           <CategoryView label={item.category} />
-          <View>
-            <Text className={"text-base font-semibold line-through "}>
+          <View className="w-[70%]">
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              className={"text-base font-semibold line-through"}
+            >
               {item.title}
             </Text>
-            <Text className={"text-xs font-normal line-through "}>
+
+            <Text className={"text-xs font-normal line-through"}>
               {item.hour}
             </Text>
           </View>
@@ -208,7 +223,7 @@ const ToDoListScreen = () => {
 
         <View className="flex-1 bg-[#F1F5F9]">
           {/* Công việc hiện có  */}
-          <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] mt-[5%] flex flex-row items-center">
+          <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] mt-[5%] flex flex-row">
             <FlatList
               data={todos.filter((todo) => !todo.isCompleted)}
               keyExtractor={(item) => item.id.toString()}
@@ -219,7 +234,7 @@ const ToDoListScreen = () => {
           <Text className="text-lg font-semibold ml-[5%] my-[3%]">
             Hoàn thành
           </Text>
-          <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] flex flex-row items-center">
+          <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] flex flex-row">
             <FlatList
               data={todos.filter((todo) => todo.isCompleted)}
               keyExtractor={(item) => item.id.toString()}
