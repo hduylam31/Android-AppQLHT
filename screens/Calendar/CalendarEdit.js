@@ -119,11 +119,21 @@ const Calendar_Edit = () => {
     }
   };
 
+  const handleDeleteCalendar = async () => {
+    console.log("Start delete");
+    try {
+      await CalendarService.deleteCalendar(c_id);
+      navigation.navigate(BottomBar);
+    } catch (error) {
+      console.log("Fail due to: ", error);
+    }
+  };
+
   const AlertDelete = () => {
     Alert.alert("Xóa danh mục", "Xóa danh mục khỏi danh sách sự kiện này ?", [
       {
         text: "Đồng ý",
-        // onPress: handleDeleteTodolist,
+        onPress: handleDeleteCalendar,
       },
       {
         text: "Hủy",

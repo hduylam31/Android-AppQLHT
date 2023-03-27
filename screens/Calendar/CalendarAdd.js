@@ -27,7 +27,7 @@ const Calendar_Add = () => {
   const [show, setShow] = React.useState(false);
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
-  const [isNotified, setIsNotified] = useState(true);
+  const [isNotified, setIsNotified] = useState(false);
 
   const currentDate = new Date().toLocaleDateString();
 
@@ -73,7 +73,7 @@ const Calendar_Add = () => {
   const handleAddingUserCalendar = async () => {
     console.log("Start addingg");
     try {
-      await CalendarService.addUserCalendar(title, textDate, textTime, content);
+      await CalendarService.addUserCalendar(title, textDate, textTime, content, isNotified);
       navigation.navigate(BottomBar);
     } catch (error) {
       console.log("Fail due too: ", error);

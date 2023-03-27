@@ -7,6 +7,7 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  FieldValue,
 } from "firebase/firestore";
 import { auth, firestore } from "../firebase";
 import moment from "moment";
@@ -18,16 +19,15 @@ class CalendarService {
       const userRef = doc(collection(firestore, "user"), user.uid);
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
-        const moodleToken = userDoc.data().moodleToken;
-        if (moodleToken) {
-          return true;
-        } else {
-          return false;
+        const moodleStatus = userDoc.data().moodle.status;
+        if(moodleStatus){
+          return moodleStatus;
+        }else{
+          return 0;
         }
       }
     } catch (error) {
-      console.log(error);
-      return false;
+      return 0;
     }
   }
 
@@ -58,10 +58,11 @@ class CalendarService {
       const moodleToken = await this.getMoodleToken(username, password);
       if (moodleToken !== "error") {
         console.log("Login moodle OK with token: ", moodleToken);
+        console.log("haha");
         //save token to user colection
         const user = auth.currentUser;
         const userRef = doc(collection(firestore, "user"), user.uid);
-        updateDoc(userRef, { moodleToken: moodleToken });
+        updateDoc(userRef, { moodle: {token: moodleToken, status: 1} });
         //load calendar moodle data
         await this.saveCalendarData(moodleToken);
         console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -77,6 +78,25 @@ class CalendarService {
     }
   }
 
+  //Hàm reload moodle với token
+  static async reloadMoodleCalendar(){
+    try {
+      const user = auth.currentUser;
+      const userRef = doc(collection(firestore, "user"), user.uid);
+      const userDoc = await getDoc(userRef);
+      if (userDoc.exists()){
+        const moodle = userDoc.data().moodle;
+        const status = moodle.status;
+        if(status === 1){
+          const token = moodle.token;
+          this.saveCalendarData(token);
+        }
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
   static async saveCalendarData(token) {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
@@ -85,6 +105,18 @@ class CalendarService {
     const nextMonthYear = currentMonth === 12 ? currentYear + 1 : currentYear;
 
     let currentMonthEvent = await this.fetchCalendarData(token, 11, 2022);
+    if(currentMonthEvent === "error"){
+      console.log("error token");
+      const user = auth.currentUser;
+      const userRef = doc(collection(firestore, "user"), user.uid);
+      //Xóa token + cập nhật status moodle token
+      updateDoc(userRef, { moodle: {status: -1}  });
+      //Xóa tất cả dữ liệu moodle
+      const calendarRef = doc(collection(firestore, "calendar"), user.uid);
+      updateDoc(calendarRef, { "calendar.moodle": []});
+      return;
+    }
+
     let nextMonthEvent = await this.fetchCalendarData(token, 12, 2022);
     const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);
 
@@ -220,7 +252,7 @@ class CalendarService {
     }
   }
 
-  static async addUserCalendar(title, textDate, textTime, content) {
+  static async addUserCalendar(title, textDate, textTime, content, isNotified) {
     try {
       console.log("inside function");
 
@@ -241,20 +273,20 @@ class CalendarService {
         dateString: textDateProcessed,
         description: content,
         isMoodle: "false",
-        isNotified: true,
+        isNotified: isNotified,
       };
       //firebase adding
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
-        updateDoc(
+        await updateDoc(
           userRef,
           { "calendar.user": arrayUnion(item) },
           { merge: true }
         );
       } else {
-        setDoc(userRef, { calendar: { user: [item] } });
+        await setDoc(userRef, { calendar: { user: [item] } });
       }
     } catch (error) {
       console.log("error: ", error);
@@ -262,7 +294,6 @@ class CalendarService {
   }
 
   static async updateUserCalendar(elm) {
-    console.log("Update User Calendar: ", elm);
     const user = auth.currentUser;
 
     const timeArray = elm.textTime.split(":");
@@ -282,12 +313,9 @@ class CalendarService {
       description: elm.content,
       isMoodle: elm.c_isMoodle,
     };
-    console.log("update data: ", updatedData);
     try {
       const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
-      console.log("data: ", userDoc.data().calendar.user);
-      console.log("id: ", elm.c_id);
       const userCalendarData = userDoc.data().calendar.user;
       const itemIndex = userCalendarData.findIndex(
         (item) => item.id === elm.c_id
@@ -311,6 +339,36 @@ class CalendarService {
       console.log("error: ", error);
     }
   }
+
+  static deleteCalendar = async (id) => {
+    console.log("Delete Calendar: ", id);
+    try {
+      const user = auth.currentUser;
+      const userRef = doc(collection(firestore, 'calendar'), user.uid);
+      const userDoc = await getDoc(userRef);
+      const userCalendar = userDoc.data().calendar.user;
+      const updatedUserCalendar = userCalendar.filter(item => item.id !== id);
+      await updateDoc(userRef, { "calendar": {"user": updatedUserCalendar} }, {merge: true});
+      console.log("delete OKK");
+    } catch (error) {
+      console.log("error: ", error);
+    }
+};
+
+static deleteTodolist = async (id) => {
+  console.log("Delete Todolist");
+  const user = auth.currentUser;
+  const userRef = doc(collection(firestore, 'todolist'), user.uid);
+  try {
+      const userDoc = await getDoc(userRef);
+      const todolist = userDoc.data().todolist;
+      const updatedTodolist = todolist.filter(item => item.id !== id);
+      await updateDoc(userRef, { todolist: updatedTodolist }, {merge: true});
+      console.log("delete OKK");
+  } catch (error) {
+      console.log("error: ", error);
+  }
+};
 }
 
 export default CalendarService;

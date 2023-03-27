@@ -34,6 +34,7 @@ const Login = () => {
   const [Password, setPassword] = React.useState("");
   useEffect(() => {
     const unsubcribe = auth.onAuthStateChanged((user) => {
+      console.log("checkuser");
       if (user) {
         navigation.navigate("BottomBar");
       }
