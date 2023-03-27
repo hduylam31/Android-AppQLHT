@@ -1,12 +1,12 @@
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
 } from "react-native";
 import { todosData } from "../../data/todos";
+import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -196,10 +196,10 @@ const ToDoListScreen = () => {
     </TouchableOpacity>
   );
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-[#3A4666]">
       {/* Header */}
       <View className="flex-1 bg-[#3A4666]">
-        <View className="flex-row justify-between my-[7%] mx-[5%] ">
+        <View className="flex-row justify-between my-[7%] mx-[5%]">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <MaterialCommunityIcons
               name="dots-vertical"
