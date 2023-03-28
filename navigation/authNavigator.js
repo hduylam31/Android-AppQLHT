@@ -19,12 +19,31 @@ import Login_Moodle from "../screens/Authentication/Login_Moodle";
 import Calendar_Add from "../screens/Calendar/CalendarAdd";
 import Calendar_Edit from "../screens/Calendar/CalendarEdit";
 import Done_Moodle from "../screens/Authentication/DoneMoodle";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const Auth = createNativeStackNavigator();
 
 export default function AuthStack() {
+  const navigation = useNavigation();
+  useEffect(() => {
+    CheckIsExist();
+  }, []);
+  const CheckIsExist = async () => {
+    try {
+      const value = await AsyncStorage.getItem("GetStarted");
+      if (value === "true") {
+        await AsyncStorage.setItem("GetStarted", "true");
+      } else {
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <Auth.Navigator>
+    <Auth.Navigator initialRouteName="GetStarted">
       <Auth.Screen
         name="GetStarted"
         component={GetStarted}
@@ -33,7 +52,6 @@ export default function AuthStack() {
           ...TransitionPresets.RevealFromBottomAndroid,
         }}
       />
-
       <Auth.Screen
         name="Login"
         component={Login}

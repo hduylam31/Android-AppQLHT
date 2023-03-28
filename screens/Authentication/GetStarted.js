@@ -8,6 +8,8 @@ import {
 import React, { useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { GetStartedImage } from "../../assets";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 
 const GetStarted = () => {
   const navigation = useNavigation();
@@ -17,6 +19,22 @@ const GetStarted = () => {
       headerShown: false,
     });
   }, []);
+
+  useEffect(() => {
+    CheckIsExist();
+  }, []);
+  const CheckIsExist = async () => {
+    try {
+      const value = await AsyncStorage.getItem("GetStarted");
+      if (value === "true") {
+        await AsyncStorage.setItem("GetStarted", "true");
+      } else {
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 justify-between bg-[#23ACCD] pt-36">

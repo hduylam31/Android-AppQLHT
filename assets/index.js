@@ -9,3 +9,4 @@ export { default as icon2 } from "./icon.png";
 export { default as forgotpw } from "./ForgotPW.png";
 export { default as moodleLogin } from "./moodleLogin.png";
 export { default as MoodleIcon } from "./MoodleIcon.png";
+export { default as CatImage } from "./emoji-cat.png";
