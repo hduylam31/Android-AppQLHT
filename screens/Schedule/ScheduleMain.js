@@ -13,6 +13,7 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import { CatImage } from "../../assets";
+import ScheduleService from "../../service/ScheduleService";
 
 const ScheduleMain = () => {
   const [selectedTab, setSelectedTab] = useState(false);
@@ -20,89 +21,22 @@ const ScheduleMain = () => {
   const dayOfWeek = ["T.2", "T.3", "T.4", "T.5", "T.6", "T.7", "CN"];
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const data = [
-    {
-      id: "1",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "2",
-      title: "Nhập môn công nghệ thông",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "3",
-      title: "Nhập môn công nghệ",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "4",
-      title: "Nhập môn công",
-      DayOfWeek: "T.3",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "5",
-      title: "Nhập môn",
-      DayOfWeek: "T.3",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "6",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "7",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "8",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "9",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-  ];
+  let [data, setData] = useState([]);
+
+  const loadData = async () => {
+    try {
+      const scheduleData = await ScheduleService.loadScheduleData();
+      setData(scheduleData);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      loadData();
+    }
+  }, [isFocused]);
 
   const onDayPress = (day) => {
     console.log(day);
@@ -125,7 +59,15 @@ const ScheduleMain = () => {
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Schedule_Edit");
+        navigation.navigate("Schedule_Edit", {
+          c_id: item.id,
+          c_title: item.title,
+          c_DayOfWeek: item.DayOfWeek,
+          c_lessonStart: item.lessonStart,
+          c_lessonEnd: item.lessonEnd,
+          c_location: item.location,
+          c_note: item.note
+        });
       }}
     >
       <Animatable.View

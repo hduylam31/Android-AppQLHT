@@ -11,6 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
+import ScheduleService from "../../service/ScheduleService";
+import BottomBar from "../BottomBar";
 
 const Schedule_Add = () => {
   const navigation = useNavigation();
@@ -22,24 +24,34 @@ const Schedule_Add = () => {
 
   const data = [
     { key: "1", value: "1" },
-    { key: "2", value: "1.5" },
-    { key: "3", value: "2" },
-    { key: "4", value: "2.5" },
-    { key: "5", value: "3" },
-    { key: "6", value: "3.5" },
-    { key: "8", value: "4" },
-    { key: "9", value: "4.5" },
-    { key: "10", value: "5" },
-    { key: "11", value: "5.5" },
-    { key: "12", value: "6" },
-    { key: "13", value: "6.5" },
-    { key: "14", value: "7" },
-    { key: "15", value: "7.5" },
-    { key: "16", value: "8" },
-    { key: "17", value: "8.5" },
-    { key: "18", value: "9" },
-    { key: "19", value: "9.5" },
-    { key: "20", value: "10" },
+    { key: "1.5", value: "1.5" },
+    { key: "2", value: "2" },
+    { key: "2.5", value: "2.5" },
+    { key: "3", value: "3" },
+    { key: "3.5", value: "3.5" },
+    { key: "4", value: "4" },
+    { key: "4.5", value: "4.5" },
+    { key: "5", value: "5" },
+    { key: "5.5", value: "5.5" },
+    { key: "6", value: "6" },
+    { key: "6.5", value: "6.5" },
+    { key: "7", value: "7" },
+    { key: "7.5", value: "7.5" },
+    { key: "8", value: "8" },
+    { key: "8.5", value: "8.5" },
+    { key: "9", value: "9" },
+    { key: "9.5", value: "9.5" },
+    { key: "10", value: "10" },
+    { key: "10.5", value: "10.5" },
+    { key: "11", value: "11" },
+    { key: "11.5", value: "11.5" },
+    { key: "12", value: "12" },
+    { key: "12.5", value: "12.5" },
+    { key: "13", value: "13" },
+    { key: "13.5", value: "13.5" },
+    { key: "14", value: "14" },
+    { key: "14.5", value: "14.5" },
+    { key: "15", value: "15" },
   ];
 
   useLayoutEffect(() => {
@@ -52,15 +64,15 @@ const Schedule_Add = () => {
     Keyboard.dismiss();
   };
 
-  // const handleAddingUserSchedule = async () => {
-  //   console.log("Start addingg");
-  //   try {
-  //     await CalendarService.addUserCalendar(title, textDate, textTime, content);
-  //     navigation.navigate(BottomBar);
-  //   } catch (error) {
-  //     console.log("Fail due too: ", error);
-  //   }
-  // };
+  const handleAddingUserSchedule = async () => {
+    console.log("Start addingg");
+    try {
+      await ScheduleService.addSchedule({title, "DayOfWeek": "T.2", selectedLessonStart, selectedLessonEnd, location, note});
+      navigation.navigate(BottomBar);
+    } catch (error) {
+      console.log("Fail due to: ", error);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
@@ -112,7 +124,7 @@ const Schedule_Add = () => {
             ></TextInput>
           </View>
           <TouchableOpacity
-            // onPress={handleAddingUserSchedule}
+            onPress={handleAddingUserSchedule}
             className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[5%] w-[90%] ml-[5%"
           >
             <Text className="text-white text-center font-bold text-xl">
