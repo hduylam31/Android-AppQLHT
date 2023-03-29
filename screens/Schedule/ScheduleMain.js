@@ -123,9 +123,13 @@ const ScheduleMain = () => {
   );
 
   renderItem = ({ item, index }) => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("Schedule_Edit");
+      }}
+    >
       <Animatable.View
-        animation="slideInLeft"
+        animation="flipInX"
         delay={index * 10}
         className="mx-[5%] my-[3%] bg-white rounded-xl flex-1 flex-row content-center"
       >
@@ -229,23 +233,25 @@ const ScheduleMain = () => {
             </View>
           )}
         </View>
-        {!selectedTab && (
-          <View className="bg-[#F1F5F9] w-full h-[65%]">
-            <FlatList
-              data={data.filter(
-                (ScheduleData) => ScheduleData.DayOfWeek === selectedDayOfWeek
-              )}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={this.renderItem}
-              ListEmptyComponent={ListEmptyComponent}
-            />
-          </View>
-        )}
+        <View className="bg-[#F1F5F9] w-full h-full">
+          {!selectedTab && (
+            <View className="bg-[#F1F5F9] w-full h-[65%]">
+              <FlatList
+                data={data.filter(
+                  (ScheduleData) => ScheduleData.DayOfWeek === selectedDayOfWeek
+                )}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={this.renderItem}
+                ListEmptyComponent={ListEmptyComponent}
+              />
+            </View>
+          )}
+        </View>
 
         <TouchableOpacity
-          // onPress={() => {
-          //   navigation.navigate("Calendar_Add");
-          // }}
+          onPress={() => {
+            navigation.navigate("Schedule_Add");
+          }}
           className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         >
           <Text className="text-white text-center font-bold text-base">

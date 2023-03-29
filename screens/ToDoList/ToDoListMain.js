@@ -223,7 +223,7 @@ const ToDoListScreen = () => {
 
           <View className="flex-1 bg-[#F1F5F9]">
             {/* Công việc hiện có  */}
-            <View className="w-[90%] h-[45%] bg-white rounded-2xl mx-[5%] mt-[5%]">
+            <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] mt-[5%]">
               <FlatList
                 data={todos.filter((todo) => !todo.isCompleted)}
                 keyExtractor={(item) => item.id.toString()}

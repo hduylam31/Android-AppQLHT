@@ -62,7 +62,7 @@ const TodoList_Edit = () => {
   const [textDate, setDateText] = React.useState(
     new Date().toLocaleDateString()
   );
-  const [textTime, setTimeDate] = React.useState("00:00");
+  const [textTime, setTimeDate] = React.useState();
 
   const route = useRoute();
   const {
@@ -195,7 +195,7 @@ const TodoList_Edit = () => {
             </View>
           </TouchableOpacity>
           <View>
-            <Text className="text-white text-xl">Chỉnh sửa công việc</Text>
+            <Text className="text-white text-xl">Cập nhật công việc</Text>
           </View>
           <TouchableOpacity onPress={AlertDelete}>
             <AntDesign name="delete" size={25} color="white" />

@@ -4,10 +4,9 @@ import {
   View,
   Text,
   FlatList,
-  Modal,
   TouchableOpacity,
 } from "react-native";
-import { Calendar, CalendarList, Agenda } from "react-native-calendars";
+import { Calendar } from "react-native-calendars";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
