@@ -9,6 +9,7 @@ import Done_Moodle from "./screens/Authentication/DoneMoodle";
 import CalendarMain from "./screens/Calendar/CalendarMain";
 import Login_Moodle from "./screens/Authentication/Login_Moodle";
 import Login from "./screens/Authentication/Login";
+import ScheduleMain from "./screens/Schedule/ScheduleMain";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,10 +17,10 @@ export default function App() {
   return (
     <TailwindProvider>
       <NavigationContainer>
-        <AuthStack />
-        {/* /* <Stack.Navigator>
-          <Stack.Screen name="Schecule" component={Login} />
-        </Stack.Navigator> */}
+        {/* <AuthStack /> */}
+        <Stack.Navigator>
+          <Stack.Screen name="Schecule" component={ScheduleMain} />
+        </Stack.Navigator>
       </NavigationContainer>
     </TailwindProvider>
   );

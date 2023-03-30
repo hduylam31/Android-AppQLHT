@@ -97,7 +97,7 @@ const Login = () => {
               className="flex-1 bg-[#3A4666] mt-2 space-y-[4%]"
               style={{ borderTopLeftRadius: 47, borderTopRightRadius: 47 }}
             >
-              <View className="self-center w-[80%] h-[50%] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
+              <View className="self-center w-[85%] h-[50%] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
                 <TextInput
                   placeholder="Email"
                   value={email}

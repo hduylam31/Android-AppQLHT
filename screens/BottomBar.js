@@ -33,7 +33,7 @@ const BottomBar = () => {
           } else if (route.name === "ToDoList") {
             iconName = focused ? "file-check-outline" : "file-check";
           } else if (route.name === "Schedule") {
-            iconName = focused ? "clock-outline" : "clock";
+            iconName = focused ? "calendar-multiselect" : "calendar-text";
           } else if (route.name === "Account") {
             iconName = focused ? "account-outline" : "account";
           }

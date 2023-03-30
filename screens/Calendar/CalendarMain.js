@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useMemo } from "react";
 import {
   TouchableWithoutFeedback,
   View,
@@ -16,7 +16,7 @@ import * as Animatable from "react-native-animatable";
 import CalendarService from "../../service/CalendarService";
 import { MoodleIcon } from "../../assets";
 
-const CalendarMain = () => {
+const CalendarMain = (props) => {
   const [markedDates, setMarkedDates] = useState();
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -114,6 +114,21 @@ const CalendarMain = () => {
     </TouchableOpacity>
   );
 
+  // const [selectedDate, setSelectedDate] = useState("");
+  const [selected, setSelected] = useState();
+
+  const marked = useMemo(
+    () => ({
+      ...markedDates,
+      [selected]: {
+        selected: true,
+        selectedColor: "#393E36",
+        selectedTextColor: "white",
+      },
+    }),
+    [selected, markedDates]
+  );
+
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="bg-[#3A4666] flex-1">
@@ -202,14 +217,17 @@ const CalendarMain = () => {
             style={{
               borderRadius: 10,
               elevation: 4,
-              margin: 20,
+              margin: "5%",
             }}
             markingType={"multi-dot"}
-            markedDates={markedDates}
+            markedDates={marked}
             onDayPress={(date) => {
               setSelectDay(date);
-              console.log(date);
+              setSelected(date.dateString);
+              props.onDaySelect && props.onDaySelect(date);
             }}
+            // markedDates={marked}
+            {...props}
           />
         </View>
       </SafeAreaView>

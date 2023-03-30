@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  StyleSheet,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +14,15 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import { CatImage } from "../../assets";
+import {
+  Table,
+  TableWrapper,
+  Row,
+  Rows,
+  Col,
+} from "react-native-table-component";
+
+const colors = ["#FFC3B3", "#f6f8fa", "#DEDEDE"];
 
 const ScheduleMain = () => {
   const [selectedTab, setSelectedTab] = useState(false);
@@ -20,6 +30,50 @@ const ScheduleMain = () => {
   const dayOfWeek = ["T.2", "T.3", "T.4", "T.5", "T.6", "T.7", "CN"];
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+
+  this.state = {
+    tableHead: ["Tiết", "T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+    tableTitle: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+    tableData: [
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", ""],
+    ],
+  };
+
+  getCellColor = (rowIndex, colIndex) => {
+    // Check if the current cell is in the first row or column
+    // if (rowIndex === 0 || colIndex === 0) {
+    //   return "#FFC3B3"; // Set the background color to pink
+    // }
+    // // Check if the current cell is in an even row
+    // else
+    if (rowIndex % 2 === 0) {
+      return "#F5F5F5"; // Set the background color to light gray
+    }
+    // Check if the current cell is in an odd row
+    else if (rowIndex % 2 === 1) {
+      return "#FFFFFF"; // Set the background color to white
+    }
+  };
+
   const data = [
     {
       id: "1",
@@ -171,7 +225,7 @@ const ScheduleMain = () => {
 
   return (
     <TouchableWithoutFeedback>
-      <SafeAreaView className="flex-1">
+      <SafeAreaView className="flex-1 relative">
         <View className="h-[25%] bg-[#3A4666]">
           <View className="flex-row mt-[3%]">
             <TouchableOpacity>
@@ -242,6 +296,62 @@ const ScheduleMain = () => {
           </View>
         )}
 
+        {selectedTab && (
+          <View
+            style={{
+              weight: "80%",
+              padding: 16,
+              backgroundColor: "#ffffff",
+              borderWidth: 0.5,
+              borderRadius: 10,
+              position: "absolute",
+              width: "95%",
+            }}
+            className="self-center top-[18%]"
+          >
+            <View style={styles.container}>
+              <Row
+                data={state.tableHead}
+                flexArr={[2, 1, 1, 1, 1, 1, 1, 1, 1]}
+                style={{ height: 40, backgroundColor: "#FFC3B3" }}
+                textStyle={{ textAlign: "center" }}
+                borderStyle={{ borderWidth: 1, borderColor: "#DEDEDE" }}
+              />
+              <View className="flex-row">
+                <Col
+                  data={state.tableTitle}
+                  style={{ flex: 2.25, backgroundColor: "#f6f8fa" }}
+                  heightArr={20}
+                  textStyle={{ textAlign: "center" }}
+                  borderStyle={{ borderWidth: 1, borderColor: "#DEDEDE" }}
+                />
+                <View style={styles.container}>
+                  {state.tableData.map((rowData, rowIndex) => (
+                    <View key={rowIndex} style={styles.row}>
+                      {rowData.map((cellData, colIndex) => (
+                        <View
+                          key={colIndex}
+                          style={[
+                            styles.cell,
+                            {
+                              backgroundColor: this.getCellColor(
+                                rowIndex,
+                                colIndex
+                              ),
+                            },
+                          ]}
+                        >
+                          <Text>{cellData}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </View>
+          </View>
+        )}
+
         <TouchableOpacity
           // onPress={() => {
           //   navigation.navigate("Calendar_Add");
@@ -256,5 +366,23 @@ const ScheduleMain = () => {
     </TouchableWithoutFeedback>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 8,
+    backgroundColor: "#FFFFFF",
+  },
+  row: {
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF",
+    height: 15,
+  },
+  cell: {
+    flex: 1,
+    borderWidth: 0.5,
+    borderColor: "#DEDEDE",
+    textAlign: "center",
+  },
+});
 
 export default ScheduleMain;
