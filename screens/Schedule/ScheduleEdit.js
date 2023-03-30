@@ -64,7 +64,7 @@ const Schedule_Edit = () => {
       alert("Tiết bắt đầu phải bé hơn tiết kết thúc");
     }else{
       const removedCurrentLessonMap = await ScheduleService.removeCurrentLessonPair(dayLessonMap, DayOfWeek, Number(c_lessonStart), Number(c_lessonEnd));
-      const isLessonNotConflict = await ScheduleService.dayLessonValidate(removedCurrentLessonMap, DayOfWeek, Number(selectedLessonStart), Number(selectedLessonEnd), true);
+      const isLessonNotConflict = await ScheduleService.dayLessonValidate(removedCurrentLessonMap, DayOfWeek, Number(selectedLessonStart), Number(selectedLessonEnd));
       if(!isLessonNotConflict){
         alert("Vi phạm tiết đã có");
       }else{
