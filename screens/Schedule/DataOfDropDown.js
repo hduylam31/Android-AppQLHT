@@ -30,11 +30,11 @@ export const lessons = [
   { key: "15", value: "15" },
 ];
 export const weekdays = [
-  { key: "1", value: "T.2" },
-  { key: "2", value: "T.3" },
-  { key: "3", value: "T.4" },
-  { key: "4", value: "T.5" },
-  { key: "5", value: "T.6" },
-  { key: "6", value: "T.7" },
-  { key: "7", value: "CN" },
+  { key: "T.2", value: "T.2" },
+  { key: "T.3", value: "T.3" },
+  { key: "T.4", value: "T.4" },
+  { key: "T.5", value: "T.5" },
+  { key: "T.6", value: "T.6" },
+  { key: "T.7", value: "T.7" },
+  { key: "CN", value: "CN" }, 
 ];

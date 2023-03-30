@@ -30,6 +30,7 @@ const ScheduleMain = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   let [data, setData] = useState([]);
+  let [dayLessonMap, setDayLessonMap] = useState({});
 
   this.state = {
     tableHead: ["Tiết", "T2", "T3", "T4", "T5", "T6", "T7", "CN"],
@@ -74,10 +75,39 @@ const ScheduleMain = () => {
     }
   };
 
+  function getListLesson(data){
+    try {
+      let listLesson = {"T.2":[], "T.3":[], "T.4":[], "T.5":[],"T.6":[], 
+                      "T.7":[],"CN":[]};
+      let day;
+      let lessonStartNumber;
+      let lessonEndNumber;
+      //Add data
+      data.forEach(item => {
+        day = item.DayOfWeek;
+        lessonStartNumber = Number(item.lessonStart) ;
+        lessonEndNumber = Number(item.lessonEnd);
+        listLesson[day].push(...[lessonStartNumber, lessonEndNumber])
+      });
+      //Sort data by lesson in Day
+      Object.keys(listLesson).map(key => {
+        listLesson[key].sort((a, b) => {
+          return a-b;
+        });
+      })
+      return listLesson;
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  }
+
   const loadData = async () => {
     try {
       const scheduleData = await ScheduleService.loadScheduleData();
       setData(scheduleData);
+      let dayLessonMap = await getListLesson(scheduleData);
+      setDayLessonMap(dayLessonMap);
     } catch (error) {
       console.log("error: ", error);
     }
@@ -118,6 +148,7 @@ const ScheduleMain = () => {
           c_lessonEnd: item.lessonEnd,
           c_location: item.location,
           c_note: item.note,
+          dayLessonMap
         });
       }}
     >
@@ -298,7 +329,7 @@ const ScheduleMain = () => {
 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Schedule_Add");
+            navigation.navigate("Schedule_Add", dayLessonMap);
           }}
           className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         >

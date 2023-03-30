@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import React, { useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
@@ -18,6 +18,8 @@ import ScheduleService from "../../service/ScheduleService";
 
 const Schedule_Add = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const dayLessonMap = route.params;
   const [title, setTitle] = useState();
   const [DayOfWeek, setDayOfWeek] = useState();
   const [selectedLessonStart, setSelectedLessonStart] = useState("");
@@ -36,19 +38,29 @@ const Schedule_Add = () => {
   };
 
   const handleAddingUserSchedule = async () => {
-    console.log("Start addingg");
-    try {
-      await ScheduleService.addSchedule({
-        title,
-        DayOfWeek,
-        selectedLessonStart,
-        selectedLessonEnd,
-        location,
-        note,
-      });
-      navigation.navigate("BottomBar");
-    } catch (error) {
-      console.log("Fail due to: ", error);
+    console.log("Lesson Validate");
+    if(Number(selectedLessonStart) >= Number(selectedLessonEnd)){
+      alert("Tiết bắt đầu phải bé hơn tiết kết thúc");
+    }else{
+      const isLessonNotConflict = await ScheduleService.dayLessonValidate(dayLessonMap, DayOfWeek, Number(selectedLessonStart), Number(selectedLessonEnd));
+      if(!isLessonNotConflict){
+        alert("Vi phạm tiết đã có");
+      }else{
+        console.log("Start addingg");
+        try {
+          await ScheduleService.addSchedule({
+            title,
+            DayOfWeek,
+            selectedLessonStart,
+            selectedLessonEnd,
+            location,
+            note,
+          });
+          navigation.navigate("BottomBar");
+        } catch (error) {
+          console.log("Fail due to: ", error);
+        }
+      }
     }
   };
 

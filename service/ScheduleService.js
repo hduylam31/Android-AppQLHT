@@ -19,6 +19,9 @@ class ScheduleService{
         if (docSnap.exists()) {
           const jsonObject = docSnap.data().schedule;
           console.log(jsonObject);
+          jsonObject.sort((item1, item2)=>{
+            return Number(item1.lessonStart) - Number(item2.lessonStart);
+          })
           return jsonObject;
         } else {
           console.log("No such document!");
@@ -97,7 +100,7 @@ class ScheduleService{
         }
       }
 
-    static deleteCalendar = async (id) => {
+    static async deleteSchedule(id){
         console.log("Delete Schedule: ", id);
         try {
             const user = auth.currentUser;
@@ -111,6 +114,53 @@ class ScheduleService{
             console.log("error: ", error);
         }
     };
+
+    static async removeCurrentLessonPair(daySortedLessons, dayOfWeek, startLesson, endLesson){
+      try {
+        let dayOfWeekSortedLessons = daySortedLessons[dayOfWeek];
+        let indexStartLesson;
+        for(var i=0;i<dayOfWeekSortedLessons.length-1;i++){
+          if(dayOfWeekSortedLessons[i] == startLesson && dayOfWeekSortedLessons[i+1] == endLesson){
+            indexStartLesson = i;
+            break;
+          }
+        }
+        console.log("Old: ", daySortedLessons);
+        daySortedLessons[dayOfWeek].splice(indexStartLesson, 2);
+        console.log("Remove: ", daySortedLessons);
+        return daySortedLessons;
+      } catch (error) {
+        console.log(error);
+        return {};
+      }
+    }
+
+    static async dayLessonValidate(dayLessonMap, dayOfWeek, lessonStart, lessonEnd){
+      console.log("Valide Lession");
+      try {
+        const daySortedLessons = dayLessonMap[dayOfWeek];
+        const n = daySortedLessons.length;
+        if(n === 0) return true;
+        if(lessonEnd <= daySortedLessons[0]) return true;
+        if(daySortedLessons[n-1] <= lessonStart) return true;
+        for(var i=2; i < n ; i+=2){
+          if(lessonStart <  daySortedLessons[i]){
+            let beforeEndLesson = daySortedLessons[i-1]
+            let afterStartLesson = daySortedLessons[i];
+            if(lessonStart >= beforeEndLesson && lessonEnd <= afterStartLesson){
+              return true;
+            }else{
+              return false;
+            }
+          }
+        }
+        return false;
+      } catch (error) {
+        console.log("validate lesson error: ", error);
+        return false;
+      }
+
+    }
 }
 
 export default ScheduleService;

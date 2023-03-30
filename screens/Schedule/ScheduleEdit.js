@@ -33,6 +33,7 @@ const Schedule_Edit = () => {
     c_lessonEnd,
     c_location,
     c_note,
+    dayLessonMap
   } = route.params;
 
   useEffect(() => {
@@ -58,27 +59,40 @@ const Schedule_Edit = () => {
   };
 
   const handleUpdateSchedule = async () => {
-    console.log("Start update");
-    try {
-      await ScheduleService.updateSchedule({
-        c_id,
-        title,
-        selectedLessonStart,
-        selectedLessonEnd,
-        DayOfWeek,
-        location,
-        note,
-      });
-      navigation.navigate("BottomBar");
-    } catch (error) {
-      console.log("Fail due too: ", error);
+    console.log("Lesson Validate");
+    if(Number(selectedLessonStart) >= Number(selectedLessonEnd)){
+      alert("Tiết bắt đầu phải bé hơn tiết kết thúc");
+    }else{
+      const removedCurrentLessonMap = await ScheduleService.removeCurrentLessonPair(dayLessonMap, DayOfWeek, Number(c_lessonStart), Number(c_lessonEnd));
+      const isLessonNotConflict = await ScheduleService.dayLessonValidate(removedCurrentLessonMap, DayOfWeek, Number(selectedLessonStart), Number(selectedLessonEnd), true);
+      if(!isLessonNotConflict){
+        alert("Vi phạm tiết đã có");
+      }else{
+        console.log("Start update");
+        try {
+          await ScheduleService.updateSchedule({
+            c_id,
+            title,
+            selectedLessonStart,
+            selectedLessonEnd,
+            DayOfWeek,
+            location,
+            note,
+          });
+          navigation.navigate("BottomBar");
+        } catch (error) {
+          console.log("Fail due too: ", error);
+        }
+      }
     }
+
+    
   };
 
   const handleDeleteSchedule = async () => {
     console.log("Start delete");
     try {
-      await ScheduleService.deleteCalendar(c_id);
+      await ScheduleService.deleteSchedule(c_id);
       navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
@@ -168,7 +182,7 @@ const Schedule_Edit = () => {
                 data={weekdays}
                 value={DayOfWeek}
                 setSelected={setDayOfWeek}
-                placeholder="Thứ"
+                placeholder={DayOfWeek}
                 notFoundText="Không tìm thấy kết quả"
                 searchPlaceholder="Tìm kiếm"
                 maxHeight={200}
@@ -191,7 +205,7 @@ const Schedule_Edit = () => {
                   data={lessons}
                   value={selectedLessonStart}
                   setSelected={setSelectedLessonStart}
-                  placeholder="Từ"
+                  placeholder={selectedLessonStart}
                   notFoundText="Không tìm thấy kết quả"
                   searchPlaceholder="Tìm kiếm"
                   maxHeight={200}
@@ -210,7 +224,7 @@ const Schedule_Edit = () => {
                   data={lessons}
                   value={selectedLessonEnd}
                   setSelected={setSelectedLessonEnd}
-                  placeholder="Đến"
+                  placeholder={selectedLessonEnd}
                   notFoundText="Không tìm thấy kết quả"
                   searchPlaceholder="Tìm kiếm"
                   maxHeight={200}
