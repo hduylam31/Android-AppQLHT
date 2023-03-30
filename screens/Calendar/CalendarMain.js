@@ -129,6 +129,8 @@ const CalendarMain = (props) => {
     [selected, markedDates]
   );
 
+  console.log(isMoodleActive);
+
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="bg-[#3A4666] flex-1">
@@ -156,16 +158,16 @@ const CalendarMain = (props) => {
 
             {/* Phần này là Icon tích xanh và chấm than hãy code thêm trạng thái */}
 
-            {/* {status === "success" && (
-        <View className="absolute right-0 bottom-0">
-              <AntDesign name="checkcircle" size={10} color="green" />
-            </View>
-      )}
-      {status === "failure" && (
-        <View className="absolute right-0 bottom-0">
-              <AntDesign name="exclamationcircle" size={10} color="#FBB500" />
-            </View>
-      )} */}
+            {isMoodleActive === 1 && (
+              <View className="absolute right-0 bottom-0">
+                <AntDesign name="checkcircle" size={10} color="green" />
+              </View>
+            )}
+            {isMoodleActive === -1 && (
+              <View className="absolute right-0 bottom-0">
+                <AntDesign name="exclamationcircle" size={10} color="#FBB500" />
+              </View>
+            )}
           </TouchableOpacity>
           {/* Phần tiêu đề */}
         </View>
