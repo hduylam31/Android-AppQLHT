@@ -30,7 +30,7 @@ const ScheduleMain = () => {
     } catch (error) {
       console.log("error: ", error);
     }
-  }
+  };
 
   useEffect(() => {
     if (isFocused) {
@@ -66,7 +66,7 @@ const ScheduleMain = () => {
           c_lessonStart: item.lessonStart,
           c_lessonEnd: item.lessonEnd,
           c_location: item.location,
-          c_note: item.note
+          c_note: item.note,
         });
       }}
     >

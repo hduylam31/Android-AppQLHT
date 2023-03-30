@@ -15,7 +15,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import TodolistService from "../../service/TodolistService";
-import BottomBar from "../BottomBar";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
@@ -118,7 +117,7 @@ const TodoList_Edit = () => {
         value,
         c_isCompleted
       );
-      navigation.navigate(BottomBar);
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -128,7 +127,7 @@ const TodoList_Edit = () => {
     console.log("Start delete");
     try {
       await TodolistService.deleteTodolist(c_id);
-      navigation.navigate(BottomBar);
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
     }

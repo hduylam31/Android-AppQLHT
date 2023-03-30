@@ -13,11 +13,9 @@ import {
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
-import BottomBar from "../BottomBar";
 import moment from "moment";
 
 const Calendar_Add = () => {
@@ -27,7 +25,7 @@ const Calendar_Add = () => {
   const [show, setShow] = React.useState(false);
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
-  const [isNotified, setIsNotified] = useState(false);
+  const [isNotified, setIsNotified] = useState(true);
 
   const currentDate = new Date().toLocaleDateString();
 
@@ -73,8 +71,14 @@ const Calendar_Add = () => {
   const handleAddingUserCalendar = async () => {
     console.log("Start addingg");
     try {
-      await CalendarService.addUserCalendar(title, textDate, textTime, content, isNotified);
-      navigation.navigate(BottomBar);
+      await CalendarService.addUserCalendar(
+        title,
+        textDate,
+        textTime,
+        content,
+        isNotified
+      );
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due too: ", error);
     }

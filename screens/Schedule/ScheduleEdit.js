@@ -1,3 +1,4 @@
+import { lessons, weekdays } from "./DataOfDropDown";
 import {
   View,
   Text,
@@ -13,7 +14,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
 import ScheduleService from "../../service/ScheduleService";
-import BottomBar from "../BottomBar";
 
 const Schedule_Edit = () => {
   const navigation = useNavigation();
@@ -23,38 +23,6 @@ const Schedule_Edit = () => {
   const [location, setLocation] = useState("");
   const [DayOfWeek, setDayOfWeek] = useState("");
   const [note, setNote] = useState("");
-
-  const data = [
-    { key: "1", value: "1" },
-    { key: "1.5", value: "1.5" },
-    { key: "2", value: "2" },
-    { key: "2.5", value: "2.5" },
-    { key: "3", value: "3" },
-    { key: "3.5", value: "3.5" },
-    { key: "4", value: "4" },
-    { key: "4.5", value: "4.5" },
-    { key: "5", value: "5" },
-    { key: "5.5", value: "5.5" },
-    { key: "6", value: "6" },
-    { key: "6.5", value: "6.5" },
-    { key: "7", value: "7" },
-    { key: "7.5", value: "7.5" },
-    { key: "8", value: "8" },
-    { key: "8.5", value: "8.5" },
-    { key: "9", value: "9" },
-    { key: "9.5", value: "9.5" },
-    { key: "10", value: "10" },
-    { key: "10.5", value: "10.5" },
-    { key: "11", value: "11" },
-    { key: "11.5", value: "11.5" },
-    { key: "12", value: "12" },
-    { key: "12.5", value: "12.5" },
-    { key: "13", value: "13" },
-    { key: "13.5", value: "13.5" },
-    { key: "14", value: "14" },
-    { key: "14.5", value: "14.5" },
-    { key: "15", value: "15" },
-  ];
 
   const route = useRoute();
   const {
@@ -67,7 +35,7 @@ const Schedule_Edit = () => {
     c_note,
   } = route.params;
 
-  useEffect(()=> {
+  useEffect(() => {
     const loadData = () => {
       setTitle(c_title);
       setDayOfWeek(c_DayOfWeek);
@@ -77,7 +45,7 @@ const Schedule_Edit = () => {
       setNote(c_note);
     };
     loadData();
-  }, [])
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -101,7 +69,7 @@ const Schedule_Edit = () => {
         location,
         note,
       });
-      navigation.navigate(BottomBar);
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due too: ", error);
     }
@@ -111,7 +79,7 @@ const Schedule_Edit = () => {
     console.log("Start delete");
     try {
       await ScheduleService.deleteCalendar(c_id);
-      navigation.navigate(BottomBar);
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -158,29 +126,32 @@ const Schedule_Edit = () => {
           </View>
         </View>
 
-        <View className="bg-[#F1F5F9] px-5 pt-[4%] space-y-4 h-full">
+        <View className="bg-[#F1F5F9] px-5 pt-[4%] space-y-2 h-full">
           <View className="space-y-2">
             <Text className="text-base">Tiêu đề</Text>
             <TextInput
               placeholder="Môn học"
-              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
+              placeholderTextColor="#000000"
+              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-[#3A4666] rounded-lg resize-none"
               value={title}
               onChangeText={(text) => setTitle(text)}
             ></TextInput>
           </View>
-          <View className="space-y-2 top-24">
+          <View className="space-y-2 top-40">
             <Text className="text-base">Địa điểm</Text>
             <TextInput
               placeholder="Địa điểm"
+              placeholderTextColor="#000000"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
               value={location}
               onChangeText={(text) => setLocation(text)}
             ></TextInput>
           </View>
-          <View className="space-y-2 top-24">
+          <View className="space-y-2 top-40">
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
+              placeholderTextColor="#000000"
               className="w-[100%] h-[50%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-[#3A4666] text-base rounded-[8px] resize-none"
               multiline={true}
               value={note}
@@ -189,23 +160,38 @@ const Schedule_Edit = () => {
               textAlignVertical="top"
             ></TextInput>
           </View>
-          <TouchableOpacity
-            onPress={handleUpdateSchedule}
-            className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[5%] w-[90%] ml-[5%"
-          >
-            <Text className="text-white text-center font-bold text-xl">
-              Lưu
-            </Text>
-          </TouchableOpacity>
-          <View className="space-y-2 absolute top-24 ml-[5%] w-full">
+
+          <View className="space-y-2 absolute top-24 ml-[5%] w-full z-50">
+            <Text className="text-base">Ngày trong tuần</Text>
+            <View>
+              <SelectList
+                data={weekdays}
+                value={DayOfWeek}
+                setSelected={setDayOfWeek}
+                placeholder="Thứ"
+                notFoundText="Không tìm thấy kết quả"
+                searchPlaceholder="Tìm kiếm"
+                maxHeight={200}
+                boxStyles={{
+                  borderColor: "#3A4666",
+                  borderWidth: 2,
+                  backgroundColor: "#FFFFFF",
+                }}
+                dropdownStyles={{
+                  backgroundColor: "#FFFFFF",
+                }}
+              />
+            </View>
+          </View>
+          <View className="space-y-2 absolute top-44 ml-[5%] w-full z-0">
             <Text className="text-base">Tiết</Text>
             <View className="flex-row justify-between">
               <View className="w-[45%]">
                 <SelectList
-                  data={data}
+                  data={lessons}
                   value={selectedLessonStart}
                   setSelected={setSelectedLessonStart}
-                  placeholder={selectedLessonStart}
+                  placeholder="Từ"
                   notFoundText="Không tìm thấy kết quả"
                   searchPlaceholder="Tìm kiếm"
                   maxHeight={200}
@@ -216,16 +202,15 @@ const Schedule_Edit = () => {
                   }}
                   dropdownStyles={{
                     backgroundColor: "#FFFFFF",
-                    width: "100%",
                   }}
                 />
               </View>
               <View className="w-[45%]">
                 <SelectList
-                  data={data}
+                  data={lessons}
                   value={selectedLessonEnd}
                   setSelected={setSelectedLessonEnd}
-                  placeholder={selectedLessonEnd}
+                  placeholder="Đến"
                   notFoundText="Không tìm thấy kết quả"
                   searchPlaceholder="Tìm kiếm"
                   maxHeight={200}
@@ -235,15 +220,20 @@ const Schedule_Edit = () => {
                     backgroundColor: "#FFFFFF",
                   }}
                   dropdownStyles={{
-                    top: 50,
                     backgroundColor: "#FFFFFF",
-                    width: "100%",
-                    position: "absolute",
                   }}
                 />
               </View>
             </View>
           </View>
+          <TouchableOpacity
+            onPress={handleUpdateSchedule}
+            className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[5%] w-[90%] ml-[5%]"
+          >
+            <Text className="text-white text-center font-bold text-xl">
+              Lưu
+            </Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

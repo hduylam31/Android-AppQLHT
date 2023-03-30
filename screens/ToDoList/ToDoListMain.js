@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
-import { todosData } from "../../data/todos";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
