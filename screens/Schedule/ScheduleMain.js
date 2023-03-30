@@ -23,14 +23,9 @@ import {
 } from "react-native-table-component";
 
 const colors = ["#FFC3B3", "#f6f8fa", "#DEDEDE"];
+import ScheduleService from "../../service/ScheduleService";
 
 const ScheduleMain = () => {
-  const [selectedTab, setSelectedTab] = useState(false);
-  const [selectedDayOfWeek, setSelectedDayOfWeek] = useState("T.2");
-  const dayOfWeek = ["T.2", "T.3", "T.4", "T.5", "T.6", "T.7", "CN"];
-  const navigation = useNavigation();
-  const isFocused = useIsFocused();
-
   this.state = {
     tableHead: ["Tiết", "T2", "T3", "T4", "T5", "T6", "T7", "CN"],
     tableTitle: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
@@ -74,89 +69,27 @@ const ScheduleMain = () => {
     }
   };
 
-  const data = [
-    {
-      id: "1",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "2",
-      title: "Nhập môn công nghệ thông",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "3",
-      title: "Nhập môn công nghệ",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "4",
-      title: "Nhập môn công",
-      DayOfWeek: "T.3",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "5",
-      title: "Nhập môn",
-      DayOfWeek: "T.3",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "6",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "7",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "8",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-    {
-      id: "9",
-      title: "Nhập môn công nghệ thông tin",
-      DayOfWeek: "T.2",
-      lessonStart: "1",
-      lessonEnd: "3",
-      location: "E302",
-      note: "Giáo viên: Nguyễn Văn A",
-    },
-  ];
+  const [selectedTab, setSelectedTab] = useState(false);
+  const [selectedDayOfWeek, setSelectedDayOfWeek] = useState("T.2");
+  const dayOfWeek = ["T.2", "T.3", "T.4", "T.5", "T.6", "T.7", "CN"];
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  let [data, setData] = useState([]);
+
+  const loadData = async () => {
+    try {
+      const scheduleData = await ScheduleService.loadScheduleData();
+      setData(scheduleData);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      loadData();
+    }
+  }, [isFocused]);
 
   const onDayPress = (day) => {
     console.log(day);
@@ -177,9 +110,21 @@ const ScheduleMain = () => {
   );
 
   renderItem = ({ item, index }) => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("Schedule_Edit", {
+          c_id: item.id,
+          c_title: item.title,
+          c_DayOfWeek: item.DayOfWeek,
+          c_lessonStart: item.lessonStart,
+          c_lessonEnd: item.lessonEnd,
+          c_location: item.location,
+          c_note: item.note,
+        });
+      }}
+    >
       <Animatable.View
-        animation="slideInLeft"
+        animation="flipInX"
         delay={index * 10}
         className="mx-[5%] my-[3%] bg-white rounded-xl flex-1 flex-row content-center"
       >
@@ -225,7 +170,7 @@ const ScheduleMain = () => {
 
   return (
     <TouchableWithoutFeedback>
-      <SafeAreaView className="flex-1 relative">
+      <SafeAreaView className="flex-1">
         <View className="h-[25%] bg-[#3A4666]">
           <View className="flex-row mt-[3%]">
             <TouchableOpacity>
@@ -283,18 +228,6 @@ const ScheduleMain = () => {
             </View>
           )}
         </View>
-        {!selectedTab && (
-          <View className="bg-[#F1F5F9] w-full h-[65%]">
-            <FlatList
-              data={data.filter(
-                (ScheduleData) => ScheduleData.DayOfWeek === selectedDayOfWeek
-              )}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={this.renderItem}
-              ListEmptyComponent={ListEmptyComponent}
-            />
-          </View>
-        )}
 
         {selectedTab && (
           <View
@@ -353,9 +286,9 @@ const ScheduleMain = () => {
         )}
 
         <TouchableOpacity
-          // onPress={() => {
-          //   navigation.navigate("Calendar_Add");
-          // }}
+          onPress={() => {
+            navigation.navigate("Schedule_Add");
+          }}
           className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         >
           <Text className="text-white text-center font-bold text-base">

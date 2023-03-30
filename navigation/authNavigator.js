@@ -22,28 +22,30 @@ import Done_Moodle from "../screens/Authentication/DoneMoodle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import Schedule_Add from "../screens/Schedule/ScheduleAdd";
+import Schedule_Edit from "../screens/Schedule/ScheduleEdit";
 
 const Auth = createNativeStackNavigator();
 
 export default function AuthStack() {
-  const navigation = useNavigation();
-  useEffect(() => {
-    CheckIsExist();
-  }, []);
-  const CheckIsExist = async () => {
-    try {
-      const value = await AsyncStorage.getItem("GetStarted");
-      if (value === "true") {
-        await AsyncStorage.setItem("GetStarted", "true");
-      } else {
-        navigation.navigate("Login");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const navigation = useNavigation();
+  // useEffect(() => {
+  //   CheckIsExist();
+  // }, []);
+  // const CheckIsExist = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem("GetStarted");
+  //     if (value === "true") {
+  //       await AsyncStorage.setItem("GetStarted", "true");
+  //     } else {
+  //       navigation.navigate("Login");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   return (
-    <Auth.Navigator initialRouteName="GetStarted">
+    <Auth.Navigator>
       <Auth.Screen
         name="GetStarted"
         component={GetStarted}
@@ -153,6 +155,23 @@ export default function AuthStack() {
       <Auth.Screen
         name="Calendar_Edit"
         component={Calendar_Edit}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+      <Auth.Screen
+        name="Schedule_Add"
+        component={Schedule_Add}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="Schedule_Edit"
+        component={Schedule_Edit}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,

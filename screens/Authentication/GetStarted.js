@@ -20,21 +20,31 @@ const GetStarted = () => {
     });
   }, []);
 
-  useEffect(() => {
-    CheckIsExist();
-  }, []);
-  const CheckIsExist = async () => {
-    try {
-      const value = await AsyncStorage.getItem("GetStarted");
-      if (value === "true") {
-        await AsyncStorage.setItem("GetStarted", "true");
-      } else {
-        navigation.navigate("Login");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // useEffect(() => {
+  //   // Kiểm tra trạng thái đã hiển thị màn hình welcome hay chưa
+  //   AsyncStorage.getItem("isFirstTime").then((isFirstTime) => {
+  //     if (isFirstTime === null) {
+  //       // Nếu chưa hiển thị, lưu trạng thái vào AsyncStorage
+  //       AsyncStorage.setItem("isFirstTime", "false");
+  //     } else {
+  //       // Nếu đã hiển thị, chuyển hướng đến màn hình đăng nhập
+  //       navigation.navigate("Login");
+  //     }
+  //   });
+  // }, [navigation]);
+
+  //   AsyncStorage.getItem("isFirstTime").then((isFirstTime) => {
+  //     if (isFirstTime === null) {
+  //       // Nếu isFirstTime là null, tức là lần đầu tiên khởi động ứng dụng
+  //       // Thực hiện lưu trạng thái đã khởi động ứng dụng lần đầu tiên
+  //       AsyncStorage.setItem("isFirstTime", "false");
+  //     } else {
+  //       // Nếu không phải lần đầu tiên khởi động ứng dụng,
+  //       // xóa trạng thái đã lưu trong AsyncStorage để hiển thị lại màn hình welcome
+  //       AsyncStorage.removeItem("isFirstTime");
+  //     }
+  //   });
+  // }, []);
 
   return (
     <SafeAreaView className="flex-1 justify-between bg-[#23ACCD] pt-36">

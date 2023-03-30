@@ -6,7 +6,6 @@ import {
   TouchableWithoutFeedback,
   TextInput,
   Switch,
-  Button,
   Platform,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
@@ -15,8 +14,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import TodolistService from "../../service/TodolistService.js";
-import ToDoListScreen from "./ToDoListMain.js";
-import BottomBar from "../BottomBar.js";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
@@ -80,7 +77,7 @@ const TodoList_Add = () => {
         textTime,
         content
       );
-      navigation.navigate(BottomBar);
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
     }

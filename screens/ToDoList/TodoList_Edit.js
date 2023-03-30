@@ -15,7 +15,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import TodolistService from "../../service/TodolistService";
-import BottomBar from "../BottomBar";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
@@ -62,7 +61,7 @@ const TodoList_Edit = () => {
   const [textDate, setDateText] = React.useState(
     new Date().toLocaleDateString()
   );
-  const [textTime, setTimeDate] = React.useState("00:00");
+  const [textTime, setTimeDate] = React.useState();
 
   const route = useRoute();
   const {
@@ -118,7 +117,7 @@ const TodoList_Edit = () => {
         value,
         c_isCompleted
       );
-      navigation.navigate(BottomBar);
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -128,7 +127,7 @@ const TodoList_Edit = () => {
     console.log("Start delete");
     try {
       await TodolistService.deleteTodolist(c_id);
-      navigation.navigate(BottomBar);
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -195,7 +194,7 @@ const TodoList_Edit = () => {
             </View>
           </TouchableOpacity>
           <View>
-            <Text className="text-white text-xl">Chỉnh sửa công việc</Text>
+            <Text className="text-white text-xl">Cập nhật công việc</Text>
           </View>
           <TouchableOpacity onPress={AlertDelete}>
             <AntDesign name="delete" size={25} color="white" />

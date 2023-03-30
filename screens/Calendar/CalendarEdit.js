@@ -15,7 +15,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
-import BottomBar from "../BottomBar";
 
 const LockedView = ({ isMoodle, children }) => {
   return (
@@ -113,7 +112,7 @@ const Calendar_Edit = () => {
         content,
         c_isMoodle,
       });
-      navigation.navigate(BottomBar);
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -123,7 +122,7 @@ const Calendar_Edit = () => {
     console.log("Start delete");
     try {
       await CalendarService.deleteCalendar(c_id);
-      navigation.navigate(BottomBar);
+      navigation.navigate("BottomBar");
     } catch (error) {
       console.log("Fail due to: ", error);
     }
