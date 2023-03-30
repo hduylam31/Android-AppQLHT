@@ -14,6 +14,7 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import { CatImage } from "../../assets";
+import ScheduleService from "../../service/ScheduleService";
 import {
   Table,
   TableWrapper,
@@ -22,10 +23,14 @@ import {
   Col,
 } from "react-native-table-component";
 
-const colors = ["#FFC3B3", "#f6f8fa", "#DEDEDE"];
-import ScheduleService from "../../service/ScheduleService";
-
 const ScheduleMain = () => {
+  const [selectedTab, setSelectedTab] = useState(false);
+  const [selectedDayOfWeek, setSelectedDayOfWeek] = useState("T.2");
+  const dayOfWeek = ["T.2", "T.3", "T.4", "T.5", "T.6", "T.7", "CN"];
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  let [data, setData] = useState([]);
+
   this.state = {
     tableHead: ["Tiết", "T2", "T3", "T4", "T5", "T6", "T7", "CN"],
     tableTitle: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
@@ -68,13 +73,6 @@ const ScheduleMain = () => {
       return "#FFFFFF"; // Set the background color to white
     }
   };
-
-  const [selectedTab, setSelectedTab] = useState(false);
-  const [selectedDayOfWeek, setSelectedDayOfWeek] = useState("T.2");
-  const dayOfWeek = ["T.2", "T.3", "T.4", "T.5", "T.6", "T.7", "CN"];
-  const navigation = useNavigation();
-  const isFocused = useIsFocused();
-  let [data, setData] = useState([]);
 
   const loadData = async () => {
     try {
@@ -228,7 +226,20 @@ const ScheduleMain = () => {
             </View>
           )}
         </View>
-
+        <View className="bg-[#F1F5F9] w-full h-full">
+          {!selectedTab && (
+            <View className="bg-[#F1F5F9] w-full h-[65%]">
+              <FlatList
+                data={data.filter(
+                  (ScheduleData) => ScheduleData.DayOfWeek === selectedDayOfWeek
+                )}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={this.renderItem}
+                ListEmptyComponent={ListEmptyComponent}
+              />
+            </View>
+          )}
+        </View>
         {selectedTab && (
           <View
             style={{
