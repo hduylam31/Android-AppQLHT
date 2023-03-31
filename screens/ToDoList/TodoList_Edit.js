@@ -117,7 +117,12 @@ const TodoList_Edit = () => {
         value,
         c_isCompleted
       );
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "ToDoList",
+        params: {
+          screenTodoList: "EditToMain",
+        },
+      });
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -130,7 +135,7 @@ const TodoList_Edit = () => {
       navigation.navigate("BottomBar", {
         screen: "ToDoList",
         params: {
-          screenTodoList: "EditToMain",
+          screenTodoList: "DeleteToMain",
         },
       });
     } catch (error) {

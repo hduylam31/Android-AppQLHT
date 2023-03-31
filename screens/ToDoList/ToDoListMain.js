@@ -61,7 +61,8 @@ const ToDoListScreen = () => {
   useEffect(() => {
     if (
       route?.params?.screenTodoList === "AddToMain" ||
-      route?.params?.screenTodoList === "EditToMain"
+      route?.params?.screenTodoList === "EditToMain" ||
+      route?.params?.screenTodoList === "DeleteToMain"
     ) {
       loadTodolist();
     }

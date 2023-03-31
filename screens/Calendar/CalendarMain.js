@@ -67,7 +67,8 @@ const CalendarMain = (props) => {
   useEffect(() => {
     if (
       route?.params?.screenCalendar === "AddToMain" ||
-      route?.params?.screenCalendar === "EditToMain"
+      route?.params?.screenCalendar === "EditToMain" ||
+      route?.params?.screenCalendar === "DeleteToMain"
     ) {
       loadCalendar();
     }

@@ -107,7 +107,12 @@ const Schedule_Edit = () => {
     console.log("Start delete");
     try {
       await ScheduleService.deleteSchedule(c_id);
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "Schedule",
+        params: {
+          screenSchedule: "DeleteToMain",
+        },
+      });
     } catch (error) {
       console.log("Fail due to: ", error);
     }

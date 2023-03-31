@@ -124,11 +124,16 @@ const ScheduleMain = () => {
     }
   };
 
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const route = useRoute();
   useEffect(() => {
     if (
       route?.params?.screenSchedule === "AddToMain" ||
-      route?.params?.screenSchedule === "EditToMain"
+      route?.params?.screenSchedule === "EditToMain" ||
+      route?.params?.screenSchedule === "DeleteToMain"
     ) {
       loadData();
     }

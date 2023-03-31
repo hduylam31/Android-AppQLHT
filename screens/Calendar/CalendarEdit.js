@@ -127,7 +127,12 @@ const Calendar_Edit = () => {
     console.log("Start delete");
     try {
       await CalendarService.deleteCalendar(c_id);
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "Calendar",
+        params: {
+          screenCalendar: "DeleteToMain",
+        },
+      });
     } catch (error) {
       console.log("Fail due to: ", error);
     }
