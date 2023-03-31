@@ -39,13 +39,18 @@ const Schedule_Add = () => {
 
   const handleAddingUserSchedule = async () => {
     console.log("Lesson Validate");
-    if(Number(selectedLessonStart) >= Number(selectedLessonEnd)){
+    if (Number(selectedLessonStart) >= Number(selectedLessonEnd)) {
       alert("Tiết bắt đầu phải bé hơn tiết kết thúc");
-    }else{
-      const isLessonNotConflict = await ScheduleService.dayLessonValidate(dayLessonMap, DayOfWeek, Number(selectedLessonStart), Number(selectedLessonEnd));
-      if(!isLessonNotConflict){
+    } else {
+      const isLessonNotConflict = await ScheduleService.dayLessonValidate(
+        dayLessonMap,
+        DayOfWeek,
+        Number(selectedLessonStart),
+        Number(selectedLessonEnd)
+      );
+      if (!isLessonNotConflict) {
         alert("Vi phạm tiết đã có");
-      }else{
+      } else {
         console.log("Start addingg");
         try {
           await ScheduleService.addSchedule({
@@ -56,7 +61,12 @@ const Schedule_Add = () => {
             location,
             note,
           });
-          navigation.navigate("BottomBar");
+          navigation.navigate("BottomBar", {
+            screen: "Schedule",
+            params: {
+              screenSchedule: "AddToMain",
+            },
+          });
         } catch (error) {
           console.log("Fail due to: ", error);
         }

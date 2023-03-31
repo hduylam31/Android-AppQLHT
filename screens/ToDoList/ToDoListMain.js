@@ -1,7 +1,11 @@
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useLayoutEffect, useState, useEffect } from "react";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import {
+  useNavigation,
+  useIsFocused,
+  useRoute,
+} from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { CheckBox } from "@rneui/themed";
 import { AntDesign } from "@expo/vector-icons";
@@ -47,11 +51,21 @@ const ToDoListScreen = () => {
     loadTodolist();
   }, []);
 
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     loadTodolist();
+  //   }
+  // }, [isFocused]);
+
+  const route = useRoute();
   useEffect(() => {
-    if (isFocused) {
+    if (
+      route?.params?.screenTodoList === "AddToMain" ||
+      route?.params?.screenTodoList === "EditToMain"
+    ) {
       loadTodolist();
     }
-  }, [isFocused]);
+  }, [route]);
 
   useEffect(() => {
     const sortedTodos = todolists.sort((a, b) => {

@@ -6,8 +6,6 @@ import {
   TouchableWithoutFeedback,
   TextInput,
   Switch,
-  ScrollView,
-  Button,
   Platform,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
@@ -78,7 +76,12 @@ const Calendar_Add = () => {
         content,
         isNotified
       );
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "Calendar",
+        params: {
+          screenCalendar: "AddToMain",
+        },
+      });
     } catch (error) {
       console.log("Fail due too: ", error);
     }

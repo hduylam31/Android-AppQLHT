@@ -10,7 +10,11 @@ import {
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import {
+  useNavigation,
+  useIsFocused,
+  useRoute,
+} from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import CalendarService from "../../service/CalendarService";
@@ -59,11 +63,21 @@ const CalendarMain = (props) => {
     loadCalendar();
   }, []);
 
+  const route = useRoute();
   useEffect(() => {
-    if (isFocused) {
+    if (
+      route?.params?.screenCalendar === "AddToMain" ||
+      route?.params?.screenCalendar === "EditToMain"
+    ) {
       loadCalendar();
     }
-  }, [isFocused]);
+  }, [route]);
+
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     loadCalendar();
+  //   }
+  // }, [isFocused]);
 
   renderItem = ({ item, index }) => (
     <TouchableOpacity

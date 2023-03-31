@@ -127,7 +127,12 @@ const TodoList_Edit = () => {
     console.log("Start delete");
     try {
       await TodolistService.deleteTodolist(c_id);
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "ToDoList",
+        params: {
+          screenTodoList: "EditToMain",
+        },
+      });
     } catch (error) {
       console.log("Fail due to: ", error);
     }

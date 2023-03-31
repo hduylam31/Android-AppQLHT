@@ -10,7 +10,11 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import {
+  useNavigation,
+  useIsFocused,
+  useRoute,
+} from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import { CatImage } from "../../assets";
@@ -75,26 +79,33 @@ const ScheduleMain = () => {
     }
   };
 
-  function getListLesson(data){
+  function getListLesson(data) {
     try {
-      let listLesson = {"T.2":[], "T.3":[], "T.4":[], "T.5":[],"T.6":[], 
-                      "T.7":[],"CN":[]};
+      let listLesson = {
+        "T.2": [],
+        "T.3": [],
+        "T.4": [],
+        "T.5": [],
+        "T.6": [],
+        "T.7": [],
+        CN: [],
+      };
       let day;
       let lessonStartNumber;
       let lessonEndNumber;
       //Add data
-      data.forEach(item => {
+      data.forEach((item) => {
         day = item.DayOfWeek;
-        lessonStartNumber = Number(item.lessonStart) ;
+        lessonStartNumber = Number(item.lessonStart);
         lessonEndNumber = Number(item.lessonEnd);
-        listLesson[day].push(...[lessonStartNumber, lessonEndNumber])
+        listLesson[day].push(...[lessonStartNumber, lessonEndNumber]);
       });
       //Sort data by lesson in Day
-      Object.keys(listLesson).map(key => {
+      Object.keys(listLesson).map((key) => {
         listLesson[key].sort((a, b) => {
-          return a-b;
+          return a - b;
         });
-      })
+      });
       return listLesson;
     } catch (error) {
       console.log(error);
@@ -113,11 +124,21 @@ const ScheduleMain = () => {
     }
   };
 
+  const route = useRoute();
   useEffect(() => {
-    if (isFocused) {
+    if (
+      route?.params?.screenSchedule === "AddToMain" ||
+      route?.params?.screenSchedule === "EditToMain"
+    ) {
       loadData();
     }
-  }, [isFocused]);
+  }, [route]);
+
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     loadData();
+  //   }
+  // }, [isFocused]);
 
   const onDayPress = (day) => {
     console.log(day);
@@ -148,7 +169,7 @@ const ScheduleMain = () => {
           c_lessonEnd: item.lessonEnd,
           c_location: item.location,
           c_note: item.note,
-          dayLessonMap
+          dayLessonMap,
         });
       }}
     >

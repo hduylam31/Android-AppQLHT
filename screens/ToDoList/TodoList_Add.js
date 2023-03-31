@@ -77,7 +77,12 @@ const TodoList_Add = () => {
         textTime,
         content
       );
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "ToDoList",
+        params: {
+          screenTodoList: "AddToMain",
+        },
+      });
     } catch (error) {
       console.log("Fail due to: ", error);
     }
