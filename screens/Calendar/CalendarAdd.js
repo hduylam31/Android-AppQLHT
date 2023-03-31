@@ -21,8 +21,8 @@ const Calendar_Add = () => {
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState("date");
   const [show, setShow] = React.useState(false);
-  const [title, setTitle] = useState();
-  const [content, setContent] = useState();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [isNotified, setIsNotified] = useState(true);
 
   const currentDate = new Date().toLocaleDateString();
