@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   TextInput,
+  Alert,
 } from "react-native";
 
 import React, { useLayoutEffect, useState } from "react";
@@ -20,8 +21,8 @@ const Schedule_Add = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const dayLessonMap = route.params;
-  const [title, setTitle] = useState();
-  const [DayOfWeek, setDayOfWeek] = useState();
+  const [title, setTitle] = useState("");
+  const [DayOfWeek, setDayOfWeek] = useState("");
   const [selectedLessonStart, setSelectedLessonStart] = useState("");
   const [selectedLessonEnd, setSelectedLessonEnd] = useState("");
   const [location, setLocation] = useState("");
@@ -39,8 +40,19 @@ const Schedule_Add = () => {
 
   const handleAddingUserSchedule = async () => {
     console.log("Lesson Validate");
-    if (Number(selectedLessonStart) >= Number(selectedLessonEnd)) {
-      alert("Tiết bắt đầu phải bé hơn tiết kết thúc");
+    if (title === "") {
+      Alert.alert("Lỗi thêm thông tin", "Vui lòng nhập môn học mới");
+    } else if (DayOfWeek === "") {
+      Alert.alert("Lỗi thêm thông tin", "Vui lòng nhập ngày học môn học");
+    } else if (selectedLessonStart === "") {
+      Alert.alert("Lỗi thêm thông tin", "Vui lòng nhập tiết bắt đầu môn học");
+    } else if (selectedLessonEnd === "") {
+      Alert.alert("Lỗi thêm thông tin", "Vui lòng nhập tiết kết thúc môn học");
+    } else if (Number(selectedLessonStart) >= Number(selectedLessonEnd)) {
+      Alert.alert(
+        "Lỗi thêm thông tin",
+        "Tiết bắt đầu phải bé hơn tiết kết thúc"
+      );
     } else {
       const isLessonNotConflict = await ScheduleService.dayLessonValidate(
         dayLessonMap,
@@ -49,7 +61,7 @@ const Schedule_Add = () => {
         Number(selectedLessonEnd)
       );
       if (!isLessonNotConflict) {
-        alert("Vi phạm tiết đã có");
+        Alert.alert("Lỗi thêm thông tin", "Vi phạm tiết đã có");
       } else {
         console.log("Start addingg");
         try {
@@ -94,7 +106,10 @@ const Schedule_Add = () => {
 
         <View className="bg-[#F1F5F9] px-5 pt-[4%] space-y-2 h-full">
           <View className="space-y-2">
-            <Text className="text-base">Tiêu đề</Text>
+            <View className="flex-row">
+              <Text className="text-base">Tiêu đề</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
             <TextInput
               placeholder="Môn học"
               placeholderTextColor="#000000"
@@ -128,7 +143,10 @@ const Schedule_Add = () => {
           </View>
 
           <View className="space-y-2 absolute top-24 ml-[5%] w-full z-50">
-            <Text className="text-base">Ngày trong tuần</Text>
+            <View className="flex-row">
+              <Text className="text-base">Ngày trong tuần</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
             <View>
               <SelectList
                 data={weekdays}
@@ -150,7 +168,10 @@ const Schedule_Add = () => {
             </View>
           </View>
           <View className="space-y-2 absolute top-44 ml-[5%] w-full z-0">
-            <Text className="text-base">Tiết</Text>
+            <View className="flex-row">
+              <Text className="text-base">Tiết</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
             <View className="flex-row justify-between">
               <View className="w-[45%]">
                 <SelectList

@@ -7,6 +7,7 @@ import {
   TextInput,
   Switch,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -67,23 +68,30 @@ const Calendar_Add = () => {
   };
 
   const handleAddingUserCalendar = async () => {
-    console.log("Start addingg");
-    try {
-      await CalendarService.addUserCalendar(
-        title,
-        textDate,
-        textTime,
-        content,
-        isNotified
+    if (title === "") {
+      Alert.alert(
+        "Lỗi thêm thông tin",
+        "Vui lòng nhập tiêu đề cho sự kiện mới"
       );
-      navigation.navigate("BottomBar", {
-        screen: "Calendar",
-        params: {
-          screenCalendar: "AddToMain",
-        },
-      });
-    } catch (error) {
-      console.log("Fail due too: ", error);
+    } else {
+      console.log("Start addingg");
+      try {
+        await CalendarService.addUserCalendar(
+          title,
+          textDate,
+          textTime,
+          content,
+          isNotified
+        );
+        navigation.navigate("BottomBar", {
+          screen: "Calendar",
+          params: {
+            screenCalendar: "AddToMain",
+          },
+        });
+      } catch (error) {
+        console.log("Fail due too: ", error);
+      }
     }
   };
 
@@ -106,7 +114,10 @@ const Calendar_Add = () => {
         </View>
         <View className="bg-[#F1F5F9] flex-1 px-5 pt-[4%] space-y-4 h-full">
           <View className="space-y-2">
-            <Text className="text-base">Tiêu đề</Text>
+            <View className="flex-row">
+              <Text className="text-base">Tiêu đề</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
             <TextInput
               placeholder="Tiêu đề"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
@@ -116,7 +127,10 @@ const Calendar_Add = () => {
           </View>
           <View className="flex-row items-center">
             <View className="space-y-2 w-[50%]">
-              <Text className="text-base">Ngày</Text>
+              <View className="flex-row">
+                <Text className="text-base">Ngày</Text>
+                <Text className="text-base text-red-600"> (*)</Text>
+              </View>
               <TouchableOpacity onPress={() => showMode("date")}>
                 <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
                   <View className="flex-row justify-center items-center space-x-4">
@@ -127,7 +141,10 @@ const Calendar_Add = () => {
               </TouchableOpacity>
             </View>
             <View className="pl-4 space-y-2 w-[100%]">
-              <Text className="text-base">Giờ</Text>
+              <View className="flex-row">
+                <Text className="text-base">Giờ</Text>
+                <Text className="text-base text-red-600"> (*)</Text>
+              </View>
               <TouchableOpacity onPress={() => showMode("time")}>
                 <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
                   <View className="flex-row justify-center items-center space-x-4">
