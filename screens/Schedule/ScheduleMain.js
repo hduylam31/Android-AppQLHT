@@ -59,12 +59,10 @@ const ScheduleMain = () => {
     ],
   };
 
-  getCellColor = (rowIndex, colIndex, cellData) => {
+  getCellColor = (rowIndex, colIndex) => {
     rowIndex++;
     colIndex++;
     let day;
-    let lessonStartNumber;
-    let lessonEndNumber;
 
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
@@ -306,8 +304,6 @@ const ScheduleMain = () => {
       </Animatable.View>
     </TouchableOpacity>
   );
-
-  console.log("Data ne:" + data);
 
   return (
     <TouchableWithoutFeedback>
