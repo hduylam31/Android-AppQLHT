@@ -32,8 +32,8 @@ const ScheduleMain = () => {
   let [data, setData] = useState([]);
   let [dayLessonMap, setDayLessonMap] = useState({});
 
-  this.state = {
-    tableHead: ["Tiết", "T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+  const state = {
+    tableHead: ["Tiết", "T.2", "T.3", "T.4", "T.5", "T.6", "T.7", "CN"],
     tableTitle: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
     tableData: [
       ["", "", "", "", "", "", ""],
@@ -59,42 +59,152 @@ const ScheduleMain = () => {
     ],
   };
 
-  getCellColor = (rowIndex, colIndex) => {
-    // Check if the current cell is in the first row or column
-    // if (rowIndex === 0 || colIndex === 0) {
-    //   return "#FFC3B3"; // Set the background color to pink
-    // }
-    // // Check if the current cell is in an even row
-    // else
-    if (rowIndex % 2 === 0) {
-      return "#F5F5F5"; // Set the background color to light gray
+  getCellColor = (rowIndex, colIndex, cellData) => {
+    rowIndex++;
+    colIndex++;
+    let day;
+    let lessonStartNumber;
+    let lessonEndNumber;
+
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      const day = item.DayOfWeek;
+      const lessonStartNumber = Number(item.lessonStart);
+      const lessonEndNumber = Number(item.lessonEnd);
+
+      if (day === "T.2") {
+        if (
+          colIndex === 1 &&
+          rowIndex >= lessonStartNumber + lessonStartNumber - 1
+        ) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
+            return "#4B5347";
+          } else if (
+            lessonEndNumber % 1 === 0 &&
+            rowIndex < lessonEndNumber * 2 + 1
+          ) {
+            return "#4B5347";
+          }
+        }
+      } else if (day === "T.3") {
+        if (
+          colIndex === 2 &&
+          rowIndex >= lessonStartNumber + lessonStartNumber - 1
+        ) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
+            return "#4B5347";
+          } else if (
+            lessonEndNumber % 1 === 0 &&
+            rowIndex < lessonEndNumber * 2 + 1
+          ) {
+            return "#4B5347";
+          }
+        }
+      } else if (day === "T.4") {
+        if (
+          colIndex === 3 &&
+          rowIndex >= lessonStartNumber + lessonStartNumber - 1
+        ) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
+            return "#4B5347";
+          } else if (
+            lessonEndNumber % 1 === 0 &&
+            rowIndex < lessonEndNumber * 2 + 1
+          ) {
+            return "#4B5347";
+          }
+        }
+      } else if (day === "T.5") {
+        if (
+          colIndex === 4 &&
+          rowIndex >= lessonStartNumber + lessonStartNumber - 1
+        ) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
+            return "#4B5347";
+          } else if (
+            lessonEndNumber % 1 === 0 &&
+            rowIndex < lessonEndNumber * 2 + 1
+          ) {
+            return "#4B5347";
+          }
+        }
+      } else if (day === "T.6") {
+        if (
+          colIndex === 5 &&
+          rowIndex >= lessonStartNumber + lessonStartNumber - 1
+        ) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
+            return "#4B5347";
+          } else if (
+            lessonEndNumber % 1 === 0 &&
+            rowIndex < lessonEndNumber * 2 + 1
+          ) {
+            return "#4B5347";
+          }
+        }
+      } else if (day === "T.7") {
+        if (
+          colIndex === 6 &&
+          rowIndex >= lessonStartNumber + lessonStartNumber - 1
+        ) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
+            return "#4B5347";
+          } else if (
+            lessonEndNumber % 1 === 0 &&
+            rowIndex < lessonEndNumber * 2 + 1
+          ) {
+            return "#4B5347";
+          }
+        }
+      } else if (day === "CN") {
+        if (
+          colIndex === 7 &&
+          rowIndex >= lessonStartNumber + lessonStartNumber - 1
+        ) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
+            return "#4B5347";
+          } else if (
+            lessonEndNumber % 1 === 0 &&
+            rowIndex < lessonEndNumber * 2 + 1
+          ) {
+            return "#4B5347";
+          }
+        }
+      }
     }
-    // Check if the current cell is in an odd row
-    else if (rowIndex % 2 === 1) {
-      return "#FFFFFF"; // Set the background color to white
-    }
+
+    return "#FFFFFF";
   };
 
-  function getListLesson(data){
+  function getListLesson(data) {
     try {
-      let listLesson = {"T.2":[], "T.3":[], "T.4":[], "T.5":[],"T.6":[], 
-                      "T.7":[],"CN":[]};
+      let listLesson = {
+        "T.2": [],
+        "T.3": [],
+        "T.4": [],
+        "T.5": [],
+        "T.6": [],
+        "T.7": [],
+        CN: [],
+      };
       let day;
       let lessonStartNumber;
       let lessonEndNumber;
       //Add data
-      data.forEach(item => {
+      data.forEach((item) => {
         day = item.DayOfWeek;
-        lessonStartNumber = Number(item.lessonStart) ;
+        lessonStartNumber = Number(item.lessonStart);
         lessonEndNumber = Number(item.lessonEnd);
-        listLesson[day].push(...[lessonStartNumber, lessonEndNumber])
+        listLesson[day].push(...[lessonStartNumber, lessonEndNumber]);
+
+        // console.log("data ne: " + lessonStartNumber + " va " + lessonEndNumber);
       });
       //Sort data by lesson in Day
-      Object.keys(listLesson).map(key => {
+      Object.keys(listLesson).map((key) => {
         listLesson[key].sort((a, b) => {
-          return a-b;
+          return a - b;
         });
-      })
+      });
       return listLesson;
     } catch (error) {
       console.log(error);
@@ -148,7 +258,7 @@ const ScheduleMain = () => {
           c_lessonEnd: item.lessonEnd,
           c_location: item.location,
           c_note: item.note,
-          dayLessonMap
+          dayLessonMap,
         });
       }}
     >
@@ -196,6 +306,8 @@ const ScheduleMain = () => {
       </Animatable.View>
     </TouchableOpacity>
   );
+
+  console.log("Data ne:" + data);
 
   return (
     <TouchableWithoutFeedback>
@@ -288,30 +400,49 @@ const ScheduleMain = () => {
               <Row
                 data={state.tableHead}
                 flexArr={[2, 1, 1, 1, 1, 1, 1, 1, 1]}
-                style={{ height: 40, backgroundColor: "#FFC3B3" }}
-                textStyle={{ textAlign: "center" }}
+                style={{
+                  height: 40,
+                  backgroundColor: "#FFC3B3",
+                }}
+                textStyle={{ textAlign: "center", fontWeight: "bold" }}
                 borderStyle={{ borderWidth: 1, borderColor: "#DEDEDE" }}
               />
               <View className="flex-row">
                 <Col
                   data={state.tableTitle}
-                  style={{ flex: 2.25, backgroundColor: "#f6f8fa" }}
+                  style={{
+                    flex: 2.25,
+                    backgroundColor: "#f6f8fa",
+                  }}
+                  textStyle={{ textAlign: "center", fontWeight: "bold" }}
                   heightArr={20}
-                  textStyle={{ textAlign: "center" }}
                   borderStyle={{ borderWidth: 1, borderColor: "#DEDEDE" }}
                 />
-                <View style={styles.container}>
+                <View style={{ flex: 8, backgroundColor: "#FFFFFF" }}>
                   {state.tableData.map((rowData, rowIndex) => (
-                    <View key={rowIndex} style={styles.row}>
+                    <View
+                      key={rowIndex}
+                      style={{
+                        flexDirection: "row",
+                        backgroundColor: "#FFFFFF",
+                        height: 15,
+                      }}
+                    >
                       {rowData.map((cellData, colIndex) => (
                         <View
                           key={colIndex}
                           style={[
-                            styles.cell,
+                            {
+                              flex: 1,
+                              borderWidth: 0.5,
+                              borderColor: "#DEDEDE",
+                              textAlign: "center",
+                            },
                             {
                               backgroundColor: this.getCellColor(
                                 rowIndex,
-                                colIndex
+                                colIndex,
+                                cellData
                               ),
                             },
                           ]}
@@ -343,10 +474,6 @@ const ScheduleMain = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 8,
-    backgroundColor: "#FFFFFF",
-  },
   row: {
     flexDirection: "row",
     backgroundColor: "#FFFFFF",
