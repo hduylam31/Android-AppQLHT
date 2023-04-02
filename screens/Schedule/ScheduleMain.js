@@ -10,7 +10,11 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import {
+  useNavigation,
+  useIsFocused,
+  useRoute,
+} from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import { CatImage } from "../../assets";
@@ -194,8 +198,6 @@ const ScheduleMain = () => {
         lessonStartNumber = Number(item.lessonStart);
         lessonEndNumber = Number(item.lessonEnd);
         listLesson[day].push(...[lessonStartNumber, lessonEndNumber]);
-
-        // console.log("data ne: " + lessonStartNumber + " va " + lessonEndNumber);
       });
       //Sort data by lesson in Day
       Object.keys(listLesson).map((key) => {
@@ -222,10 +224,25 @@ const ScheduleMain = () => {
   };
 
   useEffect(() => {
-    if (isFocused) {
+    loadData();
+  }, []);
+
+  const route = useRoute();
+  useEffect(() => {
+    if (
+      route?.params?.screenSchedule === "AddToMain" ||
+      route?.params?.screenSchedule === "EditToMain" ||
+      route?.params?.screenSchedule === "DeleteToMain"
+    ) {
       loadData();
     }
-  }, [isFocused]);
+  }, [route]);
+
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     loadData();
+  //   }
+  // }, [isFocused]);
 
   const onDayPress = (day) => {
     console.log(day);
@@ -392,7 +409,7 @@ const ScheduleMain = () => {
             }}
             className="self-center top-[18%]"
           >
-            <View style={styles.container}>
+            <View>
               <Row
                 data={state.tableHead}
                 flexArr={[2, 1, 1, 1, 1, 1, 1, 1, 1]}
@@ -468,19 +485,5 @@ const ScheduleMain = () => {
     </TouchableWithoutFeedback>
   );
 };
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    backgroundColor: "#FFFFFF",
-    height: 15,
-  },
-  cell: {
-    flex: 1,
-    borderWidth: 0.5,
-    borderColor: "#DEDEDE",
-    textAlign: "center",
-  },
-});
 
 export default ScheduleMain;

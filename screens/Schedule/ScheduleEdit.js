@@ -33,7 +33,7 @@ const Schedule_Edit = () => {
     c_lessonEnd,
     c_location,
     c_note,
-    dayLessonMap
+    dayLessonMap,
   } = route.params;
 
   useEffect(() => {
@@ -60,14 +60,25 @@ const Schedule_Edit = () => {
 
   const handleUpdateSchedule = async () => {
     console.log("Lesson Validate");
-    if(Number(selectedLessonStart) >= Number(selectedLessonEnd)){
+    if (Number(selectedLessonStart) >= Number(selectedLessonEnd)) {
       alert("Tiết bắt đầu phải bé hơn tiết kết thúc");
-    }else{
-      const removedCurrentLessonMap = await ScheduleService.removeCurrentLessonPair(dayLessonMap, DayOfWeek, Number(c_lessonStart), Number(c_lessonEnd));
-      const isLessonNotConflict = await ScheduleService.dayLessonValidate(removedCurrentLessonMap, DayOfWeek, Number(selectedLessonStart), Number(selectedLessonEnd));
-      if(!isLessonNotConflict){
+    } else {
+      const removedCurrentLessonMap =
+        await ScheduleService.removeCurrentLessonPair(
+          dayLessonMap,
+          DayOfWeek,
+          Number(c_lessonStart),
+          Number(c_lessonEnd)
+        );
+      const isLessonNotConflict = await ScheduleService.dayLessonValidate(
+        removedCurrentLessonMap,
+        DayOfWeek,
+        Number(selectedLessonStart),
+        Number(selectedLessonEnd)
+      );
+      if (!isLessonNotConflict) {
         alert("Vi phạm tiết đã có");
-      }else{
+      } else {
         console.log("Start update");
         try {
           await ScheduleService.updateSchedule({
@@ -79,21 +90,29 @@ const Schedule_Edit = () => {
             location,
             note,
           });
-          navigation.navigate("BottomBar");
+          navigation.navigate("BottomBar", {
+            screen: "Schedule",
+            params: {
+              screenSchedule: "EditToMain",
+            },
+          });
         } catch (error) {
           console.log("Fail due too: ", error);
         }
       }
     }
-
-    
   };
 
   const handleDeleteSchedule = async () => {
     console.log("Start delete");
     try {
       await ScheduleService.deleteSchedule(c_id);
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "Schedule",
+        params: {
+          screenSchedule: "DeleteToMain",
+        },
+      });
     } catch (error) {
       console.log("Fail due to: ", error);
     }

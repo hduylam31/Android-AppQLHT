@@ -112,7 +112,12 @@ const Calendar_Edit = () => {
         content,
         c_isMoodle,
       });
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "Calendar",
+        params: {
+          screenCalendar: "EditToMain",
+        },
+      });
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -122,7 +127,12 @@ const Calendar_Edit = () => {
     console.log("Start delete");
     try {
       await CalendarService.deleteCalendar(c_id);
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "Calendar",
+        params: {
+          screenCalendar: "DeleteToMain",
+        },
+      });
     } catch (error) {
       console.log("Fail due to: ", error);
     }

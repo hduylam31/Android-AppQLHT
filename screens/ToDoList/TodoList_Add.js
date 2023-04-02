@@ -7,6 +7,7 @@ import {
   TextInput,
   Switch,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -67,19 +68,31 @@ const TodoList_Add = () => {
   const [textTime, setTimeDate] = React.useState("00:00");
 
   const handleAddingTodolist = async () => {
-    console.log("Start adding");
-    try {
-      // TodolistService.addTodolist
-      await TodolistService.addTodolist(
-        title,
-        selectedCategory,
-        isNotified,
-        textTime,
-        content
+    if (title === "") {
+      Alert.alert(
+        "Lỗi thêm thông tin",
+        "Vui lòng nhập tiêu đề cho công việc mới"
       );
-      navigation.navigate("BottomBar");
-    } catch (error) {
-      console.log("Fail due to: ", error);
+    } else {
+      console.log("Start adding");
+      try {
+        // TodolistService.addTodolist
+        await TodolistService.addTodolist(
+          title,
+          selectedCategory,
+          isNotified,
+          textTime,
+          content
+        );
+        navigation.navigate("BottomBar", {
+          screen: "ToDoList",
+          params: {
+            screenTodoList: "AddToMain",
+          },
+        });
+      } catch (error) {
+        console.log("Fail due to: ", error);
+      }
     }
   };
 
@@ -142,7 +155,11 @@ const TodoList_Add = () => {
         </View>
         <View className="bg-[#F1F5F9] flex-1 px-5 pt-[4%] space-y-4 h-full">
           <View className="space-y-2">
-            <Text className="text-base">Tiêu đề</Text>
+            <View className="flex-row">
+              <Text className="text-base">Tiêu đề</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
+
             <TextInput
               placeholder="Tiêu đề"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
