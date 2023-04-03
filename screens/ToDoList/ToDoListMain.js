@@ -157,13 +157,13 @@ const ToDoListScreen = () => {
     <TouchableOpacity
       onPress={() => {
         navigation.navigate("TodoList_Edit", {
-          id: item.id,
-          title: item.title,
-          category: item.category,
-          isNotified: item.isNotified,
-          hour: item.hour,
-          text: item.text,
-          isCompleted: item.isCompleted,
+          c_id: item.id,
+          c_title: item.title,
+          c_category: item.category,
+          c_isNotified: item.isNotified,
+          c_hour: item.hour,
+          c_text: item.text,
+          c_isCompleted: item.isCompleted,
         });
       }}
     >
