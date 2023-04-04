@@ -40,10 +40,13 @@ export default function App() {
         if (Device.isDevice) {
           const { status: existingStatus } = await Notifications.getPermissionsAsync();
           let finalStatus = existingStatus;
+          console.log("Final status1: ", finalStatus);
           if (existingStatus !== 'granted') {
+            console.log("Final status2: ", finalStatus);
             const { status } = await Notifications.requestPermissionsAsync();
             finalStatus = status;
           }
+          console.log("Final status3: ", finalStatus);
           if (finalStatus !== 'granted') {
             alert('Enable push notifications to use the app!');
             await storage.setItem('expopushtoken', "");
