@@ -183,9 +183,6 @@ const TodoList_Edit = () => {
           },
         },
       ]
-      // {
-      //   Style: ""
-      // }
     );
   };
 
@@ -196,22 +193,23 @@ const TodoList_Edit = () => {
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
-      <SafeAreaView className="bg-[#3A4666]">
-        <View className="flex-row justify-between items-center p-4 flex-1 h-[12%]">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <View className="mt-[7%] ml-[3%]">
+      <SafeAreaView className="flex-1">
+        <View className="bg-[#3A4666] h-15">
+          <View className="flex-row justify-between items-center p-4">
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <AntDesign name="arrowleft" size={30} color="white" />
+            </TouchableOpacity>
+            <View>
+              <Text className="text-white text-xl">Cập nhật công việc</Text>
             </View>
-          </TouchableOpacity>
-          <View>
-            <Text className="text-white text-xl">Cập nhật công việc</Text>
+            <View className="w-8 h-8">
+              <TouchableOpacity onPress={AlertDelete}>
+                <AntDesign name="delete" size={25} color="white" />
+              </TouchableOpacity>
+            </View>
           </View>
-          <TouchableOpacity onPress={AlertDelete}>
-            <AntDesign name="delete" size={25} color="white" />
-          </TouchableOpacity>
-          {/* Phần tiêu đề */}
         </View>
-        <View className="bg-[#F1F5F9] flex-1 px-5 pt-[4%] space-y-4 h-full">
+        <View className="bg-[#F1F5F9] px-5 pt-[4%] space-y-2 h-full">
           <View className="space-y-2">
             <Text className="text-base">Tiêu đề</Text>
             <TextInput
@@ -298,23 +296,22 @@ const TodoList_Edit = () => {
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-[40%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none mb-4"
+              className="w-[100%] h-60 bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none mb-4"
               multiline={true}
               value={value}
               numberOfLines={4}
               onChangeText={onChangeText}
               textAlignVertical="top"
             ></TextInput>
-
-            <TouchableOpacity
-              onPress={handleUpdateTodoList}
-              className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center"
-            >
-              <Text className="text-white text-center font-bold text-xl">
-                Lưu
-              </Text>
-            </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            onPress={handleUpdateTodoList}
+            className="bg-[#3A4666] rounded-2xl h-[5%] w-[90%] ml-[5%] items-center justify-center"
+          >
+            <Text className="text-white text-center font-bold text-xl">
+              Lưu
+            </Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

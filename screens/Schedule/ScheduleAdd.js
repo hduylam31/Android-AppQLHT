@@ -98,7 +98,7 @@ const Schedule_Add = () => {
             <View>
               <Text className="text-white text-xl">Thêm sự kiện mới</Text>
             </View>
-            <View className="w-25 h-25"></View>
+            <View className="w-8 h-8"></View>
             {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên
         {/* Phần tiêu đề */}
           </View>

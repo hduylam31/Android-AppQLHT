@@ -98,21 +98,21 @@ const Calendar_Add = () => {
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
-      <SafeAreaView className="bg-[#3A4666]">
-        <View className="flex-row justify-between items-center p-4 flex-1 h-[12%]">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <View className="mt-[7%] ml-[3%]">
+      <SafeAreaView className="flex-1">
+        <View className="bg-[#3A4666] h-15">
+          <View className="flex-row justify-between items-center p-4">
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <AntDesign name="arrowleft" size={30} color="white" />
+            </TouchableOpacity>
+            <View>
+              <Text className="text-white text-xl">Thêm sự kiện mới</Text>
             </View>
-          </TouchableOpacity>
-          <View>
-            <Text className="text-white text-xl">Thêm sự kiện mới</Text>
+            <View className="w-8 h-8"></View>
+            {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên
+        {/* Phần tiêu đề */}
           </View>
-          <View className="w-25 h-25"></View>
-          {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên */}
-          {/* Phần tiêu đề */}
         </View>
-        <View className="bg-[#F1F5F9] flex-1 px-5 pt-[4%] space-y-4 h-full">
+        <View className="bg-[#F1F5F9] px-5 pt-[4%] space-y-2 h-full">
           <View className="space-y-2">
             <View className="flex-row">
               <Text className="text-base">Tiêu đề</Text>
@@ -166,7 +166,7 @@ const Calendar_Add = () => {
               />
             )}
           </View>
-          <Text className="text-base -mb-3">Bật thông báo</Text>
+          <Text className="text-base">Bật thông báo</Text>
           <View className="items-start">
             <Switch
               trackColor={{ false: "grey", true: "#3A4666" }}
@@ -181,7 +181,7 @@ const Calendar_Add = () => {
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-[50%] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
+              className="w-[100%] h-80 bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
               multiline={true}
               value={content}
               numberOfLines={4}
@@ -189,15 +189,15 @@ const Calendar_Add = () => {
               textAlignVertical="top"
             ></TextInput>
             {/* Nút thêm */}
-            <TouchableOpacity
-              onPress={handleAddingUserCalendar}
-              className="bg-[#3A4666] rounded-2xl flex basis-1/12 items-center justify-center"
-            >
-              <Text className="text-white text-center font-bold text-xl">
-                Thêm sự kiện
-              </Text>
-            </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            onPress={handleAddingUserCalendar}
+            className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[5%] w-[90%] ml-[5%]"
+          >
+            <Text className="text-white text-center font-bold text-xl">
+              Lưu
+            </Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

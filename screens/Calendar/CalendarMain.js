@@ -148,88 +148,80 @@ const CalendarMain = (props) => {
 
   return (
     <TouchableWithoutFeedback>
-      <SafeAreaView className="bg-[#3A4666] flex-1">
-        <View className="flex-row justify-between items-center h-[7%]">
-          <TouchableOpacity>
-            <View className="mt-[7%] ml-4">
+      <SafeAreaView className="flex-1">
+        <View className="bg-[#3A4666] h-[25%]">
+          <View className="flex-row justify-between items-center p-4">
+            <TouchableOpacity>
               <AntDesign name="bars" size={30} color="white" />
+            </TouchableOpacity>
+            <View>
+              <Text className="text-white text-2xl font-bold">Lịch</Text>
             </View>
-          </TouchableOpacity>
-          <View>
-            <Text className="text-white text-xl">Lịch</Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Login_Moodle");
-            }}
-            className="mr-4 relative"
-          >
-            {/* Chỗ để icon moodle */}
-            <Animatable.Image
-              animation="fadeIn"
-              easing="ease-in-out"
-              source={MoodleIcon}
-            />
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Login_Moodle");
+              }}
+            >
+              {/* Chỗ để icon moodle */}
+              <Animatable.Image
+                animation="fadeIn"
+                easing="ease-in-out"
+                source={MoodleIcon}
+              />
 
-            {/* Phần này là Icon tích xanh và chấm than hãy code thêm trạng thái */}
+              {/* Phần này là Icon tích xanh và chấm than hãy code thêm trạng thái */}
 
-            {isMoodleActive === 1 && (
-              <View className="absolute right-0 bottom-0">
-                <AntDesign name="checkcircle" size={10} color="green" />
-              </View>
-            )}
-            {isMoodleActive === -1 && (
-              <View className="absolute right-0 bottom-0">
-                <AntDesign name="exclamationcircle" size={10} color="#FBB500" />
-              </View>
-            )}
-          </TouchableOpacity>
-          {/* Phần tiêu đề */}
-        </View>
-        <View className="h-[12%]"></View>
-        <View className="flex-1 bg-[#F1F5F9]">
-          <View className="h-[41%]"></View>
-          <View className=" bg-white rounded-2xl mx-[3%] mt-[7%] flex-1 flex-row">
-            <FlatList
-              data={calendar.filter((item) => {
-                if (
-                  item.isMoodle === "true" &&
-                  item.dateString === selectDay.dateString
-                )
-                  return true;
-                return false;
-              })}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={this.renderItem}
-            />
+              {isMoodleActive === 1 && (
+                <View className="absolute right-0 bottom-0">
+                  <AntDesign name="checkcircle" size={10} color="green" />
+                </View>
+              )}
+              {isMoodleActive === -1 && (
+                <View className="absolute right-0 bottom-0">
+                  <AntDesign
+                    name="exclamationcircle"
+                    size={10}
+                    color="#FBB500"
+                  />
+                </View>
+              )}
+            </TouchableOpacity>
+            {/* Phần tiêu đề */}
           </View>
-          <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row mb-[5%]">
-            <FlatList
-              data={calendar.filter((item) => {
-                if (
-                  item.isMoodle === "false" &&
-                  item.dateString === selectDay.dateString
-                )
-                  return true;
-                return false;
-              })}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={this.renderItem}
-            />
-          </View>
-          <View className="flex-1 h-[8%]"></View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Calendar_Add");
-            }}
-            className="w-[70%] h-[7%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
-          >
-            <Text className="text-white text-center font-bold text-base">
-              Thêm sự kiện
-            </Text>
-          </TouchableOpacity>
         </View>
-        <View className="absolute w-full mt-[18%]">
+        <View className="bg-[#F1F5F9] h-full w-full">
+          <View className="w-full mt-[60%] h-[35%]">
+            <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
+              <FlatList
+                data={calendar.filter((item) => {
+                  if (
+                    item.isMoodle === "true" &&
+                    item.dateString === selectDay.dateString
+                  )
+                    return true;
+                  return false;
+                })}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={this.renderItem}
+              />
+            </View>
+            <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
+              <FlatList
+                data={calendar.filter((item) => {
+                  if (
+                    item.isMoodle === "false" &&
+                    item.dateString === selectDay.dateString
+                  )
+                    return true;
+                  return false;
+                })}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={this.renderItem}
+              />
+            </View>
+          </View>
+        </View>
+        <View className="absolute w-full top-20">
           <Calendar
             style={{
               borderRadius: 10,
@@ -247,6 +239,16 @@ const CalendarMain = (props) => {
             {...props}
           />
         </View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Calendar_Add");
+          }}
+          className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+        >
+          <Text className="text-white text-center font-bold text-base">
+            Thêm thời khóa biểu
+          </Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

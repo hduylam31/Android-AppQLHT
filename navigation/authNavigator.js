@@ -24,6 +24,9 @@ import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Schedule_Add from "../screens/Schedule/ScheduleAdd";
 import Schedule_Edit from "../screens/Schedule/ScheduleEdit";
+import MyScrollView from "../screens/NoteList/NoteListAdd";
+import NoteList_Add from "../screens/NoteList/NoteListAdd";
+import NoteList_Edit from "../screens/NoteList/NoteListEdit";
 
 const Auth = createNativeStackNavigator();
 
@@ -172,6 +175,23 @@ export default function AuthStack() {
       <Auth.Screen
         name="Schedule_Edit"
         component={Schedule_Edit}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+      <Auth.Screen
+        name="NoteList_Add"
+        component={NoteList_Add}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="NoteList_Edit"
+        component={NoteList_Edit}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,

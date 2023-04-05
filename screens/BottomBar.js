@@ -5,9 +5,9 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useNavigation } from "@react-navigation/native";
 import ToDoListScreen from "./ToDoList/ToDoListMain";
 import AccountMain from "./Account/AccountMain";
-import NoteList from "./NoteList/NoteList";
 import CalendarMain from "./Calendar/CalendarMain";
 import ScheduleMain from "./Schedule/ScheduleMain";
+import NoteListMain from "./NoteList/NoteListMain";
 
 const Tab = createBottomTabNavigator();
 
@@ -45,7 +45,7 @@ const BottomBar = () => {
       })}
     >
       <Tab.Screen name="Calendar" component={CalendarMain} />
-      <Tab.Screen name="NoteList" component={NoteList} />
+      <Tab.Screen name="NoteList" component={NoteListMain} />
       <Tab.Screen name="ToDoList" component={ToDoListScreen} />
       <Tab.Screen name="Schedule" component={ScheduleMain} />
       <Tab.Screen name="Account" component={AccountMain} />

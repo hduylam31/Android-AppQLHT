@@ -204,54 +204,52 @@ const ToDoListScreen = () => {
   );
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-1 bg-[#3A4666]">
-        {/* Header */}
-        <View className="flex-1 bg-[#3A4666]">
-          <View className="flex-row justify-between my-[7%] mx-[5%]">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <MaterialCommunityIcons
-                name="dots-vertical"
-                size={32}
-                color="white"
-              />
-            </TouchableOpacity>
-            <View className="flex items-center justify-center">
-              <Text className="text-white text-2xl font-bold text-center">
-                Danh sách công việc
-              </Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialCommunityIcons
-                name="calendar-month-outline"
-                size={32}
-                color="white"
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View className="flex-1 bg-[#F1F5F9]">
-            {/* Công việc hiện có  */}
-            <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] mt-[5%]">
-              <FlatList
-                data={todos.filter((todo) => !todo.isCompleted)}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={this.renderItem}
-              />
-            </View>
-            {/* Công việc đã hòan thành */}
-            <Text className="text-lg font-semibold ml-[5%] my-[3%]">
-              Hoàn thành
+      {/* Header */}
+      <View className=" bg-[#3A4666] h-[10%]">
+        <View className="flex-row justify-between p-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              size={32}
+              color="white"
+            />
+          </TouchableOpacity>
+          <View className="flex items-center justify-center">
+            <Text className="text-white text-2xl font-bold text-center">
+              Danh sách công việc
             </Text>
-            <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%]">
-              <FlatList
-                data={todos.filter((todo) => todo.isCompleted)}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={this.renderItemCompleted}
-              />
-            </View>
           </View>
+          <TouchableOpacity>
+            <MaterialCommunityIcons
+              name="calendar-month-outline"
+              size={32}
+              color="white"
+            />
+          </TouchableOpacity>
         </View>
       </View>
+      <View className="flex-1 bg-[#F1F5F9]">
+        {/* Công việc hiện có  */}
+        <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] mt-[5%]">
+          <FlatList
+            data={todos.filter((todo) => !todo.isCompleted)}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={this.renderItem}
+          />
+        </View>
+        {/* Công việc đã hòan thành */}
+        <Text className="text-lg font-semibold ml-[5%] my-[3%]">
+          Hoàn thành
+        </Text>
+        <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%]">
+          <FlatList
+            data={todos.filter((todo) => todo.isCompleted)}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={this.renderItemCompleted}
+          />
+        </View>
+      </View>
+
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("TodoList_Add");

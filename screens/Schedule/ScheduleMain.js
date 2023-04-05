@@ -347,7 +347,7 @@ const ScheduleMain = () => {
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
         <View className="h-[25%] bg-[#3A4666]">
-          <View className="flex-row mt-[3%]">
+          <View className="flex-row justify-between p-4">
             <TouchableOpacity>
               <MaterialCommunityIcons
                 name="dots-vertical"
@@ -355,11 +355,12 @@ const ScheduleMain = () => {
                 color="white"
               />
             </TouchableOpacity>
-            <Text className="text-white text-2xl font-bold ml-[22%]">
+            <Text className="text-white text-2xl font-bold">
               Thời khóa biểu
             </Text>
+            <View className="w-8 h-8 "></View>
           </View>
-          <View className="justify-center items-center mt-[3%]">
+          <View className="justify-center items-center">
             <View className="w-[45%] h-7 border-1 rounded-xl bg-[#9CA2B2] flex-row items-center">
               <TouchableOpacity
                 onPress={() => {
@@ -384,7 +385,7 @@ const ScheduleMain = () => {
             </View>
           </View>
           {!selectedTab && (
-            <View className="bg-white mt-[3%] h-[40%] w-[90%] ml-[5%] rounded-xl">
+            <View className="bg-white mt-[3%] h-[35%] w-[90%] ml-[5%] rounded-xl">
               <View className="h-full w-[90%] flex-row justify-between items-center ml-[5%]">
                 {dayOfWeek.map((day) => (
                   <TouchableOpacity

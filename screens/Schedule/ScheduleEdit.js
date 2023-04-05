@@ -149,7 +149,7 @@ const Schedule_Edit = () => {
             <View>
               <Text className="text-white text-xl">Cập nhật TKB</Text>
             </View>
-            <View className="w-25 h-25">
+            <View className="w-8 h-8">
               <TouchableOpacity onPress={AlertDelete}>
                 <AntDesign name="delete" size={25} color="white" />
               </TouchableOpacity>
