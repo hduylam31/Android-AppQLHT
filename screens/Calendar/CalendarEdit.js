@@ -78,25 +78,17 @@ const Calendar_Edit = () => {
   };
 
   const route = useRoute();
-  const {
-    c_id,
-    c_title,
-    c_dateString,
-    c_timeString,
-    c_description,
-    c_isNotified,
-    c_isMoodle,
-  } = route.params;
+  const item = route.params.item;
 
   useEffect(() => {
     const loadData = () => {
-      setTitle(c_title);
-      setTimeDate(c_timeString);
-      const date = new Date(c_dateString);
+      setTitle(item.title);
+      setTimeDate(item.timeString);
+      const date = new Date(item.dateString);
       const dateFormat = date.toLocaleDateString("vi-VN");
       setDateText(dateFormat);
-      setContent(c_description);
-      setIsNotified(c_isNotified);
+      setContent(item.description);
+      setIsNotified(item.isNotified);
     };
     loadData();
   }, []);
@@ -129,12 +121,12 @@ const Calendar_Edit = () => {
   const handleDeleteCalendar = async () => {
     console.log("Start delete");
     try {
-      await CalendarService.deleteCalendar(c_id);
+      await CalendarService.deleteCalendar(item);
       navigation.navigate("BottomBar", {
         screen: "Calendar",
         params: {
           screenCalendar: "DeleteToMain",
-        },
+        }, 
       });
     } catch (error) {
       console.log("Fail due to: ", error);
@@ -176,7 +168,7 @@ const Calendar_Edit = () => {
           </View>
         </View>
         <View className="bg-[#F1F5F9] px-5 pt-[4%] space-y-2 h-full">
-          <LockedView isMoodle={c_isMoodle}>
+          <LockedView isMoodle={item.isMoodle}>
             <View className="space-y-2">
               <Text className="text-base">Tiêu đề</Text>
               <TextInput

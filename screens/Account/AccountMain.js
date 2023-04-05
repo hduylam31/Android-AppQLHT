@@ -2,12 +2,14 @@ import React, { useLayoutEffect } from "react";
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebase";
+import NotificationUtils from "../../service/NotificationUtils";
 
 const AccountMain = () => {
   const handleSignOut = () => {
     auth
       .signOut()
       .then(() => {
+        NotificationUtils.removeAllNotification();
         navigation.replace("Login");
       })
       .catch((error) => alert(error.message));

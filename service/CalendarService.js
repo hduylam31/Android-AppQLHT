@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { auth, firestore } from "../firebase";
 import moment from "moment";
+import NotificationUtils from "./NotificationUtils";
 
 class CalendarService {
   static async isMoodleActive() {
@@ -265,7 +266,35 @@ class CalendarService {
       const textDateProcessed = `${year}-${month
         .toString()
         .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-      // const textDateProcessed = textDate.split('/').reverse().join('-');
+      
+      let identifier = "";
+       /* ==================================Notification====================================== */
+      if(isNotified){ 
+        //Thông báo cách tối thiểu 2h
+        const UTC7Plus = 7 * 60 * 60 * 1000;
+        const data = new Date(year, month-1, day, timeArray[0], timeArray[1]);
+        const deadlineDate = new Date(data.getTime() + UTC7Plus);
+        console.log(deadlineDate);
+        const now = new Date(Date.now() + UTC7Plus);
+        console.log(now);
+        const diff = deadlineDate - now;
+        console.log("Diff: ", diff);
+        const twoHours = 2*60*60*1000;
+        if(diff > twoHours){ //2hours
+          const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
+          const timeInfo = {
+            year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
+            month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
+            day: Number(twoHoursBeforeDeadlineTime.getDate()),
+            hour: Number(twoHoursBeforeDeadlineTime.getHours()),
+            minute: Number(twoHoursBeforeDeadlineTime.getMinutes())
+          }
+          console.log(timeInfo);
+          identifier = await NotificationUtils.setNotificationAndGetIdentifer(title, content, timeInfo);
+        }
+      }
+
+
       const item = {
         id: documentId,
         title: title,
@@ -274,8 +303,10 @@ class CalendarService {
         description: content,
         isMoodle: "false",
         isNotified: isNotified,
+        identifier: identifier
       };
-      //firebase adding
+
+      /* ==================================DB Adding====================================== */
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
@@ -340,9 +371,15 @@ class CalendarService {
     }
   }
 
-  static deleteCalendar = async (id) => {
+  static deleteCalendar = async (c_item) => {
+    const id = c_item.id;
     console.log("Delete Calendar: ", id);
     try {
+      // ==================================Notification============================
+      if(c_item.isNotified){
+        NotificationUtils.cancelNotification(c_item.identifier);
+      }
+      // =====================================DB===================================
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, 'calendar'), user.uid);
       const userDoc = await getDoc(userRef);

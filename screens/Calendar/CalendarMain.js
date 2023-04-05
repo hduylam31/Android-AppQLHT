@@ -39,7 +39,7 @@ const CalendarMain = (props) => {
     const isMoodleActive = async () => {
       try {
         const moodleActive = await CalendarService.isMoodleActive();
-        setIsMoodleActive(moodleActive);
+        setIsMoodleActive(moodleActive); 
         console.log("Moodle activee: ", moodleActive);
       } catch (error) {}
     };
@@ -83,18 +83,10 @@ const CalendarMain = (props) => {
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Calendar_Edit", {
-          c_id: item.id,
-          c_title: item.title,
-          c_dateString: item.dateString,
-          c_timeString: item.timeString,
-          c_description: item.description,
-          c_isNotified: item.isNotified,
-          c_isMoodle: item.isMoodle,
-        });
+        navigation.navigate("Calendar_Edit", {item});
       }}
     >
-      <Animatable.View
+      <Animatable.View 
         animation="slideInLeft"
         delay={index * 10}
         className="h-12 h-min-full border-b-[#f3f2f4] border-b-2 my-1 flex flex-row content-center"
