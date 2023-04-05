@@ -17,21 +17,23 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
 import moment from "moment";
 
-const Calendar_Add = () => {
+const Calendar_Add = ({ selectedDay }) => {
   const navigation = useNavigation();
-  const [date, setDate] = React.useState(new Date());
-  const [mode, setMode] = React.useState("date");
-  const [show, setShow] = React.useState(false);
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isNotified, setIsNotified] = useState(true);
 
-  const currentDate = new Date().toLocaleDateString();
+  console.log("aa", selectedDay);
 
-  const [textDate, setDateText] = React.useState(
-    moment(currentDate, "M/DD/YYYY").format("DD/M/YYYY")
-  );
-  const [textTime, setTimeDate] = React.useState("00:00");
+  // const selectedDay = props.currentDate;
+  const DaySelected = moment(selectedDay, "YYYY-MM-DD").format("D/M/YYYY");
+  console.log("aaa", DaySelected);
+
+  const [textDate, setDateText] = useState(DaySelected);
+  const [textTime, setTimeDate] = useState("00:00");
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -39,11 +41,11 @@ const Calendar_Add = () => {
     });
   });
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+  const onChange = () => {
+    const currentDate = date;
     setShow(Platform.OS === "ios");
     setDate(currentDate);
-
+    console.log(currentDate);
     let tempDate = new Date(currentDate);
     let fDate =
       tempDate.getDate() +

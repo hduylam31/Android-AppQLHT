@@ -79,7 +79,7 @@ const Login = () => {
           {/* Second section */}
           <View className="mt-[8%] flex-row justify-center items-center">
             <Text className="ml-4 text-[#FFFFFF] text-3xl font-bold">
-              Hi Welcome {"\n"}back
+              Chào mừng {"\n"}bạn quay trở lại
             </Text>
             <Animatable.Image
               animation="fadeIn"
@@ -99,13 +99,13 @@ const Login = () => {
             >
               <View className="self-center w-[85%] h-[50%] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
                 <TextInput
-                  placeholder="Email"
+                  placeholder="Tên đăng nhập"
                   value={email}
                   onChangeText={(text) => setEmail(text)}
                   className="w-[80%] h-[20%] bg-[#D9D9D9] mt-[20%] self-center pl-4"
                 ></TextInput>
                 <TextInput
-                  placeholder="Password"
+                  placeholder="Mật khẩu"
                   value={Password}
                   onChangeText={(text) => setPassword(text)}
                   secureTextEntry
@@ -145,7 +145,7 @@ const Login = () => {
                   <AntDesign name="arrowleft" size={40} />
                 </View>
                 <Text className="text-base" style={{ color: "white" }}>
-                  Or sign in with
+                  Hoặc đăng nhập với
                 </Text>
                 <View className="w-[25%] h-[1px] bg-[#F8F7FA] items-center"></View>
               </View>

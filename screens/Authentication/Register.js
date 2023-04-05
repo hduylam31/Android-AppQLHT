@@ -24,17 +24,27 @@ const Register = () => {
   const [repassword, setrePassword] = useState("");
 
   const handleRegister = () => {
-    try {
-      if (email && password && repassword) {
-        if (password !== repassword) {
-          Alert.alert("Mật khẩu nhập lại không khớp");
-        } else {
-          CredentialService.handleRegister(name, email, password);
+    if (email === "") {
+      Alert.alert("Đăng kí không thành công", "Vui lòng nhập email");
+    } else if (password === "") {
+      Alert.alert("Đăng kí không thành công", "Vui lòng nhập mật khẩu");
+    } else if (repassword === "") {
+      Alert.alert(
+        "Đăng kí không thành công",
+        "Vui lòng nhập nhập lại mật khẩu"
+      );
+    } else
+      try {
+        if (email && password && repassword) {
+          if (password !== repassword) {
+            Alert.alert("Mật khẩu nhập lại không khớp");
+          } else {
+            CredentialService.handleRegister(name, email, password);
+          }
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   useLayoutEffect(() => {
@@ -64,9 +74,11 @@ const Register = () => {
               </View>
             </TouchableOpacity>
             <View className="mt-5">
-              <Text className="text-white font-bold text-4xl ml-8">Hello!</Text>
-              <Text className="text-white font-bold text-xl ml-14 mt-4">
-                Good to see you here
+              <Text className="text-white font-bold text-4xl ml-6">
+                Xin chào!
+              </Text>
+              <Text className="text-white font-bold text-xl ml-10 mt-4">
+                Rất vui khi gặp bạn ở đây
               </Text>
             </View>
           </View>
@@ -78,7 +90,12 @@ const Register = () => {
               Đăng kí
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity className="w-[80%] h-14 ml-[10%] bg-[#CECECE] rounded-2xl mt-5 flex items-center justify-center">
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
+            className="w-[80%] h-14 ml-[10%] bg-[#CECECE] rounded-2xl mt-5 flex items-center justify-center"
+          >
             <Text className="text-[#9E9090] text-center font-bold text-xl">
               Đăng nhập
             </Text>
