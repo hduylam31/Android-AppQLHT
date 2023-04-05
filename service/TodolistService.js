@@ -76,6 +76,8 @@ class TodolistService{
         if(oldItem.isNotified && !newItem.isNotified && !oldItem.isCompleted){ // Chỉ xóa thông báo khi cập nhật Thông báo -> Không thông páo
             NotificationUtils.cancelNotification(oldItem.identifier);
         }else if(!oldItem.isCompleted){ // Còn những trường hợp còn lại chưa hoàn thành todolist thì set thông báo mới (chỉ có category ko impact) 
+            NotificationUtils.cancelNotification(oldItem.identifier);
+            
             const timeArray = newItem.hour.split(":");
             const timeInfo = {
                 hour: Number(timeArray[0]),

@@ -96,17 +96,19 @@ const Calendar_Edit = () => {
   const handleUpdateCalendar = async () => {
     console.log("Start update");
     try {
-      // TodolistService.addTodolist
-      await CalendarService.updateUserCalendar({
-        c_id,
+      const newItem = {
+        id: item.id,
         title,
         textDate,
         textTime,
         content,
         isNotified,
         content,
-        c_isMoodle,
-      });
+        isMoodle: item.isMoodle  
+      };
+      console.log("new Item: ", newItem);
+      console.log("Old Item: ", item);
+      await CalendarService.updateUserCalendar(newItem, item);
       navigation.navigate("BottomBar", {
         screen: "Calendar",
         params: {
@@ -129,7 +131,7 @@ const Calendar_Edit = () => {
         }, 
       });
     } catch (error) {
-      console.log("Fail due to: ", error);
+      console.log("Fail due to: ", error); 
     }
   };
 

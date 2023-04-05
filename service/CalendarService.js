@@ -271,14 +271,9 @@ class CalendarService {
        /* ==================================Notification====================================== */
       if(isNotified){ 
         //Thông báo cách tối thiểu 2h
-        const UTC7Plus = 7 * 60 * 60 * 1000;
-        const data = new Date(year, month-1, day, timeArray[0], timeArray[1]);
-        const deadlineDate = new Date(data.getTime() + UTC7Plus);
-        console.log(deadlineDate);
-        const now = new Date(Date.now() + UTC7Plus);
-        console.log(now);
+        const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]);
+        const now = new Date(Date.now());
         const diff = deadlineDate - now;
-        console.log("Diff: ", diff);
         const twoHours = 2*60*60*1000;
         if(diff > twoHours){ //2hours
           const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
@@ -289,7 +284,6 @@ class CalendarService {
             hour: Number(twoHoursBeforeDeadlineTime.getHours()),
             minute: Number(twoHoursBeforeDeadlineTime.getMinutes())
           }
-          console.log(timeInfo);
           identifier = await NotificationUtils.setNotificationAndGetIdentifer(title, content, timeInfo);
         }
       }
@@ -324,7 +318,7 @@ class CalendarService {
     }
   }
 
-  static async updateUserCalendar(elm) {
+  static async updateUserCalendar(elm, oldItem) {
     const user = auth.currentUser;
 
     const timeArray = elm.textTime.split(":");
@@ -334,41 +328,68 @@ class CalendarService {
     const textDateProcessed = `${year}-${month
       .toString()
       .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-
-    const updatedData = {
-      id: elm.c_id,
-      title: elm.title,
-      dateString: textDateProcessed,
-      isNotified: elm.isNotified,
-      timeString: vTime,
-      description: elm.content,
-      isMoodle: elm.c_isMoodle,
-    };
-    try {
-      const userRef = doc(collection(firestore, "calendar"), user.uid);
-      const userDoc = await getDoc(userRef);
-      const userCalendarData = userDoc.data().calendar.user;
-      const itemIndex = userCalendarData.findIndex(
-        (item) => item.id === elm.c_id
-      );
-      if (itemIndex !== -1) {
-        const updatedUserCalendarList = [...userCalendarData];
-        updatedUserCalendarList[itemIndex] = {
-          ...updatedUserCalendarList[itemIndex],
-          ...updatedData,
-        };
-        await updateDoc(
-          userRef,
-          { "calendar.user": updatedUserCalendarList },
-          { merge: true }
-        );
-        console.log("update OKK");
-      } else {
-        console.log("No todolist item found");
+    
+    let identifier = "";
+    // ==================================Notification============================
+    if(oldItem.isNotified && !elm.isNotified){ // Chỉ xóa thông báo khi cập nhật Thông báo -> Không thông báo
+      NotificationUtils.cancelNotification(oldItem.identifier);
+    }else{ // Còn những trường hợp còn lại thì set thông báo mới, kiểm tra luôn vụ chỉ thông báo trước 2h
+      await NotificationUtils.cancelNotification(oldItem.identifier);
+      //Thông báo cách tối thiểu 2h
+      const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]);
+      const now = new Date(Date.now());
+      const diff = deadlineDate - now;
+      console.log("Diff: ", diff); 
+      const twoHours = 2*60*60*1000;
+      if(diff > twoHours){ //2hours
+        const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
+        const timeInfo = {
+          year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
+          month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
+          day: Number(twoHoursBeforeDeadlineTime.getDate()),
+          hour: Number(twoHoursBeforeDeadlineTime.getHours()),
+          minute: Number(twoHoursBeforeDeadlineTime.getMinutes())
+        }
+        identifier = await NotificationUtils.setNotificationAndGetIdentifer(elm.title, elm.content, timeInfo);
       }
-    } catch (error) {
-      console.log("error: ", error);
     }
+  // =====================================DB===================================
+
+      const updatedData = {
+        id: elm.id,
+        title: elm.title,
+        dateString: textDateProcessed,
+        isNotified: elm.isNotified,
+        timeString: vTime,
+        description: elm.content,
+        isMoodle: elm.isMoodle,
+        identifier: identifier
+      };
+      try {
+        const userRef = doc(collection(firestore, "calendar"), user.uid);
+        const userDoc = await getDoc(userRef);
+        const userCalendarData = userDoc.data().calendar.user;
+        const itemIndex = userCalendarData.findIndex(
+          (item) => item.id === elm.id
+        );
+        if (itemIndex !== -1) {
+          const updatedUserCalendarList = [...userCalendarData];
+          updatedUserCalendarList[itemIndex] = {
+            ...updatedUserCalendarList[itemIndex],
+            ...updatedData,
+          };
+          await updateDoc(
+            userRef,
+            { "calendar.user": updatedUserCalendarList },
+            { merge: true }
+          );
+          console.log("update OKK");
+        } else {
+          console.log("No todolist item found");
+        }
+      } catch (error) {
+        console.log("error: ", error);
+      }
   }
 
   static deleteCalendar = async (c_item) => {
@@ -390,22 +411,8 @@ class CalendarService {
     } catch (error) {
       console.log("error: ", error);
     }
-};
+  };
 
-static deleteTodolist = async (id) => {
-  console.log("Delete Todolist");
-  const user = auth.currentUser;
-  const userRef = doc(collection(firestore, 'todolist'), user.uid);
-  try {
-      const userDoc = await getDoc(userRef);
-      const todolist = userDoc.data().todolist;
-      const updatedTodolist = todolist.filter(item => item.id !== id);
-      await updateDoc(userRef, { todolist: updatedTodolist }, {merge: true});
-      console.log("delete OKK");
-  } catch (error) {
-      console.log("error: ", error);
-  }
-};
 }
 
 export default CalendarService;

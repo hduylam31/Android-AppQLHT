@@ -21,19 +21,13 @@ class NotificationUtils{
                     }
                 })
             }else{
+                const scheduledDate  = new Date(timeInfo.year, timeInfo.month -1, timeInfo.day, timeInfo.hour, timeInfo.minute, 0);
                 identifier = await Notifications.scheduleNotificationAsync({
                     content: {
                         title: title,
                         body: content,
                     },
-                    trigger: {
-                        year: timeInfo.year,
-                        month: timeInfo.month,
-                        day: timeInfo.day,
-                        hour: timeInfo.hour,
-                        minute: timeInfo.minute,
-                        repeats: false
-                    }
+                    trigger: scheduledDate,
                 })
             }
             

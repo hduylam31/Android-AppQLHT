@@ -73,15 +73,15 @@ const Calendar_Add = () => {
         "Lỗi thêm thông tin",
         "Vui lòng nhập tiêu đề cho sự kiện mới"
       );
-    } else {
+    } else { 
       console.log("Start addingg");
       try {
-        await CalendarService.addUserCalendar(
+        await CalendarService.addUserCalendar( 
           title,
           textDate,
           textTime,
           content,
-          isNotified
+          isNotified  
         );
         navigation.navigate("BottomBar", {
           screen: "Calendar",
