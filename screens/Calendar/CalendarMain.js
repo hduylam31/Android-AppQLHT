@@ -19,8 +19,10 @@ import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import CalendarService from "../../service/CalendarService";
 import { MoodleIcon } from "../../assets";
+import moment from "moment";
+import Calendar_Add from "./CalendarAdd";
 
-const CalendarMain = (props) => {
+const CalendarMain = () => {
   const [markedDates, setMarkedDates] = useState();
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -32,7 +34,14 @@ const CalendarMain = (props) => {
   });
 
   const [calendar, setCalendar] = useState([]);
-  const [selectDay, setSelectDay] = useState([]);
+  const currentDate = new Date().toLocaleDateString();
+
+  const [selectedDay, setSelectedDay] = useState(
+    moment(currentDate, "M/DD/YYYY").format("YYYY-MM-DD")
+  );
+
+  console.log("a1", selectedDay);
+
   const [isMoodleActive, setIsMoodleActive] = useState();
 
   useEffect(() => {
@@ -73,6 +82,18 @@ const CalendarMain = (props) => {
       loadCalendar();
     }
   }, [route]);
+
+  const filteredMoodle = calendar.filter((item) => {
+    const showMoodle =
+      item.isMoodle === "true" && item.dateString === selectedDay;
+    return showMoodle;
+  });
+
+  const filteredIndividual = calendar.filter((item) => {
+    const showIndividual =
+      item.isMoodle === "false" && item.dateString === selectedDay;
+    return showIndividual;
+  });
 
   // useEffect(() => {
   //   if (isFocused) {
@@ -122,18 +143,18 @@ const CalendarMain = (props) => {
   );
 
   // const [selectedDate, setSelectedDate] = useState("");
-  const [selected, setSelected] = useState();
+  // const [selected, setSelected] = useState();
 
   const marked = useMemo(
     () => ({
       ...markedDates,
-      [selected]: {
+      [selectedDay]: {
         selected: true,
         selectedColor: "#393E36",
         selectedTextColor: "white",
       },
     }),
-    [selected, markedDates]
+    [selectedDay, markedDates]
   );
 
   console.log(isMoodleActive);
@@ -183,37 +204,27 @@ const CalendarMain = (props) => {
         </View>
         <View className="bg-[#F1F5F9] h-full w-full">
           <View className="w-full mt-[60%] h-[35%]">
-            <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
-              <FlatList
-                data={calendar.filter((item) => {
-                  if (
-                    item.isMoodle === "true" &&
-                    item.dateString === selectDay.dateString
-                  )
-                    return true;
-                  return false;
-                })}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={this.renderItem}
-              />
-            </View>
-            <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
-              <FlatList
-                data={calendar.filter((item) => {
-                  if (
-                    item.isMoodle === "false" &&
-                    item.dateString === selectDay.dateString
-                  )
-                    return true;
-                  return false;
-                })}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={this.renderItem}
-              />
-            </View>
+            {filteredMoodle.length > 0 && (
+              <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
+                <FlatList
+                  data={filteredMoodle}
+                  keyExtractor={(item) => item.id.toString()}
+                  renderItem={this.renderItem}
+                />
+              </View>
+            )}
+            {filteredIndividual.length > 0 && (
+              <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
+                <FlatList
+                  data={filteredIndividual}
+                  keyExtractor={(item) => item.id.toString()}
+                  renderItem={this.renderItem}
+                />
+              </View>
+            )}
           </View>
         </View>
-        <View className="absolute w-full top-20">
+        <View className="absolute w-full top-16">
           <Calendar
             style={{
               borderRadius: 10,
@@ -223,12 +234,12 @@ const CalendarMain = (props) => {
             markingType={"multi-dot"}
             markedDates={marked}
             onDayPress={(date) => {
-              setSelectDay(date);
-              setSelected(date.dateString);
-              props.onDaySelect && props.onDaySelect(date);
+              setSelectedDay(date.dateString);
+              console.log(selectedDay);
+              // props.onDaySelect && props.onDaySelect(date);
             }}
             // markedDates={marked}
-            {...props}
+            // {...props}
           />
         </View>
         <TouchableOpacity
@@ -241,6 +252,7 @@ const CalendarMain = (props) => {
             Thêm thời khóa biểu
           </Text>
         </TouchableOpacity>
+        <Calendar_Add selectedDay={selectedDay} />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
