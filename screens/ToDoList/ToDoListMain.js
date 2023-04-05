@@ -33,9 +33,6 @@ const CategoryView = ({ label }) => (
 );
 const ToDoListScreen = () => {
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
-
-  console.log("Set todolist");
 
   //======= BE: lấy data todolist của account đang đăng nhập =========
   const [todolists, setTodolists] = useState([]);
@@ -50,12 +47,6 @@ const ToDoListScreen = () => {
   useEffect(() => {
     loadTodolist();
   }, []);
-
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     loadTodolist();
-  //   }
-  // }, [isFocused]);
 
   const route = useRoute();
   useEffect(() => {
@@ -77,10 +68,10 @@ const ToDoListScreen = () => {
 
   // ===========================================================================
 
-  const handleToggleCompleted = (itemId) => {
-    TodolistService.updateCompletedStatus(itemId);
+  const handleToggleCompleted = (item) => {
+    TodolistService.updateCompletedStatus(item);
     const updatedTodos = todos.map((todo) => {
-      if (todo.id === itemId) {
+      if (todo.id === item.id) {
         return { ...todo, isCompleted: !todo.isCompleted };
       } else {
         return todo;
@@ -99,15 +90,7 @@ const ToDoListScreen = () => {
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("TodoList_Edit", {
-          c_id: item.id,
-          c_title: item.title,
-          c_category: item.category,
-          c_isNotified: item.isNotified,
-          c_hour: item.hour,
-          c_text: item.text,
-          c_isCompleted: item.isCompleted,
-        });
+        navigation.navigate("TodoList_Edit", {item});
       }}
     >
       <Animatable.View
@@ -143,7 +126,7 @@ const ToDoListScreen = () => {
 
         <CheckBox
           checked={item.isCompleted}
-          onPress={() => handleToggleCompleted(item.id)}
+          onPress={() => handleToggleCompleted(item)}
           iconType="material-community"
           checkedIcon="checkbox-marked"
           uncheckedIcon="checkbox-blank-outline"
@@ -156,15 +139,7 @@ const ToDoListScreen = () => {
   renderItemCompleted = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("TodoList_Edit", {
-          c_id: item.id,
-          c_title: item.title,
-          c_category: item.category,
-          c_isNotified: item.isNotified,
-          c_hour: item.hour,
-          c_text: item.text,
-          c_isCompleted: item.isCompleted,
-        });
+        navigation.navigate("TodoList_Edit", {item});
       }}
     >
       <Animatable.View
@@ -192,7 +167,7 @@ const ToDoListScreen = () => {
 
         <CheckBox
           checked={item.isCompleted}
-          onPress={() => handleToggleCompleted(item.id)}
+          onPress={() => handleToggleCompleted(item)}
           iconType="material-community"
           checkedIcon="checkbox-marked"
           uncheckedIcon="checkbox-blank-outline"

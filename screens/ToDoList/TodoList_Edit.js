@@ -64,35 +64,19 @@ const TodoList_Edit = () => {
   const [textTime, setTimeDate] = React.useState();
 
   const route = useRoute();
-  const {
-    c_id,
-    c_title,
-    c_category,
-    c_isNotified,
-    c_hour,
-    c_text,
-    c_isCompleted,
-  } = route.params;
+  const item = route.params.item;
 
   useEffect(() => {
-    setTimeDate(c_hour);
-  }, [c_hour]);
-
-  useEffect(() => {
-    setTitle(c_title);
-  }, [c_title]);
-
-  useEffect(() => {
-    setSelectedCategory(c_category);
-  }, [c_category]);
-
-  useEffect(() => {
-    setValue(c_text);
-  }, [c_text]);
-
-  useEffect(() => {
-    setIsNotified(c_isNotified);
-  }, [c_isNotified]);
+    const loadData = () => {
+      setTitle(item.title);
+      setTimeDate(item.hour);
+      setTitle(item.title);
+      setSelectedCategory(item.category);
+      setValue(item.text);
+      setIsNotified(item.isNotified);
+    };
+    loadData();
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -108,21 +92,23 @@ const TodoList_Edit = () => {
     console.log("Start update");
     try {
       // TodolistService.addTodolist
-      await TodolistService.updateTodolist(
-        c_id,
-        title,
-        selectedCategory,
-        isNotified,
-        textTime,
-        value,
-        c_isCompleted
-      );
+      const new_item = {
+        id: item.id,
+        title: title,
+        category: selectedCategory,
+        isNotified: isNotified,
+        hour: textTime,
+        text: value,
+        isCompleted: item.isCompleted,
+        identifier: item.identifier
+      }
+      await TodolistService.updateTodolist(new_item, item);
       navigation.navigate("BottomBar", {
-        screen: "ToDoList",
+        screen: "ToDoList", 
         params: {
           screenTodoList: "EditToMain",
         },
-      });
+      }); 
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -131,7 +117,7 @@ const TodoList_Edit = () => {
   const handleDeleteTodolist = async () => {
     console.log("Start delete");
     try {
-      await TodolistService.deleteTodolist(c_id);
+      await TodolistService.deleteTodolist(item);
       navigation.navigate("BottomBar", {
         screen: "ToDoList",
         params: {
