@@ -43,7 +43,7 @@ const ForgotPassword_CheckMail = () => {
       <View className="mt-10 space-y-5">
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("ForgotPassword_ChangePass");
+            navigation.navigate("Login");
           }}
         >
           <Animatable.View
@@ -58,18 +58,10 @@ const ForgotPassword_CheckMail = () => {
               elevation: 5,
             }}
           >
-            <Text className="text-base font-bold">Mở ứng dụng email</Text>
+            <Text className="text-[#3A4666] text-base font-bold">
+              Quay lại trang đăng nhập
+            </Text>
           </Animatable.View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Login");
-          }}
-          className="justify-center items-center"
-        >
-          <Text className="text-base font-bold text-white">
-            Bỏ qua, bạn sẽ xác nhận sau
-          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

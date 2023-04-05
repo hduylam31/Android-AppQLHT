@@ -5,7 +5,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  ScrollView,
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -24,20 +24,24 @@ const ForgotPassword = () => {
   }, []);
 
   const handleResetEmail = () => {
-    try {
-      if (email) {
-        CredentialService.handleResetEmail(email);
-        console.log("OK");
-        navigation.navigate("ForgotPassword_CheckMail");
+    if (email === "") {
+      Alert.alert("Gửi hướng dẫn không thành công", "Vui lòng nhập email");
+    } else {
+      try {
+        if (email) {
+          CredentialService.handleResetEmail(email);
+          console.log("OK");
+          navigation.navigate("ForgotPassword_CheckMail");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-[#3A4666]">
-      <View className="w-full h-[45%] bg-[#23ACCD] rounded-b-[50px]">
+      <View className="w-full h-80 bg-[#23ACCD] rounded-b-3xl">
         <View className="w-60 h-60 bg-[#126C83] rounded-full absolute top-12 -left-16"></View>
         <View className="w-32 h-32 bg-[#126C83] rounded-full absolute top-44 -right-8"></View>
         <Image
@@ -71,9 +75,6 @@ const ForgotPassword = () => {
         </View>
         <TouchableOpacity
           onPress={handleResetEmail}
-          // onPress={() => {
-          //
-          // }}
           className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-5 flex items-center justify-center"
         >
           <Text className="text-[#3A4666] text-center font-bold text-xl">
