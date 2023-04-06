@@ -189,6 +189,34 @@ class TodolistService{
         }
         
     }
+
+    static async loadNotificationAndUpdateDb(){
+        try {
+            const user = auth.currentUser;
+            const userRef = doc(collection(firestore, 'todolist'), user.uid);
+            const userDoc = await getDoc(userRef);
+            if(userDoc.exists()){
+                const todolist = userDoc.data().todolist;
+                const updatedTodolist = [...todolist];
+                const itemIndexes = todolist.filter(item => item.identifier != "")
+                                            .map(item => todolist.findIndex(obj => obj.id == item.id));
+                for(const i of itemIndexes) {
+                    const elem = todolist[i];
+                    const timeArray = elem.hour.split(":");
+                    const timeInfo = {
+                        hour: Number(timeArray[0]),
+                        minute: Number(timeArray[1]),
+                        isRepeated: true
+                    }
+                    const identifier = await NotificationUtils.setNotificationAndGetIdentifer(elem.title, elem.text, timeInfo);
+                    updatedTodolist[i] = {...updatedTodolist[i], identifier: identifier};
+                };
+                await updateDoc(userRef, { todolist: updatedTodolist }, {merge: true});
+            }
+        } catch (error) {
+            console.log("error: ", error);
+        }
+    }
 }
 
 export default TodolistService;

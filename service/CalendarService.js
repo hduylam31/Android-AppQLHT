@@ -98,6 +98,42 @@ class CalendarService {
     }
   }
 
+  static async unRegisterMoodleNotification(){
+    const user = auth.currentUser;
+    const userRef = doc(collection(firestore, "calendar"), user.uid);
+    const userDoc = await getDoc(userRef);
+    if(userDoc.exists()){
+      const moodleData = userDoc.data().calendar.moodle;
+      const identifiers = [];
+      moodleData.forEach(item => {
+        if(item.identifier != ""){
+          identifiers.push(item.identifier);
+        }
+      });
+      if (identifiers.length > 0) {
+        await Promise.all(identifiers.map(item => NotificationUtils.cancelNotification(item)));
+      }
+    }
+  }
+
+  static async logOutMoodle(status){
+    try {
+      const user = auth.currentUser;
+      const userRef = doc(collection(firestore, "user"), user.uid);
+      //Xóa token + cập nhật status moodle token
+      updateDoc(userRef, { moodle: {status: status}  });
+      //Xóa tất cả dữ liệu thông báo + moodle
+      const calendarRef = doc(collection(firestore, "calendar"), user.uid);
+      await this.unRegisterMoodleNotification();
+      updateDoc(calendarRef, { "calendar.moodle": []});
+    return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  
+
   static async saveCalendarData(token) {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
@@ -108,19 +144,14 @@ class CalendarService {
     let currentMonthEvent = await this.fetchCalendarData(token, 11, 2022);
     if(currentMonthEvent === "error"){
       console.log("error token");
-      const user = auth.currentUser;
-      const userRef = doc(collection(firestore, "user"), user.uid);
-      //Xóa token + cập nhật status moodle token
-      updateDoc(userRef, { moodle: {status: -1}  });
-      //Xóa tất cả dữ liệu moodle
-      const calendarRef = doc(collection(firestore, "calendar"), user.uid);
-      updateDoc(calendarRef, { "calendar.moodle": []});
+      await this.logOutMoodle(-1);
       return;
     }
 
     let nextMonthEvent = await this.fetchCalendarData(token, 12, 2022);
     const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);
-
+    console.log(twoMonthEvents);
+    // =====================================DB===================================
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "calendar"), user.uid);
     const userDoc = await getDoc(userRef);
@@ -153,9 +184,10 @@ class CalendarService {
       return "error";
     }
     const events = [];
+    const promises = []; // create an array to store promises
     data.weeks.forEach((week) => {
       week.days.forEach((day) => {
-        day.events.forEach((event) => {
+        day.events.forEach(async (event) => {
           const timestamp = event.timestart;
           const date = new Date(timestamp * 1000);
           const dateString = date
@@ -173,20 +205,52 @@ class CalendarService {
             hourCycle: "h24",
           });
           const id = generateUUID(6);
-          const eventItem = {
-            id: id,
-            title: event.name,
-            description: event.course.fullname,
-            isMoodle: "true",
-            isNotified: true,
-            dateString: dateString,
-            timeString: timeString,
-          };
-          events.push(eventItem);
+          // ==================================Notification============================
+          //Thông báo cách tối thiểu 2h
+          const [year, month, day] = dateString.split("-");
+          const timeArray = timeString.split(":");
+          // const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]); //test 01/12/2022 do dữ liệu đang tháng 11 và 12/2022
+          const now = new Date(Date.now());
+          // const now = new Date(2022,12-1, 1,0,0);
+          const diff = deadlineDate - now;
+          const twoHours = 2*60*60*1000;
+          const twoDays = 60*1000*60*24*2;
+          let identifier = "";
+          if(diff > twoHours && diff <= twoDays){ //2hours và chỉ lấy dữ liệu trong 2 ngày tiếp theo
+            const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
+            const timeInfo = {
+              year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
+              month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
+              day: Number(twoHoursBeforeDeadlineTime.getDate()),
+              hour: Number(twoHoursBeforeDeadlineTime.getHours()),
+              minute: Number(twoHoursBeforeDeadlineTime.getMinutes())
+            }
+            promises.push(NotificationUtils.setNotificationAndGetIdentifer(event.course.fullname, event.name, timeInfo).then((res) => {
+              identifier = res;
+            }))
+          }
+          // ==================================End Notification============================
+          
+          const eventItemPromise = Promise.all(promises).then(()=> {
+            const eventItem = {
+              id: id,
+              title: event.name,
+              description: event.course.fullname,
+              isMoodle: "true",
+              isNotified: true,
+              dateString: dateString,
+              timeString: timeString,
+              identifier: identifier
+            };
+            events.push(eventItem);
+          })
+          promises.push(eventItemPromise);
         });
       });
     });
-    return events;
+    return Promise.all(promises).then(()=>{
+      return events
+    });
   }
 
   static async loadCalendarData() {

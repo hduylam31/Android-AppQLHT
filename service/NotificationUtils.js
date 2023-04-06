@@ -43,7 +43,7 @@ class NotificationUtils{
     static async cancelNotification(identifier){
         try {
             await Notifications.cancelScheduledNotificationAsync(identifier);
-            console.log("remove notification Ok");
+            console.log("remove notification Ok: ", identifier);
             return true;
         } catch (error) {
             console.log("Cancel Notification: ", error);
