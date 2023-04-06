@@ -22,6 +22,14 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setrePassword] = useState("");
+  const [validationMessage, setValidationMessage] = useState("");
+
+  let validateAndSet = (value, valueCompare, setValue) => {
+    value !== valueCompare
+      ? setValidationMessage("Mật khẩu nhập lại không khớp")
+      : setValidationMessage("");
+    setValue(value);
+  };
 
   const handleRegister = () => {
     if (email === "") {
@@ -60,7 +68,7 @@ const Register = () => {
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       <SafeAreaView>
-        <View className="flex-1 bg-[#3A4666] h-full">
+        <ScrollView className="bg-[#3A4666] h-full">
           <View className="w-full h-96 bg-[#23ACCD] rounded-b-[50px]">
             <View className="w-60 h-60 bg-[#126C83] rounded-full absolute top-12 -left-16"></View>
             <View className="w-32 h-32 bg-[#126C83] rounded-full absolute top-44 -right-8"></View>
@@ -100,47 +108,50 @@ const Register = () => {
               Đăng nhập
             </Text>
           </TouchableOpacity>
-        </View>
-        <View className="w-[90%] h-80 bg-white rounded-2xl mx-[5%] mt-[60%] flex justify-center items-center absolute">
-          <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 mb-[3%]">
-            <TextInput
-              className="text-lg pl-4"
-              placeholderTextColor="#9A999B"
-              placeholder="Họ và tên"
-              value={name}
-              onChangeText={(name) => setName(name)}
-            ></TextInput>
+          <View className="w-[90%] h-80 bg-white rounded-2xl mx-[5%] top-56 flex justify-center items-center absolute">
+            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 mb-[3%]">
+              <TextInput
+                className="text-lg pl-4"
+                placeholderTextColor="#9A999B"
+                placeholder="Họ và tên"
+                value={name}
+                onChangeText={(name) => setName(name)}
+              ></TextInput>
+            </View>
+            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
+              <TextInput
+                className="text-lg pl-4"
+                placeholderTextColor="#9A999B"
+                placeholder="Email"
+                value={email}
+                onChangeText={(email) => setEmail(email)}
+              ></TextInput>
+            </View>
+            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
+              <TextInput
+                className="text-lg pl-4"
+                placeholderTextColor="#9A999B"
+                placeholder="Mật khẩu"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+              ></TextInput>
+            </View>
+            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
+              <TextInput
+                className="text-lg pl-4"
+                placeholderTextColor="#9A999B"
+                placeholder="Nhập lại mật khẩu"
+                secureTextEntry={true}
+                value={repassword}
+                onChangeText={(value) =>
+                  validateAndSet(value, password, setrePassword)
+                }
+              ></TextInput>
+              <Text className="mt-4 text-red-500">{validationMessage}</Text>
+            </View>
           </View>
-          <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
-            <TextInput
-              className="text-lg pl-4"
-              placeholderTextColor="#9A999B"
-              placeholder="Email"
-              value={email}
-              onChangeText={(email) => setEmail(email)}
-            ></TextInput>
-          </View>
-          <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
-            <TextInput
-              className="text-lg pl-4"
-              placeholderTextColor="#9A999B"
-              placeholder="Mật khẩu"
-              secureTextEntry={true}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-            ></TextInput>
-          </View>
-          <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
-            <TextInput
-              className="text-lg pl-4"
-              placeholderTextColor="#9A999B"
-              placeholder="Nhập lại mật khẩu"
-              secureTextEntry={true}
-              value={repassword}
-              onChangeText={(text) => setrePassword(text)}
-            ></TextInput>
-          </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

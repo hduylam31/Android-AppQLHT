@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 
-const NoteListMain = (props) => {
+const NoteListMain = () => {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
@@ -108,7 +108,7 @@ const NoteListMain = (props) => {
                     </View>
                     <View className="h-full">
                       <Text
-                        numberOfLines={3}
+                        numberOfLines={5}
                         ellipsizeMode="tail"
                         className={"text-sm"}
                       >

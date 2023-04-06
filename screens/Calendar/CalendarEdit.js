@@ -8,11 +8,13 @@ import {
   Platform,
   Alert,
   Switch,
+  ScrollView,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
 
@@ -104,7 +106,7 @@ const Calendar_Edit = () => {
         content,
         isNotified,
         content,
-        isMoodle: item.isMoodle  
+        isMoodle: item.isMoodle,
       };
       console.log("new Item: ", newItem);
       console.log("Old Item: ", item);
@@ -128,10 +130,10 @@ const Calendar_Edit = () => {
         screen: "Calendar",
         params: {
           screenCalendar: "DeleteToMain",
-        }, 
+        },
       });
     } catch (error) {
-      console.log("Fail due to: ", error); 
+      console.log("Fail due to: ", error);
     }
   };
 
@@ -153,23 +155,34 @@ const Calendar_Edit = () => {
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
-      <SafeAreaView className="bg-[#3A4666]">
+      <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-15">
           <View className="flex-row justify-between items-center p-4">
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <AntDesign name="arrowleft" size={30} color="white" />
+              <MaterialCommunityIcons
+                name="arrow-left"
+                size={30}
+                color="white"
+              />
             </TouchableOpacity>
             <View>
               <Text className="text-white text-xl">Cập nhật sự kiện</Text>
             </View>
-            <View className="w-8 h-8">
-              <TouchableOpacity onPress={AlertDelete}>
-                <AntDesign name="delete" size={25} color="white" />
+            <View className="flex-row">
+              <TouchableOpacity onPress={handleUpdateCalendar}>
+                <MaterialCommunityIcons name="check" size={30} color="white" />
               </TouchableOpacity>
+              {/* <TouchableOpacity onPress={AlertDelete}>
+                <MaterialCommunityIcons
+                  name="trash-can-outline"
+                  size={30}
+                  color="white"
+                />
+              </TouchableOpacity> */}
             </View>
           </View>
         </View>
-        <View className="bg-[#F1F5F9] px-5 pt-[4%] space-y-2 h-full">
+        <ScrollView className="bg-[#F1F5F9] px-5 pt-[4%] space-y-2 h-full">
           <LockedView isMoodle={item.isMoodle}>
             <View className="space-y-2">
               <Text className="text-base">Tiêu đề</Text>
@@ -234,10 +247,10 @@ const Calendar_Edit = () => {
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-80 bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
+              className="w-[100%] h-72 bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
               multiline={true}
               value={content}
-              numberOfLines={4}
+              numberOfLines={8}
               onChangeText={(value) => setContent(value)}
               textAlignVertical="top"
             ></TextInput>
@@ -251,7 +264,7 @@ const Calendar_Edit = () => {
               </Text>
             </TouchableOpacity>
           </LockedView>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

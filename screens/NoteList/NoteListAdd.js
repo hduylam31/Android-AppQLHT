@@ -6,12 +6,22 @@ import {
   TouchableWithoutFeedback,
   TextInput,
   Alert,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
-import React, { useLayoutEffect, useState } from "react";
+import {
+  actions,
+  RichEditor,
+  RichToolbar,
+} from "react-native-pell-rich-editor";
+
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const NoteList_Add = () => {
   const navigation = useNavigation();
@@ -19,6 +29,7 @@ const NoteList_Add = () => {
   const [title, setTitle] = useState("");
 
   const [note, setNote] = useState("");
+  console.log(note);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -54,6 +65,28 @@ const NoteList_Add = () => {
   //       }
   //     }
   //   };
+  const richText = useRef();
+
+  const getFirstParagraph = () => {
+    const contentHtml = richEditorRef.current?.getContentHtml(); // lấy nội dung HTML từ RichEditor
+    const firstParagraph = stripHtml(contentHtml).result.split("\n")[0]; // xóa các thẻ HTML và lấy đoạn đầu tiên
+    return firstParagraph;
+  };
+
+  // const [selectedColor, setSelectedColor] = useState("#000");
+
+  // const handleColorChange = (color) => {
+  //   setSelectedColor(color);
+  // };
+
+  // const colors = [
+  //   "#000", // black
+  //   "#f00", // red
+  //   "#0f0", // green
+  //   "#00f", // blue
+  //   "#ff0", // yellow
+  //   "#fff", // white
+  // ];
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
@@ -67,44 +100,79 @@ const NoteList_Add = () => {
             <View>
               <Text className="text-white text-xl">Thêm ghi chú mới</Text>
             </View>
-            <View className="w-8 h-8"></View>
-            {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên
-        {/* Phần tiêu đề */}
+            <TouchableOpacity>
+              <MaterialCommunityIcons
+                name="trash-can-outline"
+                size={30}
+                color="white"
+              />
+            </TouchableOpacity>
           </View>
         </View>
-
-        <View className="bg-[#F1F5F9] px-5 pt-[4%] space-y-2 h-full">
-          <View className="space-y-2">
-            <Text className="text-base">Tiêu đề</Text>
-
-            <TextInput
-              placeholder="Tiêu đề"
-              placeholderTextColor="#000000"
-              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-[#3A4666] rounded-lg resize-none"
-              value={title}
-              onChangeText={(text) => setTitle(text)}
-            ></TextInput>
-          </View>
-          <View className="space-y-2">
-            <Text className="text-base">Ghi chú</Text>
-            <TextInput
+        <View className="p-2 border-b-2 border-b-[#9A999B] bg-white">
+          <TextInput
+            placeholder="Tiêu đề"
+            style={{ fontSize: 16 }}
+            className="w-[100%] pl-2 resize-none"
+            multiline={true}
+            value={title}
+            onChangeText={(text) => setTitle(text)}
+            textAlignVertical="top"
+          ></TextInput>
+        </View>
+        <ScrollView className="px-2 space-y-2 h-full bg-white">
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+          >
+            <RichEditor
+              ref={richText}
               placeholder="Nội dung"
-              placeholderTextColor="#000000"
-              className="w-[100%] h-[462px] bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-[#3A4666] text-base rounded-[8px] resize-none"
-              multiline={true}
-              value={note}
-              onChangeText={(text) => setNote(text)}
-              textAlignVertical="top"
-            ></TextInput>
-          </View>
-          <TouchableOpacity
+              // editorStyle={{ color: "red" }}
+              onChange={(text) => setNote(text)}
+            />
+            {/* </View> */}
+            {/* <TouchableOpacity
             // onPress={handleAddingUserNoteList}
             className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[5%] w-[90%] ml-[5%]"
           >
             <Text className="text-white text-center font-bold text-xl">
               Lưu
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          </KeyboardAvoidingView>
+        </ScrollView>
+        <View className="flex absolute bottom-0">
+          <RichToolbar
+            // selectedColor={selectedColor}
+            // colors={colors}
+            editor={richText}
+            actions={[
+              actions.keyboard,
+              actions.undo,
+              actions.redo,
+              actions.setBold,
+              actions.setItalic,
+              actions.setUnderline,
+              actions.insertBulletsList,
+              actions.insertOrderedList,
+              actions.alignLeft,
+              actions.alignCenter,
+              actions.alignRight,
+              actions.alignFull,
+              actions.insertLink,
+              actions.heading1,
+              actions.setStrikethrough,
+              actions.removeFormat,
+              actions.insertVideo,
+              actions.checkboxList,
+            ]}
+            iconMap={{
+              [actions.heading1]: () => (
+                <Text className="mb-1 text-lg">H1</Text>
+              ),
+            }}
+          />
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

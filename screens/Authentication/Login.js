@@ -102,14 +102,14 @@ const Login = () => {
                   placeholder="Tên đăng nhập"
                   value={email}
                   onChangeText={(text) => setEmail(text)}
-                  className="w-[80%] h-[20%] bg-[#D9D9D9] mt-[20%] self-center pl-4"
+                  className="w-[80%] h-[20%] bg-[#D9D9D9] mt-[20%] self-center pl-4 rounded-2xl"
                 ></TextInput>
                 <TextInput
                   placeholder="Mật khẩu"
                   value={Password}
                   onChangeText={(text) => setPassword(text)}
                   secureTextEntry
-                  className="w-[80%] h-[20%] bg-[#D9D9D9] self-center pl-4"
+                  className="w-[80%] h-[20%] bg-[#D9D9D9] self-center pl-4 rounded-2xl"
                 ></TextInput>
                 <TouchableOpacity onPress={handleLogin}>
                   <Animatable.View
