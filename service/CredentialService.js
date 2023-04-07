@@ -8,15 +8,15 @@ import { auth, firestore } from "../firebase";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 
 class CredentialService {
-  static handleLoginWithEmail = (username, password) => {
-    signInWithEmailAndPassword(auth, username, password)
+  static handleLoginWithEmail = async (username, password) => {
+    await signInWithEmailAndPassword(auth, username, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("Logged in with :", user.email);
       })
       .catch((error) => {
         console.log("Fail:");
-        alert(error.message);
+        alert("Sai thông tin đăng nhập");
       });
   };
 

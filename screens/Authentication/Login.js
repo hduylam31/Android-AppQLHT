@@ -26,6 +26,7 @@ import {
 } from "../../assets";
 import CredentialService from "../../service/CredentialService";
 import { auth } from "../../firebase";
+import CommonService from "../../service/CommonService";
 
 const Login = () => {
   const navigation = useNavigation();
@@ -33,9 +34,11 @@ const Login = () => {
   const [email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
   useEffect(() => {
-    const unsubcribe = auth.onAuthStateChanged((user) => {
+    const unsubcribe = auth.onAuthStateChanged(async (user) => {
       console.log("checkuser");
       if (user) {
+        await CommonService.loadAllNotificationAndUpdateDB(); 
+        console.log("Load Notification OK");
         navigation.navigate("BottomBar");
       }
     });
@@ -48,7 +51,7 @@ const Login = () => {
     });
   });
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     try {
       let account;
       if (!email.includes("gmail.com")) {
@@ -56,7 +59,7 @@ const Login = () => {
       } else {
         account = email;
       }
-      CredentialService.handleLoginWithEmail(account, Password);
+      await CredentialService.handleLoginWithEmail(account, Password);
       console.log("Login OK");
     } catch (error) {
       console.log("Login fail with: ", error);
@@ -168,7 +171,7 @@ const Login = () => {
                 <View>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("Register");
+                      navigation.navigate("Register"); 
                     }}
                   >
                     <Text className="text-sm" style={{ color: "#23ACCD" }}>

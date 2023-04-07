@@ -31,7 +31,7 @@ const Calendar_Add = ({ selectedDay }) => {
   console.log("aa", selectedDay);
 
   // const selectedDay = props.currentDate;
-  const DaySelected = moment(selectedDay, "YYYY-MM-DD").format("D/M/YYYY");
+  const DaySelected = moment(selectedDay, "YYYY-MM-DD").format("DD/MM/YYYY");
   console.log("aaa", DaySelected);
 
   const [textDate, setDateText] = useState(DaySelected);

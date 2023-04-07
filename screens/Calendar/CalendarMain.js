@@ -40,8 +40,6 @@ const CalendarMain = () => {
     moment(currentDate, "M/DD/YYYY").format("YYYY-MM-DD")
   );
 
-  console.log("a1", selectedDay);
-
   const [isMoodleActive, setIsMoodleActive] = useState();
 
   useEffect(() => {
@@ -58,6 +56,7 @@ const CalendarMain = () => {
   const loadCalendar = async () => {
     try {
       const calendar = await CalendarService.loadCalendarData();
+      console.log("calendar: ", calendar);
       setCalendar(calendar);
       const calendarProcess = await CalendarService.processDataForCalendar(
         calendar
@@ -235,7 +234,6 @@ const CalendarMain = () => {
             markedDates={marked}
             onDayPress={(date) => {
               setSelectedDay(date.dateString);
-              console.log(selectedDay);
               // props.onDaySelect && props.onDaySelect(date);
             }}
             // markedDates={marked}

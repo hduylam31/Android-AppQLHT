@@ -69,14 +69,14 @@ const Login_Moodle = () => {
               source={moodleLogin}
               resizeMode="contain"
               style={{ marginLeft: 30 }}
-            />
+            /> 
           </View> 
           <View className="w-42 h-60 bg-white rounded-2xl mx-6 mt-10 flex justify-center items-center space-y-6">
             <TextInput
               placeholder="Tài khoản"
               value={username}
               onChangeText={(text) => setUsername(text)}
-              className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4"
+              className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4" 
             ></TextInput>
             <TextInput
               placeholder="Mật khẩu"

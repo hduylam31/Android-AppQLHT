@@ -209,14 +209,14 @@ class CalendarService {
           //Thông báo cách tối thiểu 2h
           const [year, month, day] = dateString.split("-");
           const timeArray = timeString.split(":");
-          // const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]); //test 01/12/2022 do dữ liệu đang tháng 11 và 12/2022
+          const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]); 
           const now = new Date(Date.now());
-          // const now = new Date(2022,12-1, 1,0,0);
+          // const now = new Date(2022,12-1, 1,0,0); //test 01/12/2022 do dữ liệu đang tháng 11 và 12/2022
           const diff = deadlineDate - now;
           const twoHours = 2*60*60*1000;
           const twoDays = 60*1000*60*24*2;
           let identifier = "";
-          if(diff > twoHours && diff <= twoDays){ //2hours và chỉ lấy dữ liệu trong 2 ngày tiếp theo
+          if(diff > twoHours && diff <= twoDays){ //2hours và chỉ lấy dữ liệu trong 2 ngày tiếp theo (test thì lấy 30 ngày)
             const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
             const timeInfo = {
               year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
@@ -351,8 +351,6 @@ class CalendarService {
           identifier = await NotificationUtils.setNotificationAndGetIdentifer(title, content, timeInfo);
         }
       }
-
-
       const item = {
         id: documentId,
         title: title,
@@ -476,6 +474,66 @@ class CalendarService {
       console.log("error: ", error);
     }
   };
+
+  static async loadNotificationAndUpdateDb(){
+    try {
+        const user = auth.currentUser; 
+        const userRef = doc(collection(firestore, 'calendar'), user.uid);
+        const userDoc = await getDoc(userRef);
+        if(userDoc.exists()){
+            const moodleData = userDoc.data().calendar.moodle;   
+            const userData = userDoc.data().calendar.user;  
+            // loadNotificationAndUpdateOne(moodleData, userRef, true);
+            loadNotificationAndUpdateOne(userData, userRef, false);
+        }
+    } catch (error) {
+        console.log("error: ", error);
+    }
+
+    async function loadNotificationAndUpdateOne(data, userRef, isMoodleProcess) {
+        const updatedCalendar = [...data];
+        const itemIndexes = data.filter(item => item.identifier != "")
+                                    .map(item => data.findIndex(obj => obj.id == item.id));
+        for(const i of itemIndexes) {
+            const elem = data[i];
+            const timeArray = elem.timeString.split(":");
+            const [year, month, day] = elem.dateString.split("-");
+            /* ==================================Notification====================================== */
+            //Thông báo cách tối thiểu 2h
+            const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]);
+            const now = new Date(Date.now());
+            // const now = new Date(2022,12-1, 1,0,0);
+            const diff = deadlineDate - now;
+            const twoHours = 2*60*60*1000;
+            const twoDays = 60*1000*60*24*2;
+            if(diff > twoHours && diff <= twoDays){ // > 2hours and < 2 day
+              const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
+              const timeInfo = {
+                year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
+                month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
+                day: Number(twoHoursBeforeDeadlineTime.getDate()),
+                hour: Number(twoHoursBeforeDeadlineTime.getHours()),
+                minute: Number(twoHoursBeforeDeadlineTime.getMinutes())
+              }
+              let identifier;
+              if(isMoodleProcess){
+                identifier = await NotificationUtils.setNotificationAndGetIdentifer(elem.description, elem.title, timeInfo);
+              }else{
+                identifier = await NotificationUtils.setNotificationAndGetIdentifer(elem.title, elem.description, timeInfo);
+              }
+              updatedCalendar[i] = {...updatedCalendar[i], identifier: identifier};
+            }else{
+              updatedCalendar[i] = {...updatedCalendar[i], identifier: ""};
+            }
+        };
+        if(isMoodleProcess){
+          await updateDoc(userRef,{ "calendar.moodle": updatedCalendar },{ merge: true });
+        }else{
+          await updateDoc(userRef,{ "calendar.user": updatedCalendar },{ merge: true });
+        }
+        
+    }
+}
 
 }
 
