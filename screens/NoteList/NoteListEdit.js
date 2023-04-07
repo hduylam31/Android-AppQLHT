@@ -21,6 +21,7 @@ import React, { useLayoutEffect, useState, useRef } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const NoteList_Edit = () => {
   const navigation = useNavigation();
@@ -96,6 +97,21 @@ const NoteList_Edit = () => {
 
   const richText = useRef();
 
+  const [isKeyboardShowing, setIsKeyboardShowing] = useState(false);
+
+  const showKeyboard = () => {
+    console.log("Keyboard is showing");
+    setIsKeyboardShowing(true);
+  };
+
+  const hideKeyboard = () => {
+    console.log("Keyboard is hiding");
+    setIsKeyboardShowing(false);
+  };
+
+  Keyboard.addListener("keyboardDidShow", showKeyboard);
+  Keyboard.addListener("keyboardDidHide", hideKeyboard);
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -108,11 +124,19 @@ const NoteList_Edit = () => {
             <View>
               <Text className="text-white text-xl">Cập nhật ghi chú</Text>
             </View>
-            <View className="w-8 h-8">
-              <TouchableOpacity onPress={AlertDelete}>
-                <AntDesign name="delete" size={25} color="white" />
+            {isKeyboardShowing ? (
+              <TouchableOpacity>
+                <MaterialCommunityIcons name="check" size={30} color="white" />
               </TouchableOpacity>
-            </View>
+            ) : (
+              <TouchableOpacity onPress={AlertDelete}>
+                <MaterialCommunityIcons
+                  name="trash-can-outline"
+                  size={30}
+                  color="white"
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 

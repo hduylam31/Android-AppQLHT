@@ -17,7 +17,7 @@ import {
   RichToolbar,
 } from "react-native-pell-rich-editor";
 
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
@@ -67,6 +67,22 @@ const NoteList_Add = () => {
   //   };
   const richText = useRef();
 
+  //Kiểm tra bàn phím có đang xuất hiện không
+  const [isKeyboardShowing, setIsKeyboardShowing] = useState(false);
+
+  const showKeyboard = () => {
+    console.log("Keyboard is showing");
+    setIsKeyboardShowing(true);
+  };
+
+  const hideKeyboard = () => {
+    console.log("Keyboard is hiding");
+    setIsKeyboardShowing(false);
+  };
+
+  Keyboard.addListener("keyboardDidShow", showKeyboard);
+  Keyboard.addListener("keyboardDidHide", hideKeyboard);
+
   const getFirstParagraph = () => {
     const contentHtml = richEditorRef.current?.getContentHtml(); // lấy nội dung HTML từ RichEditor
     const firstParagraph = stripHtml(contentHtml).result.split("\n")[0]; // xóa các thẻ HTML và lấy đoạn đầu tiên
@@ -100,13 +116,20 @@ const NoteList_Add = () => {
             <View>
               <Text className="text-white text-xl">Thêm ghi chú mới</Text>
             </View>
-            <TouchableOpacity>
-              <MaterialCommunityIcons
-                name="trash-can-outline"
-                size={30}
-                color="white"
-              />
-            </TouchableOpacity>
+
+            {isKeyboardShowing ? (
+              <TouchableOpacity>
+                <MaterialCommunityIcons name="check" size={30} color="white" />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity>
+                <MaterialCommunityIcons
+                  name="trash-can-outline"
+                  size={30}
+                  color="white"
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
         <View className="p-2 border-b-2 border-b-[#9A999B] bg-white">
