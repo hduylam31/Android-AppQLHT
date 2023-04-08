@@ -77,7 +77,8 @@ const CalendarMain = () => {
       route?.params?.screenCalendar === "AddToMain" ||
       route?.params?.screenCalendar === "EditToMain" ||
       route?.params?.screenCalendar === "DeleteToMain" ||
-      route?.params?.screenCalendar === "UpdateMoodleToMain"
+      route?.params?.screenCalendar === "UpdateMoodleToMain" ||
+      route?.params?.screenCalendar === "LogoutMoodleToMain"
     ) {
       loadCalendar();
     }
@@ -164,7 +165,7 @@ const CalendarMain = () => {
     Alert.alert("", "Hủy kết nối đến moodle ?", [
       {
         text: "Đồng ý",
-        // onPress: handleLogoutMoodle,
+        onPress: handleLogoutMoodle,
       },
       {
         text: "Hủy",
@@ -173,6 +174,21 @@ const CalendarMain = () => {
         },
       },
     ]);
+  };
+
+  const handleLogoutMoodle = async () => {
+    console.log("Start logout");
+    try {
+      await CalendarService.logOutMoodle(0);
+      navigation.navigate("BottomBar", {
+        screen: "Calendar",
+        params: {
+          screenCalendar: "LogoutMoodleToMain",
+        },
+      });
+    } catch (error) {
+      console.log("Fail due too: ", error);
+    }
   };
 
   const AlertErrorMoodle = () => {
