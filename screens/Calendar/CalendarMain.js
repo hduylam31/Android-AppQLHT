@@ -185,13 +185,14 @@ const CalendarMain = () => {
             <View>
               <Text className="text-white text-2xl font-bold">Lịch</Text>
             </View>
+
+            {/* Chỗ để icon moodle */}
             {isMoodleActive === 0 ? (
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("Login_Moodle");
                 }}
               >
-                {/* Chỗ để icon moodle */}
                 <Animatable.Image
                   animation="fadeIn"
                   easing="ease-in-out"
@@ -200,7 +201,6 @@ const CalendarMain = () => {
               </TouchableOpacity>
             ) : isMoodleActive === 1 ? (
               <TouchableOpacity onPress={AlertLogoutMoodle}>
-                {/* Chỗ để icon moodle */}
                 <Animatable.Image
                   animation="fadeIn"
                   easing="ease-in-out"
@@ -216,7 +216,6 @@ const CalendarMain = () => {
                   navigation.navigate("Login_Moodle");
                 }}
               >
-                {/* Chỗ để icon moodle */}
                 <Animatable.Image
                   animation="fadeIn"
                   easing="ease-in-out"
