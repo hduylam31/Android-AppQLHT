@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AntDesign } from "@expo/vector-icons";
@@ -19,7 +19,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
 import moment from "moment";
 
-const Calendar_Add = ({ selectedDay }) => {
+const Calendar_Add = () => {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
@@ -28,8 +28,9 @@ const Calendar_Add = ({ selectedDay }) => {
   const [content, setContent] = useState("");
   const [isNotified, setIsNotified] = useState(true);
 
+  const route = useRoute();
+  const selectedDay = route.params.selectedDay;
   console.log("aa", selectedDay);
-
   // const selectedDay = props.currentDate;
   const DaySelected = moment(selectedDay, "YYYY-MM-DD").format("DD/MM/YYYY");
   console.log("aaa", DaySelected);
@@ -43,11 +44,11 @@ const Calendar_Add = ({ selectedDay }) => {
     });
   });
 
-  const onChange = () => {
-    const currentDate = date;
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
     setShow(Platform.OS === "ios");
     setDate(currentDate);
-    console.log(currentDate);
+
     let tempDate = new Date(currentDate);
     let fDate =
       tempDate.getDate() +
@@ -115,16 +116,17 @@ const Calendar_Add = ({ selectedDay }) => {
             <View>
               <Text className="text-white text-xl">Thêm sự kiện mới</Text>
             </View>
-            <TouchableOpacity onPress={handleAddingUserCalendar}>
+            <View className="w-8 h-8"></View>
+            {/* <TouchableOpacity onPress={handleAddingUserCalendar}>
               <MaterialCommunityIcons name="check" size={30} color="white" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên
         {/* Phần tiêu đề */}
           </View>
         </View>
         <ScrollView className="bg-[#F1F5F9] h-full">
-          <View className="px-5 pt-[4%] space-y-2">
+          <View className="px-5 pt-[4%] space-y-2 h-[90%]">
             <View className="space-y-2">
               <View className="flex-row">
                 <Text className="text-base">Tiêu đề</Text>
@@ -132,7 +134,7 @@ const Calendar_Add = ({ selectedDay }) => {
               </View>
               <TextInput
                 placeholder="Tiêu đề"
-                className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
+                className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-gray-400 rounded-[8px] resize-none"
                 value={title}
                 onChangeText={(text) => setTitle(text)}
               ></TextInput>
@@ -145,7 +147,7 @@ const Calendar_Add = ({ selectedDay }) => {
                 </View>
                 <TouchableOpacity onPress={() => showMode("date")}>
                   <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                    <View className="flex-row justify-center items-center space-x-4">
+                    <View className="flex-row justify-center items-center space-x-1">
                       <Text className="text-base text-gray-400">
                         {textDate}
                       </Text>
