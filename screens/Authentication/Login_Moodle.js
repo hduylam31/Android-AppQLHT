@@ -30,7 +30,12 @@ const Login_Moodle = () => {
     console.log("statuss: ", status);
     if (status === 1) {
       //1 = ok, 0 = sai mật khẩu, -1 = lỗi
-      navigation.navigate("BottomBar");
+      navigation.navigate("BottomBar", {
+        screen: "Calendar",
+        params: {
+          screenCalendar: "UpdateMoodleToMain",
+        },
+      });
     } else if (status === 0) {
       console.log("Sai mat khau");
     } else {

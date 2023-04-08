@@ -76,13 +76,14 @@ const CalendarMain = () => {
     if (
       route?.params?.screenCalendar === "AddToMain" ||
       route?.params?.screenCalendar === "EditToMain" ||
-      route?.params?.screenCalendar === "DeleteToMain"
+      route?.params?.screenCalendar === "DeleteToMain" ||
+      route?.params?.screenCalendar === "UpdateMoodleToMain"
     ) {
       loadCalendar();
     }
   }, [route]);
 
-  const filteredMoodle = calendar.filter((item) => { 
+  const filteredMoodle = calendar.filter((item) => {
     const showMoodle =
       item.isMoodle === "true" && item.dateString === selectedDay;
     return showMoodle;
