@@ -6,6 +6,7 @@ import {
   FlatList,
   Modal,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -157,6 +158,22 @@ const CalendarMain = () => {
 
   console.log(isMoodleActive);
 
+  //Logout Moodle
+  const AlertLogoutMoodle = () => {
+    Alert.alert("", "Hủy kết nối đến moodle ?", [
+      {
+        text: "Đồng ý",
+        // onPress: handleLogoutMoodle,
+      },
+      {
+        text: "Hủy",
+        onPress: () => {
+          console.log("No Pressed");
+        },
+      },
+    ]);
+  };
+
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
@@ -168,21 +185,67 @@ const CalendarMain = () => {
             <View>
               <Text className="text-white text-2xl font-bold">Lịch</Text>
             </View>
-            <TouchableOpacity
+            {isMoodleActive === 0 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Login_Moodle");
+                }}
+              >
+                {/* Chỗ để icon moodle */}
+                <Animatable.Image
+                  animation="fadeIn"
+                  easing="ease-in-out"
+                  source={MoodleIcon}
+                />
+              </TouchableOpacity>
+            ) : isMoodleActive === 1 ? (
+              <TouchableOpacity onPress={AlertLogoutMoodle}>
+                {/* Chỗ để icon moodle */}
+                <Animatable.Image
+                  animation="fadeIn"
+                  easing="ease-in-out"
+                  source={MoodleIcon}
+                />
+                <View className="absolute right-0 bottom-0">
+                  <AntDesign name="checkcircle" size={10} color="green" />
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Login_Moodle");
+                }}
+              >
+                {/* Chỗ để icon moodle */}
+                <Animatable.Image
+                  animation="fadeIn"
+                  easing="ease-in-out"
+                  source={MoodleIcon}
+                />
+                <View className="absolute right-0 bottom-0">
+                  <AntDesign
+                    name="exclamationcircle"
+                    size={10}
+                    color="#FBB500"
+                  />
+                </View>
+              </TouchableOpacity>
+            )}
+            {/* <TouchableOpacity
               onPress={() => {
                 navigation.navigate("Login_Moodle");
               }}
-            >
-              {/* Chỗ để icon moodle */}
-              <Animatable.Image
+            > */}
+            {/* Chỗ để icon moodle */}
+            {/* <Animatable.Image
                 animation="fadeIn"
                 easing="ease-in-out"
                 source={MoodleIcon}
-              />
+              /> */}
 
-              {/* Phần này là Icon tích xanh và chấm than hãy code thêm trạng thái */}
+            {/* Phần này là Icon tích xanh và chấm than hãy code thêm trạng thái */}
 
-              {isMoodleActive === 1 && (
+            {/* {isMoodleActive === 1 && (
                 <View className="absolute right-0 bottom-0">
                   <AntDesign name="checkcircle" size={10} color="green" />
                 </View>
@@ -195,8 +258,8 @@ const CalendarMain = () => {
                     color="#FBB500"
                   />
                 </View>
-              )}
-            </TouchableOpacity>
+              )} */}
+
             {/* Phần tiêu đề */}
           </View>
         </View>
