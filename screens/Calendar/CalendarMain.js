@@ -42,15 +42,18 @@ const CalendarMain = () => {
 
   const [isMoodleActive, setIsMoodleActive] = useState();
 
+  const LoadMoodleActive = async () => {
+    try {
+      const moodleActive = await CalendarService.isMoodleActive();
+      setIsMoodleActive(moodleActive);
+      console.log("Moodle activee: ", moodleActive);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const isMoodleActive = async () => {
-      try {
-        const moodleActive = await CalendarService.isMoodleActive();
-        setIsMoodleActive(moodleActive);
-        console.log("Moodle activee: ", moodleActive);
-      } catch (error) {}
-    };
-    isMoodleActive();
+    LoadMoodleActive();
   }, []);
 
   const loadCalendar = async () => {
@@ -81,6 +84,7 @@ const CalendarMain = () => {
       route?.params?.screenCalendar === "LogoutMoodleToMain"
     ) {
       loadCalendar();
+      LoadMoodleActive();
     }
   }, [route]);
 
