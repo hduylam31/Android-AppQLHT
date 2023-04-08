@@ -109,13 +109,13 @@ const CalendarMain = () => {
       <Animatable.View
         animation="slideInLeft"
         delay={index * 10}
-        className="h-12 h-min-full border-b-[#f3f2f4] border-b-2 my-1 flex flex-row content-center"
+        className="h-12 border-b-[#f3f2f4] border-b-2 flex-row "
       >
         <View className={"w-[12%] flex ml-[3%]"}>
           <Text className={"text-sm font-semibold "}>{item.timeString}</Text>
         </View>
         <View
-          className={`w-[2%] h-[85%] mx-[3%]  ${
+          className={`w-[2%] h-[80%] mx-[3%] my-1 ${
             item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
           }`}
         ></View>
@@ -174,96 +174,108 @@ const CalendarMain = () => {
     ]);
   };
 
+  const AlertErrorMoodle = () => {
+    Alert.alert("Lỗi kết nối với moodle", "Vui lòng đăng nhập lại moodle", [
+      {
+        text: "Đồng ý",
+        onPress: () => {
+          navigation.navigate("Login_Moodle");
+        },
+      },
+
+      {
+        text: "Hủy",
+        onPress: () => {
+          console.log("No Pressed");
+        },
+      },
+    ]);
+  };
+
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-[25%]">
           <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity>
-              <AntDesign name="bars" size={30} color="white" />
-            </TouchableOpacity>
+            <View className="flex-row">
+              {/* Chỗ để icon moodle */}
+              {isMoodleActive === 0 ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("Login_Moodle");
+                  }}
+                >
+                  <Animatable.Image
+                    animation="fadeIn"
+                    easing="ease-in-out"
+                    source={MoodleIcon}
+                  />
+                </TouchableOpacity>
+              ) : isMoodleActive === 1 ? (
+                <TouchableOpacity onPress={AlertLogoutMoodle}>
+                  <Animatable.Image
+                    animation="fadeIn"
+                    easing="ease-in-out"
+                    source={MoodleIcon}
+                  />
+                  <View className="absolute right-0 bottom-0">
+                    <AntDesign name="checkcircle" size={10} color="green" />
+                  </View>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={AlertErrorMoodle}>
+                  <Animatable.Image
+                    animation="fadeIn"
+                    easing="ease-in-out"
+                    source={MoodleIcon}
+                  />
+                  <View className="absolute right-0 bottom-0">
+                    <AntDesign
+                      name="exclamationcircle"
+                      size={10}
+                      color="#FBB500"
+                    />
+                  </View>
+                </TouchableOpacity>
+              )}
+              <View className="w-8 h-8"></View>
+            </View>
+
             <View>
               <Text className="text-white text-2xl font-bold">Lịch</Text>
             </View>
 
-            {/* Chỗ để icon moodle */}
-            {isMoodleActive === 0 ? (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Login_Moodle");
-                }}
-              >
-                <Animatable.Image
-                  animation="fadeIn"
-                  easing="ease-in-out"
-                  source={MoodleIcon}
+            {/* Chỗ để iconSearch */}
+            <View className="flex-row">
+              <View className="w-8 h-8"></View>
+              <TouchableOpacity>
+                <MaterialCommunityIcons
+                  name="dots-vertical"
+                  size={32}
+                  color="white"
                 />
               </TouchableOpacity>
-            ) : isMoodleActive === 1 ? (
-              <TouchableOpacity onPress={AlertLogoutMoodle}>
-                <Animatable.Image
-                  animation="fadeIn"
-                  easing="ease-in-out"
-                  source={MoodleIcon}
-                />
-                <View className="absolute right-0 bottom-0">
-                  <AntDesign name="checkcircle" size={10} color="green" />
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Login_Moodle");
-                }}
-              >
-                <Animatable.Image
-                  animation="fadeIn"
-                  easing="ease-in-out"
-                  source={MoodleIcon}
-                />
-                <View className="absolute right-0 bottom-0">
-                  <AntDesign
-                    name="exclamationcircle"
-                    size={10}
-                    color="#FBB500"
-                  />
-                </View>
-              </TouchableOpacity>
-            )}
-            {/* <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Login_Moodle");
-              }}
-            > */}
-            {/* Chỗ để icon moodle */}
-            {/* <Animatable.Image
-                animation="fadeIn"
-                easing="ease-in-out"
-                source={MoodleIcon}
-              /> */}
-
-            {/* Phần này là Icon tích xanh và chấm than hãy code thêm trạng thái */}
-
-            {/* {isMoodleActive === 1 && (
-                <View className="absolute right-0 bottom-0">
-                  <AntDesign name="checkcircle" size={10} color="green" />
-                </View>
-              )}
-              {isMoodleActive === -1 && (
-                <View className="absolute right-0 bottom-0">
-                  <AntDesign
-                    name="exclamationcircle"
-                    size={10}
-                    color="#FBB500"
-                  />
-                </View>
-              )} */}
-
-            {/* Phần tiêu đề */}
+            </View>
           </View>
         </View>
-        <View className="bg-[#F1F5F9] h-full w-full">
-          <View className="w-full mt-[60%] h-[35%]">
+        <View className="bg-[#F1F5F9] h-full"></View>
+        <View className="absolute w-full top-20 h-[85%]">
+          <Calendar
+            style={{
+              borderRadius: 10,
+              elevation: 4,
+              margin: "5%",
+            }}
+            markingType={"multi-dot"}
+            markedDates={marked}
+            onDayPress={(date) => {
+              setSelectedDay(date.dateString);
+              // props.onDaySelect && props.onDaySelect(date);
+            }}
+            // markedDates={marked}
+            // {...props}
+          />
+          <View className="max-h-72">
             {filteredMoodle.length > 0 && (
               <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
                 <FlatList
@@ -284,23 +296,6 @@ const CalendarMain = () => {
             )}
           </View>
         </View>
-        <View className="absolute w-full top-16">
-          <Calendar
-            style={{
-              borderRadius: 10,
-              elevation: 4,
-              margin: "5%",
-            }}
-            markingType={"multi-dot"}
-            markedDates={marked}
-            onDayPress={(date) => {
-              setSelectedDay(date.dateString);
-              // props.onDaySelect && props.onDaySelect(date);
-            }}
-            // markedDates={marked}
-            // {...props}
-          />
-        </View>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("Calendar_Add", { selectedDay });
@@ -308,7 +303,7 @@ const CalendarMain = () => {
           className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         >
           <Text className="text-white text-center font-bold text-base">
-            Thêm thời khóa biểu
+            Thêm sự kiện mới
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
