@@ -148,7 +148,7 @@ const Calendar_Edit = () => {
         },
       });
     } catch (error) {
-      console.log("Fail due to: ", error);  
+      console.log("Fail due to: ", error);
     }
   };
 
@@ -167,6 +167,8 @@ const Calendar_Edit = () => {
     ]);
   };
 
+  console.log(item.isMoodle);
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -183,10 +185,7 @@ const Calendar_Edit = () => {
             <View>
               <Text className="text-white text-xl">Cập nhật sự kiện</Text>
             </View>
-            <View className="flex-row">
-              {/* <TouchableOpacity onPress={handleUpdateCalendar}>
-                <MaterialCommunityIcons name="check" size={30} color="white" />
-              </TouchableOpacity> */}
+            {item.isMoodle === "false" ? (
               <TouchableOpacity onPress={AlertDelete}>
                 <MaterialCommunityIcons
                   name="trash-can-outline"
@@ -194,7 +193,9 @@ const Calendar_Edit = () => {
                   color="white"
                 />
               </TouchableOpacity>
-            </View>
+            ) : (
+              <View className="w-8 h-8"></View>
+            )}
           </View>
         </View>
         <ScrollView className="bg-[#F1F5F9] h-full">
@@ -209,7 +210,6 @@ const Calendar_Edit = () => {
                   className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
                 ></TextInput>
               </View>
-
               <View className="flex-row items-center">
                 <View className="space-y-2 w-[50%]">
                   <Text className="text-base">Ngày</Text>
@@ -275,14 +275,18 @@ const Calendar_Edit = () => {
                 textAlignVertical="top"
               ></TextInput>
               {/* Nút thêm */}
-              <TouchableOpacity
-                onPress={handleUpdateCalendar}
-                className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[6%] w-[90%] ml-[5%]"
-              >
-                <Text className="text-white text-center font-bold text-xl">
-                  Lưu
-                </Text>
-              </TouchableOpacity>
+              {item.isMoodle === "false" ? (
+                <TouchableOpacity
+                  onPress={handleUpdateCalendar}
+                  className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[6%] w-[90%] ml-[5%]"
+                >
+                  <Text className="text-white text-center font-bold text-xl">
+                    Lưu
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <View></View>
+              )}
             </View>
           </LockedView>
         </ScrollView>
