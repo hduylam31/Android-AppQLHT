@@ -100,15 +100,15 @@ const TodoList_Edit = () => {
         hour: textTime,
         text: value,
         isCompleted: item.isCompleted,
-        identifier: item.identifier
-      }
+        identifier: item.identifier,
+      };
       await TodolistService.updateTodolist(new_item, item);
       navigation.navigate("BottomBar", {
-        screen: "ToDoList", 
+        screen: "ToDoList",
         params: {
           screenTodoList: "EditToMain",
         },
-      }); 
+      });
     } catch (error) {
       console.log("Fail due to: ", error);
     }
@@ -141,7 +141,15 @@ const TodoList_Edit = () => {
       (tempDate.getMonth() + 1) +
       "/" +
       tempDate.getFullYear();
-    let fTime = tempDate.getHours() + ":" + tempDate.getMinutes();
+    if (tempDate.getHours() < 10 && tempDate.getMinutes() < 10) {
+      fTime = "0" + tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else if (tempDate.getHours() < 10) {
+      fTime = "0" + tempDate.getHours() + ":" + tempDate.getMinutes();
+    } else if (tempDate.getMinutes() < 10) {
+      fTime = tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else {
+      fTime = tempDate.getHours() + ":" + tempDate.getMinutes();
+    }
     setDateText(fDate);
     setTimeDate(fTime);
 

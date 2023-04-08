@@ -63,7 +63,15 @@ const Calendar_Edit = () => {
       (tempDate.getMonth() + 1) +
       "/" +
       tempDate.getFullYear();
-    let fTime = tempDate.getHours() + ":" + tempDate.getMinutes();
+    if (tempDate.getHours() < 10 && tempDate.getMinutes() < 10) {
+      fTime = "0" + tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else if (tempDate.getHours() < 10) {
+      fTime = "0" + tempDate.getHours() + ":" + tempDate.getMinutes();
+    } else if (tempDate.getMinutes() < 10) {
+      fTime = tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else {
+      fTime = tempDate.getHours() + ":" + tempDate.getMinutes();
+    }
     setDateText(fDate);
     setTimeDate(fTime);
 

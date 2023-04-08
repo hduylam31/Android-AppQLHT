@@ -101,22 +101,22 @@ const Login = () => {
             style={{ borderTopLeftRadius: 40, borderTopRightRadius: 40 }}
           >
             <View
-              className="flex-1 bg-[#3A4666] mt-2 space-y-[4%]"
+              className="flex-1 bg-[#3A4666] mt-2 space-y-[4%] h-full"
               style={{ borderTopLeftRadius: 47, borderTopRightRadius: 47 }}
             >
-              <View className="self-center w-[85%] h-[50%] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
+              <View className="self-center w-[350px] h-[300px] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
                 <TextInput
                   placeholder="Tên đăng nhập"
                   value={email}
                   onChangeText={(text) => setEmail(text)}
-                  className="w-[80%] h-[20%] bg-[#D9D9D9] mt-[20%] self-center pl-4 rounded-2xl"
+                  className="w-72 h-16 bg-[#D9D9D9] mt-[20%] self-center pl-4 rounded-2xl"
                 ></TextInput>
                 <TextInput
                   placeholder="Mật khẩu"
                   value={Password}
                   onChangeText={(text) => setPassword(text)}
                   secureTextEntry
-                  className="w-[80%] h-[20%] bg-[#D9D9D9] self-center pl-4 rounded-2xl"
+                  className="w-72 h-16 bg-[#D9D9D9] self-center pl-4 rounded-2xl"
                 ></TextInput>
                 <TouchableOpacity onPress={handleLogin}>
                   <Animatable.View

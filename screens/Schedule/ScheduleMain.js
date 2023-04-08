@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  textStyle,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -476,8 +477,7 @@ const ScheduleMain = () => {
                             {
                               backgroundColor: this.getCellColor(
                                 rowIndex,
-                                colIndex,
-                                cellData
+                                colIndex
                               ),
                             },
                           ]}

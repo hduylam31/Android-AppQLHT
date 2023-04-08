@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { moodleLogin } from "../../assets";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
-import CalendarService from "../../service/CalendarService"; 
+import CalendarService from "../../service/CalendarService";
 import CommonService from "../../service/CommonService";
 
 const Login_Moodle = () => {
@@ -25,7 +25,7 @@ const Login_Moodle = () => {
   const [password, setPassword] = React.useState("");
 
   const handleLogin = async () => {
-    const status = await CalendarService.processLoginMoodle(username, password); 
+    const status = await CalendarService.processLoginMoodle(username, password);
     // const status = await CommonService.loadAllNotificationAndUpdateDB();  //Này để test
     console.log("statuss: ", status);
     if (status === 1) {
@@ -49,9 +49,9 @@ const Login_Moodle = () => {
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={handlePress}> 
+    <TouchableWithoutFeedback onPress={handlePress}>
       <SafeAreaView className="flex-1 bg-[#3A4666]">
-        <View className="w-full h-[45%] bg-[#23ACCD] rounded-b-[50px]">
+        <View className="w-full h-[380px] bg-[#23ACCD] rounded-b-[50px]">
           <View className="w-60 h-60 bg-[#126C83] rounded-full absolute top-12 -left-16"></View>
           <View className="w-32 h-32 bg-[#126C83] rounded-full absolute top-44 -right-8"></View>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -69,14 +69,14 @@ const Login_Moodle = () => {
               source={moodleLogin}
               resizeMode="contain"
               style={{ marginLeft: 30 }}
-            /> 
-          </View> 
+            />
+          </View>
           <View className="w-42 h-60 bg-white rounded-2xl mx-6 mt-10 flex justify-center items-center space-y-6">
             <TextInput
               placeholder="Tài khoản"
               value={username}
               onChangeText={(text) => setUsername(text)}
-              className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4" 
+              className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4"
             ></TextInput>
             <TextInput
               placeholder="Mật khẩu"
