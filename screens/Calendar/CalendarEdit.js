@@ -104,29 +104,36 @@ const Calendar_Edit = () => {
   }, []);
 
   const handleUpdateCalendar = async () => {
-    console.log("Start update");
-    try {
-      const newItem = {
-        id: item.id,
-        title,
-        textDate,
-        textTime,
-        content,
-        isNotified,
-        content,
-        isMoodle: item.isMoodle,
-      };
-      console.log("new Item: ", newItem);
-      console.log("Old Item: ", item);
-      await CalendarService.updateUserCalendar(newItem, item);
-      navigation.navigate("BottomBar", {
-        screen: "Calendar",
-        params: {
-          screenCalendar: "EditToMain",
-        },
-      });
-    } catch (error) {
-      console.log("Fail due to: ", error);
+    if (title === "") {
+      Alert.alert(
+        "Lỗi cập nhật thông tin",
+        "Tiêu đề không được để trống vui lòng nhập tiêu đề"
+      );
+    } else {
+      console.log("Start update");
+      try {
+        const newItem = {
+          id: item.id,
+          title,
+          textDate,
+          textTime,
+          content,
+          isNotified,
+          content,
+          isMoodle: item.isMoodle,
+        };
+        console.log("new Item: ", newItem);
+        console.log("Old Item: ", item);
+        await CalendarService.updateUserCalendar(newItem, item);
+        navigation.navigate("BottomBar", {
+          screen: "Calendar",
+          params: {
+            screenCalendar: "EditToMain",
+          },
+        });
+      } catch (error) {
+        console.log("Fail due to: ", error);
+      }
     }
   };
 
@@ -208,7 +215,7 @@ const Calendar_Edit = () => {
                   <Text className="text-base">Ngày</Text>
                   <TouchableOpacity onPress={() => showMode("date")}>
                     <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                      <View className="flex-row justify-center items-center space-x-4">
+                      <View className="flex-row justify-center items-center space-x-1">
                         <Text className="text-base text-gray-400">
                           {textDate}
                         </Text>
