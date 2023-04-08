@@ -37,7 +37,7 @@ const CalendarMain = () => {
   const currentDate = new Date().toLocaleDateString();
 
   const [selectedDay, setSelectedDay] = useState(
-    moment(currentDate, "M/DD/YYYY").format("YYYY-MM-DD")
+    moment(currentDate, "DD/MM/YYYY").format("YYYY-MM-DD")
   );
 
   const [isMoodleActive, setIsMoodleActive] = useState();
