@@ -466,20 +466,16 @@ const ScheduleMain = () => {
                       {rowData.map((cellData, colIndex) => (
                         <View
                           key={colIndex}
-                          style={[
-                            {
-                              flex: 1,
-                              borderWidth: 0.5,
-                              borderColor: "#DEDEDE",
-                              textAlign: "center",
-                            },
-                            {
-                              backgroundColor: this.getCellColor(
-                                rowIndex,
-                                colIndex
-                              ),
-                            },
-                          ]}
+                          style={{
+                            flex: 1,
+                            borderWidth: 0.5,
+                            borderColor: "#DEDEDE",
+                            textAlign: "center",
+                            backgroundColor: this.getCellColor(
+                              rowIndex,
+                              colIndex
+                            ),
+                          }}
                         >
                           <Text>{cellData}</Text>
                         </View>
