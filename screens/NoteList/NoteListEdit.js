@@ -17,11 +17,12 @@ import {
   RichToolbar,
 } from "react-native-pell-rich-editor";
 
-import React, { useLayoutEffect, useState, useRef } from "react";
+import React, { useLayoutEffect, useState, useRef, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import NoteService from "../../service/NoteService";
 
 const NoteList_Edit = () => {
   const navigation = useNavigation();
@@ -29,6 +30,16 @@ const NoteList_Edit = () => {
   const [title, setTitle] = useState("");
 
   const [note, setNote] = useState("");
+  const c_item = route.params.item;
+
+  useEffect(()=>{
+    const setData = async ()=>{
+      console.log(c_item);
+      setTitle(c_item.title);
+      setNote(c_item.note);
+    }
+    setData();
+  },[])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,35 +51,29 @@ const NoteList_Edit = () => {
     Keyboard.dismiss();
   };
 
-  // const handleUpdateNoteList = async () => {
-  //   console.log("Start update");
-  //   try {
-  //     // TodolistService.addTodolist
-  //     await CalendarService.updateUserCalendar({
-  //       c_id,
-  //       title,
-  //       textDate,
-  //       textTime,
-  //       content,
-  //       isNotified,
-  //       content,
-  //       c_isMoodle,
-  //     });
-  //     navigation.navigate("BottomBar", {
-  //       screen: "NoteList",
-  //       params: {
-  //         screenNoteList: "EditToMain",
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.log("Fail due to: ", error);
-  //   }
-  // };
+  const handleUpdateNoteList = async () => {
+    console.log("Start update");
+    try {
+      await NoteService.updateNote({
+        c_id: c_item.id,
+        title,
+        note
+      });
+      navigation.navigate("BottomBar", {
+        screen: "NoteList",
+        params: {
+          screenNoteList: "EditToMain",
+        },
+      });
+    } catch (error) {
+      console.log("Fail due to: ", error);
+    }
+  };
 
   const handleDeleteNoteList = async () => {
     console.log("Start delete");
     try {
-      await ScheduleService.deleteSchedule(c_id);
+      await NoteService.deleteNote(c_item.id);
       navigation.navigate("BottomBar", {
         screen: "NoteList",
         params: {
@@ -118,7 +123,7 @@ const NoteList_Edit = () => {
       <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-15">
           <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={handleUpdateNoteList}>
               <AntDesign name="arrowleft" size={30} color="white" />
             </TouchableOpacity>
             <View>
@@ -153,7 +158,7 @@ const NoteList_Edit = () => {
         </View>
         <ScrollView className="px-2 space-y-2 h-full bg-white">
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            behavior={Platform.OS === "ios" ? "padding" : "height"} 
             style={{ flex: 1 }}
           >
             <RichEditor

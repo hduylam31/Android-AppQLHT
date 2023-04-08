@@ -483,7 +483,7 @@ class CalendarService {
         if(userDoc.exists()){
             const moodleData = userDoc.data().calendar.moodle;   
             const userData = userDoc.data().calendar.user;  
-            // loadNotificationAndUpdateOne(moodleData, userRef, true);
+            loadNotificationAndUpdateOne(moodleData, userRef, true);
             loadNotificationAndUpdateOne(userData, userRef, false);
         }
     } catch (error) {

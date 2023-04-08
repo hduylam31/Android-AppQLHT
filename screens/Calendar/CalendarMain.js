@@ -44,7 +44,7 @@ const CalendarMain = () => {
 
   const LoadMoodleActive = async () => {
     try {
-      const moodleActive = await CalendarService.isMoodleActive();
+      const moodleActive = await CalendarService.isMoodleActive(); 
       setIsMoodleActive(moodleActive);
       console.log("Moodle activee: ", moodleActive);
     } catch (error) {

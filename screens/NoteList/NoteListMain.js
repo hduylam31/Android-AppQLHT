@@ -10,9 +10,11 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
+import NoteService from "../../service/NoteService";
 
 const NoteListMain = () => {
   const navigation = useNavigation();
+  const [data, setData] = useState([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -20,52 +22,46 @@ const NoteListMain = () => {
     });
   });
 
-  data = [
-    { id: 1, title: "Vật dụng cần", note: "Kem răng" },
-    {
-      id: 2,
-      title: "Vật dụng mua",
-      note: "Kem đánh răng là một chất tẩy sạch răng dạng hỗn hợp nhão hay gel được sử dụng với bàn chải đánh răng như một phụ kiện để tẩy sạch, duy trì thẩm mỹ và sức khoẻ của răng. Kem đánh răng dùng để thúc đẩy",
-    },
-    { id: 3, title: "Vật dụng cần mua", note: "Kem đánh" },
-    { id: 4, title: "Vật dụng cần mua", note: "Kem đánh" },
-    { id: 5, title: "Vật dụng cần mua", note: "Kem đánh" },
-    { id: 6, title: "Vật dụng cần mua", note: "Kem đánh" },
-    { id: 7, title: "Vật dụng cần mua", note: "Kem đánh" },
-    { id: 8, title: "Vật dụng cần mua", note: "Kem đánh" },
-    { id: 9, title: "Vật dụng cần mua", note: "Kem đánh" },
-    { id: 10, title: "Vật dụng cần mua", note: "Kem đánh" },
-  ];
+  // data = [
+  //   { id: 1, title: "Vật dụng cần", note: "Kem răng" },
+  //   {
+  //     id: 2,
+  //     title: "Vật dụng mua",
+  //     note: "Kem đánh răng là một chất tẩy sạch răng dạng hỗn hợp nhão hay gel được sử dụng với bàn chải đánh răng như một phụ kiện để tẩy sạch, duy trì thẩm mỹ và sức khoẻ của răng. Kem đánh răng dùng để thúc đẩy",
+  //   },
+  //   { id: 3, title: "Vật dụng cần mua", note: "Kem đánh" },
+  //   { id: 4, title: "Vật dụng cần mua", note: "Kem đánh" },
+  //   { id: 5, title: "Vật dụng cần mua", note: "Kem đánh" },
+  //   { id: 6, title: "Vật dụng cần mua", note: "Kem đánh" },
+  //   { id: 7, title: "Vật dụng cần mua", note: "Kem đánh" },
+  //   { id: 8, title: "Vật dụng cần mua", note: "Kem đánh" },
+  //   { id: 9, title: "Vật dụng cần mua", note: "Kem đánh" },
+  //   { id: 10, title: "Vật dụng cần mua", note: "Kem đánh" },
+  // ];
 
   // thay loadCalendar thanh loadNoteList 2 useEffect phia duoi
+  const loadNoteList = async () => {
+    try {
+      const notelist = await NoteService.loadNoteData(); 
+      setData(notelist);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    loadNoteList();
+  }, []);
 
-  // const loadCalendar = async () => {
-  //   try {
-  //     const calendar = await CalendarService.loadCalendarData();
-  //     setCalendar(calendar);
-  //     const calendarProcess = await CalendarService.processDataForCalendar(
-  //       calendar
-  //     );
-  //     setMarkedDates(calendarProcess);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   loadCalendar();
-  // }, []);
-
-  // const route = useRoute();
-  // useEffect(() => {
-  //   if (
-  //     route?.params?.screenCalendar === "AddToMain" ||
-  //     route?.params?.screenCalendar === "EditToMain" ||
-  //     route?.params?.screenCalendar === "DeleteToMain"
-  //   ) {
-  //     loadCalendar();
-  //   }
-  // }, [route]);
+  const route = useRoute();
+  useEffect(() => {
+    if (
+      route?.params?.screenNoteList === "AddToMain" ||
+      route?.params?.screenNoteList === "EditToMain" ||
+      route?.params?.screenNoteList === "DeleteToMain"
+    ) {
+      loadNoteList();
+    }
+  }, [route]);
 
   return (
     <TouchableWithoutFeedback>
@@ -100,7 +96,7 @@ const NoteListMain = () => {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("NoteList_Edit");
+                      navigation.navigate("NoteList_Edit", {item});
                     }}
                   >
                     <View className="h-7 flex justify-center items-center rounded-t-xl bg-[#FE8668]">

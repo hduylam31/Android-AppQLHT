@@ -27,6 +27,7 @@ import {
 } from "../../assets";
 import CredentialService from "../../service/CredentialService";
 import { auth } from "../../firebase";
+import CommonService from "../../service/CommonService";
 
 const Login = () => {
   const navigation = useNavigation();
@@ -34,9 +35,10 @@ const Login = () => {
   const [email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
   useEffect(() => {
-    const unsubcribe = auth.onAuthStateChanged((user) => {
+    const unsubcribe = auth.onAuthStateChanged(async (user) => {
       console.log("checkuser");
       if (user) {
+        await CommonService.loadAllNotificationAndUpdateDB();
         navigation.navigate("BottomBar");
       }
     });

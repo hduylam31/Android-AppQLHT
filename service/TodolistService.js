@@ -44,7 +44,7 @@ class TodolistService{
             const userDoc = await getDoc(userRef);
             if(userDoc.exists()){
                 //update
-                updateDoc(userRef, {
+                await updateDoc(userRef, {
                     todolist: arrayUnion(item)}, {merge: true});
                console.log("done update function OKK" );
             }else{
