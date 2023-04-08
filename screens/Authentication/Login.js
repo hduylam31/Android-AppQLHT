@@ -43,6 +43,15 @@ const Login = () => {
     return unsubcribe;
   }, []);
 
+  useEffect(() => {
+    const autoLogin = async () => { 
+      const todolists = await CredentialService.autoLogin();
+      console.log("Auto Login OK");
+    };
+    autoLogin()
+  }, []);
+
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -64,6 +73,7 @@ const Login = () => {
         }
         CredentialService.handleLoginWithEmail(account, Password);
         console.log("Login OK");
+
       } catch (error) {
         console.log("Login fail with: ", error);
       }

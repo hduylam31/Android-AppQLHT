@@ -141,7 +141,7 @@ const Calendar_Edit = () => {
         },
       });
     } catch (error) {
-      console.log("Fail due to: ", error);
+      console.log("Fail due to: ", error);  
     }
   };
 

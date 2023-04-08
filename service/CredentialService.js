@@ -7,13 +7,33 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../firebase";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class CredentialService {
+
+  static autoLogin = async () => { 
+    const username = await AsyncStorage.getItem("username");
+    const password = await AsyncStorage.getItem("password");
+    if(username && password){
+      console.log("Auto login with: ", username, password);
+      signInWithEmailAndPassword(auth, username, password)
+        .then((userCredentials) => {
+          const user = userCredentials.user;
+          console.log("Logged in with :", user.email);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   static handleLoginWithEmail = (username, password) => {
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("Logged in with :", user.email);
+        AsyncStorage.setItem("username", username);
+        AsyncStorage.setItem("password", password);
       })
       .catch((error) => {
         console.log("Fail:");

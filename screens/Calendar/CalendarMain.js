@@ -82,7 +82,7 @@ const CalendarMain = () => {
     }
   }, [route]);
 
-  const filteredMoodle = calendar.filter((item) => {
+  const filteredMoodle = calendar.filter((item) => { 
     const showMoodle =
       item.isMoodle === "true" && item.dateString === selectedDay;
     return showMoodle;

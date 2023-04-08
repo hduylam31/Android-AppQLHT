@@ -121,7 +121,7 @@ class CalendarService {
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
       //Xóa token + cập nhật status moodle token
-      updateDoc(userRef, { moodle: {status: status}  });
+      updateDoc(userRef, { "moodle.status": status  });
       //Xóa tất cả dữ liệu thông báo + moodle
       const calendarRef = doc(collection(firestore, "calendar"), user.uid);
       await this.unRegisterMoodleNotification();
@@ -468,7 +468,7 @@ class CalendarService {
       const userDoc = await getDoc(userRef);
       const userCalendar = userDoc.data().calendar.user;
       const updatedUserCalendar = userCalendar.filter(item => item.id !== id);
-      await updateDoc(userRef, { "calendar": {"user": updatedUserCalendar} }, {merge: true});
+      await updateDoc(userRef, { "calendar.user": updatedUserCalendar }, {merge: true});  
       console.log("delete OKK");
     } catch (error) {
       console.log("error: ", error);

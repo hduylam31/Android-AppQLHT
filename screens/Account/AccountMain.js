@@ -3,13 +3,16 @@ import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebase";
 import NotificationUtils from "../../service/NotificationUtils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AccountMain = () => {
   const handleSignOut = () => {
     auth
       .signOut()
-      .then(() => {
+      .then(async () => {
         NotificationUtils.removeAllNotification();
+        await AsyncStorage.removeItem("username");
+        await AsyncStorage.removeItem("password");
         navigation.replace("Login");
       })
       .catch((error) => alert(error.message));
