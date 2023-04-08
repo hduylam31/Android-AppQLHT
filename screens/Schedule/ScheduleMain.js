@@ -476,8 +476,7 @@ const ScheduleMain = () => {
                             {
                               backgroundColor: this.getCellColor(
                                 rowIndex,
-                                colIndex,
-                                cellData
+                                colIndex
                               ),
                             },
                           ]}
