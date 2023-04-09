@@ -21,9 +21,9 @@ class CalendarService {
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
         const moodleStatus = userDoc.data().moodle.status;
-        if(moodleStatus){
+        if (moodleStatus) {
           return moodleStatus;
-        }else{
+        } else {
           return 0;
         }
       }
@@ -63,7 +63,7 @@ class CalendarService {
         //save token to user colection
         const user = auth.currentUser;
         const userRef = doc(collection(firestore, "user"), user.uid);
-        updateDoc(userRef, { moodle: {token: moodleToken, status: 1} });
+        updateDoc(userRef, { moodle: { token: moodleToken, status: 1 } });
         //load calendar moodle data
         await this.saveCalendarData(moodleToken);
         console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -80,15 +80,15 @@ class CalendarService {
   }
 
   //Hàm reload moodle với token
-  static async reloadMoodleCalendar(){
+  static async reloadMoodleCalendar() {
     try {
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
       const userDoc = await getDoc(userRef);
-      if (userDoc.exists()){
+      if (userDoc.exists()) {
         const moodle = userDoc.data().moodle;
         const status = moodle.status;
-        if(status === 1){
+        if (status === 1) {
           const token = moodle.token;
           this.saveCalendarData(token);
         }
@@ -98,41 +98,42 @@ class CalendarService {
     }
   }
 
-  static async unRegisterMoodleNotification(){
+  static async unRegisterMoodleNotification() {
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "calendar"), user.uid);
     const userDoc = await getDoc(userRef);
-    if(userDoc.exists()){
+    if (userDoc.exists()) {
       const moodleData = userDoc.data().calendar.moodle;
       const identifiers = [];
-      moodleData.forEach(item => {
-        if(item.identifier != ""){
+      moodleData.forEach((item) => {
+        if (item.identifier != "") {
           identifiers.push(item.identifier);
         }
       });
       if (identifiers.length > 0) {
-        await Promise.all(identifiers.map(item => NotificationUtils.cancelNotification(item)));
+        await Promise.all(
+          identifiers.map((item) => NotificationUtils.cancelNotification(item))
+        );
       }
     }
   }
 
-  static async logOutMoodle(status){
+  static async logOutMoodle(status) {
     try {
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
       //Xóa token + cập nhật status moodle token
-      updateDoc(userRef, { "moodle.status": status  });
+      updateDoc(userRef, { "moodle.status": status });
       //Xóa tất cả dữ liệu thông báo + moodle
       const calendarRef = doc(collection(firestore, "calendar"), user.uid);
       await this.unRegisterMoodleNotification();
-      updateDoc(calendarRef, { "calendar.moodle": []});
-    return true;
+      updateDoc(calendarRef, { "calendar.moodle": [] });
+      return true;
     } catch (error) {
       console.log(error);
       return false;
     }
   }
-  
 
   static async saveCalendarData(token) {
     const currentDate = new Date();
@@ -142,7 +143,7 @@ class CalendarService {
     const nextMonthYear = currentMonth === 12 ? currentYear + 1 : currentYear;
 
     let currentMonthEvent = await this.fetchCalendarData(token, 11, 2022);
-    if(currentMonthEvent === "error"){
+    if (currentMonthEvent === "error") {
       console.log("error token");
       await this.logOutMoodle(-1);
       return;
@@ -209,29 +210,44 @@ class CalendarService {
           //Thông báo cách tối thiểu 2h
           const [year, month, day] = dateString.split("-");
           const timeArray = timeString.split(":");
-          const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]); 
+          const deadlineDate = new Date(
+            year,
+            month - 1,
+            day,
+            timeArray[0],
+            timeArray[1]
+          );
           const now = new Date(Date.now());
           // const now = new Date(2022,12-1, 1,0,0); //test 01/12/2022 do dữ liệu đang tháng 11 và 12/2022
           const diff = deadlineDate - now;
-          const twoHours = 2*60*60*1000;
-          const twoDays = 60*1000*60*24*2;
+          const twoHours = 2 * 60 * 60 * 1000;
+          const twoDays = 60 * 1000 * 60 * 24 * 2;
           let identifier = "";
-          if(diff > twoHours && diff <= twoDays){ //2hours và chỉ lấy dữ liệu trong 2 ngày tiếp theo (test thì lấy 30 ngày)
-            const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
+          if (diff > twoHours && diff <= twoDays) {
+            //2hours và chỉ lấy dữ liệu trong 2 ngày tiếp theo (test thì lấy 30 ngày)
+            const twoHoursBeforeDeadlineTime = new Date(
+              deadlineDate.getTime() - twoHours
+            );
             const timeInfo = {
               year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
               month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
               day: Number(twoHoursBeforeDeadlineTime.getDate()),
               hour: Number(twoHoursBeforeDeadlineTime.getHours()),
-              minute: Number(twoHoursBeforeDeadlineTime.getMinutes())
-            }
-            promises.push(NotificationUtils.setNotificationAndGetIdentifer(event.course.fullname, event.name, timeInfo).then((res) => {
-              identifier = res;
-            }))
+              minute: Number(twoHoursBeforeDeadlineTime.getMinutes()),
+            };
+            promises.push(
+              NotificationUtils.setNotificationAndGetIdentifer(
+                event.course.fullname,
+                event.name,
+                timeInfo
+              ).then((res) => {
+                identifier = res;
+              })
+            );
           }
           // ==================================End Notification============================
-          
-          const eventItemPromise = Promise.all(promises).then(()=> {
+
+          const eventItemPromise = Promise.all(promises).then(() => {
             const eventItem = {
               id: id,
               title: event.name,
@@ -240,16 +256,16 @@ class CalendarService {
               isNotified: true,
               dateString: dateString,
               timeString: timeString,
-              identifier: identifier
+              identifier: identifier,
             };
             events.push(eventItem);
-          })
+          });
           promises.push(eventItemPromise);
         });
       });
     });
-    return Promise.all(promises).then(()=>{
-      return events
+    return Promise.all(promises).then(() => {
+      return events;
     });
   }
 
@@ -298,6 +314,9 @@ class CalendarService {
           if (oldType !== 2 && oldType !== type) {
             dots = [{ color: "red" }, { color: "green" }];
             type = 2;
+          } else if (oldType === 2) {
+            dots = [{ color: "red" }, { color: "green" }];
+            type = 2;
           }
         }
         markedDateJson[date] = {
@@ -330,25 +349,38 @@ class CalendarService {
       const textDateProcessed = `${year}-${month
         .toString()
         .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-      
+
       let identifier = "";
-       /* ==================================Notification====================================== */
-      if(isNotified){ 
+      /* ==================================Notification====================================== */
+      if (isNotified) {
         //Thông báo cách tối thiểu 2h
-        const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]);
+        const deadlineDate = new Date(
+          year,
+          month - 1,
+          day,
+          timeArray[0],
+          timeArray[1]
+        );
         const now = new Date(Date.now());
         const diff = deadlineDate - now;
-        const twoHours = 2*60*60*1000;
-        if(diff > twoHours){ //2hours
-          const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
+        const twoHours = 2 * 60 * 60 * 1000;
+        if (diff > twoHours) {
+          //2hours
+          const twoHoursBeforeDeadlineTime = new Date(
+            deadlineDate.getTime() - twoHours
+          );
           const timeInfo = {
             year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
             month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
             day: Number(twoHoursBeforeDeadlineTime.getDate()),
             hour: Number(twoHoursBeforeDeadlineTime.getHours()),
-            minute: Number(twoHoursBeforeDeadlineTime.getMinutes())
-          }
-          identifier = await NotificationUtils.setNotificationAndGetIdentifer(title, content, timeInfo);
+            minute: Number(twoHoursBeforeDeadlineTime.getMinutes()),
+          };
+          identifier = await NotificationUtils.setNotificationAndGetIdentifer(
+            title,
+            content,
+            timeInfo
+          );
         }
       }
       const item = {
@@ -359,7 +391,7 @@ class CalendarService {
         description: content,
         isMoodle: "false",
         isNotified: isNotified,
-        identifier: identifier
+        identifier: identifier,
       };
 
       /* ==================================DB Adding====================================== */
@@ -390,68 +422,83 @@ class CalendarService {
     const textDateProcessed = `${year}-${month
       .toString()
       .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-    
+
     let identifier = "";
     // ==================================Notification============================
-    if(oldItem.isNotified && !elm.isNotified){ // Chỉ xóa thông báo khi cập nhật Thông báo -> Không thông báo
+    if (oldItem.isNotified && !elm.isNotified) {
+      // Chỉ xóa thông báo khi cập nhật Thông báo -> Không thông báo
       NotificationUtils.cancelNotification(oldItem.identifier);
-    }else{ // Còn những trường hợp còn lại thì set thông báo mới, kiểm tra luôn vụ chỉ thông báo trước 2h
+    } else {
+      // Còn những trường hợp còn lại thì set thông báo mới, kiểm tra luôn vụ chỉ thông báo trước 2h
       await NotificationUtils.cancelNotification(oldItem.identifier);
       //Thông báo cách tối thiểu 2h
-      const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]);
+      const deadlineDate = new Date(
+        year,
+        month - 1,
+        day,
+        timeArray[0],
+        timeArray[1]
+      );
       const now = new Date(Date.now());
       const diff = deadlineDate - now;
-      console.log("Diff: ", diff); 
-      const twoHours = 2*60*60*1000;
-      if(diff > twoHours){ //2hours
-        const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
+      console.log("Diff: ", diff);
+      const twoHours = 2 * 60 * 60 * 1000;
+      if (diff > twoHours) {
+        //2hours
+        const twoHoursBeforeDeadlineTime = new Date(
+          deadlineDate.getTime() - twoHours
+        );
         const timeInfo = {
           year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
           month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
           day: Number(twoHoursBeforeDeadlineTime.getDate()),
           hour: Number(twoHoursBeforeDeadlineTime.getHours()),
-          minute: Number(twoHoursBeforeDeadlineTime.getMinutes())
-        }
-        identifier = await NotificationUtils.setNotificationAndGetIdentifer(elm.title, elm.content, timeInfo);
+          minute: Number(twoHoursBeforeDeadlineTime.getMinutes()),
+        };
+        identifier = await NotificationUtils.setNotificationAndGetIdentifer(
+          elm.title,
+          elm.content,
+          timeInfo
+        );
       }
     }
-  // =====================================DB===================================
+    // =====================================DB===================================
 
-      const updatedData = {
-        id: elm.id,
-        title: elm.title,
-        dateString: textDateProcessed,
-        isNotified: elm.isNotified,
-        timeString: vTime,
-        description: elm.content,
-        isMoodle: elm.isMoodle,
-        identifier: identifier
-      };
-      try {
-        const userRef = doc(collection(firestore, "calendar"), user.uid);
-        const userDoc = await getDoc(userRef);
-        const userCalendarData = userDoc.data().calendar.user;
-        const itemIndex = userCalendarData.findIndex(
-          (item) => item.id === elm.id
+    const updatedData = {
+      id: elm.id,
+      title: elm.title,
+      dateString: textDateProcessed,
+      isNotified: elm.isNotified,
+      timeString: vTime,
+      description: elm.content,
+      isMoodle: elm.isMoodle,
+      identifier: identifier,
+    };
+    try {
+      const userRef = doc(collection(firestore, "calendar"), user.uid);
+      const userDoc = await getDoc(userRef);
+      const userCalendarData = userDoc.data().calendar.user;
+      const itemIndex = userCalendarData.findIndex(
+        (item) => item.id === elm.id
+      );
+      if (itemIndex !== -1) {
+        const updatedUserCalendarList = [...userCalendarData];
+        updatedUserCalendarList[itemIndex] = {
+          ...updatedUserCalendarList[itemIndex],
+          ...updatedData,
+        };
+        await updateDoc(
+          userRef,
+          { "calendar.user": updatedUserCalendarList },
+          { merge: true }
         );
-        if (itemIndex !== -1) {
-          const updatedUserCalendarList = [...userCalendarData];
-          updatedUserCalendarList[itemIndex] = {
-            ...updatedUserCalendarList[itemIndex],
-            ...updatedData,
-          };
-          await updateDoc(
-            userRef,
-            { "calendar.user": updatedUserCalendarList },
-            { merge: true }
-          );
-          console.log("update OKK");
-        } else {
-          console.log("No todolist item found");
-        }
-      } catch (error) {
-        console.log("error: ", error);
+        console.log("update OKK");
+      } else {
+        console.log("No todolist item found");
       }
+    } catch (error) {
+      console.log("error: ", error);
+    }
   }
 
   static deleteCalendar = async (c_item) => {
@@ -459,82 +506,117 @@ class CalendarService {
     console.log("Delete Calendar: ", id);
     try {
       // ==================================Notification============================
-      if(c_item.isNotified){
+      if (c_item.isNotified) {
         NotificationUtils.cancelNotification(c_item.identifier);
       }
       // =====================================DB===================================
       const user = auth.currentUser;
-      const userRef = doc(collection(firestore, 'calendar'), user.uid);
+      const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
       const userCalendar = userDoc.data().calendar.user;
-      const updatedUserCalendar = userCalendar.filter(item => item.id !== id);
-      await updateDoc(userRef, { "calendar.user": updatedUserCalendar }, {merge: true});  
+      const updatedUserCalendar = userCalendar.filter((item) => item.id !== id);
+      await updateDoc(
+        userRef,
+        { "calendar.user": updatedUserCalendar },
+        { merge: true }
+      );
       console.log("delete OKK");
     } catch (error) {
       console.log("error: ", error);
     }
   };
 
-  static async loadNotificationAndUpdateDb(){
+  static async loadNotificationAndUpdateDb() {
     try {
-        const user = auth.currentUser; 
-        const userRef = doc(collection(firestore, 'calendar'), user.uid);
-        const userDoc = await getDoc(userRef);
-        if(userDoc.exists()){
-            const moodleData = userDoc.data().calendar.moodle;   
-            const userData = userDoc.data().calendar.user;  
-            loadNotificationAndUpdateOne(moodleData, userRef, true);
-            loadNotificationAndUpdateOne(userData, userRef, false);
-        }
+      const user = auth.currentUser;
+      const userRef = doc(collection(firestore, "calendar"), user.uid);
+      const userDoc = await getDoc(userRef);
+      if (userDoc.exists()) {
+        const moodleData = userDoc.data().calendar.moodle;
+        const userData = userDoc.data().calendar.user;
+        loadNotificationAndUpdateOne(moodleData, userRef, true);
+        loadNotificationAndUpdateOne(userData, userRef, false);
+      }
     } catch (error) {
-        console.log("error: ", error);
+      console.log("error: ", error);
     }
 
-    async function loadNotificationAndUpdateOne(data, userRef, isMoodleProcess) {
-        const updatedCalendar = [...data];
-        const itemIndexes = data.filter(item => item.identifier != "")
-                                    .map(item => data.findIndex(obj => obj.id == item.id));
-        for(const i of itemIndexes) {
-            const elem = data[i];
-            const timeArray = elem.timeString.split(":");
-            const [year, month, day] = elem.dateString.split("-");
-            /* ==================================Notification====================================== */
-            //Thông báo cách tối thiểu 2h
-            const deadlineDate = new Date(year, month-1, day, timeArray[0], timeArray[1]);
-            const now = new Date(Date.now());
-            // const now = new Date(2022,12-1, 1,0,0);
-            const diff = deadlineDate - now;
-            const twoHours = 2*60*60*1000;
-            const twoDays = 60*1000*60*24*2;
-            if(diff > twoHours && diff <= twoDays){ // > 2hours and < 2 day
-              const twoHoursBeforeDeadlineTime = new Date(deadlineDate.getTime() - twoHours);
-              const timeInfo = {
-                year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
-                month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
-                day: Number(twoHoursBeforeDeadlineTime.getDate()),
-                hour: Number(twoHoursBeforeDeadlineTime.getHours()),
-                minute: Number(twoHoursBeforeDeadlineTime.getMinutes())
-              }
-              let identifier;
-              if(isMoodleProcess){
-                identifier = await NotificationUtils.setNotificationAndGetIdentifer(elem.description, elem.title, timeInfo);
-              }else{
-                identifier = await NotificationUtils.setNotificationAndGetIdentifer(elem.title, elem.description, timeInfo);
-              }
-              updatedCalendar[i] = {...updatedCalendar[i], identifier: identifier};
-            }else{
-              updatedCalendar[i] = {...updatedCalendar[i], identifier: ""};
-            }
-        };
-        if(isMoodleProcess){
-          await updateDoc(userRef,{ "calendar.moodle": updatedCalendar },{ merge: true });
-        }else{
-          await updateDoc(userRef,{ "calendar.user": updatedCalendar },{ merge: true });
+    async function loadNotificationAndUpdateOne(
+      data,
+      userRef,
+      isMoodleProcess
+    ) {
+      const updatedCalendar = [...data];
+      const itemIndexes = data
+        .filter((item) => item.identifier != "")
+        .map((item) => data.findIndex((obj) => obj.id == item.id));
+      for (const i of itemIndexes) {
+        const elem = data[i];
+        const timeArray = elem.timeString.split(":");
+        const [year, month, day] = elem.dateString.split("-");
+        /* ==================================Notification====================================== */
+        //Thông báo cách tối thiểu 2h
+        const deadlineDate = new Date(
+          year,
+          month - 1,
+          day,
+          timeArray[0],
+          timeArray[1]
+        );
+        const now = new Date(Date.now());
+        // const now = new Date(2022,12-1, 1,0,0);
+        const diff = deadlineDate - now;
+        const twoHours = 2 * 60 * 60 * 1000;
+        const twoDays = 60 * 1000 * 60 * 24 * 2;
+        if (diff > twoHours && diff <= twoDays) {
+          // > 2hours and < 2 day
+          const twoHoursBeforeDeadlineTime = new Date(
+            deadlineDate.getTime() - twoHours
+          );
+          const timeInfo = {
+            year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
+            month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
+            day: Number(twoHoursBeforeDeadlineTime.getDate()),
+            hour: Number(twoHoursBeforeDeadlineTime.getHours()),
+            minute: Number(twoHoursBeforeDeadlineTime.getMinutes()),
+          };
+          let identifier;
+          if (isMoodleProcess) {
+            identifier = await NotificationUtils.setNotificationAndGetIdentifer(
+              elem.description,
+              elem.title,
+              timeInfo
+            );
+          } else {
+            identifier = await NotificationUtils.setNotificationAndGetIdentifer(
+              elem.title,
+              elem.description,
+              timeInfo
+            );
+          }
+          updatedCalendar[i] = {
+            ...updatedCalendar[i],
+            identifier: identifier,
+          };
+        } else {
+          updatedCalendar[i] = { ...updatedCalendar[i], identifier: "" };
         }
-        
+      }
+      if (isMoodleProcess) {
+        await updateDoc(
+          userRef,
+          { "calendar.moodle": updatedCalendar },
+          { merge: true }
+        );
+      } else {
+        await updateDoc(
+          userRef,
+          { "calendar.user": updatedCalendar },
+          { merge: true }
+        );
+      }
     }
-}
-
+  }
 }
 
 export default CalendarService;

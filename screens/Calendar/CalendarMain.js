@@ -44,7 +44,7 @@ const CalendarMain = () => {
 
   const LoadMoodleActive = async () => {
     try {
-      const moodleActive = await CalendarService.isMoodleActive(); 
+      const moodleActive = await CalendarService.isMoodleActive();
       setIsMoodleActive(moodleActive);
       console.log("Moodle activee: ", moodleActive);
     } catch (error) {
@@ -155,7 +155,7 @@ const CalendarMain = () => {
       ...markedDates,
       [selectedDay]: {
         selected: true,
-        selectedColor: "#393E36",
+        selectedColor: "#3A4666",
         selectedTextColor: "white",
       },
     }),
