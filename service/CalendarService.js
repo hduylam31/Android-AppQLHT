@@ -34,11 +34,12 @@ class CalendarService {
 
   static async getMoodleToken(username, password) {
     console.log("get token");
+
     url =
       "https://courses.fit.hcmus.edu.vn/login/token.php?username=" +
-      username +
+      encodeURIComponent(username) + 
       "&password=" +
-      password +
+      encodeURIComponent(password) +
       "&service=moodle_mobile_app";
     const response = await fetch(url, {
       method: "POST",
@@ -47,7 +48,7 @@ class CalendarService {
       },
     });
     const data = await response.json();
-    if (data.errorcode === "invalidlogin") {
+    if (data.errorcode === "invalidlogin" || !data.token) {
       return "error";
     }
 
