@@ -84,7 +84,7 @@ const Calendar_Add = () => {
     if (title === "") {
       Alert.alert(
         "Lỗi thêm thông tin",
-        "Vui lòng nhập tiêu đề cho sự kiện mới"
+        "Tiêu đề không được để trống vui lòng nhập tiêu đề"
       );
     } else {
       console.log("Start addingg");
@@ -97,7 +97,7 @@ const Calendar_Add = () => {
           isNotified
         );
         navigation.navigate("BottomBar", {
-          screen: "Calendar",
+          screen: "Lịch",
           params: {
             screenCalendar: "AddToMain",
           },
@@ -133,50 +133,66 @@ const Calendar_Add = () => {
         {/* Phần tiêu đề */}
           </View>
         </View>
-        <ScrollView className="bg-[#F1F5F9] h-full">
-          <View className="px-5 pt-[4%] space-y-2 h-[90%]">
-            <View className="space-y-2">
-              <View className="flex-row">
-                <Text className="text-base">Tiêu đề</Text>
-                <Text className="text-base text-red-600"> (*)</Text>
-              </View>
-              <TextInput
-                placeholder="Tiêu đề"
-                className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-gray-400 rounded-[8px] resize-none"
-                value={title}
-                onChangeText={(text) => setTitle(text)}
-              ></TextInput>
+        <ScrollView className=" bg-[#F1F5F9]">
+          <View className="px-5 pt-[4%] space-y-2">
+            <View className="flex-row">
+              <Text className="text-base">Tiêu đề</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
             </View>
-            <View className="flex-row items-center">
-              <View className="space-y-2 w-[50%]">
+            <TextInput
+              placeholder="Tiêu đề"
+              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg resize-none text-base"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+              value={title}
+              onChangeText={(text) => setTitle(text)}
+            ></TextInput>
+
+            <View className="flex-row justify-between items-center">
+              <View className="space-y-2 w-[49%]">
                 <View className="flex-row">
                   <Text className="text-base">Ngày</Text>
                   <Text className="text-base text-red-600"> (*)</Text>
                 </View>
                 <TouchableOpacity onPress={() => showMode("date")}>
-                  <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                    <View className="flex-row justify-center items-center space-x-1">
-                      <Text className="text-base text-gray-400">
-                        {textDate}
-                      </Text>
-                      <AntDesign name="calendar" size={25} color="black" />
-                    </View>
+                  <View
+                    className=" bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3"
+                    style={{
+                      shadowColor: "#000000",
+                      shadowOffset: { width: 10, height: 10 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 10,
+                    }}
+                  >
+                    <Text className="text-base ">{textDate}</Text>
+                    <AntDesign name="calendar" size={25} color="black" />
                   </View>
                 </TouchableOpacity>
               </View>
-              <View className="pl-4 space-y-2 w-[100%]">
+              <View className="space-y-2 w-[49%]">
                 <View className="flex-row">
                   <Text className="text-base">Giờ</Text>
                   <Text className="text-base text-red-600"> (*)</Text>
                 </View>
                 <TouchableOpacity onPress={() => showMode("time")}>
-                  <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                    <View className="flex-row justify-center items-center space-x-4">
-                      <Text className="text-base text-gray-400">
-                        {textTime}
-                      </Text>
-                      <AntDesign name="clockcircleo" size={25} color="black" />
-                    </View>
+                  <View
+                    className="bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3 "
+                    style={{
+                      shadowColor: "#000000",
+                      shadowOffset: { width: 10, height: 10 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 10,
+                    }}
+                  >
+                    <Text className="text-base">{textTime}</Text>
+                    <AntDesign name="clockcircleo" size={25} color="black" />
                   </View>
                 </TouchableOpacity>
               </View>
@@ -192,6 +208,7 @@ const Calendar_Add = () => {
                 />
               )}
             </View>
+
             <Text className="text-base">Bật thông báo</Text>
             <View className="items-start">
               <Switch
@@ -199,32 +216,46 @@ const Calendar_Add = () => {
                 thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
                 value={isNotified}
                 onValueChange={(newValue) => setIsNotified(newValue)}
-                style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
+                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               />
             </View>
+
             {/* Nội dung phần ghi chú */}
-            <View className="space-y-2">
-              <Text className="text-base">Ghi chú</Text>
-              <TextInput
-                placeholder="Nội dung"
-                className="w-[100%] h-72 bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
-                multiline={true}
-                value={content}
-                numberOfLines={8}
-                onChangeText={(text) => setContent(text)}
-                textAlignVertical="top"
-              ></TextInput>
-              {/* Nút thêm */}
-            </View>
-            <TouchableOpacity
-              onPress={handleAddingUserCalendar}
-              className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[5%] w-[90%] ml-[5%]"
-            >
-              <Text className="text-white text-center font-bold text-xl">
-                Lưu
-              </Text>
-            </TouchableOpacity>
+
+            <Text className="text-base">Ghi chú</Text>
+            <TextInput
+              placeholder="Nội dung"
+              className="w-[100%] h-72 bg-[#FFFFFF] px-4 pt-4 rounded-lg resize-none text-base"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+              multiline={true}
+              value={content}
+              numberOfLines={8}
+              onChangeText={(text) => setContent(text)}
+              textAlignVertical="top"
+            ></TextInput>
           </View>
+          {/* Nút thêm */}
+          <TouchableOpacity
+            onPress={handleAddingUserCalendar}
+            className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-16 mb-6 h-10 w-[90%] ml-[5%]"
+            style={{
+              shadowColor: "#000000",
+              shadowOffset: { width: 10, height: 10 },
+              shadowOpacity: 0.5,
+              shadowRadius: 10,
+              elevation: 10,
+            }}
+          >
+            <Text className="text-white text-center font-bold text-xl">
+              Lưu
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>

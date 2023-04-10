@@ -42,7 +42,7 @@ const NoteListMain = () => {
   // thay loadCalendar thanh loadNoteList 2 useEffect phia duoi
   const loadNoteList = async () => {
     try {
-      const notelist = await NoteService.loadNoteData(); 
+      const notelist = await NoteService.loadNoteData();
       setData(notelist);
     } catch (error) {
       console.log(error);
@@ -89,31 +89,41 @@ const NoteListMain = () => {
                 padding: "4%",
               }}
             >
-              {data.map((item) => (
-                <View
-                  key={item.id}
-                  className="w-[48%] h-40 mb-[4%] bg-white rounded-xl"
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("NoteList_Edit", {item});
-                    }}
-                  >
-                    <View className="h-7 flex justify-center items-center rounded-t-xl bg-[#FE8668]">
-                      <Text>{item.title}</Text>
-                    </View>
-                    <View className="h-full">
-                      <Text
-                        numberOfLines={5}
-                        ellipsizeMode="tail"
-                        className={"text-sm"}
+              {data.map(
+                (item) => (
+                  (replaceHTML = item.note.replace(/<(.|\n)*?>/g, "").trim()),
+                  (replaceWhiteSpace = replaceHTML
+                    .replace(/&nbsp;/g, "")
+                    .trim()),
+                  (
+                    <View
+                      key={item.id}
+                      className="w-[48%] h-40 mb-[4%] bg-white rounded-xl"
+                    >
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("NoteList_Edit", { item });
+                        }}
                       >
-                        {item.note}
-                      </Text>
+                        <View className="h-7 flex justify-center items-center rounded-t-xl bg-[#FE8668]">
+                          <Text numberOfLines={1} ellipsizeMode="tail">
+                            {item.title}
+                          </Text>
+                        </View>
+                        <View className="h-full px-3">
+                          <Text
+                            numberOfLines={3}
+                            ellipsizeMode="tail"
+                            className={"text-sm"}
+                          >
+                            {replaceWhiteSpace}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
-                  </TouchableOpacity>
-                </View>
-              ))}
+                  )
+                )
+              )}
             </ScrollView>
           </View>
         </View>
@@ -122,7 +132,14 @@ const NoteListMain = () => {
           onPress={() => {
             navigation.navigate("NoteList_Add");
           }}
-          className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          className="w-[90%] h-[5%] absolute bottom-2 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: { width: 5, height: 5 },
+            shadowOpacity: 0.5,
+            shadowRadius: 5,
+            elevation: 5,
+          }}
         >
           <Text className="text-white text-center font-bold text-base">
             Thêm ghi chú

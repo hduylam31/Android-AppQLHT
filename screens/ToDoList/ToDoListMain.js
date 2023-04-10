@@ -87,10 +87,16 @@ const ToDoListScreen = () => {
     });
   }, []);
 
+  const ListEmptyComponent = () => (
+    <View className="flex h-64 justify-center items-center">
+      <Text className="text-base">Bạn chưa có công việc nào!</Text>
+    </View>
+  );
+
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("TodoList_Edit", {item});
+        navigation.navigate("TodoList_Edit", { item });
       }}
     >
       <Animatable.View
@@ -139,7 +145,7 @@ const ToDoListScreen = () => {
   renderItemCompleted = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("TodoList_Edit", {item});
+        navigation.navigate("TodoList_Edit", { item });
       }}
     >
       <Animatable.View
@@ -205,18 +211,37 @@ const ToDoListScreen = () => {
       </View>
       <View className="flex-1 bg-[#F1F5F9]">
         {/* Công việc hiện có  */}
-        <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] mt-[5%]">
+        <View
+          className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] mt-[5%]"
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: { width: 10, height: 10 },
+            shadowOpacity: 0.5,
+            shadowRadius: 10,
+            elevation: 10,
+          }}
+        >
           <FlatList
             data={todos.filter((todo) => !todo.isCompleted)}
             keyExtractor={(item) => item.id.toString()}
             renderItem={this.renderItem}
+            ListEmptyComponent={ListEmptyComponent}
           />
         </View>
         {/* Công việc đã hòan thành */}
         <Text className="text-lg font-semibold ml-[5%] my-[3%]">
           Hoàn thành
         </Text>
-        <View className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%]">
+        <View
+          className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%]"
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: { width: 10, height: 10 },
+            shadowOpacity: 0.5,
+            shadowRadius: 10,
+            elevation: 10,
+          }}
+        >
           <FlatList
             data={todos.filter((todo) => todo.isCompleted)}
             keyExtractor={(item) => item.id.toString()}
@@ -229,7 +254,14 @@ const ToDoListScreen = () => {
         onPress={() => {
           navigation.navigate("TodoList_Add");
         }}
-        className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+        className="w-[90%] h-[5%] absolute bottom-2 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+        style={{
+          shadowColor: "#000000",
+          shadowOffset: { width: 5, height: 5 },
+          shadowOpacity: 0.5,
+          shadowRadius: 5,
+          elevation: 5,
+        }}
       >
         <Text className="text-white text-center font-bold text-base">
           Thêm công việc

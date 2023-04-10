@@ -308,6 +308,13 @@ const ScheduleMain = () => {
         animation="flipInX"
         delay={index * 10}
         className="mx-[5%] my-[3%] bg-white rounded-xl flex-1 flex-row content-center"
+        style={{
+          shadowColor: "#000000",
+          shadowOffset: { width: 10, height: 10 },
+          shadowOpacity: 0.5,
+          shadowRadius: 5,
+          elevation: 7,
+        }}
       >
         <View className="flex justify-center items-center w-[15%] ">
           <Text className="text-base font-medium">Tiết</Text>
@@ -498,7 +505,14 @@ const ScheduleMain = () => {
           onPress={() => {
             navigation.navigate("Schedule_Add", dayLessonMap);
           }}
-          className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          className="w-[90%] h-[5%] absolute bottom-2 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: { width: 5, height: 5 },
+            shadowOpacity: 0.5,
+            shadowRadius: 5,
+            elevation: 5,
+          }}
         >
           <Text className="text-white text-center font-bold text-base">
             Thêm thời khóa biểu

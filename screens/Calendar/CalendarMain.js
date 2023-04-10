@@ -112,38 +112,37 @@ const CalendarMain = () => {
         navigation.navigate("Calendar_Edit", { item });
       }}
     >
-      <Animatable.View
-        animation="slideInLeft"
-        delay={index * 10}
-        className="h-12 border-b-[#f3f2f4] border-b-2 flex-row "
-      >
-        <View className={"w-[12%] flex ml-[3%]"}>
-          <Text className={"text-sm font-semibold "}>{item.timeString}</Text>
-        </View>
-        <View
-          className={`w-[2%] h-[80%] mx-[3%] my-1 ${
-            item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
-          }`}
-        ></View>
-        <View className="w-[70%] flex-row">
-          <Text
-            numberOfLines={2}
-            ellipsizeMode="tail"
-            className={"text-sm font-semibold"}
-          >
-            {item.title}
-          </Text>
-          <View className={"mt-1 ml-1"}>
-            {!item.isNotified && (
-              <MaterialCommunityIcons
-                name="bell-off-outline"
-                size={14}
-                color="black"
-              />
-            )}
+      <Animatable.View animation="slideInLeft" delay={index * 10}>
+        <View className="h-12 flex-row">
+          <View className={"w-[12%] flex ml-[3%]"}>
+            <Text className={"text-sm font-semibold "}>{item.timeString}</Text>
+          </View>
+          <View
+            className={`w-[2%] h-[80%] mx-[3%] my-1 ${
+              item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
+            }`}
+          ></View>
+          <View className="w-[70%] flex-row">
+            <Text
+              numberOfLines={2}
+              ellipsizeMode="tail"
+              className={"text-sm font-semibold"}
+            >
+              {item.title}
+            </Text>
+            <View className={"mt-1 ml-1"}>
+              {!item.isNotified && (
+                <MaterialCommunityIcons
+                  name="bell-off-outline"
+                  size={14}
+                  color="black"
+                />
+              )}
+            </View>
           </View>
         </View>
       </Animatable.View>
+      <View className="w-[94%] ml-[3%] h-[2px] bg-[#f3f2f4]"></View>
     </TouchableOpacity>
   );
 
@@ -185,7 +184,7 @@ const CalendarMain = () => {
     try {
       await CalendarService.logOutMoodle(0);
       navigation.navigate("BottomBar", {
-        screen: "Calendar",
+        screen: "Lịch",
         params: {
           screenCalendar: "LogoutMoodleToMain",
         },
@@ -283,9 +282,14 @@ const CalendarMain = () => {
         <View className="absolute w-full top-20 h-[85%]">
           <Calendar
             style={{
-              borderRadius: 10,
+              borderRadius: 12,
               elevation: 4,
               margin: "5%",
+              shadowColor: "#000000",
+              shadowOffset: { width: 10, height: 10 },
+              shadowOpacity: 0.5,
+              shadowRadius: 10,
+              elevation: 10,
             }}
             markingType={"multi-dot"}
             markedDates={marked}
@@ -298,7 +302,16 @@ const CalendarMain = () => {
           />
           <View className="max-h-72">
             {filteredMoodle.length > 0 && (
-              <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
+              <View
+                className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
+                style={{
+                  shadowColor: "#000000",
+                  shadowOffset: { width: 10, height: 10 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+                  elevation: 10,
+                }}
+              >
                 <FlatList
                   data={filteredMoodle}
                   keyExtractor={(item) => item.id.toString()}
@@ -307,7 +320,16 @@ const CalendarMain = () => {
               </View>
             )}
             {filteredIndividual.length > 0 && (
-              <View className=" bg-white rounded-2xl mx-[3%] mt-[4%] flex-1 flex-row">
+              <View
+                className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
+                style={{
+                  shadowColor: "#000000",
+                  shadowOffset: { width: 10, height: 10 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+                  elevation: 10,
+                }}
+              >
                 <FlatList
                   data={filteredIndividual}
                   keyExtractor={(item) => item.id.toString()}
@@ -321,7 +343,14 @@ const CalendarMain = () => {
           onPress={() => {
             navigation.navigate("Calendar_Add", { selectedDay });
           }}
-          className="w-[70%] h-[5%] absolute bottom-2 ml-[15%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          className="w-[90%] h-[5%] absolute bottom-2 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: { width: 5, height: 5 },
+            shadowOpacity: 0.5,
+            shadowRadius: 5,
+            elevation: 5,
+          }}
         >
           <Text className="text-white text-center font-bold text-base">
             Thêm sự kiện mới

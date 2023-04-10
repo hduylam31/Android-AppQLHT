@@ -27,7 +27,7 @@ const ForgotPassword_CheckMail = () => {
           <AntDesign name="arrowleft" size={40} color="white" />
         </View> */}
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <View className="mt-[7%] ml-[3%] w-10 h-10">
+        <View className="mt-10 ml-[3%] w-10 h-10">
           <AntDesign name="arrowleft" size={40} color="white" />
         </View>
       </TouchableOpacity>

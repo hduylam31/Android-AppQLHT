@@ -25,19 +25,26 @@ const Login_Moodle = () => {
   const [password, setPassword] = React.useState("");
 
   const handleLogin = async () => {
-    const status = await CalendarService.processLoginMoodle(username, password);  
+    const status = await CalendarService.processLoginMoodle(username, password);
     // const status = await CommonService.loadAllNotificationAndUpdateDB();  //Này để test
     console.log("statuss: ", status);
-    if (status === 1) {
-      //1 = ok, 0 = sai mật khẩu, -1 = lỗi 
+    if (username === "") {
+      Alert.alert("Kết nối không thành công", "Vui lòng nhập tên tài khoản");
+    } else if (password === "") {
+      Alert.alert("Kết nối không thành công", "Vui lòng nhập mật khẩu");
+    } else if (status === 1) {
+      //1 = ok, 0 = sai mật khẩu, -1 = lỗi
       navigation.navigate("BottomBar", {
-        screen: "Calendar",
+        screen: "Lịch",
         params: {
           screenCalendar: "UpdateMoodleToMain",
         },
       });
     } else if (status === 0) {
-      console.log("Sai mat khau");
+      Alert.alert(
+        "Kết nối không thành công",
+        "Sai mật khẩu vui lòng kiểm tra lại"
+      );
     } else {
       console.log("Loi");
     }
@@ -78,17 +85,17 @@ const Login_Moodle = () => {
           </View>
           <View className="w-42 h-60 bg-white rounded-2xl mx-6 mt-10 flex justify-center items-center space-y-6">
             <TextInput
-              placeholder="Tài khoản"
+              placeholder="Tên tài khoản"
               value={username}
               onChangeText={(text) => setUsername(text)}
-              className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4"
+              className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4 rounded-2xl"
             ></TextInput>
             <TextInput
               placeholder="Mật khẩu"
               value={password}
               onChangeText={(text) => setPassword(text)}
               secureTextEntry
-              className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4"
+              className="w-[80%] h-[25%] bg-[#D9D9D9] pl-4 rounded-2xl"
             ></TextInput>
           </View>
           <TouchableOpacity onPress={handleLogin}>
@@ -104,7 +111,9 @@ const Login_Moodle = () => {
                 elevation: 5,
               }}
             >
-              <Text className="font-bold text-xl">Kết nối</Text>
+              <Text className="text-[#3A4666] text-center font-bold text-xl">
+                Kết nối
+              </Text>
             </Animatable.View>
           </TouchableOpacity>
         </View>

@@ -46,13 +46,12 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    const autoLogin = async () => { 
+    const autoLogin = async () => {
       const todolists = await CredentialService.autoLogin();
       console.log("Auto Login OK");
     };
-    autoLogin()
+    autoLogin();
   }, []);
-
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -75,7 +74,6 @@ const Login = () => {
         }
         CredentialService.handleLoginWithEmail(account, Password);
         console.log("Login OK");
-
       } catch (error) {
         console.log("Login fail with: ", error);
       }
@@ -143,7 +141,9 @@ const Login = () => {
                       elevation: 5,
                     }}
                   >
-                    <Text className="text-base">Đăng nhập</Text>
+                    <Text className="text-[#3A4666] text-center font-bold text-lg">
+                      Đăng nhập
+                    </Text>
                   </Animatable.View>
                 </TouchableOpacity>
               </View>
@@ -181,7 +181,7 @@ const Login = () => {
                 </TouchableOpacity>
               </View>
               <View className="flex-row self-center space-x-2">
-                <Text className="text-sm" style={{ color: "white" }}>
+                <Text className="text-sm text-white">
                   Bạn chưa có tài khoản ?
                 </Text>
                 <View>
@@ -190,9 +190,7 @@ const Login = () => {
                       navigation.navigate("Register");
                     }}
                   >
-                    <Text className="text-sm" style={{ color: "#23ACCD" }}>
-                      Đăng ký ngay
-                    </Text>
+                    <Text className="text-sm text-[#23ACCD]">Đăng ký ngay</Text>
                   </TouchableOpacity>
                 </View>
               </View>

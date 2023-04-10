@@ -49,11 +49,11 @@ const ForgotPassword = () => {
           className="w-30 h-30 absolute top-20 right-2"
         />
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <View className="mt-[7%] ml-[3%] w-10 h-10">
+          <View className="mt-10 ml-[3%] w-10 h-10">
             <AntDesign name="arrowleft" size={40} color="white" />
           </View>
         </TouchableOpacity>
-        <View className="mt-[27%]">
+        <View className="mt-[23%]">
           <Text className="text-white font-bold text-3xl ml-7">
             Đặt lại mật khẩu
           </Text>

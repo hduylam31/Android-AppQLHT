@@ -77,7 +77,7 @@ const Register = () => {
               className="w-30 h-30 absolute top-20 right-2"
             />
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <View className="w-10 h-10 mt-[7%] ml-[3%]">
+              <View className="w-10 h-10 mt-10 ml-[3%]">
                 <AntDesign name="arrowleft" size={40} color="white" />
               </View>
             </TouchableOpacity>

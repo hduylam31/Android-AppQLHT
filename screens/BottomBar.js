@@ -26,16 +26,16 @@ const BottomBar = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Calendar") {
-            iconName = focused ? "calendar-blank-outline" : "calendar-blank";
-          } else if (route.name === "NoteList") {
-            iconName = focused ? "file-document-outline" : "file-document";
-          } else if (route.name === "ToDoList") {
-            iconName = focused ? "file-check-outline" : "file-check";
-          } else if (route.name === "Schedule") {
-            iconName = focused ? "calendar-multiselect" : "calendar-text";
-          } else if (route.name === "Account") {
-            iconName = focused ? "account-outline" : "account";
+          if (route.name === "Lịch") {
+            iconName = focused ? "calendar" : "calendar";
+          } else if (route.name === "Ghi chú") {
+            iconName = focused ? "file-document" : "file-document";
+          } else if (route.name === "DS công việc") {
+            iconName = focused ? "file-check" : "file-check";
+          } else if (route.name === "TKB") {
+            iconName = focused ? "calendar-text" : "calendar-text";
+          } else if (route.name === "Tài khoản") {
+            iconName = focused ? "account" : "account";
           }
 
           return (
@@ -44,11 +44,11 @@ const BottomBar = () => {
         },
       })}
     >
-      <Tab.Screen name="Calendar" component={CalendarMain} />
-      <Tab.Screen name="NoteList" component={NoteListMain} />
-      <Tab.Screen name="ToDoList" component={ToDoListScreen} />
-      <Tab.Screen name="Schedule" component={ScheduleMain} />
-      <Tab.Screen name="Account" component={AccountMain} />
+      <Tab.Screen name="Lịch" component={CalendarMain} />
+      <Tab.Screen name="Ghi chú" component={NoteListMain} />
+      <Tab.Screen name="DS công việc" component={ToDoListScreen} />
+      <Tab.Screen name="TKB" component={ScheduleMain} />
+      <Tab.Screen name="Tài khoản" component={AccountMain} />
     </Tab.Navigator>
   );
 };

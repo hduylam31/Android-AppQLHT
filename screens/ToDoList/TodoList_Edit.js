@@ -8,6 +8,7 @@ import {
   Switch,
   Platform,
   Alert,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -15,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import TodolistService from "../../service/TodolistService";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const CategoryButton = ({ label, onPress, selected }) => (
   <TouchableOpacity
@@ -35,7 +37,7 @@ const CategoryButton = ({ label, onPress, selected }) => (
 const LockedView = ({ isNotified, children }) => {
   return (
     <View
-      className={`w-[50%] ${isNotified ? "" : "opacity-40"}`}
+      className={`w-[49%] ${isNotified ? "" : "opacity-40"}`}
       pointerEvents={isNotified ? "auto" : "none"}
     >
       {children}
@@ -104,7 +106,7 @@ const TodoList_Edit = () => {
       };
       await TodolistService.updateTodolist(new_item, item);
       navigation.navigate("BottomBar", {
-        screen: "ToDoList",
+        screen: "DS công việc",
         params: {
           screenTodoList: "EditToMain",
         },
@@ -119,7 +121,7 @@ const TodoList_Edit = () => {
     try {
       await TodolistService.deleteTodolist(item);
       navigation.navigate("BottomBar", {
-        screen: "ToDoList",
+        screen: "DS công việc",
         params: {
           screenTodoList: "DeleteToMain",
         },
@@ -163,8 +165,8 @@ const TodoList_Edit = () => {
 
   const AlertDelete = () => {
     Alert.alert(
-      "Xóa doanh mục",
-      "Xóa doanh mục khỏi danh sách công việc này ?",
+      "Xóa công việc",
+      "Xóa công việc này khỏi danh sách công việc? ?",
       [
         {
           text: "Đồng ý",
@@ -196,101 +198,128 @@ const TodoList_Edit = () => {
             <View>
               <Text className="text-white text-xl">Cập nhật công việc</Text>
             </View>
-            <View className="w-8 h-8">
-              <TouchableOpacity onPress={AlertDelete}>
-                <AntDesign name="delete" size={25} color="white" />
-              </TouchableOpacity>
-            </View>
+
+            <TouchableOpacity onPress={AlertDelete}>
+              <MaterialCommunityIcons
+                name="trash-can-outline"
+                size={30}
+                color="white"
+              />
+            </TouchableOpacity>
           </View>
         </View>
-        <View className="bg-[#F1F5F9] px-5 pt-[4%] space-y-2 h-full">
-          <View className="space-y-2">
-            <Text className="text-base">Tiêu đề</Text>
+        <ScrollView className="bg-[#F1F5F9]">
+          <View className="px-5 pt-[4%] space-y-2">
+            <View className="flex-row">
+              <Text className="text-base">Tiêu đề</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
             <TextInput
               placeholder="Tiêu đề"
               value={title}
               onChangeText={(text) => setTitle(text)}
-              className="w-[100%] h-12 bg-[#FFFFFF] text-base pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
+              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg resize-none text-base"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
             ></TextInput>
-          </View>
-          {/* Phần phân loại */}
-          <View className="pt-2 flex-row items-center">
-            <Text className="text-base mr-4 mb-3">Phân loại</Text>
-            <View className="justify-center items-center">
-              <CategoryButton
-                label="profile"
-                onPress={() => handleCategoryPress("profile")}
-                selected={selectedCategory === "profile"}
-              />
-              <Text className="text-sm">Học tập</Text>
+
+            {/* Phần phân loại */}
+            <View className="pt-2 flex-row items-center">
+              <Text className="text-base mr-4 mb-3">Phân loại</Text>
+              <View className="justify-center items-center">
+                <CategoryButton
+                  label="profile"
+                  onPress={() => handleCategoryPress("profile")}
+                  selected={selectedCategory === "profile"}
+                />
+                <Text className="text-sm">Học tập</Text>
+              </View>
+              <View className="justify-center items-center">
+                <CategoryButton
+                  label="dashboard"
+                  onPress={() => handleCategoryPress("dashboard")}
+                  selected={selectedCategory === "dashboard"}
+                />
+                <Text className="text-sm">Sự kiện</Text>
+              </View>
+              <View className="justify-center items-center">
+                <CategoryButton
+                  label="Trophy"
+                  onPress={() => handleCategoryPress("Trophy")}
+                  selected={selectedCategory === "Trophy"}
+                />
+                <Text className="text-sm">Giải trí</Text>
+              </View>
+              <View className="justify-center items-center">
+                <CategoryButton
+                  label="ellipsis1"
+                  onPress={() => handleCategoryPress("ellipsis1")}
+                  selected={selectedCategory === "ellipsis1"}
+                />
+                <Text className="text-sm">Khác</Text>
+              </View>
             </View>
-            <View className="justify-center items-center">
-              <CategoryButton
-                label="dashboard"
-                onPress={() => handleCategoryPress("dashboard")}
-                selected={selectedCategory === "dashboard"}
-              />
-              <Text className="text-sm">Sự kiện</Text>
+            <View className="flex-row items-center justify-between">
+              <Text className="text-base w-[49%]">Giờ</Text>
+              <Text className="text-base w-[49%]">Bật thông báo</Text>
             </View>
-            <View className="justify-center items-center">
-              <CategoryButton
-                label="Trophy"
-                onPress={() => handleCategoryPress("Trophy")}
-                selected={selectedCategory === "Trophy"}
-              />
-              <Text className="text-sm">Giải trí</Text>
-            </View>
-            <View className="justify-center items-center">
-              <CategoryButton
-                label="ellipsis1"
-                onPress={() => handleCategoryPress("ellipsis1")}
-                selected={selectedCategory === "ellipsis1"}
-              />
-              <Text className="text-sm">Khác</Text>
-            </View>
-          </View>
-          <View className="flex-row items-center justify-between">
-            <Text className="text-base">Giờ</Text>
-            <Text className="text-base mr-[20%]">Bật thông báo</Text>
-          </View>
-          <View className="flex-row items-center">
-            <LockedView isNotified={isNotified}>
-              <TouchableOpacity onPress={() => showMode("time")}>
-                <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                  <View className="flex-row justify-center items-center space-x-4">
-                    <Text className="text-base text-gray-400">{textTime}</Text>
+            <View className="flex-row items-center">
+              <LockedView isNotified={isNotified}>
+                <TouchableOpacity onPress={() => showMode("time")}>
+                  <View
+                    className=" bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3"
+                    style={{
+                      shadowColor: "#000000",
+                      shadowOffset: { width: 10, height: 10 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 10,
+                    }}
+                  >
+                    <Text className="text-base">{textTime}</Text>
                     <AntDesign name="clockcircleo" size={25} color="black" />
                   </View>
-                </View>
-              </TouchableOpacity>
-            </LockedView>
-            <View className="items-start w-[50%]">
-              <Switch
-                trackColor={{ false: "grey", true: "#3A4666" }}
-                thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
-                value={isNotified}
-                onValueChange={(newValue) => setIsNotified(newValue)}
-                style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
-              ></Switch>
-            </View>
+                </TouchableOpacity>
+              </LockedView>
+              <View className="items-start w-[49%]">
+                <Switch
+                  trackColor={{ false: "grey", true: "#3A4666" }}
+                  thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
+                  value={isNotified}
+                  onValueChange={(newValue) => setIsNotified(newValue)}
+                  style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                ></Switch>
+              </View>
 
-            {show && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode={mode}
-                is24Hour={true}
-                display="default"
-                onChange={onChange}
-              />
-            )}
-          </View>
-          {/* Nội dung phần ghi chú */}
-          <View className="space-y-2">
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode={mode}
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChange}
+                />
+              )}
+            </View>
+            {/* Nội dung phần ghi chú */}
+
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-60 bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none mb-4"
+              className="w-[100%] h-60 bg-[#FFFFFF] px-4 pt-4 rounded-lg resize-none text-base"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
               multiline={true}
               value={value}
               numberOfLines={4}
@@ -300,13 +329,20 @@ const TodoList_Edit = () => {
           </View>
           <TouchableOpacity
             onPress={handleUpdateTodoList}
-            className="bg-[#3A4666] rounded-2xl h-[5%] w-[90%] ml-[5%] items-center justify-center"
+            className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-28 mb-6 h-10 w-[90%] ml-[5%]"
+            style={{
+              shadowColor: "#000000",
+              shadowOffset: { width: 10, height: 10 },
+              shadowOpacity: 0.5,
+              shadowRadius: 10,
+              elevation: 10,
+            }}
           >
             <Text className="text-white text-center font-bold text-xl">
               Lưu
             </Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

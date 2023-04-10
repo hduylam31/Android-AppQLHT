@@ -32,14 +32,14 @@ const NoteList_Edit = () => {
   const [note, setNote] = useState("");
   const c_item = route.params.item;
 
-  useEffect(()=>{
-    const setData = async ()=>{
+  useEffect(() => {
+    const setData = async () => {
       console.log(c_item);
       setTitle(c_item.title);
       setNote(c_item.note);
-    }
+    };
     setData();
-  },[])
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -57,10 +57,10 @@ const NoteList_Edit = () => {
       await NoteService.updateNote({
         c_id: c_item.id,
         title,
-        note
+        note,
       });
       navigation.navigate("BottomBar", {
-        screen: "NoteList",
+        screen: "Ghi chú",
         params: {
           screenNoteList: "EditToMain",
         },
@@ -75,7 +75,7 @@ const NoteList_Edit = () => {
     try {
       await NoteService.deleteNote(c_item.id);
       navigation.navigate("BottomBar", {
-        screen: "NoteList",
+        screen: "Ghi chú",
         params: {
           screenNoteList: "DeleteToMain",
         },
@@ -118,7 +118,7 @@ const NoteList_Edit = () => {
   Keyboard.addListener("keyboardDidHide", hideKeyboard);
 
   return (
-    <TouchableWithoutFeedback onPress={handlePress}>
+    <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-15">
@@ -130,7 +130,9 @@ const NoteList_Edit = () => {
               <Text className="text-white text-xl">Cập nhật ghi chú</Text>
             </View>
             {isKeyboardShowing ? (
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => richText.current?.dismissKeyboard()}
+              >
                 <MaterialCommunityIcons name="check" size={30} color="white" />
               </TouchableOpacity>
             ) : (
@@ -158,14 +160,18 @@ const NoteList_Edit = () => {
         </View>
         <ScrollView className="px-2 space-y-2 h-full bg-white">
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={{ flex: 1 }}
           >
             <RichEditor
               ref={richText}
               placeholder="Nội dung"
-              // editorStyle={{ color: "red" }}
+              initialContentHTML={note}
               onChange={(text) => setNote(text)}
+
+              // editorStyle={{ color: "red" }}
+
+              // onChange={(text) => setNote(text)}
             />
             {/* </View> */}
             {/* <TouchableOpacity
@@ -184,7 +190,6 @@ const NoteList_Edit = () => {
             // colors={colors}
             editor={richText}
             actions={[
-              actions.keyboard,
               actions.undo,
               actions.redo,
               actions.setBold,
@@ -199,8 +204,6 @@ const NoteList_Edit = () => {
               actions.insertLink,
               actions.heading1,
               actions.setStrikethrough,
-              actions.removeFormat,
-              actions.insertVideo,
               actions.checkboxList,
             ]}
             iconMap={{

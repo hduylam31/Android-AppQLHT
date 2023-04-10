@@ -22,7 +22,7 @@ const LockedView = ({ isMoodle, children }) => {
   return (
     <View
       pointerEvents={isMoodle === "false" ? "auto" : "none"}
-      className="space-y-2"
+      className="px-5 pt-[4%] space-y-2"
     >
       {children}
     </View>
@@ -126,7 +126,7 @@ const Calendar_Edit = () => {
         console.log("Old Item: ", item);
         await CalendarService.updateUserCalendar(newItem, item);
         navigation.navigate("BottomBar", {
-          screen: "Calendar",
+          screen: "Lịch",
           params: {
             screenCalendar: "EditToMain",
           },
@@ -142,7 +142,7 @@ const Calendar_Edit = () => {
     try {
       await CalendarService.deleteCalendar(item);
       navigation.navigate("BottomBar", {
-        screen: "Calendar",
+        screen: "Lịch",
         params: {
           screenCalendar: "DeleteToMain",
         },
@@ -153,7 +153,7 @@ const Calendar_Edit = () => {
   };
 
   const AlertDelete = () => {
-    Alert.alert("Xóa danh mục", "Xóa danh mục khỏi danh sách sự kiện này ?", [
+    Alert.alert("Xóa sự kiện", "Xóa sự kiện này khỏi lịch?", [
       {
         text: "Đồng ý",
         onPress: handleDeleteCalendar,
@@ -182,9 +182,12 @@ const Calendar_Edit = () => {
                 color="white"
               />
             </TouchableOpacity>
-            <View>
+            {item.isMoodle === "false" ? (
               <Text className="text-white text-xl">Cập nhật sự kiện</Text>
-            </View>
+            ) : (
+              <Text className="text-white text-xl">Xem thông tin sự kiện</Text>
+            )}
+
             {item.isMoodle === "false" ? (
               <TouchableOpacity onPress={AlertDelete}>
                 <MaterialCommunityIcons
@@ -198,97 +201,131 @@ const Calendar_Edit = () => {
             )}
           </View>
         </View>
-        <ScrollView className="bg-[#F1F5F9] h-full">
+        <ScrollView className="bg-[#F1F5F9]">
           <LockedView isMoodle={item.isMoodle}>
-            <View className="px-5 pt-[4%] space-y-2 h-[90%]">
-              <View className="space-y-2">
-                <Text className="text-base">Tiêu đề</Text>
-                <TextInput
-                  placeholder="Tiêu đề"
-                  value={title}
-                  onChangeText={(text) => setTitle(text)}
-                  className="w-[100%] h-12 bg-[#FFFFFF] pl-4 border-2 border-solid border-[#3A4666] rounded-[8px] resize-none"
-                ></TextInput>
-              </View>
-              <View className="flex-row items-center">
-                <View className="space-y-2 w-[50%]">
-                  <Text className="text-base">Ngày</Text>
-                  <TouchableOpacity onPress={() => showMode("date")}>
-                    <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                      <View className="flex-row justify-center items-center space-x-1">
-                        <Text className="text-base text-gray-400">
-                          {textDate}
-                        </Text>
-                        <AntDesign name="calendar" size={25} color="black" />
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View className="pl-4 space-y-2 w-[100%]">
-                  <Text className="text-base">Giờ</Text>
-                  <TouchableOpacity onPress={() => showMode("time")}>
-                    <View className="w-[140px] h-[50px] bg-[#FFFFFF] border-2 border-solid border-gray-400 text-base rounded-[4px] justify-center items-end px-2">
-                      <View className="flex-row justify-center items-center space-x-4">
-                        <Text className="text-base text-gray-400">
-                          {textTime}
-                        </Text>
-                        <AntDesign
-                          name="clockcircleo"
-                          size={25}
-                          color="black"
-                        />
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                </View>
+            <View className="flex-row">
+              <Text className="text-base">Tiêu đề</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
+            <TextInput
+              placeholder="Tiêu đề"
+              value={title}
+              multiline={true}
+              onChangeText={(text) => setTitle(text)}
+              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg resize-none text-base "
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+            ></TextInput>
 
-                {show && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={date}
-                    mode={mode}
-                    is24Hour={true}
-                    display="default"
-                    onChange={onChange}
-                  />
-                )}
-              </View>
-              <Text className="text-base">Bật thông báo</Text>
-              <View className="items-start">
-                <Switch
-                  trackColor={{ false: "grey", true: "#3A4666" }}
-                  thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
-                  value={isNotified}
-                  onValueChange={(newValue) => setIsNotified(newValue)}
-                  style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
-                />
-              </View>
-              {/* Nội dung phần ghi chú */}
-              <Text className="text-base">Ghi chú</Text>
-              <TextInput
-                placeholder="Nội dung"
-                className="w-[100%] h-72 bg-[#FFFFFF] px-4 pt-4 border-2 border-solid border-gray-400 text-base rounded-[8px] resize-none"
-                multiline={true}
-                value={content}
-                numberOfLines={8}
-                onChangeText={(value) => setContent(value)}
-                textAlignVertical="top"
-              ></TextInput>
-              {/* Nút thêm */}
-              {item.isMoodle === "false" ? (
-                <TouchableOpacity
-                  onPress={handleUpdateCalendar}
-                  className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[6%] w-[90%] ml-[5%]"
-                >
-                  <Text className="text-white text-center font-bold text-xl">
-                    Lưu
-                  </Text>
+            <View className="flex-row justify-between items-center">
+              <View className="space-y-2 w-[49%]">
+                <View className="flex-row">
+                  <Text className="text-base">Ngày</Text>
+                  <Text className="text-base text-red-600"> (*)</Text>
+                </View>
+                <TouchableOpacity onPress={() => showMode("date")}>
+                  <View
+                    className=" bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3"
+                    style={{
+                      shadowColor: "#000000",
+                      shadowOffset: { width: 10, height: 10 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 10,
+                    }}
+                  >
+                    <Text className="text-base ">{textDate}</Text>
+                    <AntDesign name="calendar" size={25} color="black" />
+                  </View>
                 </TouchableOpacity>
-              ) : (
-                <View></View>
+              </View>
+              <View className="space-y-2 w-[49%]">
+                <View className="flex-row">
+                  <Text className="text-base">Giờ</Text>
+                  <Text className="text-base text-red-600"> (*)</Text>
+                </View>
+                <TouchableOpacity onPress={() => showMode("time")}>
+                  <View
+                    className="bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3 "
+                    style={{
+                      shadowColor: "#000000",
+                      shadowOffset: { width: 10, height: 10 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 10,
+                    }}
+                  >
+                    <Text className="text-base">{textTime}</Text>
+                    <AntDesign name="clockcircleo" size={25} color="black" />
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode={mode}
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChange}
+                />
               )}
             </View>
+            <Text className="text-base">Bật thông báo</Text>
+            <View className="items-start">
+              <Switch
+                trackColor={{ false: "grey", true: "#3A4666" }}
+                thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
+                value={isNotified}
+                onValueChange={(newValue) => setIsNotified(newValue)}
+                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+              />
+            </View>
+            {/* Nội dung phần ghi chú */}
+            <Text className="text-base">Ghi chú</Text>
+            <TextInput
+              placeholder="Nội dung"
+              className="w-[100%] h-72 bg-[#FFFFFF] px-4 pt-4  text-base rounded-lg resize-none"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+              multiline={true}
+              value={content}
+              numberOfLines={8}
+              onChangeText={(value) => setContent(value)}
+              textAlignVertical="top"
+            ></TextInput>
           </LockedView>
+          {/* Nút thêm */}
+          {item.isMoodle === "false" ? (
+            <TouchableOpacity
+              onPress={handleUpdateCalendar}
+              className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-16 mb-6 h-10 w-[90%] ml-[5%]"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+            >
+              <Text className="text-white text-center font-bold text-xl">
+                Lưu
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <View className="mt-16 mb-6"></View>
+          )}
         </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>

@@ -47,7 +47,7 @@ const NoteList_Add = () => {
     try {
       await NoteService.addNote(title, note);
       navigation.navigate("BottomBar", {
-        screen: "NoteList",
+        screen: "Ghi chú",
         params: {
           screenNoteList: "AddToMain",
         },
@@ -55,7 +55,7 @@ const NoteList_Add = () => {
     } catch (error) {
       console.log("Fail due to: ", error);
     }
-  }
+  };
   const richText = useRef();
 
   //Kiểm tra bàn phím có đang xuất hiện khôngg
@@ -74,29 +74,8 @@ const NoteList_Add = () => {
   Keyboard.addListener("keyboardDidShow", showKeyboard);
   Keyboard.addListener("keyboardDidHide", hideKeyboard);
 
-  const getFirstParagraph = () => {
-    const contentHtml = richEditorRef.current?.getContentHtml(); // lấy nội dung HTML từ RichEditor
-    const firstParagraph = stripHtml(contentHtml).result.split("\n")[0]; // xóa các thẻ HTML và lấy đoạn đầu tiên
-    return firstParagraph;
-  };
-
-  // const [selectedColor, setSelectedColor] = useState("#000");
-
-  // const handleColorChange = (color) => {
-  //   setSelectedColor(color);
-  // };
-
-  // const colors = [
-  //   "#000", // black
-  //   "#f00", // red
-  //   "#0f0", // green
-  //   "#00f", // blue
-  //   "#ff0", // yellow
-  //   "#fff", // white
-  // ];
-
   return (
-    <TouchableWithoutFeedback onPress={handlePress}>
+    <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-15">
@@ -109,17 +88,13 @@ const NoteList_Add = () => {
             </View>
 
             {isKeyboardShowing ? (
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => richText.current?.dismissKeyboard()}
+              >
                 <MaterialCommunityIcons name="check" size={30} color="white" />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity>
-                <MaterialCommunityIcons
-                  name="trash-can-outline"
-                  size={30}
-                  color="white"
-                />
-              </TouchableOpacity>
+              <View className="w-8 h-8"></View>
             )}
           </View>
         </View>
@@ -135,25 +110,20 @@ const NoteList_Add = () => {
           ></TextInput>
         </View>
         <ScrollView className="px-2 space-y-2 h-full bg-white">
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{ flex: 1 }}
-          >
-            <RichEditor
-              ref={richText}
-              placeholder="Nội dung"
-              // editorStyle={{ color: "red" }}
-              onChange={(text) => setNote(text)}
-            />
-            {/* </View> */}
-            {/* <TouchableOpacity
+          <RichEditor
+            ref={richText}
+            placeholder="Nội dung"
+            // editorStyle={{ color: "red" }}
+            onChange={(text) => setNote(text)}
+          />
+          {/* </View> */}
+          {/* <TouchableOpacity
             onPress={handleAddingUserNoteList}
             className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[5%] w-[90%] ml-[5%]">
             <Text className="text-white text-center font-bold text-xl">
               Lưu
             </Text>
            </TouchableOpacity> */}
-          </KeyboardAvoidingView>
         </ScrollView>
         <View className="flex absolute bottom-0">
           <RichToolbar
@@ -161,7 +131,6 @@ const NoteList_Add = () => {
             // colors={colors}
             editor={richText}
             actions={[
-              actions.keyboard,
               actions.undo,
               actions.redo,
               actions.setBold,
@@ -176,8 +145,6 @@ const NoteList_Add = () => {
               actions.insertLink,
               actions.heading1,
               actions.setStrikethrough,
-              actions.removeFormat,
-              actions.insertVideo,
               actions.checkboxList,
             ]}
             iconMap={{
