@@ -187,8 +187,21 @@ const ToDoListScreen = () => {
     <SafeAreaView className="flex-1">
       {/* Header */}
       <View className=" bg-[#3A4666] h-[10%]">
-        <View className="flex-row justify-between p-4">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+        <View className="flex-row p-4 justify-between items-center">
+          <View className="w-8 h-8 "></View>
+          <Text className="text-white text-2xl font-bold text-center">
+            Danh sách công việc
+          </Text>
+          <TouchableOpacity>
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              size={32}
+              color="white"
+            />
+          </TouchableOpacity>
+        </View>
+        {/* <View className="flex-row justify-between p-4">
+          <TouchableOpacity>
             <MaterialCommunityIcons
               name="dots-vertical"
               size={32}
@@ -196,9 +209,7 @@ const ToDoListScreen = () => {
             />
           </TouchableOpacity>
           <View className="flex items-center justify-center">
-            <Text className="text-white text-2xl font-bold text-center">
-              Danh sách công việc
-            </Text>
+            
           </View>
           <TouchableOpacity>
             <MaterialCommunityIcons
@@ -207,7 +218,7 @@ const ToDoListScreen = () => {
               color="white"
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       <View className="flex-1 bg-[#F1F5F9]">
         {/* Công việc hiện có  */}

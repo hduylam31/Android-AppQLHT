@@ -92,27 +92,31 @@ const TodoList_Edit = () => {
 
   const handleUpdateTodoList = async () => {
     console.log("Start update");
-    try {
-      // TodolistService.addTodolist
-      const new_item = {
-        id: item.id,
-        title: title,
-        category: selectedCategory,
-        isNotified: isNotified,
-        hour: textTime,
-        text: value,
-        isCompleted: item.isCompleted,
-        identifier: item.identifier,
-      };
-      await TodolistService.updateTodolist(new_item, item);
-      navigation.navigate("BottomBar", {
-        screen: "DS công việc",
-        params: {
-          screenTodoList: "EditToMain",
-        },
-      });
-    } catch (error) {
-      console.log("Fail due to: ", error);
+    if (title === "") {
+      Alert.alert("Lỗi thêm thông tin", "Vui lòng nhập tiêu đề cho công việc");
+    } else {
+      try {
+        // TodolistService.addTodolist
+        const new_item = {
+          id: item.id,
+          title: title,
+          category: selectedCategory,
+          isNotified: isNotified,
+          hour: textTime,
+          text: value,
+          isCompleted: item.isCompleted,
+          identifier: item.identifier,
+        };
+        await TodolistService.updateTodolist(new_item, item);
+        navigation.navigate("BottomBar", {
+          screen: "DS công việc",
+          params: {
+            screenTodoList: "EditToMain",
+          },
+        });
+      } catch (error) {
+        console.log("Fail due to: ", error);
+      }
     }
   };
 

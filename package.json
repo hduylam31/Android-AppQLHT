@@ -26,6 +26,7 @@
     "expo-notifications": "^0.18.1",
     "expo-status-bar": "~1.4.4",
     "firebase": "^9.17.1",
+    "lottie-react-native": "5.1.4",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-native": "0.71.6",
@@ -39,6 +40,7 @@
     "react-native-table-component": "^1.2.2",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.11",
+    "react-native-webview": "11.26.0",
     "tailwindcss-react-native": "^1.7.10"
   },
   "devDependencies": {

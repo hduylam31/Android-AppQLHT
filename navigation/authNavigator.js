@@ -48,7 +48,7 @@ export default function AuthStack() {
   //   }
   // };
   return (
-    <Auth.Navigator>
+    <Auth.Navigator initialRouteName="GetStarted">
       <Auth.Screen
         name="GetStarted"
         component={GetStarted}

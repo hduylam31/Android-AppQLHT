@@ -28,12 +28,15 @@ import {
 import CredentialService from "../../service/CredentialService";
 import { auth } from "../../firebase";
 import CommonService from "../../service/CommonService";
+import AppLoader from "../AppLoader/AppLoader";
 
 const Login = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
+  const [isLoadingLogin, setIsLoadingLogin] = React.useState(false);
+
   useEffect(() => {
     const unsubcribe = auth.onAuthStateChanged(async (user) => {
       console.log("checkuser");
@@ -73,6 +76,7 @@ const Login = () => {
           account = email;
         }
         CredentialService.handleLoginWithEmail(account, Password);
+        setIsLoadingLogin(true);
         console.log("Login OK");
       } catch (error) {
         console.log("Login fail with: ", error);
