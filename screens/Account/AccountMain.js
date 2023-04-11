@@ -79,7 +79,7 @@ const AccountMain = () => {
           handleSignOut();
           navigation.navigate("Login");
         }}
-        className="w-[90%] h-[5%] absolute bottom-2 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+        className="w-[90%] h-[5%] absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         style={{
           shadowColor: "#000000",
           shadowOffset: { width: 5, height: 5 },

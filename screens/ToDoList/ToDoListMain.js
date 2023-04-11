@@ -223,7 +223,7 @@ const ToDoListScreen = () => {
       <View className="flex-1 bg-[#F1F5F9]">
         {/* Công việc hiện có  */}
         <View
-          className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%] mt-[5%]"
+          className="w-[90%] h-[38%] bg-white rounded-2xl mx-[5%] mt-[5%]"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 10, height: 10 },
@@ -244,7 +244,7 @@ const ToDoListScreen = () => {
           Hoàn thành
         </Text>
         <View
-          className="w-[90%] h-[40%] bg-white rounded-2xl mx-[5%]"
+          className="w-[90%] h-[38%] bg-white rounded-2xl mx-[5%]"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 10, height: 10 },
@@ -265,7 +265,7 @@ const ToDoListScreen = () => {
         onPress={() => {
           navigation.navigate("TodoList_Add");
         }}
-        className="w-[90%] h-[5%] absolute bottom-2 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+        className="w-[90%] h-[5%] absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         style={{
           shadowColor: "#000000",
           shadowOffset: { width: 5, height: 5 },
