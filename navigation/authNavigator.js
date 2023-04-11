@@ -10,7 +10,7 @@ import Register from "../screens/Authentication/Register";
 import ForgotPassword from "../screens/Authentication/ForgotPassword";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ForgotPassword_CheckMail from "../screens/Authentication/ForgotPassword_CheckMail";
-import ForgotPassword_ChangePass from "../screens/Authentication/ForgotPassword_ChangePass";
+import ForgotPassword_ChangePass from "../screens/Authentication/Account_ChangePass";
 import ToDoListScreen from "../screens/ToDoList/ToDoListMain";
 import BottomBar from "../screens/BottomBar";
 import TodoList_Add from "../screens/ToDoList/TodoList_Add";
@@ -27,6 +27,7 @@ import Schedule_Edit from "../screens/Schedule/ScheduleEdit";
 import MyScrollView from "../screens/NoteList/NoteListAdd";
 import NoteList_Add from "../screens/NoteList/NoteListAdd";
 import NoteList_Edit from "../screens/NoteList/NoteListEdit";
+import Account_ChangePass from "../screens/Authentication/Account_ChangePass";
 
 const Auth = createNativeStackNavigator();
 
@@ -108,8 +109,8 @@ export default function AuthStack() {
         }}
       />
       <Auth.Screen
-        name="ForgotPassword_ChangePass"
-        component={ForgotPassword_ChangePass}
+        name="Account_ChangePass"
+        component={Account_ChangePass}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,
