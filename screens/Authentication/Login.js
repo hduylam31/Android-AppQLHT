@@ -35,13 +35,16 @@ const Login = () => {
 
   const [email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
-  // const [isLoadingLogin, setIsLoadingLogin] = useState(false);
+  const [isLoadingLogin, setIsLoadingLogin] = useState(false);
 
   useEffect(() => {
     const unsubcribe = auth.onAuthStateChanged(async (user) => {
       console.log("checkuser");
+
       if (user) {
+        setIsLoadingLogin(true);
         await CommonService.loadAllNotificationAndUpdateDB();
+        setIsLoadingLogin(false);
         navigation.navigate("BottomBar");
       }
     });
@@ -52,7 +55,6 @@ const Login = () => {
     const autoLogin = async () => {
       const todolists = await CredentialService.autoLogin();
       console.log("Auto Login OK");
-      // setIsLoadingLogin(true);
     };
     autoLogin();
   }, []);
@@ -87,9 +89,9 @@ const Login = () => {
   const handlePress = () => {
     Keyboard.dismiss();
   };
-  // if (isLoadingLogin) {
-  //   return <AppLoader />;
-  // }
+  if (isLoadingLogin) {
+    return <AppLoader />;
+  }
   return (
     <KeyboardAvoidingView style={`flex-1 justify-center items-center`}>
       <TouchableWithoutFeedback onPress={handlePress}>

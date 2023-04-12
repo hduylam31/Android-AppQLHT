@@ -48,6 +48,7 @@ const Register = () => {
             Alert.alert("Mật khẩu nhập lại không khớp");
           } else {
             CredentialService.handleRegister(name, email, password);
+            navigation.navigate("Login");
           }
         }
       } catch (error) {

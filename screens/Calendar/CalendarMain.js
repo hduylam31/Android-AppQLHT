@@ -60,7 +60,7 @@ const CalendarMain = () => {
   const [isLoading, setIsLoading] = useState(false);
   const loadCalendar = async () => {
     try {
-      setIsLoading(true);
+      // setIsLoading(true);
       const calendar = await CalendarService.loadCalendarData();
       console.log("calendar: ", calendar);
       setCalendar(calendar);
@@ -68,7 +68,7 @@ const CalendarMain = () => {
         calendar
       );
       setMarkedDates(calendarProcess);
-      setIsLoading(false);
+      // setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -83,12 +83,18 @@ const CalendarMain = () => {
     if (
       route?.params?.screenCalendar === "AddToMain" ||
       route?.params?.screenCalendar === "EditToMain" ||
-      route?.params?.screenCalendar === "DeleteToMain" ||
-      route?.params?.screenCalendar === "UpdateMoodleToMain" ||
-      route?.params?.screenCalendar === "LogoutMoodleToMain"
+      route?.params?.screenCalendar === "DeleteToMain"
     ) {
       loadCalendar();
       LoadMoodleActive();
+    } else if (
+      route?.params?.screenCalendar === "UpdateMoodleToMain" ||
+      route?.params?.screenCalendar === "LogoutMoodleToMain"
+    ) {
+      setIsLoading(true);
+      loadCalendar();
+      LoadMoodleActive();
+      setIsLoading(false);
     }
   }, [route]);
 
@@ -288,6 +294,16 @@ const CalendarMain = () => {
         <View className="bg-[#F1F5F9] h-full"></View>
         <View className="absolute w-full top-20 h-[85%]">
           <Calendar
+            theme={{
+              "stylesheet.calendar.header": {
+                dayTextAtIndex0: {
+                  color: "red",
+                },
+                dayTextAtIndex6: {
+                  color: "blue",
+                },
+              },
+            }}
             style={{
               borderRadius: 12,
               elevation: 4,
@@ -298,6 +314,7 @@ const CalendarMain = () => {
               shadowRadius: 10,
               elevation: 10,
             }}
+            enableSwipeMonths={true}
             markingType={"multi-dot"}
             markedDates={marked}
             onDayPress={(date) => {
