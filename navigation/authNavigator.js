@@ -1,5 +1,5 @@
 import react, { useState } from "react";
-
+import { View } from 'react-native';
 import {
   createStackNavigator,
   TransitionPresets,

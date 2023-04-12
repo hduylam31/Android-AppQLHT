@@ -14,7 +14,7 @@ class CommonService{
             console.log("Load background running OK");
             await CalendarService.loadNotificationAndUpdateDb(); 
             TodolistService.loadNotificationAndUpdateDb(); 
-            console.log("Load notification Ok");
+            console.log("Load notification Ok"); 
         } catch (error) {
             console.log("loadAllNotificationAndUpdateDB: ", error);
         }

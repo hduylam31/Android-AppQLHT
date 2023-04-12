@@ -161,14 +161,14 @@ class CalendarService {
       return;
     }
 
-    let nextMonthEvent = await this.fetchCalendarData(token, 12, 2022);
-    var twoMonthEvents = []; 
-    if (currentMonthEvent != undefined && currentMonthEvent.length != 0) {
-      twoMonthEvents = twoMonthEvents.concat(currentMonthEvent);
-    }
-    if (nextMonthEvent != undefined && nextMonthEvent.length != 0) {
-      twoMonthEvents = twoMonthEvents.concat(nextMonthEvent);
-    }
+    let nextMonthEvent = await this.fetchCalendarData(token, 2, 2023);
+    const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent); 
+    // if (currentMonthEvent != undefined && currentMonthEvent.length != 0) {
+    //   twoMonthEvents = ;
+    // }
+    // if (nextMonthEvent != undefined && nextMonthEvent.length != 0) {
+    //   twoMonthEvents = twoMonthEvents.concat(nextMonthEvent);
+    // }
     console.log(twoMonthEvents);
     // =====================================DB===================================
     const user = auth.currentUser;
@@ -670,7 +670,7 @@ class CalendarService {
     } catch (error) {
         console.log('Background fail: ', error);
     }
-}
+  }
   
 }
 

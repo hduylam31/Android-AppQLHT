@@ -84,10 +84,11 @@ class CredentialService {
       });
   };
 
-  static handleResetEmail = (email) => {
-    sendPasswordResetEmail(auth, email)
+  static handleResetEmail = async (email) => {
+    await sendPasswordResetEmail(auth, email)
       .then(() => {
         console.log("Reset successfully");
+        return true;
       })
       .catch((error) => {
         console.log(error.message);
@@ -103,8 +104,10 @@ class CredentialService {
         } else {
           // Thông báo lỗi mặc định của Firebase Auth
           Alert.alert("Gửi không thành công", error.message);
-        }
+        } 
+        return false;
       });
+      return true;
   };
 
   //   static handleGoogleLogin = async () => {

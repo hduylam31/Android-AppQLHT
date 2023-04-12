@@ -24,8 +24,8 @@ const Login_Moodle = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const handleLogin = async () => {    
-    const status = await CalendarService.processLoginMoodle(username, password);
+  const handleLogin = async () => {
+    const status = await CalendarService.processLoginMoodle(username, password); 
     if (username === "") {
       Alert.alert("Kết nối không thành công", "Vui lòng nhập tên tài khoản");
     } else if (password === "") {

@@ -23,15 +23,17 @@ const ForgotPassword = () => {
     });
   }, []);
 
-  const handleResetEmail = () => {
+  const handleResetEmail = async () => {
     if (email === "") {
       Alert.alert("Gửi hướng dẫn không thành công", "Vui lòng nhập email");
     } else {
-      try {
+      try { 
         if (email) {
-          CredentialService.handleResetEmail(email);
-          console.log("OK");
-          navigation.navigate("ForgotPassword_CheckMail");
+          const status = await CredentialService.handleResetEmail(email); 
+          console.log("OK with status: ", status);
+          if(status){
+            navigation.navigate("ForgotPassword_CheckMail");
+          }
         }
       } catch (error) {
         console.log(error);
