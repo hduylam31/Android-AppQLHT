@@ -21,6 +21,7 @@ import * as Animatable from "react-native-animatable";
 import CalendarService from "../../service/CalendarService";
 import { MoodleIcon } from "../../assets";
 import moment from "moment";
+import AppLoader from "../AppLoader/AppLoader";
 
 const CalendarMain = () => {
   const [markedDates, setMarkedDates] = useState();
@@ -56,8 +57,10 @@ const CalendarMain = () => {
     LoadMoodleActive();
   }, []);
 
+  const [isLoading, setIsLoading] = useState(false);
   const loadCalendar = async () => {
     try {
+      setIsLoading(true);
       const calendar = await CalendarService.loadCalendarData();
       console.log("calendar: ", calendar);
       setCalendar(calendar);
@@ -65,6 +68,7 @@ const CalendarMain = () => {
         calendar
       );
       setMarkedDates(calendarProcess);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -212,6 +216,9 @@ const CalendarMain = () => {
     ]);
   };
 
+  if (isLoading) {
+    return <AppLoader />;
+  }
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">

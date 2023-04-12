@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { auth } from "../../firebase";
 import NotificationUtils from "../../service/NotificationUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,8 +31,11 @@ const AccountMain = () => {
     <SafeAreaView className="flex-1">
       <View className="bg-[#3A4666] h-[15%]"></View>
       <View className="h-full bg-[#F1F5F9] items-center">
-        <Text className="mt-24 text-[#3A4666] text-xl font-bold">aaa</Text>
+        <Text className="mt-24 text-[#3A4666] text-xl font-bold">aa</Text>
         <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Account_EditInfor");
+          }}
           className="mt-5 w-[50%] h-12 rounded-3xl bg-white justify-center items-center"
           style={{
             shadowColor: "#000000",
@@ -70,9 +73,7 @@ const AccountMain = () => {
       </View>
 
       <View className="w-36 h-36 bg-[#A4AAB8] rounded-full justify-center items-center absolute top-20 left-[32%] right-0 bottom-0">
-        <View className="w-32 h-32 rounded-full justify-center items-center">
-          <MaterialCommunityIcons name="account" size={120} color="white" />
-        </View>
+        <MaterialCommunityIcons name="account" size={120} color="white" />
       </View>
       <TouchableOpacity
         onPress={() => {

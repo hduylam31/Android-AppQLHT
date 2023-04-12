@@ -62,7 +62,21 @@ const Schedule_Edit = () => {
 
   const handleUpdateSchedule = async () => {
     console.log("Lesson Validate");
-    if (Number(selectedLessonStart) >= Number(selectedLessonEnd)) {
+    if (title === "") {
+      Alert.alert("Lỗi cập nhật thông tin", "Vui lòng nhập môn học");
+    } else if (DayOfWeek === "") {
+      Alert.alert("Lỗi cập nhật thông tin", "Vui lòng nhập ngày học môn học");
+    } else if (selectedLessonStart === "") {
+      Alert.alert(
+        "Lỗi cập nhật thông tin",
+        "Vui lòng nhập tiết bắt đầu môn học"
+      );
+    } else if (selectedLessonEnd === "") {
+      Alert.alert(
+        "Lỗi cập nhật thông tin",
+        "Vui lòng nhập tiết kết thúc môn học"
+      );
+    } else if (Number(selectedLessonStart) >= Number(selectedLessonEnd)) {
       alert("Tiết bắt đầu phải bé hơn tiết kết thúc");
     } else {
       const removedCurrentLessonMap =
