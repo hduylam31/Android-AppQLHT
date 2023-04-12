@@ -15,7 +15,7 @@ class AutoUpdateService{
                 data: { autoUpdate: true }, // Add custom data to identify the notification
             },
             trigger: {
-                hour: 6,
+                seconds: 21600,
                 repeats: true
             },
         });

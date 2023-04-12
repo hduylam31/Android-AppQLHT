@@ -59,7 +59,7 @@ class CalendarService {
 
   static async processLoginMoodle(username, password) {
     try {
-      const moodleToken = await this.getMoodleToken(username, password);
+      const moodleToken = await this.getMoodleToken(username, password); 
       if (moodleToken !== "error") {
         console.log("Login moodle OK with token: ", moodleToken);
         console.log("haha");
@@ -69,8 +69,8 @@ class CalendarService {
         updateDoc(userRef, { moodle: { token: moodleToken, status: 1 } });
         //load calendar moodle data
         await this.saveCalendarData(moodleToken);
-        //Auto update Background
-        const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
+        //Auto update Background 
+        const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask(); 
         await updateDoc(userRef, {'moodle.calendarIdentifer': identifier});
 
         return 1;
@@ -162,7 +162,7 @@ class CalendarService {
     }
 
     let nextMonthEvent = await this.fetchCalendarData(token, 12, 2022);
-    const twoMonthEvents = [];
+    var twoMonthEvents = []; 
     if (currentMonthEvent != undefined && currentMonthEvent.length != 0) {
       twoMonthEvents = twoMonthEvents.concat(currentMonthEvent);
     }
