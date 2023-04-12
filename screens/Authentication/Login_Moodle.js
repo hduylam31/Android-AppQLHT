@@ -26,8 +26,6 @@ const Login_Moodle = () => {
 
   const handleLogin = async () => {
     const status = await CalendarService.processLoginMoodle(username, password);
-    // const status = await CommonService.loadAllNotificationAndUpdateDB();  //Này để test
-    console.log("statuss: ", status);
     if (username === "") {
       Alert.alert("Kết nối không thành công", "Vui lòng nhập tên tài khoản");
     } else if (password === "") {

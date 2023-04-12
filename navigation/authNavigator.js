@@ -10,7 +10,6 @@ import Register from "../screens/Authentication/Register";
 import ForgotPassword from "../screens/Authentication/ForgotPassword";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ForgotPassword_CheckMail from "../screens/Authentication/ForgotPassword_CheckMail";
-import ForgotPassword_ChangePass from "../screens/Authentication/ForgotPassword_ChangePass";
 import ToDoListScreen from "../screens/ToDoList/ToDoListMain";
 import BottomBar from "../screens/BottomBar";
 import TodoList_Add from "../screens/ToDoList/TodoList_Add";
@@ -48,7 +47,7 @@ export default function AuthStack() {
   //   }
   // };
   return (
-    <Auth.Navigator>
+    <Auth.Navigator initialRouteName="GetStarted">
       <Auth.Screen
         name="GetStarted"
         component={GetStarted}
@@ -102,14 +101,6 @@ export default function AuthStack() {
       <Auth.Screen
         name="TodoList_Edit"
         component={TodoList_Edit}
-        option={{
-          headerShown: false,
-          ...TransitionPresets.RevealFromBottomAndroid,
-        }}
-      />
-      <Auth.Screen
-        name="ForgotPassword_ChangePass"
-        component={ForgotPassword_ChangePass}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,

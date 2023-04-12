@@ -15,8 +15,7 @@ class CredentialService {
     const username = await AsyncStorage.getItem("username");
     const password = await AsyncStorage.getItem("password");
     if(username && password){
-      console.log("Auto login with: ", username, password);
-      signInWithEmailAndPassword(auth, username, password)
+      await signInWithEmailAndPassword(auth, username, password)
         .then((userCredentials) => {
           const user = userCredentials.user;
           console.log("Logged in with :", user.email);
@@ -27,8 +26,8 @@ class CredentialService {
     }
   };
 
-  static handleLoginWithEmail = (username, password) => {
-    signInWithEmailAndPassword(auth, username, password)
+  static handleLoginWithEmail = async (username, password) => {
+    await signInWithEmailAndPassword(auth, username, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("Logged in with :", user.email);

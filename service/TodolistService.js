@@ -198,7 +198,7 @@ class TodolistService{
             if(userDoc.exists()){
                 const todolist = userDoc.data().todolist;
                 const updatedTodolist = [...todolist];
-                const itemIndexes = todolist.filter(item => item.identifier != "")
+                const itemIndexes = todolist.filter(item => item.identifier != "" && item.isCompleted == false)
                                             .map(item => todolist.findIndex(obj => obj.id == item.id));
                 for(const i of itemIndexes) {
                     const elem = todolist[i];

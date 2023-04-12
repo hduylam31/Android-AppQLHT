@@ -12,6 +12,8 @@ import {
 import { auth, firestore } from "../firebase";
 import moment from "moment";
 import NotificationUtils from "./NotificationUtils";
+import AutoUpdateService from "./AutoUpdateService";
+import CredentialService from "./CredentialService";
 
 class CalendarService {
   static async isMoodleActive() {
@@ -67,7 +69,10 @@ class CalendarService {
         updateDoc(userRef, { moodle: { token: moodleToken, status: 1 } });
         //load calendar moodle data
         await this.saveCalendarData(moodleToken);
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        //Auto update Background
+        const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
+        await updateDoc(userRef, {'moodle.calendarIdentifer': identifier});
+
         return 1;
       } else {
         alert("Sai thông tin đăng nhập!");
@@ -124,10 +129,16 @@ class CalendarService {
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
       //Xóa token + cập nhật status moodle token
-      updateDoc(userRef, { "moodle.status": status });
+      //Xóa Background chạy nền cập nhật 
+      const userDoc = await getDoc(userRef);
+      if(userDoc.exists()){
+        const identifier = userDoc.data().moodle.calendarIdentifer;
+        NotificationUtils.cancelNotification(identifier);
+      }
+      updateDoc(userRef, { "moodle.status": status , "moodle.calendarIdentifer": ""});
       //Xóa tất cả dữ liệu thông báo + moodle
       const calendarRef = doc(collection(firestore, "calendar"), user.uid);
-      await this.unRegisterMoodleNotification();
+      this.unRegisterMoodleNotification();
       updateDoc(calendarRef, { "calendar.moodle": [] });
       return true;
     } catch (error) {
@@ -151,11 +162,18 @@ class CalendarService {
     }
 
     let nextMonthEvent = await this.fetchCalendarData(token, 12, 2022);
-    const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);
+    const twoMonthEvents = [];
+    if (currentMonthEvent != undefined && currentMonthEvent.length != 0) {
+      twoMonthEvents = twoMonthEvents.concat(currentMonthEvent);
+    }
+    if (nextMonthEvent != undefined && nextMonthEvent.length != 0) {
+      twoMonthEvents = twoMonthEvents.concat(nextMonthEvent);
+    }
     console.log(twoMonthEvents);
     // =====================================DB===================================
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "calendar"), user.uid);
+    
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
       updateDoc(userRef, { "calendar.moodle": twoMonthEvents });
@@ -534,9 +552,13 @@ class CalendarService {
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
         const moodleData = userDoc.data().calendar.moodle;
+        if(moodleData != undefined && moodleData.length > 0){
+          loadNotificationAndUpdateOne(moodleData, userRef, true);
+        }
         const userData = userDoc.data().calendar.user;
-        loadNotificationAndUpdateOne(moodleData, userRef, true);
-        loadNotificationAndUpdateOne(userData, userRef, false);
+        if(moodleData != undefined && moodleData.length > 0){
+          loadNotificationAndUpdateOne(userData, userRef, false);
+        }
       }
     } catch (error) {
       console.log("error: ", error);
@@ -618,6 +640,38 @@ class CalendarService {
       }
     }
   }
+
+  static async loadAutoUpdateMoodleBackground(){
+    const user = auth.currentUser;
+    const userRef = doc(collection(firestore, "user"), user.uid);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()){
+      //Reload the data moodle
+      const data = userDoc.data();
+      if(data.moodle.calendarIdentifer && data.moodle.status == 1){
+        await this.reloadMoodleCalendar();
+        //Auto update Background
+        const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
+        await updateDoc(userRef, {'moodle.calendarIdentifer': identifier});
+      }
+    }
+  }
+
+  static async runUpdateMoodle(){
+    try {
+        await CredentialService.autoLogin();
+        const user = auth.currentUser;
+        const userRef = doc(collection(firestore, 'user'), user.uid);
+        const userDoc = await getDoc(userRef);
+        if(userDoc.exists()){
+            const token = userDoc.data().moodle.token;
+            await this.saveCalendarData(token);
+        }
+    } catch (error) {
+        console.log('Background fail: ', error);
+    }
+}
+  
 }
 
 export default CalendarService;

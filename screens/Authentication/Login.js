@@ -38,20 +38,20 @@ const Login = () => {
     const unsubcribe = auth.onAuthStateChanged(async (user) => {
       console.log("checkuser");
       if (user) {
-        await CommonService.loadAllNotificationAndUpdateDB();
+        await CommonService.loadAllNotificationAndUpdateDB(); 
         navigation.navigate("BottomBar");
       }
     });
-    return unsubcribe;
+    return unsubcribe;  
   }, []);
 
-  useEffect(() => {
-    const autoLogin = async () => {
-      const todolists = await CredentialService.autoLogin();
-      console.log("Auto Login OK");
-    };
-    autoLogin();
-  }, []);
+  // useEffect(() => {
+  //   const autoLogin = async () => {
+  //     const todolists = await CredentialService.autoLogin();
+  //     console.log("Auto Login OK");
+  //   };
+  //   autoLogin();
+  // }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
