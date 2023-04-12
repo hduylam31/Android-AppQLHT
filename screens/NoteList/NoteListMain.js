@@ -68,6 +68,8 @@ const NoteListMain = () => {
       <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-[10%]">
           <View className="flex-row p-4 justify-between items-center">
+            <View className="w-8 h-8 "></View>
+            <Text className="text-white text-2xl font-bold">Ghi chú</Text>
             <TouchableOpacity>
               <MaterialCommunityIcons
                 name="dots-vertical"
@@ -75,8 +77,6 @@ const NoteListMain = () => {
                 color="white"
               />
             </TouchableOpacity>
-            <Text className="text-white text-2xl font-bold">Ghi chú</Text>
-            <View className="w-8 h-8 "></View>
           </View>
         </View>
         <View className="h-full bg-[#F1F5F9]">
@@ -132,7 +132,7 @@ const NoteListMain = () => {
           onPress={() => {
             navigation.navigate("NoteList_Add");
           }}
-          className="w-[90%] h-[5%] absolute bottom-2 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          className="w-[90%] h-[5%] absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 5, height: 5 },

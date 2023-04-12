@@ -361,6 +361,10 @@ const ScheduleMain = () => {
       <SafeAreaView className="flex-1">
         <View className="h-[25%] bg-[#3A4666]">
           <View className="flex-row justify-between p-4">
+            <View className="w-8 h-8 "></View>
+            <Text className="text-white text-2xl font-bold">
+              Thời khóa biểu
+            </Text>
             <TouchableOpacity>
               <MaterialCommunityIcons
                 name="dots-vertical"
@@ -368,10 +372,6 @@ const ScheduleMain = () => {
                 color="white"
               />
             </TouchableOpacity>
-            <Text className="text-white text-2xl font-bold">
-              Thời khóa biểu
-            </Text>
-            <View className="w-8 h-8 "></View>
           </View>
           <View className="justify-center items-center">
             <View className="w-[45%] h-7 border-1 rounded-xl bg-[#9CA2B2] flex-row items-center">
@@ -505,7 +505,7 @@ const ScheduleMain = () => {
           onPress={() => {
             navigation.navigate("Schedule_Add", dayLessonMap);
           }}
-          className="w-[90%] h-[5%] absolute bottom-2 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          className="w-[90%] h-[5%] absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 5, height: 5 },
