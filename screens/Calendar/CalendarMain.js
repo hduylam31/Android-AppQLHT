@@ -74,6 +74,22 @@ const CalendarMain = () => {
     }
   };
 
+  const loadCalendar1 = async () => {
+    try {
+      setIsLoading(true);
+      const calendar = await CalendarService.loadCalendarData();
+      console.log("calendar: ", calendar);
+      setCalendar(calendar);
+      const calendarProcess = await CalendarService.processDataForCalendar(
+        calendar
+      );
+      setMarkedDates(calendarProcess);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     loadCalendar();
   }, []);
@@ -81,20 +97,18 @@ const CalendarMain = () => {
   const route = useRoute();
   useEffect(() => {
     if (
+      route?.params?.screenCalendar === "UpdateMoodleToMain" ||
+      route?.params?.screenCalendar === "LogoutMoodleToMain"
+    ) {
+      loadCalendar1();
+      LoadMoodleActive();
+    } else if (
       route?.params?.screenCalendar === "AddToMain" ||
       route?.params?.screenCalendar === "EditToMain" ||
       route?.params?.screenCalendar === "DeleteToMain"
     ) {
       loadCalendar();
       LoadMoodleActive();
-    } else if (
-      route?.params?.screenCalendar === "UpdateMoodleToMain" ||
-      route?.params?.screenCalendar === "LogoutMoodleToMain"
-    ) {
-      setIsLoading(true);
-      loadCalendar();
-      LoadMoodleActive();
-      setIsLoading(false);
     }
   }, [route]);
 
@@ -324,7 +338,7 @@ const CalendarMain = () => {
             // markedDates={marked}
             // {...props}
           />
-          <View className="max-h-72">
+          <View className="max-h-64">
             {filteredMoodle.length > 0 && (
               <View
                 className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
