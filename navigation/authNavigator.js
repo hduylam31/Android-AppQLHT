@@ -1,4 +1,4 @@
-import react from "react";
+import react, { useState } from "react";
 
 import {
   createStackNavigator,
@@ -10,7 +10,6 @@ import Register from "../screens/Authentication/Register";
 import ForgotPassword from "../screens/Authentication/ForgotPassword";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ForgotPassword_CheckMail from "../screens/Authentication/ForgotPassword_CheckMail";
-import ForgotPassword_ChangePass from "../screens/Authentication/Account_ChangePass";
 import ToDoListScreen from "../screens/ToDoList/ToDoListMain";
 import BottomBar from "../screens/BottomBar";
 import TodoList_Add from "../screens/ToDoList/TodoList_Add";
@@ -19,7 +18,6 @@ import Login_Moodle from "../screens/Authentication/Login_Moodle";
 import Calendar_Add from "../screens/Calendar/CalendarAdd";
 import Calendar_Edit from "../screens/Calendar/CalendarEdit";
 import Done_Moodle from "../screens/Authentication/DoneMoodle";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Schedule_Add from "../screens/Schedule/ScheduleAdd";
@@ -27,29 +25,29 @@ import Schedule_Edit from "../screens/Schedule/ScheduleEdit";
 import MyScrollView from "../screens/NoteList/NoteListAdd";
 import NoteList_Add from "../screens/NoteList/NoteListAdd";
 import NoteList_Edit from "../screens/NoteList/NoteListEdit";
-import Account_ChangePass from "../screens/Authentication/Account_ChangePass";
+import Account_ChangePass from "../screens/Account/Account_ChangePass";
+import Account_EditInfor from "../screens/Account/Account_EditInfor";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Auth = createNativeStackNavigator();
 
 export default function AuthStack() {
-  // const navigation = useNavigation();
-  // useEffect(() => {
-  //   CheckIsExist();
-  // }, []);
-  // const CheckIsExist = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem("GetStarted");
-  //     if (value === "true") {
-  //       await AsyncStorage.setItem("GetStarted", "true");
-  //     } else {
-  //       navigation.navigate("Login");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem("alreadyLaunched").then((value) => {
+      if (value == null) {
+        AsyncStorage.setItem("alreadyLaunched", "true");
+        setIsFirstLaunch(true);
+      } else {
+        setIsFirstLaunch(false);
+      }
+    });
+  }, []);
+
+  const initialRoute = isFirstLaunch ? "GetStarted" : "Login";
   return (
-    <Auth.Navigator initialRouteName="GetStarted">
+    <Auth.Navigator initialRouteName={initialRoute}>
       <Auth.Screen
         name="GetStarted"
         component={GetStarted}
@@ -193,6 +191,15 @@ export default function AuthStack() {
       <Auth.Screen
         name="NoteList_Edit"
         component={NoteList_Edit}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="Account_EditInfor"
+        component={Account_EditInfor}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,
