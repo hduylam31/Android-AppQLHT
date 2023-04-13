@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,14 +11,33 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-
+import { auth } from "../../firebase"
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import AccountService from "../../service/AccountService";
 
 const Account_EditInfor = () => {
   const navigation = useNavigation();
-  const [userName, setUserName] = useState("");
+  const route = useRoute();
+  const name = route.params.name;
+
+  const [userName, setUserName] = useState(""); 
   const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const loadData = () => {
+      setUserName(name);
+      setEmail(auth.currentUser.email)
+    };
+    loadData();
+  }, []);
+
+  const handleSaveAccountInfo = async () => {
+    try {
+      await AccountService.saveUserInfo(userName);
+    } catch (error) {
+    }
+  }
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -46,9 +65,10 @@ const Account_EditInfor = () => {
         </View>
         <ScrollView className="bg-[#F1F5F9]">
           <View className="px-5 pt-[4%] space-y-2 mt-14">
-            <Text className="text-base">Tiêu đề</Text>
+            <Text className="text-base">Họ và tên</Text>
             <TextInput
               placeholder="Họ và tên"
+              defaultValue={userName}
               placeholderTextColor="#000000"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg text-base resize-none"
               style={{
@@ -75,11 +95,12 @@ const Account_EditInfor = () => {
               }}
               value={email}
               onChangeText={(text) => setEmail(text)}
+              editable={false} 
             ></TextInput>
           </View>
           {/* Button thêm */}
           <TouchableOpacity
-            // onPress={handleAddingTodolist}
+            onPress={handleSaveAccountInfo}
             className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-96 mb-6 h-10 w-[90%] ml-[5%]"
             style={{
               shadowColor: "#000000",

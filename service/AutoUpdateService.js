@@ -7,7 +7,8 @@ import CredentialService from "./CredentialService";
 
 class AutoUpdateService{
 
-    static async registerAutoUpdateMoodleBackgroundTask(){
+    static async registerAutoUpdateMoodleBackgroundTask(){ 
+        //Noti 
         const identifier = await Notifications.scheduleNotificationAsync({
             content: {
                 title: 'Cập nhật moodle',

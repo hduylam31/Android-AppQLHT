@@ -57,7 +57,7 @@ class CalendarService {
     return data.token;
   }
 
-  static async processLoginMoodle(username, password) {
+  static async processLoginMoodle(username, password) { 
     try {
       const moodleToken = await this.getMoodleToken(username, password); 
       if (moodleToken !== "error") {
@@ -70,7 +70,7 @@ class CalendarService {
         //load calendar moodle data
         await this.saveCalendarData(moodleToken);
         //Auto update Background 
-        const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask(); 
+        const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();  
         await updateDoc(userRef, {'moodle.calendarIdentifer': identifier});
 
         return 1;
@@ -162,14 +162,8 @@ class CalendarService {
     }
 
     let nextMonthEvent = await this.fetchCalendarData(token, 2, 2023);
-    const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent); 
-    // if (currentMonthEvent != undefined && currentMonthEvent.length != 0) {
-    //   twoMonthEvents = ;
-    // }
-    // if (nextMonthEvent != undefined && nextMonthEvent.length != 0) {
-    //   twoMonthEvents = twoMonthEvents.concat(nextMonthEvent);
-    // }
-    console.log(twoMonthEvents);
+    const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);  
+
     // =====================================DB===================================
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "calendar"), user.uid);
@@ -664,14 +658,15 @@ class CalendarService {
         const userRef = doc(collection(firestore, 'user'), user.uid);
         const userDoc = await getDoc(userRef);
         if(userDoc.exists()){
-            const token = userDoc.data().moodle.token;
-            await this.saveCalendarData(token);
+            if(userDoc.data().moodle.status == 1){
+              const token = userDoc.data().moodle.token;
+              await this.saveCalendarData(token);
+            }
         }
     } catch (error) {
         console.log('Background fail: ', error);
     }
   }
-  
 }
 
 export default CalendarService;

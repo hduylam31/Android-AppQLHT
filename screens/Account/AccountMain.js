@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { auth } from "../../firebase";
@@ -7,8 +7,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import AccountService from "../../service/AccountService";
 
 const AccountMain = () => {
+  const [name, setName] = useState("");
+
+  async function loadName(){
+    const userName = await AccountService.loadUserInfo();
+    setName(userName);
+  }
+
+  useEffect(()=> {
+    loadName();
+  }, [])
+
   const handleSignOut = () => {
     auth
       .signOut()
@@ -31,10 +43,10 @@ const AccountMain = () => {
     <SafeAreaView className="flex-1">
       <View className="bg-[#3A4666] h-[15%]"></View>
       <View className="h-full bg-[#F1F5F9] items-center">
-        <Text className="mt-24 text-[#3A4666] text-xl font-bold">aa</Text>
+        <Text className="mt-24 text-[#3A4666] text-xl font-bold">{name}</Text> 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Account_EditInfor");
+            navigation.navigate("Account_EditInfor", {name});
           }}
           className="mt-5 w-[50%] h-12 rounded-3xl bg-white justify-center items-center"
           style={{

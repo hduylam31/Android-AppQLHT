@@ -2,6 +2,7 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  updatePassword,
 } from "firebase/auth";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../firebase";
@@ -110,37 +111,16 @@ class CredentialService {
       return true;
   };
 
-  //   static handleGoogleLogin = async () => {
-  //     try {
-  //       console.log("AAAAA");
-  //       // Sign in with the Google provider
-  //       await GoogleSignin.hasPlayServices();
-  //       const userInfo = await GoogleSignin.signIn();
-  //       console.log("Logged in with Google:", userInfo);
-  //     } catch (error) {
-  //       // Handle errors here
-  //       console.log("Google login failed:", error);
-  //     }
-  //   };
-
-  static handleFbLogin = () => {
-    const provider = new FacebookAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // The signed-in user info.
-        console.log("b");
-        const user = result.user;
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-        const credential = FacebookAuthProvider.credentialFromResult(result);
-        const accessToken = credential.accessToken;
-        console.log("Ok with ", user);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-        console.log("fail with: ", credential);
+  static async changePassword(newPassword){
+      const user = auth.currentUser;
+      await updatePassword(user, newPassword).then(async ()=> {
+        console.log("changePassword OK");
+        await AsyncStorage.setItem("password", newPassword);
+      }).catch(async (error)=>{
+        console.log("changePassword: ", error);
       });
-  };
+  } 
+
 }
 
 export default CredentialService;

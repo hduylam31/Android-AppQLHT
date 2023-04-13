@@ -14,6 +14,9 @@ import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ClockImage } from "../../assets";
 import { AntDesign } from "@expo/vector-icons";
+import AccountMain from "./AccountMain";
+import CredentialService from "../../service/CredentialService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Account_ChangePass = () => {
   const navigation = useNavigation();
@@ -34,6 +37,16 @@ const Account_ChangePass = () => {
       : setValidationMessage("");
     setValue(value);
   };
+
+  const updatePassword=async ()=>{
+    const currentPassword = await AsyncStorage.getItem("password");
+    if(currentPassword != password){
+      alert("Mật khẩu hiện tại không đúng");  
+    }else{
+      const status = await CredentialService.changePassword(newpassword); 
+      //Navigate ở đây
+    }
+  }
 
   const handlePress = () => {
     Keyboard.dismiss();
@@ -64,7 +77,9 @@ const Account_ChangePass = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-[40%] flex items-center justify-center">
+          <TouchableOpacity 
+            onPress={updatePassword}
+            className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-[40%] flex items-center justify-center">
             <Text className="text-[#3A4666] text-center font-bold text-lg">
               Cập nhật lại mật khẩu
             </Text>

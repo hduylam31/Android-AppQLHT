@@ -74,7 +74,7 @@ const CalendarMain = () => {
     }
   };
 
-  const loadCalendar1 = async () => {
+  const loadCalendar1 = async () => {  
     try {
       setIsLoading(true);
       const calendar = await CalendarService.loadCalendarData();
