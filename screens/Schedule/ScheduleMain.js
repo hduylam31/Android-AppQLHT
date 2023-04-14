@@ -107,12 +107,12 @@ const ScheduleMain = () => {
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
           if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
-            return "#4B5347";
+            return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
             rowIndex < lessonEndNumber * 2 + 1
           ) {
-            return "#4B5347";
+            return "#1CB0D4";
           }
         }
       } else if (day === "T.3") {
@@ -121,12 +121,12 @@ const ScheduleMain = () => {
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
           if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
-            return "#4B5347";
+            return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
             rowIndex < lessonEndNumber * 2 + 1
           ) {
-            return "#4B5347";
+            return "#1CB0D4";
           }
         }
       } else if (day === "T.4") {
@@ -135,12 +135,12 @@ const ScheduleMain = () => {
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
           if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
-            return "#4B5347";
+            return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
             rowIndex < lessonEndNumber * 2 + 1
           ) {
-            return "#4B5347";
+            return "#1CB0D4";
           }
         }
       } else if (day === "T.5") {
@@ -149,12 +149,12 @@ const ScheduleMain = () => {
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
           if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
-            return "#4B5347";
+            return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
             rowIndex < lessonEndNumber * 2 + 1
           ) {
-            return "#4B5347";
+            return "#1CB0D4";
           }
         }
       } else if (day === "T.6") {
@@ -163,12 +163,12 @@ const ScheduleMain = () => {
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
           if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
-            return "#4B5347";
+            return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
             rowIndex < lessonEndNumber * 2 + 1
           ) {
-            return "#4B5347";
+            return "#1CB0D4";
           }
         }
       } else if (day === "T.7") {
@@ -177,12 +177,12 @@ const ScheduleMain = () => {
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
           if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
-            return "#4B5347";
+            return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
             rowIndex < lessonEndNumber * 2 + 1
           ) {
-            return "#4B5347";
+            return "#1CB0D4";
           }
         }
       } else if (day === "CN") {
@@ -191,12 +191,12 @@ const ScheduleMain = () => {
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
           if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
-            return "#4B5347";
+            return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
             rowIndex < lessonEndNumber * 2 + 1
           ) {
-            return "#4B5347";
+            return "#1CB0D4";
           }
         }
       }
