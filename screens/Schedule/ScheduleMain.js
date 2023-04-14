@@ -481,7 +481,7 @@ const ScheduleMain = () => {
                           key={colIndex}
                           style={{
                             flex: 1,
-                            borderWidth: 0.15,
+                            borderWidth: 0.2,
                             borderColor: "#DEDEDE",
                             textAlign: "center",
                             backgroundColor: this.getCellColor(
