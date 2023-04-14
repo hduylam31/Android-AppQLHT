@@ -27,17 +27,6 @@ const Stack = createNativeStackNavigator();
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
     console.log("Recieved notification");
-    if (notification.request.content.data.autoUpdate) {
-      console.log("Run notification.");  
-      // Check if the custom data is present
-      await CalendarService.runUpdateMoodle();  
-      // Stop alert (stop notify) for the calling function notification
-      return {
-        shouldShowAlert: false,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-      }
-    }
     // Notify for other notifications
     return {
       shouldShowAlert: true,

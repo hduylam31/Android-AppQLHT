@@ -14,6 +14,8 @@ import moment from "moment";
 import NotificationUtils from "./NotificationUtils";
 import AutoUpdateService from "./AutoUpdateService";
 import CredentialService from "./CredentialService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as he from 'he';
 
 class CalendarService {
   static async isMoodleActive() {
@@ -71,8 +73,8 @@ class CalendarService {
         await this.saveCalendarData(moodleToken);
         //Auto update Background 
         const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();  
+        AsyncStorage.setItem("moodleIdentifier", identifier);
         await updateDoc(userRef, {'moodle.calendarIdentifer': identifier});
-
         return 1;
       } else {
         alert("Sai thông tin đăng nhập!");
@@ -140,6 +142,7 @@ class CalendarService {
       const calendarRef = doc(collection(firestore, "calendar"), user.uid);
       this.unRegisterMoodleNotification();
       updateDoc(calendarRef, { "calendar.moodle": [] });
+      AsyncStorage.removeItem("moodleIdentifier");
       return true;
     } catch (error) {
       console.log(error);
@@ -202,6 +205,8 @@ class CalendarService {
     data.weeks.forEach((week) => {
       week.days.forEach((day) => {
         day.events.forEach(async (event) => {
+          const coureName = he.decode(event.course.fullname);
+          const eventName = he.decode(event.name);
           const timestamp = event.timestart;
           const date = new Date(timestamp * 1000);
           const dateString = date
@@ -234,9 +239,9 @@ class CalendarService {
           // const now = new Date(2022,12-1, 1,0,0); //test 01/12/2022 do dữ liệu đang tháng 11 và 12/2022
           const diff = deadlineDate - now;
           const twoHours = 2 * 60 * 60 * 1000;
-          const twoDays = 60 * 1000 * 60 * 24 * 2;
+          const threeDays = 60 * 1000 * 60 * 24 * 3;
           let identifier = "";
-          if (diff > twoHours && diff <= twoDays) {
+          if (diff > twoHours && diff <= threeDays) {
             //2hours và chỉ lấy dữ liệu trong 2 ngày tiếp theo (test thì lấy 30 ngày)
             const twoHoursBeforeDeadlineTime = new Date(
               deadlineDate.getTime() - twoHours
@@ -250,8 +255,8 @@ class CalendarService {
             };
             promises.push(
               NotificationUtils.setNotificationAndGetIdentifer(
-                event.course.fullname,
-                event.name,
+                coureName,
+                eventName,
                 timeInfo
               ).then((res) => {
                 identifier = res;
@@ -263,8 +268,8 @@ class CalendarService {
           const eventItemPromise = Promise.all(promises).then(() => {
             const eventItem = {
               id: id,
-              title: event.name,
-              description: event.course.fullname,
+              title: eventName,
+              description: coureName,
               isMoodle: "true",
               isNotified: true,
               dateString: dateString,
@@ -584,8 +589,8 @@ class CalendarService {
         // const now = new Date(2022,12-1, 1,0,0);
         const diff = deadlineDate - now;
         const twoHours = 2 * 60 * 60 * 1000;
-        const twoDays = 60 * 1000 * 60 * 24 * 2;
-        if (diff > twoHours && diff <= twoDays) {
+        const threeDays = 60 * 1000 * 60 * 24 * 3;
+        if (diff > twoHours && diff <= threeDays) {
           // > 2hours and < 2 day
           const twoHoursBeforeDeadlineTime = new Date(
             deadlineDate.getTime() - twoHours
@@ -645,7 +650,14 @@ class CalendarService {
       if(data.moodle.calendarIdentifer && data.moodle.status == 1){
         await this.reloadMoodleCalendar();
         //Auto update Background
+        const oldIdentifier = await AsyncStorage.getItem("moodleIdentifier");
+        console.log("oldIdentifier: ", oldIdentifier);
+        if(oldIdentifier){
+          console.log("Cancel 3 days");
+          NotificationUtils.cancelNotification(oldIdentifier);
+        }
         const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
+        AsyncStorage.setItem("moodleIdentifier", identifier);
         await updateDoc(userRef, {'moodle.calendarIdentifer': identifier});
       }
     }

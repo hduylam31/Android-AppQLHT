@@ -34,7 +34,7 @@ const Login = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = React.useState("");
-  const [Password, setPassword] = React.useState("");
+  const [Password, setPassword] = React.useState(""); 
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const Login = () => {
     } else {
       try {
         let account;
-        if (!email.includes("gmail.com")) {
+        if (!email.includes("@gmail.com")) {
           account = email + "@gmail.com";
         } else {
           account = email;

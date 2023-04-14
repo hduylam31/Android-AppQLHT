@@ -1,9 +1,5 @@
 import * as Notifications from 'expo-notifications'
 
-import { collection, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove} from "firebase/firestore";
-import { auth, firestore } from "../firebase";
-import CredentialService from "./CredentialService";
-
 
 class AutoUpdateService{
 
@@ -11,18 +7,19 @@ class AutoUpdateService{
         //Noti 
         const identifier = await Notifications.scheduleNotificationAsync({
             content: {
-                title: 'Cập nhật moodle',
-                body: 'Đã thiết lập cơ chế tự động cập nhật',
+                title: 'Triviti',
+                body: 'Bạn ơi 🥳 Mở app cập nhật moodle nhé 🤓',
                 data: { autoUpdate: true }, // Add custom data to identify the notification
             },
             trigger: {
-                seconds: 21600,
+                seconds: 259200, // 3 ngày
                 repeats: true
             },
         });
         console.log("Task is scheduled with: ", identifier);
         return identifier;
     }
+
 }
 
 export default AutoUpdateService;

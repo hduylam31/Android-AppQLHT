@@ -28,6 +28,7 @@ const AccountMain = () => {
         NotificationUtils.removeAllNotification();
         await AsyncStorage.removeItem("username");
         await AsyncStorage.removeItem("password");
+        await AsyncStorage.removeItem("moodleIdentifier");
         navigation.replace("Login");
       })
       .catch((error) => alert(error.message));
