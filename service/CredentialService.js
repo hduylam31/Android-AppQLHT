@@ -11,11 +11,10 @@ import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class CredentialService {
-
-  static autoLogin = async () => { 
+  static autoLogin = async () => {
     const username = await AsyncStorage.getItem("username");
     const password = await AsyncStorage.getItem("password");
-    if(username && password){
+    if (username && password) {
       await signInWithEmailAndPassword(auth, username, password)
         .then((userCredentials) => {
           const user = userCredentials.user;
@@ -53,8 +52,8 @@ class CredentialService {
       });
   };
 
-  static handleRegister = (name, email, password) => {
-    createUserWithEmailAndPassword(auth, email, password)
+  static handleRegister = async (name, email, password) => {
+    await createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
         console.log("Successfully register withh", user.email);
@@ -64,6 +63,7 @@ class CredentialService {
         const userRef = doc(collection(firestore, "user"), user.uid);
         await setDoc(userRef, { name });
         console.log("Successfully register user name", name);
+        return true;
       })
       .catch((error) => {
         console.log("Không thể đăng kí", error);
@@ -82,7 +82,9 @@ class CredentialService {
         } else {
           Alert.alert("Đăng kí không thành công", error.message);
         }
+        return false;
       });
+    return true;
   };
 
   static handleResetEmail = async (email) => {
@@ -105,22 +107,23 @@ class CredentialService {
         } else {
           // Thông báo lỗi mặc định của Firebase Auth
           Alert.alert("Gửi không thành công", error.message);
-        } 
+        }
         return false;
       });
-      return true;
+    return true;
   };
 
-  static async changePassword(newPassword){
-      const user = auth.currentUser;
-      await updatePassword(user, newPassword).then(async ()=> {
+  static async changePassword(newPassword) {
+    const user = auth.currentUser;
+    await updatePassword(user, newPassword)
+      .then(async () => {
         console.log("changePassword OK");
         await AsyncStorage.setItem("password", newPassword);
-      }).catch(async (error)=>{
+      })
+      .catch(async (error) => {
         console.log("changePassword: ", error);
       });
-  } 
-
+  }
 }
 
 export default CredentialService;

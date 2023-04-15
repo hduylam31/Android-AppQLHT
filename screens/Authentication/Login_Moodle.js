@@ -10,7 +10,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react"; 
+import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { moodleLogin } from "../../assets";
 import { AntDesign } from "@expo/vector-icons";
@@ -20,12 +20,12 @@ import CommonService from "../../service/CommonService";
 
 const Login_Moodle = () => {
   const navigation = useNavigation();
- 
+
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const handleLogin = async () => { 
-    const status = await CalendarService.processLoginMoodle(username, password);  
+  const handleLogin = async () => {
+    const status = await CalendarService.processLoginMoodle(username, password);
     if (username === "") {
       Alert.alert("Kết nối không thành công", "Vui lòng nhập tên tài khoản");
     } else if (password === "") {
@@ -41,7 +41,7 @@ const Login_Moodle = () => {
     } else if (status === 0) {
       Alert.alert(
         "Kết nối không thành công",
-        "Sai mật khẩu vui lòng kiểm tra lại"
+        "Sai thông tin kết nối vui lòng kiểm tra lại"
       );
     } else {
       console.log("Loi");

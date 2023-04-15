@@ -31,8 +31,10 @@ const Register = () => {
     setValue(value);
   };
 
-  const handleRegister = () => {
-    if (email === "") {
+  const handleRegister = async () => {
+    if (name === "") {
+      Alert.alert("Đăng kí không thành công", "Vui lòng nhập họ và tên");
+    } else if (email === "") {
       Alert.alert("Đăng kí không thành công", "Vui lòng nhập email");
     } else if (password === "") {
       Alert.alert("Đăng kí không thành công", "Vui lòng nhập mật khẩu");
@@ -47,8 +49,14 @@ const Register = () => {
           if (password !== repassword) {
             Alert.alert("Mật khẩu nhập lại không khớp");
           } else {
-            CredentialService.handleRegister(name, email, password);
-            navigation.navigate("Login");
+            const status = await CredentialService.handleRegister(
+              name,
+              email,
+              password
+            );
+            if (status) {
+              navigation.navigate("Login");
+            }
           }
         }
       } catch (error) {

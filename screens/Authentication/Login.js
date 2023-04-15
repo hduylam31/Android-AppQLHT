@@ -34,7 +34,7 @@ const Login = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = React.useState("");
-  const [Password, setPassword] = React.useState(""); 
+  const [Password, setPassword] = React.useState("");
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const Login = () => {
 
   const handleLogin = () => {
     if (email === "") {
-      Alert.alert("Đăng nhập không thành công", "Vui lòng nhập tài khoản");
+      Alert.alert("Đăng nhập không thành công", "Vui lòng nhập Email");
     } else if (Password === "") {
       Alert.alert("Đăng nhập không thành công", "Vui lòng nhập mật khẩu");
     } else {
@@ -124,7 +124,7 @@ const Login = () => {
             >
               <View className="self-center w-[85%] h-[300px] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
                 <TextInput
-                  placeholder="Tên đăng nhập"
+                  placeholder="Email"
                   value={email}
                   onChangeText={(text) => setEmail(text)}
                   className="w-72 h-16 bg-[#D9D9D9] mt-[20%] self-center pl-4 rounded-2xl"

@@ -38,15 +38,21 @@ const Account_ChangePass = () => {
     setValue(value);
   };
 
-  const updatePassword=async ()=>{
+  const updatePassword = async () => {
     const currentPassword = await AsyncStorage.getItem("password");
-    if(currentPassword != password){
-      alert("Mật khẩu hiện tại không đúng");  
-    }else{
-      const status = await CredentialService.changePassword(newpassword); 
+    if (currentPassword != password) {
+      alert("Mật khẩu hiện tại không đúng");
+    } else {
+      const status = await CredentialService.changePassword(newpassword);
       //Navigate ở đây
+      navigation.navigate("BottomBar", {
+        screen: "Tài khoản",
+        params: {
+          screenAccount: "UpdateToMain",
+        },
+      });
     }
-  }
+  };
 
   const handlePress = () => {
     Keyboard.dismiss();
@@ -77,9 +83,10 @@ const Account_ChangePass = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={updatePassword}
-            className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-[40%] flex items-center justify-center">
+            className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-[40%] flex items-center justify-center"
+          >
             <Text className="text-[#3A4666] text-center font-bold text-lg">
               Cập nhật lại mật khẩu
             </Text>

@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { auth } from "../../firebase"
+import { auth } from "../../firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import AccountService from "../../service/AccountService";
@@ -21,13 +21,13 @@ const Account_EditInfor = () => {
   const route = useRoute();
   const name = route.params.name;
 
-  const [userName, setUserName] = useState(""); 
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
 
   useEffect(() => {
     const loadData = () => {
       setUserName(name);
-      setEmail(auth.currentUser.email)
+      setEmail(auth.currentUser.email);
     };
     loadData();
   }, []);
@@ -35,9 +35,14 @@ const Account_EditInfor = () => {
   const handleSaveAccountInfo = async () => {
     try {
       await AccountService.saveUserInfo(userName);
-    } catch (error) {
-    }
-  }
+      navigation.navigate("BottomBar", {
+        screen: "Tài khoản",
+        params: {
+          screenAccount: "EditToMain",
+        },
+      });
+    } catch (error) {}
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -95,7 +100,7 @@ const Account_EditInfor = () => {
               }}
               value={email}
               onChangeText={(text) => setEmail(text)}
-              editable={false} 
+              editable={false}
             ></TextInput>
           </View>
           {/* Button thêm */}

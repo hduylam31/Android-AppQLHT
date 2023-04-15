@@ -12,14 +12,24 @@ import AccountService from "../../service/AccountService";
 const AccountMain = () => {
   const [name, setName] = useState("");
 
-  async function loadName(){
+  async function loadName() {
     const userName = await AccountService.loadUserInfo();
     setName(userName);
   }
 
-  useEffect(()=> {
+  const route = useRoute();
+  useEffect(() => {
+    if (
+      route?.params?.screenAccount === "UpdateToMain" ||
+      route?.params?.screenAccount === "EditToMain"
+    ) {
+      loadName();
+    }
+  }, [route]);
+
+  useEffect(() => {
     loadName();
-  }, [])
+  }, []);
 
   const handleSignOut = () => {
     auth
@@ -44,10 +54,10 @@ const AccountMain = () => {
     <SafeAreaView className="flex-1">
       <View className="bg-[#3A4666] h-[15%]"></View>
       <View className="h-full bg-[#F1F5F9] items-center">
-        <Text className="mt-24 text-[#3A4666] text-xl font-bold">{name}</Text> 
+        <Text className="mt-24 text-[#3A4666] text-xl font-bold">{name}</Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Account_EditInfor", {name});
+            navigation.navigate("Account_EditInfor", { name });
           }}
           className="mt-5 w-[50%] h-12 rounded-3xl bg-white justify-center items-center"
           style={{

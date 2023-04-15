@@ -143,9 +143,7 @@ const NoteList_Add = () => {
               actions.alignRight,
               actions.alignFull,
               actions.insertLink,
-              actions.heading1,
               actions.setStrikethrough,
-              actions.checkboxList,
             ]}
             iconMap={{
               [actions.heading1]: () => (

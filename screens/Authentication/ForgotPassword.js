@@ -27,11 +27,11 @@ const ForgotPassword = () => {
     if (email === "") {
       Alert.alert("Gửi hướng dẫn không thành công", "Vui lòng nhập email");
     } else {
-      try { 
+      try {
         if (email) {
-          const status = await CredentialService.handleResetEmail(email); 
+          const status = await CredentialService.handleResetEmail(email);
           console.log("OK with status: ", status);
-          if(status){
+          if (status) {
             navigation.navigate("ForgotPassword_CheckMail");
           }
         }
