@@ -57,7 +57,7 @@ const Account_EditInfor = () => {
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-[10%]">
+        <View className="bg-[#3A4666] h-15">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <View className="mt-5 ml-[3%] w-10 h-10">
               <MaterialCommunityIcons
