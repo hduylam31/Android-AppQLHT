@@ -111,7 +111,7 @@ const ToDoListScreen = () => {
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                className={"text-base font-semibold"}
+                className={"font-semibold text-base"}
               >
                 {item.title}
               </Text>
@@ -119,7 +119,7 @@ const ToDoListScreen = () => {
                 {item.isNotified && (
                   <MaterialCommunityIcons
                     name="bell-ring-outline"
-                    size={14}
+                    size={16}
                     color="black"
                   />
                 )}

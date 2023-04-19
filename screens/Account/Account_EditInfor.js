@@ -58,15 +58,15 @@ const Account_EditInfor = () => {
     <TouchableWithoutFeedback onPress={handlePress}>
       <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-15">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <View className="mt-5 ml-[3%] w-10 h-10">
+          <View className="flex-row justify-between items-center p-4">
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
                 name="arrow-left"
                 size={40}
                 color="white"
               />
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
         </View>
         <ScrollView className="bg-[#F1F5F9]">
           <View className="px-5 pt-[4%] space-y-2 mt-14">

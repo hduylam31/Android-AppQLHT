@@ -74,7 +74,7 @@ export default function App() {
         } else {
           alert("Must use physical device for Push Notifications");
         }
-  
+
         // Tùy chỉnh notification cho điện thoại Android
         if (Platform.OS === "android") {
           Notifications.setNotificationChannelAsync("default", {
@@ -84,7 +84,6 @@ export default function App() {
             lightColor: "#FF231F7C",
           });
         }
-
       } catch (error) {
         console.log("Permission warning");
       }
