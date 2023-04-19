@@ -44,16 +44,25 @@ const NoteList_Add = () => {
 
   const handleAddingUserNoteList = async () => {
     console.log("Start addingg");
-    try {
-      await NoteService.addNote(title, note);
+    if (title !== "" && note !== "") {
+      try {
+        await NoteService.addNote(title, note);
+        navigation.navigate("BottomBar", {
+          screen: "Ghi chú",
+          params: {
+            screenNoteList: "AddToMain",
+          },
+        });
+      } catch (error) {
+        console.log("Fail due to: ", error);
+      }
+    } else {
       navigation.navigate("BottomBar", {
         screen: "Ghi chú",
         params: {
           screenNoteList: "AddToMain",
         },
       });
-    } catch (error) {
-      console.log("Fail due to: ", error);
     }
   };
   const richText = useRef();
