@@ -167,6 +167,7 @@ const NoteList_Edit = () => {
               ref={richText}
               placeholder="Nội dung"
               initialContentHTML={note}
+              initialHeight={650}
               onChange={(text) => setNote(text)}
 
               // editorStyle={{ color: "red" }}
@@ -188,6 +189,8 @@ const NoteList_Edit = () => {
           <RichToolbar
             // selectedColor={selectedColor}
             // colors={colors}
+            selectedIconTint="#2095F2"
+            selectedButtonStyle={{ backgroundColor: "transparent" }}
             editor={richText}
             actions={[
               actions.undo,
@@ -201,13 +204,12 @@ const NoteList_Edit = () => {
               actions.alignCenter,
               actions.alignRight,
               actions.alignFull,
-              actions.insertLink,
-              actions.heading1,
+              actions.heading2,
+              actions.removeFormat,
               actions.setStrikethrough,
-              actions.checkboxList,
             ]}
             iconMap={{
-              [actions.heading1]: () => (
+              [actions.heading2]: () => (
                 <Text className="mb-1 text-lg">H1</Text>
               ),
             }}

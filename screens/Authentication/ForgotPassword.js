@@ -70,6 +70,7 @@ const ForgotPassword = () => {
               className="text-lg pl-4"
               placeholderTextColor="#9A999B"
               placeholder="Email"
+              autoCapitalize="none"
               value={email}
               onChangeText={(email) => setEmail(email)}
             ></TextInput>

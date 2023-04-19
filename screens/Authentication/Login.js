@@ -127,11 +127,13 @@ const Login = () => {
                   placeholder="Email"
                   value={email}
                   onChangeText={(text) => setEmail(text)}
+                  autoCapitalize="none"
                   className="w-72 h-16 bg-[#D9D9D9] mt-[20%] self-center pl-4 rounded-2xl"
                 ></TextInput>
                 <TextInput
                   placeholder="Mật khẩu"
                   value={Password}
+                  autoCapitalize="none"
                   onChangeText={(text) => setPassword(text)}
                   secureTextEntry
                   className="w-72 h-16 bg-[#D9D9D9] self-center pl-4 rounded-2xl"

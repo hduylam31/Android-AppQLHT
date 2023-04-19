@@ -123,6 +123,7 @@ const Register = () => {
                 className="text-lg pl-4"
                 placeholderTextColor="#9A999B"
                 placeholder="Họ và tên"
+                autoCapitalize="none"
                 value={name}
                 onChangeText={(name) => setName(name)}
               ></TextInput>
@@ -132,6 +133,7 @@ const Register = () => {
                 className="text-lg pl-4"
                 placeholderTextColor="#9A999B"
                 placeholder="Email"
+                autoCapitalize="none"
                 value={email}
                 onChangeText={(email) => setEmail(email)}
               ></TextInput>
@@ -141,6 +143,7 @@ const Register = () => {
                 className="text-lg pl-4"
                 placeholderTextColor="#9A999B"
                 placeholder="Mật khẩu"
+                autoCapitalize="none"
                 secureTextEntry={true}
                 value={password}
                 onChangeText={(text) => setPassword(text)}
@@ -152,6 +155,7 @@ const Register = () => {
                 placeholderTextColor="#9A999B"
                 placeholder="Nhập lại mật khẩu"
                 secureTextEntry={true}
+                autoCapitalize="none"
                 value={repassword}
                 onChangeText={(value) =>
                   validateAndSet(value, password, setrePassword)

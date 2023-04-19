@@ -62,17 +62,22 @@ const NoteList_Add = () => {
   const [isKeyboardShowing, setIsKeyboardShowing] = useState(false);
 
   const showKeyboard = () => {
-    console.log("Keyboard is showing");
     setIsKeyboardShowing(true);
   };
 
   const hideKeyboard = () => {
-    console.log("Keyboard is hiding");
     setIsKeyboardShowing(false);
   };
 
   Keyboard.addListener("keyboardDidShow", showKeyboard);
   Keyboard.addListener("keyboardDidHide", hideKeyboard);
+
+  // const handleUnHeading = () => {
+  //   richText.current?.getSelectedHtml().then((selectedHtml) => {
+  //     const unHeadingHtml = selectedHtml.replace(/<h[1-6]>/, "");
+  //     console.log("test", unHeadingHtml);
+  //   });
+  // };
 
   return (
     <TouchableWithoutFeedback>
@@ -110,25 +115,31 @@ const NoteList_Add = () => {
           ></TextInput>
         </View>
         <ScrollView className="px-2 space-y-2 h-full bg-white">
-          <RichEditor
-            ref={richText}
-            placeholder="Nội dung"
-            // editorStyle={{ color: "red" }}
-            onChange={(text) => setNote(text)}
-          />
-          {/* </View> */}
-          {/* <TouchableOpacity
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+          >
+            <RichEditor
+              ref={richText}
+              placeholder="Nội dung"
+              initialHeight={650}
+              // editorStyle={{ backgroundColor: "red" }}
+              onChange={(text) => setNote(text)}
+            />
+            {/* </View> */}
+            {/* <TouchableOpacity
             onPress={handleAddingUserNoteList}
             className="bg-[#3A4666] rounded-2xl flex items-center justify-center h-[5%] w-[90%] ml-[5%]">
             <Text className="text-white text-center font-bold text-xl">
               Lưu
             </Text>
            </TouchableOpacity> */}
+          </KeyboardAvoidingView>
         </ScrollView>
         <View className="flex absolute bottom-0">
           <RichToolbar
-            // selectedColor={selectedColor}
-            // colors={colors}
+            selectedIconTint="#2095F2"
+            selectedButtonStyle={{ backgroundColor: "transparent" }}
             editor={richText}
             actions={[
               actions.undo,
@@ -142,11 +153,12 @@ const NoteList_Add = () => {
               actions.alignCenter,
               actions.alignRight,
               actions.alignFull,
-              actions.insertLink,
+              actions.heading2,
+              actions.removeFormat,
               actions.setStrikethrough,
             ]}
             iconMap={{
-              [actions.heading1]: () => (
+              [actions.heading2]: () => (
                 <Text className="mb-1 text-lg">H1</Text>
               ),
             }}

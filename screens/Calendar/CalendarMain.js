@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { Calendar, CalendarList, Agenda } from "react-native-calendars";
+import { Calendar, LocaleConfig } from "react-native-calendars";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -22,6 +22,56 @@ import CalendarService from "../../service/CalendarService";
 import { MoodleIcon } from "../../assets";
 import moment from "moment";
 import AppLoader from "../AppLoader/AppLoader";
+
+LocaleConfig.locales["fr"] = {
+  monthNames: [
+    "Tháng 1,",
+    "Tháng 2,",
+    "Tháng 3,",
+    "Tháng 4,",
+    "Tháng 5,",
+    "Tháng 6,",
+    "Tháng 7,",
+    "Tháng 8,",
+    "Tháng 9,",
+    "Tháng 10,",
+    "Tháng 11,",
+    "Tháng 12,",
+  ],
+  monthNames: [
+    "Tháng 1,",
+    "Tháng 2,",
+    "Tháng 3,",
+    "Tháng 4,",
+    "Tháng 5,",
+    "Tháng 6,",
+    "Tháng 7,",
+    "Tháng 8,",
+    "Tháng 9,",
+    "Tháng 10,",
+    "Tháng 11,",
+    "Tháng 12,",
+  ],
+  monthNamesShort: [
+    "Janv.",
+    "Févr.",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juil.",
+    "Août",
+    "Sept.",
+    "Oct.",
+    "Nov.",
+    "Déc.",
+  ],
+  dayNames: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+  dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+  today: "Aujourd'hui",
+};
+
+LocaleConfig.defaultLocale = "fr";
 
 const CalendarMain = () => {
   const [markedDates, setMarkedDates] = useState();
@@ -74,7 +124,7 @@ const CalendarMain = () => {
     }
   };
 
-  const loadCalendar1 = async () => {  
+  const loadCalendar1 = async () => {
     try {
       setIsLoading(true);
       const calendar = await CalendarService.loadCalendarData();

@@ -84,7 +84,6 @@ class CredentialService {
         }
         return false;
       });
-    return true;
   };
 
   static handleResetEmail = async (email) => {
@@ -110,7 +109,6 @@ class CredentialService {
         }
         return false;
       });
-    return true;
   };
 
   static async changePassword(newPassword) {
