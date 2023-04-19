@@ -16,6 +16,8 @@ import AutoUpdateService from "./AutoUpdateService";
 import CredentialService from "./CredentialService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as he from 'he';
+import * as BackgroundFetch from 'expo-background-fetch';
+import Constants from "../domain/constant";
 
 class CalendarService {
   static async isMoodleActive() {
@@ -72,9 +74,7 @@ class CalendarService {
         //load calendar moodle data
         await this.saveCalendarData(moodleToken);
         //Auto update Background 
-        const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();  
-        AsyncStorage.setItem("moodleIdentifier", identifier);
-        await updateDoc(userRef, {'moodle.calendarIdentifer': identifier});
+        await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();  
         return 1;
       } else {
         alert("Sai thông tin đăng nhập!");
@@ -132,17 +132,12 @@ class CalendarService {
       const userRef = doc(collection(firestore, "user"), user.uid);
       //Xóa token + cập nhật status moodle token
       //Xóa Background chạy nền cập nhật 
-      const userDoc = await getDoc(userRef);
-      if(userDoc.exists()){
-        const identifier = userDoc.data().moodle.calendarIdentifer;
-        NotificationUtils.cancelNotification(identifier);
-      }
-      updateDoc(userRef, { "moodle.status": status , "moodle.calendarIdentifer": ""});
+      await BackgroundFetch.unregisterTaskAsync(Constants.BACKGROUND_FETCH_TASK);
+      await updateDoc(userRef, { "moodle.status": status , "moodle.token": ""});
       //Xóa tất cả dữ liệu thông báo + moodle
       const calendarRef = doc(collection(firestore, "calendar"), user.uid);
       this.unRegisterMoodleNotification();
-      updateDoc(calendarRef, { "calendar.moodle": [] });
-      AsyncStorage.removeItem("moodleIdentifier");
+      await updateDoc(calendarRef, { "calendar.moodle": [] });
       return true;
     } catch (error) {
       console.log(error);
@@ -156,26 +151,24 @@ class CalendarService {
     const currentYear = currentDate.getFullYear();
     const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
     const nextMonthYear = currentMonth === 12 ? currentYear + 1 : currentYear;
-
-    let currentMonthEvent = await this.fetchCalendarData(token, 11, 2022);
+    let currentMonthEvent = await this.fetchCalendarData(token, currentMonth, currentYear);
     if (currentMonthEvent === "error") {
       console.log("error token");
       await this.logOutMoodle(-1);
       return;
     }
 
-    let nextMonthEvent = await this.fetchCalendarData(token, 2, 2023);
+    let nextMonthEvent = await this.fetchCalendarData(token, nextMonth, nextMonthYear);
     const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);  
-
     // =====================================DB===================================
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "calendar"), user.uid);
     
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
-      updateDoc(userRef, { "calendar.moodle": twoMonthEvents });
+      await updateDoc(userRef, { "calendar.moodle": twoMonthEvents });
     } else {
-      setDoc(userRef, { calendar: { moodle: twoMonthEvents } });
+      await setDoc(userRef, { calendar: { moodle: twoMonthEvents } });
     }
 
     console.log("done save two month calendar function OKK");
@@ -550,10 +543,12 @@ class CalendarService {
       const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
+
         const moodleData = userDoc.data().calendar.moodle;
         if(moodleData != undefined && moodleData.length > 0){
           loadNotificationAndUpdateOne(moodleData, userRef, true);
         }
+
         const userData = userDoc.data().calendar.user;
         if(moodleData != undefined && moodleData.length > 0){
           loadNotificationAndUpdateOne(userData, userRef, false);
@@ -640,25 +635,19 @@ class CalendarService {
     }
   }
 
-  static async loadAutoUpdateMoodleBackground(){
+  static async loadAutoUpdateMoodleBackground(isAutoLogin){
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "user"), user.uid);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()){
       //Reload the data moodle
       const data = userDoc.data();
-      if(data.moodle.calendarIdentifer && data.moodle.status == 1){
+      if(data.moodle.status == 1){
         await this.reloadMoodleCalendar();
         //Auto update Background
-        const oldIdentifier = await AsyncStorage.getItem("moodleIdentifier");
-        console.log("oldIdentifier: ", oldIdentifier);
-        if(oldIdentifier){
-          console.log("Cancel 3 days");
-          NotificationUtils.cancelNotification(oldIdentifier);
+        if(!isAutoLogin){
+          await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
         }
-        const identifier = await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
-        AsyncStorage.setItem("moodleIdentifier", identifier);
-        await updateDoc(userRef, {'moodle.calendarIdentifer': identifier});
       }
     }
   }

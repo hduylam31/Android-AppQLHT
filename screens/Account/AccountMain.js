@@ -8,6 +8,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AccountService from "../../service/AccountService";
+import * as BackgroundFetch from 'expo-background-fetch';
+import Constants from "../../domain/constant";
 
 const AccountMain = () => {
   const [name, setName] = useState("");
@@ -31,14 +33,19 @@ const AccountMain = () => {
     loadName();
   }, []);
 
-  const handleSignOut = () => {
+  const handleSignOut = () => { 
     auth
       .signOut()
       .then(async () => {
         NotificationUtils.removeAllNotification();
         await AsyncStorage.removeItem("username");
-        await AsyncStorage.removeItem("password");
-        await AsyncStorage.removeItem("moodleIdentifier");
+        await AsyncStorage.removeItem("password"); 
+        try {
+          await BackgroundFetch.unregisterTaskAsync(Constants.BACKGROUND_FETCH_TASK);
+        } catch (error) {
+          console.log("Loi nay ke no di: ", error);
+        }
+        
         navigation.replace("Login");
       })
       .catch((error) => alert(error.message));

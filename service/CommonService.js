@@ -5,12 +5,14 @@ import * as Notifications from 'expo-notifications'
 import { collection, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove} from "firebase/firestore";
 import { auth, firestore } from "../firebase";
 import CredentialService from "./CredentialService";
+import NotificationUtils from "./NotificationUtils";
 
 class CommonService{
 
-    static async loadAllNotificationAndUpdateDB(){
+    static async loadAllNotificationAndUpdateDB(isAutoLogin){
         try {
-            await CalendarService.loadAutoUpdateMoodleBackground(); 
+            await NotificationUtils.removeAllNotification();
+            await CalendarService.loadAutoUpdateMoodleBackground(isAutoLogin); 
             console.log("Load background running OK");
             await CalendarService.loadNotificationAndUpdateDb(); 
             TodolistService.loadNotificationAndUpdateDb(); 

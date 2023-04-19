@@ -247,16 +247,16 @@ const CalendarMain = () => {
       {
         text: "Hủy",
         onPress: () => {
-          console.log("No Pressed");
+          console.log("No Pressed"); 
         },
       },
     ]);
   };
 
-  const handleLogoutMoodle = async () => {
+  const handleLogoutMoodle = async () => {  
     console.log("Start logout");
     try {
-      await CalendarService.logOutMoodle(0);
+      await CalendarService.logOutMoodle(0); 
       navigation.navigate("BottomBar", {
         screen: "Lịch",
         params: {

@@ -36,25 +36,39 @@ const Login = () => {
   const [email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
+  const [isAutoLogin, setIsAutoLogin] = useState(false);
 
   useEffect(() => {
-    const unsubcribe = auth.onAuthStateChanged(async (user) => {
-      console.log("checkuser");
-
-      if (user) {
-        setIsLoadingLogin(true);
-        await CommonService.loadAllNotificationAndUpdateDB();
-        setIsLoadingLogin(false);
-        navigation.navigate("BottomBar");
-      }
-    });
-    return unsubcribe;
-  }, []);
+    if(isAutoLogin){
+      auth.onAuthStateChanged(async (user) => {
+        console.log("checkuser");
+  
+        if (user) {
+          setIsLoadingLogin(true);
+          console.log("isAutoLogin: ", isAutoLogin);
+          await CommonService.loadAllNotificationAndUpdateDB(isAutoLogin); 
+          setIsLoadingLogin(false);
+          navigation.navigate("BottomBar");
+        }
+      });
+    }else{
+      auth.onAuthStateChanged(async (user) => {
+        console.log("checkuser");
+  
+        if (user) {
+          setIsLoadingLogin(true);
+          await CommonService.loadAllNotificationAndUpdateDB(isAutoLogin); 
+          setIsLoadingLogin(false);
+          navigation.navigate("BottomBar");
+        }
+      });
+    }
+  }, [isAutoLogin]);
 
   useEffect(() => {
     const autoLogin = async () => {
-      const todolists = await CredentialService.autoLogin();
-      console.log("Auto Login OK");
+      const status = await CredentialService.autoLogin();
+      setIsAutoLogin(status);
     };
     autoLogin();
   }, []);

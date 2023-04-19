@@ -15,14 +15,18 @@ class CredentialService {
     const username = await AsyncStorage.getItem("username");
     const password = await AsyncStorage.getItem("password");
     if (username && password) {
-      await signInWithEmailAndPassword(auth, username, password)
+      return await signInWithEmailAndPassword(auth, username, password)
         .then((userCredentials) => {
           const user = userCredentials.user;
           console.log("Logged in with :", user.email);
+          return true;
         })
         .catch((error) => {
           console.log(error);
+          return false;
         });
+    }else{
+      return false;
     }
   };
 
