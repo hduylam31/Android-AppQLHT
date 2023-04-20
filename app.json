@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/IconApp.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.trisan.AppLearningManager"
@@ -29,7 +29,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "93592a67-b4f9-4d75-a509-bb47bc9db2bc"
+        "projectId": "99358243-cb8f-470f-9ada-13e7ae9580e9"
       }
     }
   }
