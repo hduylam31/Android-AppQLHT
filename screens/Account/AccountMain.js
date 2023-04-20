@@ -8,7 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AccountService from "../../service/AccountService";
-import * as BackgroundFetch from 'expo-background-fetch';
+import * as BackgroundFetch from "expo-background-fetch";
 import Constants from "../../domain/Constants";
 
 const AccountMain = () => {
@@ -33,19 +33,21 @@ const AccountMain = () => {
     loadName();
   }, []);
 
-  const handleSignOut = () => { 
+  const handleSignOut = () => {
     auth
       .signOut()
       .then(async () => {
         NotificationUtils.removeAllNotification();
         await AsyncStorage.removeItem("username");
-        await AsyncStorage.removeItem("password"); 
+        await AsyncStorage.removeItem("password");
         try {
-          await BackgroundFetch.unregisterTaskAsync(Constants.BACKGROUND_FETCH_TASK);
+          await BackgroundFetch.unregisterTaskAsync(
+            Constants.BACKGROUND_FETCH_TASK
+          );
         } catch (error) {
           console.log("Loi nay ke no di: ", error);
         }
-        
+
         navigation.replace("Login");
       })
       .catch((error) => alert(error.message));
@@ -61,7 +63,9 @@ const AccountMain = () => {
     <SafeAreaView className="flex-1">
       <View className="bg-[#3A4666] h-[15%]"></View>
       <View className="h-full bg-[#F1F5F9] items-center">
-        <Text className="mt-24 text-[#3A4666] text-xl font-bold">{name}</Text>
+        <Text className="mt-[25%] text-[#3A4666] text-xl font-bold">
+          {name}
+        </Text>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("Account_EditInfor", { name });
@@ -102,7 +106,7 @@ const AccountMain = () => {
         </TouchableOpacity>
       </View>
 
-      <View className="w-36 h-36 bg-[#A4AAB8] rounded-full justify-center items-center absolute top-20 left-[32%] right-0 bottom-0">
+      <View className="w-36 h-36 bg-[#A4AAB8] rounded-full justify-center items-center absolute top-[10%] left-[32%] right-0 bottom-0">
         <MaterialCommunityIcons name="account" size={120} color="white" />
       </View>
       <TouchableOpacity
