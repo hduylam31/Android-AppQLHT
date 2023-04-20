@@ -17,7 +17,7 @@ import CredentialService from "./CredentialService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as he from 'he';
 import * as BackgroundFetch from 'expo-background-fetch';
-import Constants from "../domain/constant";
+import Constants from "../domain/Constants";
 
 class CalendarService {
   static async isMoodleActive() {

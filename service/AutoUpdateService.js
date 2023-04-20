@@ -1,10 +1,6 @@
 import * as Notifications from 'expo-notifications'
 import * as BackgroundFetch from 'expo-background-fetch';
-import * as TaskManager from 'expo-task-manager';
-import Constants from '../domain/constant';
-import CredentialService from './CredentialService';
-import CalendarService from './CalendarService';
-
+import Constants from '../domain/Constants';
 
 class AutoUpdateService{
     

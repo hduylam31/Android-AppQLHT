@@ -9,7 +9,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AccountService from "../../service/AccountService";
 import * as BackgroundFetch from 'expo-background-fetch';
-import Constants from "../../domain/constant";
+import Constants from "../../domain/Constants";
 
 const AccountMain = () => {
   const [name, setName] = useState("");

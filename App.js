@@ -22,8 +22,7 @@ import CalendarService from "./service/CalendarService";
 import CredentialService from "./service/CredentialService";
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
-import Constants from "./domain/constant";
-
+import Constants from "./domain/Constants";
 
 const Stack = createNativeStackNavigator();
 
