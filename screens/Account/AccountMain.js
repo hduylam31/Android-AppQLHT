@@ -106,7 +106,7 @@ const AccountMain = () => {
         </TouchableOpacity>
       </View>
 
-      <View className="w-36 h-36 bg-[#A4AAB8] rounded-full justify-center items-center absolute top-[10%] left-[32%] right-0 bottom-0">
+      <View className="w-36 h-36 bg-[#A4AAB8] rounded-full justify-center items-center absolute bottom-[75%] left-[32%]">
         <MaterialCommunityIcons name="account" size={120} color="white" />
       </View>
       <TouchableOpacity
