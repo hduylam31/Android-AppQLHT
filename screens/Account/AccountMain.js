@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { auth } from "../../firebase";
 import NotificationUtils from "../../service/NotificationUtils";
@@ -59,6 +59,21 @@ const AccountMain = () => {
     });
   });
 
+  const AlertSignOut = () => {
+    Alert.alert("Đăng xuất", "Bạn muốn đăng xuất ?", [
+      {
+        text: "Đồng ý",
+        onPress: handleSignOut,
+      },
+      {
+        text: "Hủy",
+        onPress: () => {
+          console.log("No Pressed");
+        },
+      },
+    ]);
+  };
+
   return (
     <SafeAreaView className="flex-1">
       <View className="bg-[#3A4666] h-[15%]"></View>
@@ -110,10 +125,7 @@ const AccountMain = () => {
         <MaterialCommunityIcons name="account" size={120} color="white" />
       </View>
       <TouchableOpacity
-        onPress={() => {
-          handleSignOut();
-          navigation.navigate("Login");
-        }}
+        onPress={AlertSignOut}
         className="w-[90%] h-[5%] absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         style={{
           shadowColor: "#000000",

@@ -33,15 +33,19 @@ const Account_EditInfor = () => {
   }, []);
 
   const handleSaveAccountInfo = async () => {
-    try {
-      await AccountService.saveUserInfo(userName);
-      navigation.navigate("BottomBar", {
-        screen: "Tài khoản",
-        params: {
-          screenAccount: "EditToMain",
-        },
-      });
-    } catch (error) {}
+    if (userName === "") {
+      Alert.alert("Lưu không thành công", "Vui lòng nhập họ và tên");
+    } else {
+      try {
+        await AccountService.saveUserInfo(userName);
+        navigation.navigate("BottomBar", {
+          screen: "Tài khoản",
+          params: {
+            screenAccount: "EditToMain",
+          },
+        });
+      } catch (error) {}
+    }
   };
 
   useLayoutEffect(() => {

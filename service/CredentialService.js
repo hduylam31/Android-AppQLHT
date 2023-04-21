@@ -25,7 +25,7 @@ class CredentialService {
           console.log(error);
           return false;
         });
-    }else{
+    } else {
       return false;
     }
   };
@@ -114,18 +114,26 @@ class CredentialService {
         return false;
       });
   };
-
-  static async changePassword(newPassword) {
+  static changePassword = async (newPassword) => {
     const user = auth.currentUser;
     await updatePassword(user, newPassword)
       .then(async () => {
         console.log("changePassword OK");
         await AsyncStorage.setItem("password", newPassword);
+        return true;
       })
-      .catch(async (error) => {
+      .catch((error) => {
         console.log("changePassword: ", error);
+        if (error.code === "auth/weak-password") {
+          // Thông báo lỗi: "Mật khẩu phải có ít nhất 6 kí tự"
+          Alert.alert(
+            "Đối mật khẩu không thành công",
+            "Mật khẩu phải có ít nhất 6 kí tự"
+          );
+        }
+        return false;
       });
-  }
+  };
 }
 
 export default CredentialService;

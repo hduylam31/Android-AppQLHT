@@ -39,25 +39,25 @@ const Login = () => {
   const [isAutoLogin, setIsAutoLogin] = useState(false);
 
   useEffect(() => {
-    if(isAutoLogin){
+    if (isAutoLogin) {
       auth.onAuthStateChanged(async (user) => {
         console.log("checkuser");
-  
+
         if (user) {
           setIsLoadingLogin(true);
           console.log("isAutoLogin: ", isAutoLogin);
-          await CommonService.loadAllNotificationAndUpdateDB(isAutoLogin); 
+          await CommonService.loadAllNotificationAndUpdateDB(isAutoLogin);
           setIsLoadingLogin(false);
           navigation.navigate("BottomBar");
         }
       });
-    }else{
+    } else {
       auth.onAuthStateChanged(async (user) => {
         console.log("checkuser");
-  
+
         if (user) {
           setIsLoadingLogin(true);
-          await CommonService.loadAllNotificationAndUpdateDB(isAutoLogin); 
+          await CommonService.loadAllNotificationAndUpdateDB(isAutoLogin);
           setIsLoadingLogin(false);
           navigation.navigate("BottomBar");
         }
@@ -107,108 +107,106 @@ const Login = () => {
     return <AppLoader />;
   }
   return (
-    <KeyboardAvoidingView style={`flex-1 justify-center items-center`}>
+    <KeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={handlePress}>
-        <SafeAreaView className="bg-[#23ACCD] flex-1 relative">
-          {/* first section */}
-          <View>
-            <View className="absolute w-[177px] h-[177px] bg-[#126C83] rounded-full  top-[30%] -left-[15%]"></View>
-            <View className="absolute w-[130px] h-[130px] bg-[#126C83] rounded-full  top-[30%] -right-[10%]]"></View>
-          </View>
-          {/* Second section */}
-          <View className="mt-[8%] flex-row justify-center items-center">
-            <Text className="ml-4 text-[#FFFFFF] text-3xl font-bold">
-              Chào mừng {"\n"}bạn quay trở lại
-            </Text>
-            <Animatable.Image
-              animation="fadeIn"
-              easing="ease-in-out"
-              source={ClockImage}
-              resizeMode="contain"
-              style={{ marginLeft: 20 }}
-            />
-          </View>
-          <View
-            className="flex-1 bg-[#FE8668] mt-4 "
-            style={{ borderTopLeftRadius: 40, borderTopRightRadius: 40 }}
-          >
+        <SafeAreaView>
+          <View className="bg-[#23ACCD] flex-1 relative">
+            {/* first section */}
+            <View>
+              <View className="absolute w-[177px] h-[177px] bg-[#126C83] rounded-full  top-[30%] -left-[15%]"></View>
+              <View className="absolute w-[130px] h-[130px] bg-[#126C83] rounded-full  top-[30%] -right-[10%]]"></View>
+            </View>
+            {/* Second section */}
+            <View className="mt-[8%] flex-row justify-center items-center">
+              <Text className="ml-4 text-[#FFFFFF] text-3xl font-bold">
+                Chào mừng {"\n"}bạn quay trở lại
+              </Text>
+              <Animatable.Image
+                animation="fadeIn"
+                easing="ease-in-out"
+                source={ClockImage}
+                resizeMode="contain"
+                style={{ marginLeft: 20 }}
+              />
+            </View>
             <View
-              className="flex-1 bg-[#3A4666] mt-2 space-y-[4%] h-full"
-              style={{ borderTopLeftRadius: 47, borderTopRightRadius: 47 }}
+              className="flex-1 bg-[#FE8668] mt-4 "
+              style={{ borderTopLeftRadius: 40, borderTopRightRadius: 40 }}
             >
-              <View className="self-center w-[85%] h-[300px] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
-                <TextInput
-                  placeholder="Email"
-                  value={email}
-                  onChangeText={(text) => setEmail(text)}
-                  autoCapitalize="none"
-                  className="w-72 h-16 bg-[#D9D9D9] mt-[20%] self-center pl-4 rounded-2xl"
-                ></TextInput>
-                <TextInput
-                  placeholder="Mật khẩu"
-                  value={Password}
-                  autoCapitalize="none"
-                  onChangeText={(text) => setPassword(text)}
-                  secureTextEntry
-                  className="w-72 h-16 bg-[#D9D9D9] self-center pl-4 rounded-2xl"
-                ></TextInput>
-                <TouchableOpacity onPress={handleLogin}>
-                  <Animatable.View
-                    easing="ease-in-out"
-                    iterationCount={"infinite"}
-                    className="w-[80%] h-[45%] items-center justify-center bg-[#FE8668] self-center rounded-2xl mt-[2%]"
-                    style={{
-                      shadowColor: "#000",
-                      shadowOffset: { width: 0, height: 2 },
-                      shadowOpacity: 0.25,
-                      shadowRadius: 3.84,
-                      elevation: 5,
-                    }}
-                  >
-                    <Text className="text-[#3A4666] text-center font-bold text-lg">
-                      Đăng nhập
-                    </Text>
-                  </Animatable.View>
-                </TouchableOpacity>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("ForgotPassword");
-                }}
+              <View
+                className="flex-1 bg-[#3A4666] mt-2 space-y-[4%] h-full"
+                style={{ borderTopLeftRadius: 47, borderTopRightRadius: 47 }}
               >
-                <Text
-                  className="font-light italic text-sm text-right underline mr-10"
-                  style={{ color: "white" }}
-                >
-                  Quên mật khẩu
-                </Text>
-              </TouchableOpacity>
-              <View className="flex-row space-x-3 items-center justify-center">
-                <View className="w-[25%] h-[1px] bg-[#F8F7FA]">
-                  <AntDesign name="arrowleft" size={40} />
+                <View className="self-center w-[85%] h-[300px] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
+                  <TextInput
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
+                    autoCapitalize="none"
+                    className="w-72 h-16 bg-[#D9D9D9] mt-[20%] self-center pl-4 rounded-2xl"
+                  ></TextInput>
+                  <TextInput
+                    placeholder="Mật khẩu"
+                    value={Password}
+                    autoCapitalize="none"
+                    onChangeText={(text) => setPassword(text)}
+                    secureTextEntry
+                    className="w-72 h-16 bg-[#D9D9D9] self-center pl-4 rounded-2xl"
+                  ></TextInput>
+                  <TouchableOpacity onPress={handleLogin}>
+                    <Animatable.View
+                      easing="ease-in-out"
+                      iterationCount={"infinite"}
+                      className="w-[80%] h-[45%] items-center justify-center bg-[#FE8668] self-center rounded-2xl mt-[2%]"
+                      style={{
+                        shadowColor: "#000",
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.25,
+                        shadowRadius: 3.84,
+                        elevation: 5,
+                      }}
+                    >
+                      <Text className="text-[#3A4666] text-center font-bold text-lg">
+                        Đăng nhập
+                      </Text>
+                    </Animatable.View>
+                  </TouchableOpacity>
                 </View>
-                <Text className="text-base" style={{ color: "white" }}>
-                  Hoặc đăng nhập với
-                </Text>
-                <View className="w-[25%] h-[1px] bg-[#F8F7FA] items-center"></View>
-              </View>
-              <View className="self-center w-[40%] h-[10%] bg-[#F8F7FA] mt-[10%] rounded-2xl flex-row justify-center items-center space-x-4">
-                <TouchableOpacity>
-                  <View>
-                    <Animatable.Image source={Face} />
-                  </View>
+                <TouchableOpacity
+                  className="self-end"
+                  onPress={() => {
+                    navigation.navigate("ForgotPassword");
+                  }}
+                >
+                  <Text className="font-light italic text-sm text-right underline mr-8 text-white">
+                    Quên mật khẩu
+                  </Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
-                  <View>
-                    <Animatable.Image source={Google} />
+                <View className="flex-row space-x-3 items-center justify-center">
+                  <View className="w-[25%] h-[1px] bg-[#F8F7FA]">
+                    <AntDesign name="arrowleft" size={40} />
                   </View>
-                </TouchableOpacity>
-              </View>
-              <View className="flex-row self-center space-x-2">
-                <Text className="text-sm text-white">
-                  Bạn chưa có tài khoản ?
-                </Text>
-                <View>
+                  <Text className="text-base" style={{ color: "white" }}>
+                    Hoặc đăng nhập với
+                  </Text>
+                  <View className="w-[25%] h-[1px] bg-[#F8F7FA] items-center"></View>
+                </View>
+                <View className="self-center w-[40%] h-[10%] bg-[#F8F7FA] mt-[10%] rounded-2xl flex-row justify-center items-center space-x-4">
+                  <TouchableOpacity>
+                    <View>
+                      <Animatable.Image source={Face} />
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <View>
+                      <Animatable.Image source={Google} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View className="flex-row self-center space-x-2">
+                  <Text className="text-sm text-white">
+                    Bạn chưa có tài khoản ?
+                  </Text>
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("Register");

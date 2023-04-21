@@ -247,16 +247,16 @@ const CalendarMain = () => {
       {
         text: "Hủy",
         onPress: () => {
-          console.log("No Pressed"); 
+          console.log("No Pressed");
         },
       },
     ]);
   };
 
-  const handleLogoutMoodle = async () => {  
+  const handleLogoutMoodle = async () => {
     console.log("Start logout");
     try {
-      await CalendarService.logOutMoodle(0); 
+      await CalendarService.logOutMoodle(0);
       navigation.navigate("BottomBar", {
         screen: "Lịch",
         params: {
@@ -291,8 +291,8 @@ const CalendarMain = () => {
   }
   return (
     <TouchableWithoutFeedback>
-      <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-[25%]">
+      <SafeAreaView className="flex-1 relative">
+        <View className="bg-[#3A4666] h-[30%]">
           <View className="flex-row justify-between items-center p-4">
             <View className="flex-row">
               {/* Chỗ để icon moodle */}
@@ -369,8 +369,7 @@ const CalendarMain = () => {
               },
             }}
             style={{
-              borderRadius: 12,
-              elevation: 4,
+              borderRadius: 8,
               margin: "5%",
               shadowColor: "#000000",
               shadowOffset: { width: 10, height: 10 },

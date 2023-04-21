@@ -21,8 +21,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Account_ChangePass = () => {
   const navigation = useNavigation();
   const [password, setPassword] = useState("");
-  const [repassword, setrePassword] = useState("");
-  const [newpassword, setNewPassword] = useState("");
+  const [reNewPassword, setReNewPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
 
   useLayoutEffect(() => {
@@ -39,18 +39,43 @@ const Account_ChangePass = () => {
   };
 
   const updatePassword = async () => {
-    const currentPassword = await AsyncStorage.getItem("password");
-    if (currentPassword != password) {
-      alert("Mật khẩu hiện tại không đúng");
+    if (password === "") {
+      Alert.alert("Đổi mật khẩu không thành công", "Vui lòng nhập mật khẩu");
+    } else if (newPassword === "") {
+      Alert.alert(
+        "Đổi mật khẩu không thành công",
+        "Vui lòng nhập mật khẩu mới. Mật khẩu bao gồm 6 kí tự"
+      );
+    } else if (reNewPassword === "") {
+      Alert.alert(
+        "Đổi mật khẩu không thành công",
+        "Vui lòng nhập nhập lại mật khẩu mới"
+      );
+    } else if (newPassword !== reNewPassword) {
+      Alert.alert(
+        "Đổi mật khẩu không thành công",
+        "Mật khẩu nhập lại không khớp"
+      );
     } else {
-      const status = await CredentialService.changePassword(newpassword);
-      //Navigate ở đây
-      navigation.navigate("BottomBar", {
-        screen: "Tài khoản",
-        params: {
-          screenAccount: "UpdateToMain",
-        },
-      });
+      const currentPassword = await AsyncStorage.getItem("password");
+      if (currentPassword != password) {
+        Alert.alert(
+          "Đổi mật khẩu không thành công",
+          "Mật khẩu không chính xác"
+        );
+      } else {
+        const status = await CredentialService.changePassword(newPassword);
+        console.log("as", status);
+        //Navigate ở đây
+        if (status) {
+          navigation.navigate("BottomBar", {
+            screen: "Tài khoản",
+            params: {
+              screenAccount: "UpdateToMain",
+            },
+          });
+        }
+      }
     }
   };
 
@@ -109,7 +134,7 @@ const Account_ChangePass = () => {
                 placeholderTextColor="#9A999B"
                 placeholder="Mật khẩu mới"
                 secureTextEntry={true}
-                value={newpassword}
+                value={newPassword}
                 onChangeText={(text) => setNewPassword(text)}
               ></TextInput>
             </View>
@@ -119,9 +144,9 @@ const Account_ChangePass = () => {
                 placeholderTextColor="#9A999B"
                 placeholder="Nhập lại mật khẩu"
                 secureTextEntry={true}
-                value={repassword}
+                value={reNewPassword}
                 onChangeText={(value) =>
-                  validateAndSet(value, newpassword, setrePassword)
+                  validateAndSet(value, newPassword, setReNewPassword)
                 }
               ></TextInput>
             </View>
