@@ -106,7 +106,7 @@ const ScheduleMain = () => {
           colIndex === 1 &&
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
             return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
@@ -120,7 +120,7 @@ const ScheduleMain = () => {
           colIndex === 2 &&
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
             return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
@@ -134,7 +134,7 @@ const ScheduleMain = () => {
           colIndex === 3 &&
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
             return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
@@ -148,7 +148,7 @@ const ScheduleMain = () => {
           colIndex === 4 &&
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
             return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
@@ -162,7 +162,7 @@ const ScheduleMain = () => {
           colIndex === 5 &&
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
             return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
@@ -176,7 +176,7 @@ const ScheduleMain = () => {
           colIndex === 6 &&
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
             return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
@@ -190,7 +190,7 @@ const ScheduleMain = () => {
           colIndex === 7 &&
           rowIndex >= lessonStartNumber + lessonStartNumber - 1
         ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex <= lessonEndNumber * 2 + 1) {
+          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
             return "#1CB0D4";
           } else if (
             lessonEndNumber % 1 === 0 &&
