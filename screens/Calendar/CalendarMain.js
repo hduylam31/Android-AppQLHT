@@ -356,7 +356,7 @@ const CalendarMain = () => {
           </View>
         </View>
         <View className="bg-[#F1F5F9] h-full"></View>
-        <View className="absolute w-full top-20 h-[85%]">
+        <View className="absolute w-full bottom-16 h-[85%]">
           <Calendar
             theme={{
               "stylesheet.calendar.header": {

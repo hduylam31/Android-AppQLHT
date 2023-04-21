@@ -442,7 +442,7 @@ const ScheduleMain = () => {
               position: "absolute",
               width: "95%",
             }}
-            className="self-center top-[19%]"
+            className="self-center bottom-[17%]"
           >
             <View>
               <Row
