@@ -12,12 +12,12 @@ const AppLoader = () => {
         loop
       />
       <View className="flex-row justify-center items-center mt-20 ml-7">
-        <Text className="text-2xl font-semibold -mr-4">Đang tải dữ liệu</Text>
+        <Text className="font-semibold text-lg -mr-2">Đang tải dữ liệu</Text>
         <Lottie
           style={{
-            height: 70,
+            height: 40,
             // backgroundColor: "red",
-            marginTop: 6,
+            marginTop: 4,
           }}
           source={require("../../assets/64108-loading-dots.json")}
           autoPlay
