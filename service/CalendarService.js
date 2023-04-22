@@ -89,6 +89,7 @@ class CalendarService {
 
   //Hàm reload moodle với token
   static async reloadMoodleCalendar() {
+    console.log("inside reloadMoodleCalendar function");
     try {
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
@@ -98,7 +99,8 @@ class CalendarService {
         const status = moodle.status;
         if (status === 1) {
           const token = moodle.token;
-          this.saveCalendarData(token);
+          await this.saveCalendarData(token);
+          console.log("save saveCalendarData done");
         }
       }
     } catch (error) {
@@ -112,6 +114,8 @@ class CalendarService {
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
       const moodleData = userDoc.data().calendar.moodle;
+      if(!moodleData) return;
+      console.log("unRegisterMoodleNotification......");
       const identifiers = [];
       moodleData.forEach((item) => {
         if (item.identifier != "") {
@@ -146,6 +150,7 @@ class CalendarService {
   }
 
   static async saveCalendarData(token) {
+    console.log("inside saveCalendarData function");
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
@@ -231,11 +236,11 @@ class CalendarService {
           const now = new Date(Date.now());
           // const now = new Date(2022,12-1, 1,0,0); //test 01/12/2022 do dữ liệu đang tháng 11 và 12/2022
           const diff = deadlineDate - now;
-          const twoHours = 2 * 60 * 60 * 1000;
           const threeDays = 60 * 1000 * 60 * 24 * 3;
+          const twoHours = 2 * 60 * 60 * 1000;
           let identifier = "";
-          if (diff > twoHours && diff <= threeDays) {
-            //2hours và chỉ lấy dữ liệu trong 2 ngày tiếp theo (test thì lấy 30 ngày)
+          if (diff > 0 && diff <= threeDays) {
+            //chỉ lấy dữ liệu trong 2 ngày tiếp theo (test thì lấy 30 ngày)
             const twoHoursBeforeDeadlineTime = new Date(
               deadlineDate.getTime() - twoHours
             );
@@ -375,7 +380,7 @@ class CalendarService {
         const now = new Date(Date.now());
         const diff = deadlineDate - now;
         const twoHours = 2 * 60 * 60 * 1000;
-        if (diff > twoHours) {
+        if (diff > 0) {
           //2hours
           const twoHoursBeforeDeadlineTime = new Date(
             deadlineDate.getTime() - twoHours
@@ -454,7 +459,7 @@ class CalendarService {
       const diff = deadlineDate - now;
       console.log("Diff: ", diff);
       const twoHours = 2 * 60 * 60 * 1000;
-      if (diff > twoHours) {
+      if (diff > 0 ) {
         //2hours
         const twoHoursBeforeDeadlineTime = new Date(
           deadlineDate.getTime() - twoHours
@@ -543,12 +548,6 @@ class CalendarService {
       const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
-
-        const moodleData = userDoc.data().calendar.moodle;
-        if(moodleData != undefined && moodleData.length > 0){
-          loadNotificationAndUpdateOne(moodleData, userRef, true);
-        }
-
         const userData = userDoc.data().calendar.user;
         if(moodleData != undefined && moodleData.length > 0){
           loadNotificationAndUpdateOne(userData, userRef, false);
@@ -585,7 +584,7 @@ class CalendarService {
         const diff = deadlineDate - now;
         const twoHours = 2 * 60 * 60 * 1000;
         const threeDays = 60 * 1000 * 60 * 24 * 3;
-        if (diff > twoHours && diff <= threeDays) {
+        if (diff > 0 && diff <= threeDays) {
           // > 2hours and < 2 day
           const twoHoursBeforeDeadlineTime = new Date(
             deadlineDate.getTime() - twoHours
@@ -644,6 +643,7 @@ class CalendarService {
       const data = userDoc.data();
       if(data.moodle.status == 1){
         await this.reloadMoodleCalendar();
+        console.log("reloadMoodleCalendar done");
         //Auto update Background
         if(!isAutoLogin){
           await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
