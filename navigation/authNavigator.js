@@ -1,5 +1,5 @@
 import react, { useState } from "react";
-import { View } from 'react-native';
+import { View } from "react-native";
 import {
   createStackNavigator,
   TransitionPresets,
@@ -28,6 +28,7 @@ import NoteList_Edit from "../screens/NoteList/NoteListEdit";
 import Account_ChangePass from "../screens/Account/Account_ChangePass";
 import Account_EditInfor from "../screens/Account/Account_EditInfor";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import UserManual_I from "../screens/Authentication/UserManual_I";
 
 const Auth = createNativeStackNavigator();
 
@@ -200,6 +201,15 @@ export default function AuthStack() {
       <Auth.Screen
         name="Account_EditInfor"
         component={Account_EditInfor}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="UserManual_I"
+        component={UserManual_I}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,
