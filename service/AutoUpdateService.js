@@ -8,7 +8,7 @@ class AutoUpdateService{
         console.log("Register Background Task");
         try {
             await BackgroundFetch.registerTaskAsync(Constants.BACKGROUND_FETCH_TASK, {
-                minimumInterval: 21600, // 6 hour
+                minimumInterval: 14400, // 6 hour
                 stopOnTerminate: false, // android only,
                 startOnBoot: true, // android only
             });

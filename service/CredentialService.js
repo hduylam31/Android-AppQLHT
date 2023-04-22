@@ -31,12 +31,13 @@ class CredentialService {
   };
 
   static handleLoginWithEmail = async (username, password) => {
-    await signInWithEmailAndPassword(auth, username, password)
+    return await signInWithEmailAndPassword(auth, username, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("Logged in with :", user.email);
         AsyncStorage.setItem("username", username);
         AsyncStorage.setItem("password", password);
+        return true;
       })
       .catch((error) => {
         console.log("Fail:");
@@ -53,6 +54,7 @@ class CredentialService {
           // Thông báo lỗi mặc định của Firebase Auth
           Alert.alert("Đăng nhập không thành công", error.message);
         }
+        return false;
       });
   };
 

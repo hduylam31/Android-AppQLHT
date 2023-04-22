@@ -36,39 +36,17 @@ const Login = () => {
   const [email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
-  const [isAutoLogin, setIsAutoLogin] = useState(false);
-
-  useEffect(() => {
-    if (isAutoLogin) {
-      auth.onAuthStateChanged(async (user) => {
-        console.log("checkuser");
-
-        if (user) {
-          setIsLoadingLogin(true);
-          console.log("isAutoLogin: ", isAutoLogin);
-          await CommonService.loadAllNotificationAndUpdateDB(isAutoLogin);
-          setIsLoadingLogin(false);
-          navigation.navigate("BottomBar");
-        }
-      });
-    } else {
-      auth.onAuthStateChanged(async (user) => {
-        console.log("checkuser");
-
-        if (user) {
-          setIsLoadingLogin(true);
-          await CommonService.loadAllNotificationAndUpdateDB(isAutoLogin);
-          setIsLoadingLogin(false);
-          navigation.navigate("BottomBar");
-        }
-      });
-    }
-  }, [isAutoLogin]);
 
   useEffect(() => {
     const autoLogin = async () => {
       const status = await CredentialService.autoLogin();
-      setIsAutoLogin(status);
+      if(status){
+        setIsLoadingLogin(true);
+        console.log("isAutoLogin: ", true);
+        await CommonService.loadAllNotificationAndUpdateDB(true);
+        setIsLoadingLogin(false);
+        navigation.navigate("BottomBar");
+      }
     };
     autoLogin();
   }, []);
@@ -79,7 +57,7 @@ const Login = () => {
     });
   });
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (email === "") {
       Alert.alert("Đăng nhập không thành công", "Vui lòng nhập Email");
     } else if (Password === "") {
@@ -92,7 +70,14 @@ const Login = () => {
         } else {
           account = email;
         }
-        CredentialService.handleLoginWithEmail(account, Password);
+        const status = await CredentialService.handleLoginWithEmail(account, Password);
+        if(status){
+          setIsLoadingLogin(true);
+          console.log("isAutoLogin: ", false);
+          await CommonService.loadAllNotificationAndUpdateDB(false);
+          setIsLoadingLogin(false);
+          navigation.navigate("BottomBar");
+        }
         console.log("Login OK");
       } catch (error) {
         console.log("Login fail with: ", error);
