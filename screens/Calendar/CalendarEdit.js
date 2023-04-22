@@ -212,7 +212,7 @@ const Calendar_Edit = () => {
               value={title}
               multiline={true}
               onChangeText={(text) => setTitle(text)}
-              className="w-[100%] bg-[#FFFFFF] pl-4 py-3 rounded-lg resize-none text-base "
+              className="w-[100%] bg-[#FFFFFF] px-4 py-3 rounded-lg resize-none text-base "
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
