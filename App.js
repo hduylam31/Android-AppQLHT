@@ -20,9 +20,10 @@ import storage from "@react-native-async-storage/async-storage";
 import * as Device from "expo-device";
 import CalendarService from "./service/CalendarService";
 import CredentialService from "./service/CredentialService";
-import * as TaskManager from 'expo-task-manager';
-import * as BackgroundFetch from 'expo-background-fetch';
+import * as TaskManager from "expo-task-manager";
+import * as BackgroundFetch from "expo-background-fetch";
 import Constants from "./domain/Constants";
+import UserManual_I from "./screens/Authentication/UserManual_I";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,14 +43,13 @@ Notifications.setNotificationHandler({
 TaskManager.defineTask(Constants.BACKGROUND_FETCH_TASK, async () => {
   console.log("Task set at ", new Date(Date.now()).toLocaleTimeString());
   try {
-      await CredentialService.autoLogin();
-      await CalendarService.reloadMoodleCalendar();
-      return BackgroundFetch.BackgroundFetchResult.NewData;
+    await CredentialService.autoLogin();
+    await CalendarService.reloadMoodleCalendar();
+    return BackgroundFetch.BackgroundFetchResult.NewData;
   } catch (error) {
-      console.log('AutoUpdateMoodle: ', error);
-      return BackgroundFetch.BackgroundFetchResult.Failed;
-  }   
-  
+    console.log("AutoUpdateMoodle: ", error);
+    return BackgroundFetch.BackgroundFetchResult.Failed;
+  }
 });
 
 export default function App() {
@@ -127,7 +127,7 @@ export default function App() {
       <NavigationContainer>
         <AuthStack />
         {/* <Stack.Navigator>
-          <Stack.Screen name="Schecule" component={Login_Moodle} />
+          <Stack.Screen name="Schecule" component={UserManual_I} />
         </Stack.Navigator> */}
       </NavigationContainer>
     </TailwindProvider>

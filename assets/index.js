@@ -10,3 +10,7 @@ export { default as forgotpw } from "./ForgotPW.png";
 export { default as moodleLogin } from "./moodleLogin.png";
 export { default as MoodleIcon } from "./MoodleIcon.png";
 export { default as CatImage } from "./emoji-cat.png";
+export { default as Manual_I } from "./Manual_I.png";
+export { default as Manual_II } from "./Manual_II.png";
+export { default as Manual_III } from "./Manual_III.png";
+export { default as Manual_IV } from "./Manual_IV.png";
