@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import React, { useLayoutEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useLayoutEffect, useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Manual_I, Manual_II, Manual_III, Manual_IV } from "../../assets";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
@@ -85,6 +85,15 @@ const UserManual_I = () => {
     ref?.current.scrollToOffset({ offset });
     setCurrentSlideIndex(lastSlideIndex);
   };
+  const route = useRoute();
+  const [isOpen, setIsOpen] = useState(false);
+  const { param1 } = route.params;
+  useEffect(() => {
+    if (param1 === "isOpen") {
+      setIsOpen(true);
+      console.log("isOpen", isOpen);
+    }
+  }, [route]);
 
   const Footer = () => {
     return (
@@ -123,16 +132,30 @@ const UserManual_I = () => {
           {currentSlideIndex == slides.length - 1 ? (
             <View style={{ height: 50 }}>
               {/* Press bắt đầu ở đây */}
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => {
-                  navigation.navigate("Login");
-                }}
-              >
-                <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-                  Bắt đầu
-                </Text>
-              </TouchableOpacity>
+              {isOpen && (
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={() => {
+                    navigation.navigate("Tài khoản");
+                  }}
+                >
+                  <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                    Xác nhận
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {!isOpen && (
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={() => {
+                    navigation.navigate("Login");
+                  }}
+                >
+                  <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                    Bắt đầu
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           ) : (
             <View style={{ flexDirection: "row" }}>

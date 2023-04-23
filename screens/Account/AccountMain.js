@@ -121,7 +121,7 @@ const AccountMain = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("UserManual_I");
+            navigation.navigate("UserManual_I", { param1: "isOpen" });
           }}
           className="mt-5 w-full h-16 px-4 bg-white justify-between items-center flex-row"
           style={{
@@ -132,7 +132,11 @@ const AccountMain = () => {
             elevation: 10,
           }}
         >
-          <Ionicons name="key-outline" size={30} color="black" />
+          <MaterialCommunityIcons
+            name="book-open-variant"
+            size={30}
+            color="black"
+          />
           <Text className="text-[#3A4666] text-base">Xem hướng dẫn</Text>
           <MaterialCommunityIcons
             name="chevron-right"
