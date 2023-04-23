@@ -65,7 +65,7 @@ const NoteListMain = () => {
 
   return (
     <TouchableWithoutFeedback>
-      <SafeAreaView className="flex-1">
+      <SafeAreaView className="flex-1 bg-white">
         <View className="bg-[#3A4666] h-[10%]">
           <View className="flex-row p-4 justify-between items-center">
             <View className="w-8 h-8 "></View>

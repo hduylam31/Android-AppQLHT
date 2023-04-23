@@ -18,37 +18,20 @@ import Login_Moodle from "../screens/Authentication/Login_Moodle";
 import Calendar_Add from "../screens/Calendar/CalendarAdd";
 import Calendar_Edit from "../screens/Calendar/CalendarEdit";
 import Done_Moodle from "../screens/Authentication/DoneMoodle";
-import { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import Schedule_Add from "../screens/Schedule/ScheduleAdd";
 import Schedule_Edit from "../screens/Schedule/ScheduleEdit";
-import MyScrollView from "../screens/NoteList/NoteListAdd";
 import NoteList_Add from "../screens/NoteList/NoteListAdd";
 import NoteList_Edit from "../screens/NoteList/NoteListEdit";
 import Account_ChangePass from "../screens/Account/Account_ChangePass";
 import Account_EditInfor from "../screens/Account/Account_EditInfor";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import UserManual_I from "../screens/Authentication/UserManual_I";
 
 const Auth = createNativeStackNavigator();
 
 export default function AuthStack() {
-  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
-
-  useEffect(() => {
-    AsyncStorage.getItem("alreadyLaunched").then((value) => {
-      if (value == null) {
-        AsyncStorage.setItem("alreadyLaunched", "true");
-        setIsFirstLaunch(true);
-      } else {
-        setIsFirstLaunch(false);
-      }
-    });
-  }, []);
-
-  const initialRoute = isFirstLaunch ? "GetStarted" : "Login";
   return (
-    <Auth.Navigator initialRouteName={initialRoute}>
+    <Auth.Navigator>
       <Auth.Screen
         name="GetStarted"
         component={GetStarted}
