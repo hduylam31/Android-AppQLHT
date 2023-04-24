@@ -112,7 +112,6 @@ const Schedule_Add = () => {
             </View>
             <TextInput
               placeholder="Môn học"
-              placeholderTextColor="#000000"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg text-base resize-none"
               style={{
                 shadowColor: "#000000",
@@ -129,7 +128,6 @@ const Schedule_Add = () => {
               <Text className="text-base">Địa điểm</Text>
               <TextInput
                 placeholder="Địa điểm"
-                placeholderTextColor="#000000"
                 className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg text-base resize-none"
                 style={{
                   shadowColor: "#000000",
@@ -146,7 +144,6 @@ const Schedule_Add = () => {
               <Text className="text-base">Ghi chú</Text>
               <TextInput
                 placeholder="Nội dung"
-                placeholderTextColor="#000000"
                 className="w-[100%] h-56 bg-[#FFFFFF] px-4 pt-4 text-base rounded-lg resize-none"
                 style={{
                   shadowColor: "#000000",
@@ -177,7 +174,15 @@ const Schedule_Add = () => {
                   notFoundText="Không tìm thấy kết quả"
                   searchPlaceholder="Tìm kiếm"
                   maxHeight={200}
-                  inputStyles={{ fontSize: 16, lineHeight: 24 }}
+                  inputStyles={[
+                    DayOfWeek !== ""
+                      ? { color: "#000000" }
+                      : { color: "#C7C7CD" },
+                    {
+                      fontSize: 16,
+                      lineHeight: 24,
+                    },
+                  ]}
                   boxStyles={{
                     height: 48,
                     borderWidth: 0,
@@ -209,7 +214,15 @@ const Schedule_Add = () => {
                     notFoundText="Không tìm thấy kết quả"
                     searchPlaceholder="Tìm kiếm"
                     maxHeight={200}
-                    inputStyles={{ fontSize: 16, lineHeight: 24 }}
+                    inputStyles={[
+                      selectedLessonStart !== ""
+                        ? { color: "#000000" }
+                        : { color: "#C7C7CD" },
+                      {
+                        fontSize: 16,
+                        lineHeight: 24,
+                      },
+                    ]}
                     boxStyles={{
                       height: 48,
                       borderWidth: 0,
@@ -234,7 +247,15 @@ const Schedule_Add = () => {
                     notFoundText="Không tìm thấy kết quả"
                     searchPlaceholder="Tìm kiếm"
                     maxHeight={200}
-                    inputStyles={{ fontSize: 16, lineHeight: 24 }}
+                    inputStyles={[
+                      selectedLessonEnd !== ""
+                        ? { color: "#000000" }
+                        : { color: "#C7C7CD" },
+                      {
+                        fontSize: 16,
+                        lineHeight: 24,
+                      },
+                    ]}
                     boxStyles={{
                       height: 48,
                       borderWidth: 0,

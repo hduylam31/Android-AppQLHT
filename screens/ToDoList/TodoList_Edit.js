@@ -36,10 +36,7 @@ const CategoryButton = ({ label, onPress, selected }) => (
 
 const LockedView = ({ isNotified, children }) => {
   return (
-    <View
-      className={`w-[49%] ${isNotified ? "" : "opacity-40"}`}
-      pointerEvents={isNotified ? "auto" : "none"}
-    >
+    <View className={`w-[49%]`} pointerEvents={isNotified ? "auto" : "none"}>
       {children}
     </View>
   );
@@ -285,12 +282,22 @@ const TodoList_Edit = () => {
                       elevation: 10,
                     }}
                   >
-                    <Text className="text-base">{textTime}</Text>
-                    <AntDesign name="clockcircleo" size={25} color="black" />
+                    <Text
+                      className={`text-base ${
+                        isNotified ? "" : "text-[#C7C7CD]"
+                      }`}
+                    >
+                      {textTime}
+                    </Text>
+                    <AntDesign
+                      name="clockcircleo"
+                      size={25}
+                      color={isNotified ? "black" : "#C7C7CD"}
+                    />
                   </View>
                 </TouchableOpacity>
               </LockedView>
-              <View className="items-start w-[49%]">
+              <View className="items-center w-[49%]">
                 <Switch
                   trackColor={{ false: "grey", true: "#3A4666" }}
                   thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}

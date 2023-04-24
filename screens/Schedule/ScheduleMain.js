@@ -323,33 +323,26 @@ const ScheduleMain = () => {
           </Text>
         </View>
         <View className="w-[1%] h-[70%] mt-[4%] mr-[3%] bg-[#FE8668] "></View>
-        <View className=" my-3">
-          <View className="flex-row">
-            <MaterialCommunityIcons
-              style={{ marginTop: 2 }}
-              name="bookmark"
-              size={18}
-              color="#23ACCD"
-            />
+        <View className="my-3">
+          <View className="flex-row justify-center items-center">
+            <MaterialCommunityIcons name="bookmark" size={18} color="#23ACCD" />
             <Text className="text-base font-medium ml-1">{item.title}</Text>
           </View>
-          <View className="flex-row">
+          <View className="flex-row items-center justify-start">
             <MaterialCommunityIcons
-              style={{ marginTop: 2 }}
               name="map-marker"
               size={16}
               color="#FF0404"
             />
-            <Text className="text-sm font-normal ml-1">{item.location}</Text>
+            <Text className="text-sm font-normal ml-2">{item.location}</Text>
           </View>
-          <View className="flex-row">
+          <View className="flex-row items-center justify-start">
             <MaterialCommunityIcons
-              style={{ marginTop: 2 }}
               name="file-document-outline"
               size={16}
               color="#3A4666"
             />
-            <Text className="text-sm font-normal ml-1">{item.note}</Text>
+            <Text className="text-sm font-normal ml-2">{item.note}</Text>
           </View>
         </View>
       </Animatable.View>
@@ -505,7 +498,7 @@ const ScheduleMain = () => {
           onPress={() => {
             navigation.navigate("Schedule_Add", dayLessonMap);
           }}
-          className="w-[90%] h-[5%] absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 5, height: 5 },

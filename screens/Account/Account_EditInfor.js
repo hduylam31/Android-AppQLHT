@@ -66,7 +66,7 @@ const Account_EditInfor = () => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
                 name="arrow-left"
-                size={40}
+                size={30}
                 color="white"
               />
             </TouchableOpacity>
@@ -124,7 +124,7 @@ const Account_EditInfor = () => {
             </Text>
           </TouchableOpacity>
         </ScrollView>
-        <View className="w-24 h-24 bg-[#A4AAB8] rounded-full justify-center items-center absolute top-10 left-[38%] right-0 bottom-0">
+        <View className="w-24 h-24 bg-[#A4AAB8] rounded-full justify-center items-center absolute top-5 left-[38%]">
           <MaterialCommunityIcons name="account" size={80} color="white" />
         </View>
       </SafeAreaView>

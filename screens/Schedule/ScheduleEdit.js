@@ -187,7 +187,6 @@ const Schedule_Edit = () => {
             </View>
             <TextInput
               placeholder="Môn học"
-              placeholderTextColor="#000000"
               className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg text-base resize-none"
               style={{
                 shadowColor: "#000000",
@@ -204,7 +203,6 @@ const Schedule_Edit = () => {
               <Text className="text-base">Địa điểm</Text>
               <TextInput
                 placeholder="Địa điểm"
-                placeholderTextColor="#000000"
                 className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg text-base resize-none"
                 style={{
                   shadowColor: "#000000",
@@ -221,7 +219,6 @@ const Schedule_Edit = () => {
               <Text className="text-base">Ghi chú</Text>
               <TextInput
                 placeholder="Nội dung"
-                placeholderTextColor="#000000"
                 className="w-[100%] h-56 bg-[#FFFFFF] px-4 pt-4 text-base rounded-lg resize-none"
                 style={{
                   shadowColor: "#000000",

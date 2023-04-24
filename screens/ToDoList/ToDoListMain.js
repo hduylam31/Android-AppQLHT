@@ -240,7 +240,7 @@ const ToDoListScreen = () => {
           />
         </View>
         {/* Công việc đã hòan thành */}
-        <Text className="text-lg font-semibold ml-[5%] my-[3%]">
+        <Text className="text-base font-semibold ml-[5%] my-[3%]">
           Hoàn thành
         </Text>
         <View
@@ -265,7 +265,7 @@ const ToDoListScreen = () => {
         onPress={() => {
           navigation.navigate("TodoList_Add");
         }}
-        className="w-[90%] h-[5%] absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+        className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         style={{
           shadowColor: "#000000",
           shadowOffset: { width: 5, height: 5 },
