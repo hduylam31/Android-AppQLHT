@@ -412,7 +412,7 @@ const ScheduleMain = () => {
         </View>
         <View className="bg-[#F1F5F9] w-full h-full">
           {!selectedTab && (
-            <View className="bg-[#F1F5F9] w-full h-[65%]">
+            <View className="bg-[#F1F5F9] w-full h-[60%]">
               <FlatList
                 data={data.filter(
                   (ScheduleData) => ScheduleData.DayOfWeek === selectedDayOfWeek

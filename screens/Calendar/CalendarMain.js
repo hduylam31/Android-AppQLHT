@@ -356,7 +356,7 @@ const CalendarMain = () => {
           </View>
         </View>
         <View className="bg-[#F1F5F9] h-full"></View>
-        <View className="absolute w-full bottom-16 h-[85%]">
+        <View className="absolute w-full bottom-20 h-[83%]">
           <Calendar
             theme={{
               "stylesheet.calendar.header": {
@@ -387,7 +387,7 @@ const CalendarMain = () => {
             // markedDates={marked}
             // {...props}
           />
-          <View className="max-h-64">
+          <View className="max-h-60">
             {filteredMoodle.length > 0 && (
               <View
                 className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
