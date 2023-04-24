@@ -59,7 +59,7 @@ class CredentialService {
   };
 
   static handleRegister = async (name, email, password) => {
-    await createUserWithEmailAndPassword(auth, email, password)
+    return await createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
         console.log("Successfully register withh", user.email);
@@ -93,7 +93,7 @@ class CredentialService {
   };
 
   static handleResetEmail = async (email) => {
-    await sendPasswordResetEmail(auth, email)
+    return await sendPasswordResetEmail(auth, email)
       .then(() => {
         console.log("Reset successfully");
         return true;
@@ -118,7 +118,7 @@ class CredentialService {
   };
   static changePassword = async (newPassword) => {
     const user = auth.currentUser;
-    await updatePassword(user, newPassword)
+    return await updatePassword(user, newPassword)
       .then(async () => {
         console.log("changePassword OK");
         await AsyncStorage.setItem("password", newPassword);

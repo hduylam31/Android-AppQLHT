@@ -144,6 +144,31 @@ const AccountMain = () => {
             color="black"
           />
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Account_Survey");
+          }}
+          className="mt-5 w-full h-16 px-4 bg-white justify-between items-center flex-row"
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: { width: 10, height: 10 },
+            shadowOpacity: 0.5,
+            shadowRadius: 10,
+            elevation: 10,
+          }}
+        >
+          <MaterialCommunityIcons
+            name="application-edit-outline"
+            size={30}
+            color="black"
+          />
+          <Text className="text-[#3A4666] text-base">Khảo sát, đánh giá</Text>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={30}
+            color="black"
+          />
+        </TouchableOpacity>
       </View>
 
       <View className="w-36 h-36 bg-[#A4AAB8] rounded-full justify-center items-center absolute bottom-[75%] left-[32%]">

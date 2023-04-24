@@ -68,12 +68,25 @@ const Account_ChangePass = () => {
         console.log("as", status);
         //Navigate ở đây
         if (status) {
-          navigation.navigate("BottomBar", {
-            screen: "Tài khoản",
-            params: {
-              screenAccount: "UpdateToMain",
+          Alert.alert("Thành công", "Mật khẩu đã được cập nhật", [
+            {
+              text: "Xác nhận",
+              onPress: () => {
+                navigation.navigate("BottomBar", {
+                  screen: "Tài khoản",
+                  params: {
+                    screenAccount: "UpdateToMain",
+                  },
+                });
+              },
             },
-          });
+            // {
+            //   text: "Hủy",
+            //   onPress: () => {
+            //     console.log("No Pressed");
+            //   },
+            // },
+          ]);
         }
       }
     }

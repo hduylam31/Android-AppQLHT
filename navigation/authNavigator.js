@@ -26,6 +26,7 @@ import Account_ChangePass from "../screens/Account/Account_ChangePass";
 import Account_EditInfor from "../screens/Account/Account_EditInfor";
 
 import UserManual_I from "../screens/Authentication/UserManual_I";
+import Account_Survey from "../screens/Account/Account_Survey";
 
 const Auth = createNativeStackNavigator();
 
@@ -193,6 +194,15 @@ export default function AuthStack() {
       <Auth.Screen
         name="UserManual_I"
         component={UserManual_I}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="Account_Survey"
+        component={Account_Survey}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,

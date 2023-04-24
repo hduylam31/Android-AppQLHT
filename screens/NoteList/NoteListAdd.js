@@ -44,7 +44,11 @@ const NoteList_Add = () => {
 
   const handleAddingUserNoteList = async () => {
     console.log("Start addingg");
-    if ((title !== "" && note !== "") || note === "" || title === "") {
+    if (
+      (title !== "" && note !== "") ||
+      (note === "" && title !== "") ||
+      (title === "" && note !== "")
+    ) {
       try {
         await NoteService.addNote(title, note);
         navigation.navigate("BottomBar", {

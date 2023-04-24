@@ -220,6 +220,7 @@ const Calendar_Edit = () => {
                 shadowRadius: 10,
                 elevation: 10,
               }}
+              editable={item.isMoodle === "true" ? false : true}
             ></TextInput>
 
             <View className="flex-row justify-between items-center">
@@ -239,7 +240,15 @@ const Calendar_Edit = () => {
                       elevation: 10,
                     }}
                   >
-                    <Text className="text-base ">{textDate}</Text>
+                    <Text
+                      className={`text-base ${
+                        item.isMoodle === "true"
+                          ? "text-[#666666] opacity-50"
+                          : ""
+                      }`}
+                    >
+                      {textDate}
+                    </Text>
                     <AntDesign name="calendar" size={25} color="black" />
                   </View>
                 </TouchableOpacity>
@@ -260,7 +269,15 @@ const Calendar_Edit = () => {
                       elevation: 10,
                     }}
                   >
-                    <Text className="text-base">{textTime}</Text>
+                    <Text
+                      className={`text-base ${
+                        item.isMoodle === "true"
+                          ? "text-[#666666] opacity-50"
+                          : ""
+                      }`}
+                    >
+                      {textTime}
+                    </Text>
                     <AntDesign name="clockcircleo" size={25} color="black" />
                   </View>
                 </TouchableOpacity>
@@ -304,6 +321,7 @@ const Calendar_Edit = () => {
               numberOfLines={8}
               onChangeText={(value) => setContent(value)}
               textAlignVertical="top"
+              editable={item.isMoodle === "true" ? false : true}
             ></TextInput>
           </LockedView>
           {/* Nút thêm */}
