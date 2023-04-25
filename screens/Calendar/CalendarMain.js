@@ -291,7 +291,7 @@ const CalendarMain = () => {
   }
   return (
     <TouchableWithoutFeedback>
-      <SafeAreaView className="flex-1 bg-[#23ACCD]">
+      <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-[30%]">
           <View className="flex-row justify-between items-center p-4">
             <View className="flex-row">

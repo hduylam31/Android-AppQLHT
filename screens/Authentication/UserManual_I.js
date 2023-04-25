@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   Image,
   StyleSheet,
   FlatList,
@@ -12,6 +11,7 @@ import {
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Manual_I, Manual_II, Manual_III, Manual_IV } from "../../assets";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 
@@ -205,7 +205,8 @@ const UserManual_I = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primary }}>
-      <StatusBar backgroundColor={COLORS.primary} />
+      {/* <View style={{ flex: 1, backgroundColor: COLORS.primary }}> */}
+      {/* <StatusBar backgroundColor={COLORS.primary} /> */}
       <FlatList
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}

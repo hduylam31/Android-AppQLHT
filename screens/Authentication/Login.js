@@ -29,7 +29,9 @@ import CredentialService from "../../service/CredentialService";
 import { auth } from "../../firebase";
 import CommonService from "../../service/CommonService";
 import AppLoader from "../AppLoader/AppLoader";
-import { StatusBar } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import GetStarted from "./GetStarted";
 
 const Login = () => {
   const navigation = useNavigation();
@@ -92,14 +94,38 @@ const Login = () => {
   const handlePress = () => {
     Keyboard.dismiss();
   };
-  if (isLoadingLogin) {
+
+  const handleDismiss = () => {
+    navigation.navigate("UserManual_I", { param1: "isNotOpen" });
+    setShowWelcomeScreen(false);
+    AsyncStorage.setItem("ShownWelcomeScreenFirst", "true");
+  };
+
+  const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
+
+  useEffect(() => {
+    // Kiểm tra xem đã hiển thị màn hình chào mừng lần đầu tiên hay chưa
+    async function checkIfShowWelcomeScreen() {
+      const hasShown = await AsyncStorage.getItem("ShownWelcomeScreenFirst");
+      console.log(hasShown);
+      if (hasShown !== null) {
+        setShowWelcomeScreen(false);
+      }
+    }
+    checkIfShowWelcomeScreen();
+  }, []);
+
+  console.log("showWelcomeScreen", showWelcomeScreen);
+  if (showWelcomeScreen) {
+    return <GetStarted onDismiss={handleDismiss} />;
+  } else if (isLoadingLogin) {
     return <AppLoader />;
   } else {
     return (
       <KeyboardAvoidingView>
         <TouchableWithoutFeedback onPress={handlePress}>
-          <SafeAreaView className="bg-[#23ACCD]">
-            <StatusBar className="bg-[#23ACCD]" />
+          <SafeAreaView>
+            {/* <StatusBar className="bg-[#23ACCD]" /> */}
             <View className="bg-[#23ACCD] flex-1 relative">
               {/* first section */}
               <View>

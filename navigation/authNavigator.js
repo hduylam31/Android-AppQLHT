@@ -32,7 +32,7 @@ const Auth = createNativeStackNavigator();
 
 export default function AuthStack() {
   return (
-    <Auth.Navigator>
+    <Auth.Navigator initialRouteName="Login">
       <Auth.Screen
         name="GetStarted"
         component={GetStarted}
