@@ -66,7 +66,7 @@ const Account_EditInfor = () => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
                 name="arrow-left"
-                size={30}
+                size={32}
                 color="white"
               />
             </TouchableOpacity>
@@ -110,7 +110,7 @@ const Account_EditInfor = () => {
           {/* Button thêm */}
           <TouchableOpacity
             onPress={handleSaveAccountInfo}
-            className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-96 mb-6 h-10 w-[90%] ml-[5%]"
+            className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-[440px] mb-6 h-10 w-[90%] ml-[5%]"
             style={{
               shadowColor: "#000000",
               shadowOffset: { width: 10, height: 10 },
@@ -124,7 +124,7 @@ const Account_EditInfor = () => {
             </Text>
           </TouchableOpacity>
         </ScrollView>
-        <View className="w-24 h-24 bg-[#A4AAB8] rounded-full justify-center items-center absolute top-5 left-[38%]">
+        <View className="w-24 h-24 bg-[#A4AAB8] rounded-full justify-center items-center absolute top-7 left-[38%]">
           <MaterialCommunityIcons name="account" size={80} color="white" />
         </View>
       </SafeAreaView>

@@ -153,6 +153,29 @@ const Schedule_Edit = () => {
     );
   };
 
+  //Kiểm tra bàn phím có đang xuất hiện khôngg
+  const [isKeyboardShowing, setIsKeyboardShowing] = useState(false);
+
+  const showKeyboard = () => {
+    setIsKeyboardShowing(true);
+  };
+
+  const hideKeyboard = () => {
+    setIsKeyboardShowing(false);
+  };
+
+  Keyboard.addListener("keyboardDidShow", showKeyboard);
+  Keyboard.addListener("keyboardDidHide", hideKeyboard);
+
+  //Xác định chiều cao TextInput Title
+  const [height, setHeight] = useState(0);
+
+  const onContentSizeChange = (event) => {
+    const { height } = event.nativeEvent.contentSize;
+    setHeight(height);
+  };
+  const newHeightTitle = height + 50;
+  const newHeightTitle2 = height + 140;
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -187,24 +210,26 @@ const Schedule_Edit = () => {
             </View>
             <TextInput
               placeholder="Môn học"
-              className="w-[100%] h-12 bg-[#FFFFFF] px-4 py-3 rounded-lg text-base resize-none"
+              className="w-[100%] bg-[#FFFFFF] px-4 py-3 rounded-lg text-base resize-none"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
                 shadowOpacity: 0.5,
                 shadowRadius: 10,
                 elevation: 10,
+                height: height,
               }}
               value={title}
               onChangeText={(text) => setTitle(text)}
               multiline={true}
+              onContentSizeChange={onContentSizeChange}
             ></TextInput>
 
             <View className="space-y-2 top-44">
               <Text className="text-base">Địa điểm</Text>
               <TextInput
                 placeholder="Địa điểm"
-                className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg text-base resize-none"
+                className="w-[100%] bg-[#FFFFFF] px-4 py-3 rounded-lg text-base resize-none"
                 style={{
                   shadowColor: "#000000",
                   shadowOffset: { width: 10, height: 10 },
@@ -214,6 +239,7 @@ const Schedule_Edit = () => {
                 }}
                 value={location}
                 onChangeText={(text) => setLocation(text)}
+                multiline={true}
               ></TextInput>
             </View>
             <View className="space-y-2 top-44">
@@ -236,7 +262,12 @@ const Schedule_Edit = () => {
               ></TextInput>
             </View>
 
-            <View className="space-y-2 absolute top-24 ml-[5%] w-full z-50">
+            <View
+              className="space-y-2 absolute ml-[5%] w-full z-50"
+              style={{
+                top: newHeightTitle,
+              }}
+            >
               <View className="flex-row">
                 <Text className="text-base">Ngày trong tuần</Text>
                 <Text className="text-base text-red-600"> (*)</Text>
@@ -267,7 +298,12 @@ const Schedule_Edit = () => {
                 />
               </View>
             </View>
-            <View className="space-y-2 absolute top-[184px] ml-[5%] w-full z-0">
+            <View
+              className="space-y-2 absolute ml-[5%] w-full z-0"
+              style={{
+                top: newHeightTitle2,
+              }}
+            >
               <View className="flex-row">
                 <Text className="text-base">Tiết</Text>
                 <Text className="text-base text-red-600"> (*)</Text>
@@ -326,22 +362,45 @@ const Schedule_Edit = () => {
               </View>
             </View>
           </View>
-          <TouchableOpacity
-            onPress={handleUpdateSchedule}
-            className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-56 mb-6 h-10 w-[90%] ml-[5%]"
-            style={{
-              shadowColor: "#000000",
-              shadowOffset: { width: 10, height: 10 },
-              shadowOpacity: 0.5,
-              shadowRadius: 10,
-              elevation: 10,
-            }}
-          >
-            <Text className="text-white text-center font-bold text-xl">
-              Lưu
-            </Text>
-          </TouchableOpacity>
+          <View className="h-52"></View>
+          {isKeyboardShowing && (
+            <TouchableOpacity
+              onPress={handleUpdateSchedule}
+              className="w-[90%] h-10 mb-6 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+            >
+              <Text className="text-white text-center font-bold text-base">
+                Lưu
+              </Text>
+            </TouchableOpacity>
+          )}
         </ScrollView>
+
+        {!isKeyboardShowing && (
+          <View className="w-full h-16 bg-[#F1F5F9]">
+            <TouchableOpacity
+              onPress={handleUpdateSchedule}
+              className="w-[90%] h-10 absolute bottom-6 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+            >
+              <Text className="text-white text-center font-bold text-base">
+                Lưu
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

@@ -43,10 +43,10 @@ Notifications.setNotificationHandler({
 TaskManager.defineTask(Constants.BACKGROUND_FETCH_TASK, async () => {
   console.log("Task set at ", new Date(Date.now()).toLocaleTimeString());
   try {
-      await CredentialService.autoLogin();
-      await CalendarService.unRegisterMoodleNotification();
-      await CalendarService.reloadMoodleCalendar();
-      return BackgroundFetch.BackgroundFetchResult.NewData;
+    await CredentialService.autoLogin();
+    await CalendarService.unRegisterMoodleNotification();
+    await CalendarService.reloadMoodleCalendar();
+    return BackgroundFetch.BackgroundFetchResult.NewData;
   } catch (error) {
     console.log("AutoUpdateMoodle: ", error);
     return BackgroundFetch.BackgroundFetchResult.Failed;

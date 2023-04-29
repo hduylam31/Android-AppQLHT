@@ -187,6 +187,19 @@ const TodoList_Edit = () => {
     Keyboard.dismiss();
   };
 
+  const [isKeyboardShowing, setIsKeyboardShowing] = useState(false);
+
+  const showKeyboard = () => {
+    setIsKeyboardShowing(true);
+  };
+
+  const hideKeyboard = () => {
+    setIsKeyboardShowing(false);
+  };
+
+  Keyboard.addListener("keyboardDidShow", showKeyboard);
+  Keyboard.addListener("keyboardDidHide", hideKeyboard);
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -209,6 +222,7 @@ const TodoList_Edit = () => {
             </TouchableOpacity>
           </View>
         </View>
+
         <ScrollView className="bg-[#F1F5F9]">
           <View className="px-5 pt-[4%] space-y-2">
             <View className="flex-row">
@@ -218,8 +232,9 @@ const TodoList_Edit = () => {
             <TextInput
               placeholder="Tiêu đề"
               value={title}
+              multiline={true}
               onChangeText={(text) => setTitle(text)}
-              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg resize-none text-base"
+              className="w-[100%] bg-[#FFFFFF] px-4 py-3 rounded-lg resize-none text-base"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
@@ -297,13 +312,16 @@ const TodoList_Edit = () => {
                   </View>
                 </TouchableOpacity>
               </LockedView>
-              <View className="items-center w-[49%]">
+              <View className="items-start w-[49%]">
                 <Switch
                   trackColor={{ false: "grey", true: "#3A4666" }}
                   thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
                   value={isNotified}
                   onValueChange={(newValue) => setIsNotified(newValue)}
-                  style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                  style={{
+                    transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+                    marginLeft: 12,
+                  }}
                 ></Switch>
               </View>
 
@@ -323,7 +341,7 @@ const TodoList_Edit = () => {
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-60 bg-[#FFFFFF] px-4 pt-4 rounded-lg resize-none text-base"
+              className="w-[100%] h-60 bg-[#FFFFFF] px-4 py-3 rounded-lg resize-none text-base"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
@@ -333,27 +351,49 @@ const TodoList_Edit = () => {
               }}
               multiline={true}
               value={value}
-              numberOfLines={4}
               onChangeText={onChangeText}
               textAlignVertical="top"
             ></TextInput>
           </View>
-          <TouchableOpacity
-            onPress={handleUpdateTodoList}
-            className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-28 mb-6 h-10 w-[90%] ml-[5%]"
-            style={{
-              shadowColor: "#000000",
-              shadowOffset: { width: 10, height: 10 },
-              shadowOpacity: 0.5,
-              shadowRadius: 10,
-              elevation: 10,
-            }}
-          >
-            <Text className="text-white text-center font-bold text-xl">
-              Lưu
-            </Text>
-          </TouchableOpacity>
+          <View className="h-20"></View>
+          {isKeyboardShowing && (
+            <TouchableOpacity
+              onPress={handleUpdateTodoList}
+              className="w-[90%] h-10 mb-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+            >
+              <Text className="text-white text-center font-bold text-base">
+                Lưu
+              </Text>
+            </TouchableOpacity>
+          )}
         </ScrollView>
+
+        {!isKeyboardShowing && (
+          <View className="w-full h-16 bg-[#F1F5F9]">
+            <TouchableOpacity
+              onPress={handleUpdateTodoList}
+              className="w-[90%] h-10 absolute bottom-6 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+            >
+              <Text className="text-white text-center font-bold text-base">
+                Lưu
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

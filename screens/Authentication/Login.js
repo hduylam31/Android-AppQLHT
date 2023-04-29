@@ -32,6 +32,7 @@ import AppLoader from "../AppLoader/AppLoader";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GetStarted from "./GetStarted";
+import LoginLoader from "../AppLoader/LoginLoader";
 
 const Login = () => {
   const navigation = useNavigation();
@@ -98,7 +99,7 @@ const Login = () => {
   const handleDismiss = () => {
     navigation.navigate("UserManual_I", { param1: "isNotOpen" });
     setShowWelcomeScreen(false);
-    AsyncStorage.setItem("ShownWelcomeScreenFirst", "true");
+    AsyncStorage.setItem("ShownWelcomeApp", "true");
   };
 
   const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
@@ -106,7 +107,7 @@ const Login = () => {
   useEffect(() => {
     // Kiểm tra xem đã hiển thị màn hình chào mừng lần đầu tiên hay chưa
     async function checkIfShowWelcomeScreen() {
-      const hasShown = await AsyncStorage.getItem("ShownWelcomeScreenFirst");
+      const hasShown = await AsyncStorage.getItem("ShownWelcomeApp");
       console.log(hasShown);
       if (hasShown !== null) {
         setShowWelcomeScreen(false);
@@ -115,11 +116,11 @@ const Login = () => {
     checkIfShowWelcomeScreen();
   }, []);
 
-  console.log("showWelcomeScreen", showWelcomeScreen);
+  console.log("showWelcome", showWelcomeScreen);
   if (showWelcomeScreen) {
     return <GetStarted onDismiss={handleDismiss} />;
   } else if (isLoadingLogin) {
-    return <AppLoader />;
+    return <LoginLoader />;
   } else {
     return (
       <KeyboardAvoidingView>

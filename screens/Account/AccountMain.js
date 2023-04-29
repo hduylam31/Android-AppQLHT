@@ -78,9 +78,15 @@ const AccountMain = () => {
     <SafeAreaView className="flex-1">
       <View className="bg-[#3A4666] h-[15%]"></View>
       <View className="h-full bg-[#F1F5F9] items-center">
-        <Text className="mt-[25%] text-[#3A4666] text-xl font-bold">
-          {name}
-        </Text>
+        <View className="w-[70%] mt-[25%] items-center justify-center">
+          <Text
+            className=" text-[#3A4666] text-xl font-bold "
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {name}
+          </Text>
+        </View>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("Account_EditInfor", { name });

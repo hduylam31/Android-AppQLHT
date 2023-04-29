@@ -167,7 +167,19 @@ const Calendar_Edit = () => {
     ]);
   };
 
-  console.log(item.isMoodle);
+  //Kiểm tra bàn phím có đang xuất hiện khôngg
+  const [isKeyboardShowing, setIsKeyboardShowing] = useState(false);
+
+  const showKeyboard = () => {
+    setIsKeyboardShowing(true);
+  };
+
+  const hideKeyboard = () => {
+    setIsKeyboardShowing(false);
+  };
+
+  Keyboard.addListener("keyboardDidShow", showKeyboard);
+  Keyboard.addListener("keyboardDidHide", hideKeyboard);
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
@@ -324,11 +336,12 @@ const Calendar_Edit = () => {
               editable={item.isMoodle === "true" ? false : true}
             ></TextInput>
           </LockedView>
+          <View className="h-20"></View>
           {/* Nút thêm */}
-          {item.isMoodle === "false" ? (
+          {item.isMoodle === "false" && isKeyboardShowing ? (
             <TouchableOpacity
               onPress={handleUpdateCalendar}
-              className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-16 mb-6 h-10 w-[90%] ml-[5%]"
+              className="bg-[#3A4666] rounded-2xl flex items-center justify-center mb-6 h-10 w-[90%] ml-[5%]"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
@@ -337,14 +350,33 @@ const Calendar_Edit = () => {
                 elevation: 10,
               }}
             >
-              <Text className="text-white text-center font-bold text-xl">
+              <Text className="text-white text-center font-bold text-base">
                 Lưu
               </Text>
             </TouchableOpacity>
           ) : (
-            <View className="mt-16 mb-6"></View>
+            <View className="mt-10 mb-6"></View>
           )}
         </ScrollView>
+        {!isKeyboardShowing && item.isMoodle === "false" && (
+          <View className="w-full h-16 bg-[#F1F5F9]">
+            <TouchableOpacity
+              onPress={handleUpdateCalendar}
+              className="w-[90%] h-10 absolute bottom-6 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+            >
+              <Text className="text-white text-center font-bold text-base">
+                Lưu
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
