@@ -317,32 +317,50 @@ const ScheduleMain = () => {
         }}
       >
         <View className="flex justify-center items-center w-[15%] ">
-          <Text className="text-base font-medium">Tiết</Text>
-          <Text className="text-base font-medium">
+          <Text className="text-sm font-medium">Tiết</Text>
+          <Text className="text-sm font-medium">
             {item.lessonStart} - {item.lessonEnd}
           </Text>
         </View>
         <View className="w-[1%] h-[70%] mt-[4%] mr-[3%] bg-[#FE8668] "></View>
-        <View className="my-3">
-          <View className="flex-row justify-center items-center">
-            <MaterialCommunityIcons name="bookmark" size={18} color="#23ACCD" />
-            <Text className="text-base font-medium ml-1">{item.title}</Text>
+        <View className="my-3 w-[75%]">
+          <View className="flex-row justify-start items-center">
+            <MaterialCommunityIcons name="bookmark" size={17} color="#23ACCD" />
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              className="text-base font-medium ml-1"
+            >
+              {item.title}
+            </Text>
           </View>
           <View className="flex-row items-center justify-start">
             <MaterialCommunityIcons
               name="map-marker"
-              size={16}
+              size={17}
               color="#FF0404"
             />
-            <Text className="text-sm font-normal ml-2">{item.location}</Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              className="text-sm font-normal ml-1"
+            >
+              {item.location}
+            </Text>
           </View>
           <View className="flex-row items-center justify-start">
             <MaterialCommunityIcons
               name="file-document-outline"
-              size={16}
+              size={17}
               color="#3A4666"
             />
-            <Text className="text-sm font-normal ml-2">{item.note}</Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              className="text-sm font-normal ml-1"
+            >
+              {item.note}
+            </Text>
           </View>
         </View>
       </Animatable.View>
@@ -353,7 +371,7 @@ const ScheduleMain = () => {
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1 relative">
         <View className="h-[30%] bg-[#3A4666]">
-          <View className="flex-row justify-between p-4">
+          <View className="flex-row justify-between items-center p-4">
             <View className="w-8 h-8 "></View>
             <Text className="text-white text-2xl font-bold">
               Thời khóa biểu

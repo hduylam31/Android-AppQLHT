@@ -112,7 +112,8 @@ const Schedule_Add = () => {
             </View>
             <TextInput
               placeholder="Môn học"
-              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg text-base resize-none"
+              multiline={true}
+              className="w-[100%] h-12 bg-[#FFFFFF] px-4 py-3 rounded-lg text-base resize-none"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },

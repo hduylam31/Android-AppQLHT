@@ -187,7 +187,7 @@ const Schedule_Edit = () => {
             </View>
             <TextInput
               placeholder="Môn học"
-              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg text-base resize-none"
+              className="w-[100%] h-12 bg-[#FFFFFF] px-4 py-3 rounded-lg text-base resize-none"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
@@ -197,6 +197,7 @@ const Schedule_Edit = () => {
               }}
               value={title}
               onChangeText={(text) => setTitle(text)}
+              multiline={true}
             ></TextInput>
 
             <View className="space-y-2 top-44">

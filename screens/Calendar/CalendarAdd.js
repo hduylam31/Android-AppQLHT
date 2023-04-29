@@ -141,7 +141,7 @@ const Calendar_Add = () => {
             </View>
             <TextInput
               placeholder="Tiêu đề"
-              className="w-[100%] h-12 bg-[#FFFFFF] pl-4 rounded-lg resize-none text-base"
+              className="w-[100%] h-12 bg-[#FFFFFF] px-4 py-3 rounded-lg resize-none text-base"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
