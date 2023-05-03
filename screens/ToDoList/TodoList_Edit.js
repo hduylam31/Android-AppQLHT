@@ -286,30 +286,29 @@ const TodoList_Edit = () => {
             </View>
             <View className="flex-row items-center">
               <LockedView isNotified={isNotified}>
-                <TouchableOpacity onPress={() => showMode("time")}>
-                  <View
-                    className=" bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3"
-                    style={{
-                      shadowColor: "#000000",
-                      shadowOffset: { width: 10, height: 10 },
-                      shadowOpacity: 0.5,
-                      shadowRadius: 10,
-                      elevation: 10,
-                    }}
+                <TouchableOpacity
+                  onPress={() => showMode("time")}
+                  className=" bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3"
+                  style={{
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 10, height: 10 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 10,
+                    elevation: 10,
+                  }}
+                >
+                  <Text
+                    className={`text-base ${
+                      isNotified ? "" : "text-[#C7C7CD]"
+                    }`}
                   >
-                    <Text
-                      className={`text-base ${
-                        isNotified ? "" : "text-[#C7C7CD]"
-                      }`}
-                    >
-                      {textTime}
-                    </Text>
-                    <AntDesign
-                      name="clockcircleo"
-                      size={25}
-                      color={isNotified ? "black" : "#C7C7CD"}
-                    />
-                  </View>
+                    {textTime}
+                  </Text>
+                  <AntDesign
+                    name="clockcircleo"
+                    size={25}
+                    color={isNotified ? "black" : "#C7C7CD"}
+                  />
                 </TouchableOpacity>
               </LockedView>
               <View className="items-start w-[49%]">

@@ -384,7 +384,7 @@ const ScheduleMain = () => {
               />
             </TouchableOpacity>
           </View>
-          <View className="justify-center items-center mb-3">
+          <View className="justify-center items-center">
             <View className="w-[45%] h-7 border-1 rounded-xl bg-[#9CA2B2] flex-row items-center">
               <TouchableOpacity
                 onPress={() => {
@@ -409,22 +409,18 @@ const ScheduleMain = () => {
             </View>
           </View>
           {!selectedTab && (
-            <View className="bg-white mt-[3%] h-[35%] w-[90%] ml-[5%] rounded-xl">
-              <View className="h-full w-[90%] flex-row justify-between items-center ml-[5%]">
-                {dayOfWeek.map((day) => (
-                  <TouchableOpacity
-                    key={day}
-                    onPress={() => onDayPress(day)}
-                    className={`justify-center items-center h-[35%] w-[11%] rounded-lg ${
-                      day === selectedDayOfWeek
-                        ? "bg-[#FE8668]"
-                        : "bg-[#f9c2b4]"
-                    }`}
-                  >
-                    <Text>{day}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+            <View className="bg-white mt-6 h-[35%] w-[90%] ml-[5%] rounded-xl px-4 flex-row justify-between items-center">
+              {dayOfWeek.map((day) => (
+                <TouchableOpacity
+                  key={day}
+                  onPress={() => onDayPress(day)}
+                  className={`justify-center items-center h-[35%] w-[11%] rounded-lg ${
+                    day === selectedDayOfWeek ? "bg-[#FE8668]" : "bg-[#f9c2b4]"
+                  }`}
+                >
+                  <Text>{day}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
           )}
         </View>

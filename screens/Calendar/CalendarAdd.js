@@ -174,20 +174,19 @@ const Calendar_Add = () => {
                   <Text className="text-base">Ngày</Text>
                   <Text className="text-base text-red-600"> (*)</Text>
                 </View>
-                <TouchableOpacity onPress={() => showMode("date")}>
-                  <View
-                    className=" bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3"
-                    style={{
-                      shadowColor: "#000000",
-                      shadowOffset: { width: 10, height: 10 },
-                      shadowOpacity: 0.5,
-                      shadowRadius: 10,
-                      elevation: 10,
-                    }}
-                  >
-                    <Text className="text-base ">{textDate}</Text>
-                    <AntDesign name="calendar" size={25} color="black" />
-                  </View>
+                <TouchableOpacity
+                  onPress={() => showMode("date")}
+                  className=" bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3"
+                  style={{
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 10, height: 10 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 10,
+                    elevation: 10,
+                  }}
+                >
+                  <Text className="text-base ">{textDate}</Text>
+                  <AntDesign name="calendar" size={25} color="black" />
                 </TouchableOpacity>
               </View>
               <View className="space-y-2 w-[49%]">
@@ -195,20 +194,19 @@ const Calendar_Add = () => {
                   <Text className="text-base">Giờ</Text>
                   <Text className="text-base text-red-600"> (*)</Text>
                 </View>
-                <TouchableOpacity onPress={() => showMode("time")}>
-                  <View
-                    className="bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3 "
-                    style={{
-                      shadowColor: "#000000",
-                      shadowOffset: { width: 10, height: 10 },
-                      shadowOpacity: 0.5,
-                      shadowRadius: 10,
-                      elevation: 10,
-                    }}
-                  >
-                    <Text className="text-base">{textTime}</Text>
-                    <AntDesign name="clockcircleo" size={25} color="black" />
-                  </View>
+                <TouchableOpacity
+                  onPress={() => showMode("time")}
+                  className="bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3 "
+                  style={{
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 10, height: 10 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 10,
+                    elevation: 10,
+                  }}
+                >
+                  <Text className="text-base">{textTime}</Text>
+                  <AntDesign name="clockcircleo" size={25} color="black" />
                 </TouchableOpacity>
               </View>
 
