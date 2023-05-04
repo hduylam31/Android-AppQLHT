@@ -1,3 +1,4 @@
+import { DataTimeNoti, DataCategoriTimeNoti } from "./DataOfDropDown";
 import {
   View,
   Text,
@@ -17,6 +18,7 @@ import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
+import { Dropdown } from "react-native-element-dropdown";
 
 const LockedView = ({ isMoodle, children }) => {
   return (
@@ -181,6 +183,13 @@ const Calendar_Edit = () => {
   Keyboard.addListener("keyboardDidShow", showKeyboard);
   Keyboard.addListener("keyboardDidHide", hideKeyboard);
 
+  const [timeNoti, setTimeNoti] = useState(null);
+  const [customTimeNoti, setCustomTimeNoti] = useState("1");
+  const [numberTimeNoti, setNumberTimeNoti] = useState("5");
+
+  console.log("cus", customTimeNoti);
+  console.log("number", numberTimeNoti);
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -304,8 +313,10 @@ const Calendar_Edit = () => {
                 />
               )}
             </View>
+          </LockedView>
+          <View className="px-5 space-y-2">
             <Text className="text-base">Bật thông báo</Text>
-            <View className="items-start">
+            <View className="items-start" pointerEvents="auto">
               <Switch
                 trackColor={{ false: "grey", true: "#3A4666" }}
                 thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
@@ -314,11 +325,110 @@ const Calendar_Edit = () => {
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               />
             </View>
+            <Text className="text-base">Thời gian thông báo</Text>
+            <Dropdown
+              disable={isNotified ? false : true}
+              style={{
+                backgroundColor: "#FFFFFF",
+                height: 48,
+                borderRadius: 8,
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+              containerStyle={{
+                borderRadius: 8,
+              }}
+              itemContainerStyle={{
+                borderRadius: 8,
+                height: 48,
+              }}
+              itemTextStyle={{
+                height: 48,
+              }}
+              placeholderStyle={{
+                fontSize: 16,
+                paddingLeft: 16,
+                color: "#C7C7CD",
+              }}
+              selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+              iconStyle={{ marginRight: 16 }}
+              data={DataTimeNoti}
+              maxHeight={200}
+              labelField="key"
+              valueField="value"
+              placeholder="Thời gian thông báo"
+              value={isNotified ? timeNoti : ""}
+              onChange={(item) => {
+                setTimeNoti(item.value);
+              }}
+            />
+            {timeNoti === "6" && isNotified ? (
+              <View className="flex-row justify-between">
+                <TextInput
+                  placeholder="Nhập số"
+                  keyboardType="numeric"
+                  className="w-[48%] bg-[#FFFFFF] px-4 py-2 rounded-lg resize-none text-base"
+                  style={{
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 10, height: 10 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 10,
+                    elevation: 10,
+                  }}
+                  value={numberTimeNoti}
+                  onChangeText={(text) => setNumberTimeNoti(text)}
+                ></TextInput>
+                <Dropdown
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    height: 48,
+                    width: "48%",
+                    borderRadius: 8,
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 10, height: 10 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 10,
+                    elevation: 10,
+                  }}
+                  containerStyle={{
+                    borderRadius: 8,
+                  }}
+                  itemContainerStyle={{
+                    borderRadius: 8,
+                    height: 48,
+                  }}
+                  itemTextStyle={{
+                    height: 48,
+                  }}
+                  placeholderStyle={{
+                    fontSize: 16,
+                    paddingLeft: 16,
+                    color: "#C7C7CD",
+                  }}
+                  selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+                  iconStyle={{ marginRight: 16 }}
+                  data={DataCategoriTimeNoti}
+                  maxHeight={200}
+                  labelField="key"
+                  valueField="value"
+                  value={customTimeNoti}
+                  onChange={(item) => {
+                    setCustomTimeNoti(item.value);
+                  }}
+                />
+              </View>
+            ) : (
+              <View></View>
+            )}
+
             {/* Nội dung phần ghi chú */}
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-72 bg-[#FFFFFF] px-4 pt-4  text-base rounded-lg resize-none"
+              className="w-[100%] h-52 bg-[#FFFFFF] px-4 pt-4  text-base rounded-lg resize-none"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
@@ -333,10 +443,11 @@ const Calendar_Edit = () => {
               textAlignVertical="top"
               editable={item.isMoodle === "true" ? false : true}
             ></TextInput>
-          </LockedView>
-          <View className="h-20"></View>
+
+            <View className="h-20"></View>
+          </View>
           {/* Nút thêm */}
-          {item.isMoodle === "false" && isKeyboardShowing ? (
+          {isKeyboardShowing ? (
             <TouchableOpacity
               onPress={handleUpdateCalendar}
               className="bg-[#3A4666] rounded-2xl flex items-center justify-center mb-6 h-10 w-[90%] ml-[5%]"
@@ -356,7 +467,7 @@ const Calendar_Edit = () => {
             <View className="mt-10 mb-6"></View>
           )}
         </ScrollView>
-        {!isKeyboardShowing && item.isMoodle === "false" && (
+        {!isKeyboardShowing && (
           <View className="w-full h-16 bg-[#F1F5F9]">
             <TouchableOpacity
               onPress={handleUpdateCalendar}

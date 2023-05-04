@@ -1,3 +1,4 @@
+import { DataTimeNoti, DataCategoriTimeNoti } from "./DataOfDropDown";
 import {
   View,
   Text,
@@ -18,6 +19,7 @@ import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
 import moment from "moment";
+import { Dropdown } from "react-native-element-dropdown";
 
 const Calendar_Add = () => {
   const navigation = useNavigation();
@@ -122,6 +124,13 @@ const Calendar_Add = () => {
     }
   };
 
+  const [timeNoti, setTimeNoti] = useState(null);
+  const [customTimeNoti, setCustomTimeNoti] = useState("1");
+  const [numberTimeNoti, setNumberTimeNoti] = useState("5");
+
+  console.log("cus", customTimeNoti);
+  console.log("number", numberTimeNoti);
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -167,7 +176,6 @@ const Calendar_Add = () => {
               value={title}
               onChangeText={(text) => setTitle(text)}
             ></TextInput>
-
             <View className="flex-row justify-between items-center">
               <View className="space-y-2 w-[49%]">
                 <View className="flex-row">
@@ -221,7 +229,6 @@ const Calendar_Add = () => {
                 />
               )}
             </View>
-
             <Text className="text-base">Bật thông báo</Text>
             <View className="items-start">
               <Switch
@@ -232,13 +239,108 @@ const Calendar_Add = () => {
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               />
             </View>
-
+            <Text className="text-base">Thời gian thông báo</Text>
+            <Dropdown
+              disable={isNotified ? false : true}
+              style={{
+                backgroundColor: "#FFFFFF",
+                height: 48,
+                borderRadius: 8,
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+              containerStyle={{
+                borderRadius: 8,
+              }}
+              itemContainerStyle={{
+                borderRadius: 8,
+                height: 48,
+              }}
+              itemTextStyle={{
+                height: 48,
+              }}
+              placeholderStyle={{
+                fontSize: 16,
+                paddingLeft: 16,
+                color: "#C7C7CD",
+              }}
+              selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+              iconStyle={{ marginRight: 16 }}
+              data={DataTimeNoti}
+              maxHeight={200}
+              labelField="key"
+              valueField="value"
+              placeholder="Thời gian thông báo"
+              value={isNotified ? timeNoti : ""}
+              onChange={(item) => {
+                setTimeNoti(item.value);
+              }}
+            />
+            {timeNoti === "6" && isNotified ? (
+              <View className="flex-row justify-between">
+                <TextInput
+                  keyboardType="numeric"
+                  className="w-[48%] bg-[#FFFFFF] px-4 py-2 rounded-lg resize-none text-base"
+                  style={{
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 10, height: 10 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 10,
+                    elevation: 10,
+                  }}
+                  value={numberTimeNoti}
+                  onChangeText={(text) => setNumberTimeNoti(text)}
+                ></TextInput>
+                <Dropdown
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    height: 48,
+                    width: "48%",
+                    borderRadius: 8,
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 10, height: 10 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 10,
+                    elevation: 10,
+                  }}
+                  containerStyle={{
+                    borderRadius: 8,
+                  }}
+                  itemContainerStyle={{
+                    borderRadius: 8,
+                    height: 48,
+                  }}
+                  itemTextStyle={{
+                    height: 48,
+                  }}
+                  placeholderStyle={{
+                    fontSize: 16,
+                    paddingLeft: 16,
+                    color: "#C7C7CD",
+                  }}
+                  selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+                  iconStyle={{ marginRight: 16 }}
+                  data={DataCategoriTimeNoti}
+                  maxHeight={200}
+                  labelField="key"
+                  valueField="value"
+                  value={customTimeNoti}
+                  onChange={(item) => {
+                    setCustomTimeNoti(item.value);
+                  }}
+                />
+              </View>
+            ) : (
+              <View></View>
+            )}
             {/* Nội dung phần ghi chú */}
-
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-72 bg-[#FFFFFF] px-4 pt-4 rounded-lg resize-none text-base"
+              className="w-[100%] h-52 bg-[#FFFFFF] px-4 pt-4 rounded-lg resize-none text-base"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },

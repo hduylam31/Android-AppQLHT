@@ -286,6 +286,10 @@ const CalendarMain = () => {
     ]);
   };
 
+  const [showExtends, setShowExtends] = useState(false);
+
+  console.log("ShowExtend", showExtends);
+
   if (isLoading) {
     return <AppLoader />;
   }
@@ -343,16 +347,57 @@ const CalendarMain = () => {
             </View>
 
             {/* Chỗ để iconSearch */}
-            <View className="flex-row">
-              <View className="w-8 h-8"></View>
-              <TouchableOpacity>
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={32}
-                  color="white"
-                />
+            <TouchableOpacity onPress={() => setShowExtends(true)}>
+              <MaterialCommunityIcons
+                name="dots-vertical"
+                size={32}
+                color="white"
+              />
+            </TouchableOpacity>
+            <Modal
+              visible={showExtends}
+              transparent={true}
+              onRequestClose={() => setShowExtends(false)}
+            >
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  backgroundColor: "rgba(0,0,0,0.3)",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-end",
+                  paddingRight: 15,
+                  paddingTop: 60,
+                }}
+                onPress={() => setShowExtends(false)}
+              >
+                <View className="w-52 h-36 bg-white rounded-lg">
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("CalendarExtendTimeNoti");
+                    }}
+                    className="flex-1 justify-center items-center"
+                  >
+                    <Text>Thời gian thông báo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("CalendarExtendTurnOnOffNoti");
+                    }}
+                    className="flex-1 justify-center items-center"
+                  >
+                    <Text>Bật/Tắt thông báo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("CalendarExtendMoodleEvent");
+                    }}
+                    className="flex-1 justify-center items-center"
+                  >
+                    <Text>Xem tất cả sự kiện moodle</Text>
+                  </TouchableOpacity>
+                </View>
               </TouchableOpacity>
-            </View>
+            </Modal>
           </View>
         </View>
         <View className="bg-[#F1F5F9] h-full"></View>

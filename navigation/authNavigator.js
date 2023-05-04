@@ -27,6 +27,9 @@ import Account_EditInfor from "../screens/Account/Account_EditInfor";
 
 import UserManual_I from "../screens/Authentication/UserManual_I";
 import Account_Survey from "../screens/Account/Account_Survey";
+import CalendarExtendTimeNoti from "../screens/Calendar/CalendarExtendTimeNoti";
+import CalendarExtendTurnOnOffNoti from "../screens/Calendar/CalendarExtendTurnOnOffNoti";
+import CalendarExtendMoodleEvent from "../screens/Calendar/CalendarExtendMoodleEvent";
 
 const Auth = createNativeStackNavigator();
 
@@ -203,6 +206,33 @@ export default function AuthStack() {
       <Auth.Screen
         name="Account_Survey"
         component={Account_Survey}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="CalendarExtendTimeNoti"
+        component={CalendarExtendTimeNoti}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="CalendarExtendTurnOnOffNoti"
+        component={CalendarExtendTurnOnOffNoti}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="CalendarExtendMoodleEvent"
+        component={CalendarExtendMoodleEvent}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,
