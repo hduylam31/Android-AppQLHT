@@ -53,6 +53,11 @@ const NoteList_Edit = () => {
 
   const handleUpdateNoteList = async () => {
     console.log("Start update");
+    if(title == c_item.title && note == c_item.note){
+      console.log("No Update");
+      navigation.goBack();
+      return; 
+    }
     try {
       await NoteService.updateNote({
         c_id: c_item.id,

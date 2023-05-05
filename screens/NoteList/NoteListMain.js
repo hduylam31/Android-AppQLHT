@@ -14,7 +14,7 @@ import NoteService from "../../service/NoteService";
 
 const NoteListMain = () => {
   const navigation = useNavigation();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]); 
 
   useLayoutEffect(() => {
     navigation.setOptions({

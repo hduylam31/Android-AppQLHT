@@ -549,7 +549,7 @@ class CalendarService {
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
         const userData = userDoc.data().calendar.user;
-        if(moodleData != undefined && moodleData.length > 0){
+        if(userData != undefined && userData.length > 0){
           loadNotificationAndUpdateOne(userData, userRef, false);
         }
       }

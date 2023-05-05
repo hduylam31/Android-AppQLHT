@@ -8,11 +8,18 @@ import {
   arrayUnion
 } from "firebase/firestore";
 import { auth, firestore } from "../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import StorageUtils from "./StorageUtils";
 
 class ScheduleService{
 
     static async loadScheduleData() {
         console.log("inside load schedule function");
+        const scheduleList = await AsyncStorage.getItem('scheduleList');
+        if(scheduleList != null){
+          return JSON.parse(scheduleList);
+        }
+
         const user = auth.currentUser;
         const docRef = doc(firestore, "schedule", user.uid);
         const docSnap = await getDoc(docRef);
@@ -22,6 +29,7 @@ class ScheduleService{
           jsonObject.sort((item1, item2)=>{
             return Number(item1.lessonStart) - Number(item2.lessonStart);
           })
+          await AsyncStorage.setItem('scheduleList', JSON.stringify(jsonObject));
           return jsonObject;
         } else {
           console.log("No such document!");
@@ -42,22 +50,23 @@ class ScheduleService{
             location: data.location,
             note: data.note,
           };
+          //Storage
+          await StorageUtils.pushElementToArray('scheduleList', item);
           //firebase adding
           const user = auth.currentUser;
           const userRef = doc(collection(firestore, "schedule"), user.uid);
           const userDoc = await getDoc(userRef);
           if (userDoc.exists()) {
-            await updateDoc(
+            updateDoc(
               userRef,
               { "schedule": arrayUnion(item) },
               { merge: true }
             );
           } else {
-            await setDoc(userRef, { schedule: [item] });
+            setDoc(userRef, { schedule: [item] });
           }
         } catch (error) {
           console.log("error: ", error);
-        
         }
     }
 
@@ -72,7 +81,7 @@ class ScheduleService{
           location: elm.location,
           note: elm.note,
         };
-        console.log(updatedData);
+        await StorageUtils.updateElementInArray('scheduleList', updatedData);
         try {
           const userRef = doc(collection(firestore, "schedule"), user.uid);
           const userDoc = await getDoc(userRef);
@@ -86,7 +95,7 @@ class ScheduleService{
               ...updateScheduleList[itemIndex],
               ...updatedData,
             };
-            await updateDoc(
+            updateDoc(
               userRef,
               { "schedule": updateScheduleList },
               { merge: true }
@@ -102,13 +111,14 @@ class ScheduleService{
 
     static async deleteSchedule(id){
         console.log("Delete Schedule: ", id);
+        StorageUtils.removeElementFromArray('scheduleList', id);
         try {
             const user = auth.currentUser;
             const userRef = doc(collection(firestore, 'schedule'), user.uid);
             const userDoc = await getDoc(userRef);
             const scheduleList = userDoc.data().schedule;
             const updatedSchedulueList = scheduleList.filter(item => item.id !== id);
-            await updateDoc(userRef, { schedule: updatedSchedulueList }, {merge: true});
+            updateDoc(userRef, { schedule: updatedSchedulueList }, {merge: true});
             console.log("delete OKK");
         } catch (error) {
             console.log("error: ", error);

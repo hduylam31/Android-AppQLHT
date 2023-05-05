@@ -2,15 +2,23 @@
 import { collection, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove} from "firebase/firestore";
 import { auth, firestore } from "../firebase";
 import { generateUUID } from "./uid";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import StorageUtils from "./StorageUtils";
 
 class NoteService{
 
     static async loadNoteData() {
+        const noteList = await AsyncStorage.getItem('noteList');
+        if(noteList != null){
+          return JSON.parse(noteList);
+        }
+
         const user = auth.currentUser;
         const docRef = doc(firestore, "notelist", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const jsonObject = docSnap.data().notelist;
+          AsyncStorage.setItem('noteList', JSON.stringify(jsonObject));
           return jsonObject;
         } else {
           console.log("No such document!");
@@ -26,13 +34,16 @@ class NoteService{
             title: title,
             note: note
         };
+        await StorageUtils.pushElementToArray("noteList", item);
+
         const userRef = doc(collection(firestore, 'notelist'), user.uid);
         const userDoc = await getDoc(userRef);
         if(userDoc.exists()){
-            await updateDoc(userRef, {notelist: arrayUnion(item)}, {merge: true});
+            updateDoc(userRef, {notelist: arrayUnion(item)}, {merge: true});
         }else{
-            await setDoc(userRef, { notelist: [item] });
+            setDoc(userRef, { notelist: [item] });
         }
+
     }
 
     static async updateNote(elm) {
@@ -42,7 +53,7 @@ class NoteService{
           title: elm.title,
           note: elm.note
         };
-        console.log(updatedData);
+        await StorageUtils.updateElementInArray('noteList', updatedData);
         try {
           const userRef = doc(collection(firestore, "notelist"), user.uid);
           const userDoc = await getDoc(userRef);
@@ -56,7 +67,7 @@ class NoteService{
               ...updateNoteList[itemIndex],
               ...updatedData,
             };
-            await updateDoc(
+            updateDoc(
               userRef,
               { "notelist": updateNoteList },
               { merge: true }
@@ -71,12 +82,13 @@ class NoteService{
     }
 
     static async deleteNote(id){
+        await StorageUtils.removeElementFromArray('noteList', id);
         const user = auth.currentUser;
         const userRef = doc(collection(firestore, 'notelist'), user.uid);
         const userDoc = await getDoc(userRef);
         const noteList = userDoc.data().notelist;
         const updatedNoteList = noteList.filter(item => item.id !== id);
-        await updateDoc(userRef, { notelist: updatedNoteList }, {merge: true});
+        updateDoc(userRef, { notelist: updatedNoteList }, {merge: true});
         console.log("delete OKK");
     };
 }
