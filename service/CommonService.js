@@ -14,8 +14,8 @@ class CommonService{
             await NotificationUtils.removeAllNotification();
             await CalendarService.loadAutoUpdateMoodleBackground(isAutoLogin); 
             console.log("Load background running OK");
-            await CalendarService.loadNotificationAndUpdateDb(); 
             if(!isAutoLogin){
+                await CalendarService.loadNotificationAndUpdateDb(); 
                 TodolistService.loadNotificationAndUpdateDb(); 
             }
             console.log("Load notification Ok"); 

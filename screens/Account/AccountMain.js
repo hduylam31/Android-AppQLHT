@@ -44,6 +44,12 @@ const AccountMain = () => {
         AsyncStorage.removeItem("noteList"); 
         AsyncStorage.removeItem("scheduleList"); 
         AsyncStorage.removeItem("todoList"); 
+        
+        AsyncStorage.removeItem("moodleStatus"); 
+        AsyncStorage.removeItem("moodleToken"); 
+        AsyncStorage.removeItem("moodleCalendar"); 
+        AsyncStorage.removeItem("userCalendar"); 
+
         try {
           await BackgroundFetch.unregisterTaskAsync(
             Constants.BACKGROUND_FETCH_TASK

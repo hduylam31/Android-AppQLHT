@@ -18,16 +18,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as he from 'he';
 import * as BackgroundFetch from 'expo-background-fetch';
 import Constants from "../domain/Constants";
+import StorageUtils from "./StorageUtils";
 
 class CalendarService {
   static async isMoodleActive() {
     try {
+      const moodleStatusStorage = await AsyncStorage.getItem('moodleStatus');
+      if(moodleStatusStorage != null){
+        return parseInt(moodleStatusStorage);
+      }
+
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
         const moodleStatus = userDoc.data().moodle.status;
         if (moodleStatus) {
+          AsyncStorage.setItem('moodleStatus', moodleStatus.toString());
           return moodleStatus;
         } else {
           return 0;
@@ -40,7 +47,6 @@ class CalendarService {
 
   static async getMoodleToken(username, password) {
     console.log("get token");
-
     url =
       "https://courses.fit.hcmus.edu.vn/login/token.php?username=" +
       encodeURIComponent(username) + 
@@ -57,7 +63,7 @@ class CalendarService {
     if (data.errorcode === "invalidlogin" || !data.token) {
       return "error";
     }
-
+    AsyncStorage.setItem('moodleToken', data.token);
     return data.token;
   }
 
@@ -66,8 +72,8 @@ class CalendarService {
       const moodleToken = await this.getMoodleToken(username, password); 
       if (moodleToken !== "error") {
         console.log("Login moodle OK with token: ", moodleToken);
-        console.log("haha");
         //save token to user colection
+        await AsyncStorage.setItem('moodleStatus', '1');
         const user = auth.currentUser;
         const userRef = doc(collection(firestore, "user"), user.uid);
         updateDoc(userRef, { moodle: { token: moodleToken, status: 1 } });
@@ -90,6 +96,17 @@ class CalendarService {
   //Hàm reload moodle với token
   static async reloadMoodleCalendar() {
     console.log("inside reloadMoodleCalendar function");
+
+    const moodleStatus = await AsyncStorage.getItem('moodleStatus');
+    if(moodleStatus != null && parseInt(moodleStatus) == 1){
+      const moodleToken = await AsyncStorage.getItem('moodleToken');
+      if(moodleToken != null){
+        await this.saveCalendarData(moodleToken);
+        console.log("save saveCalendarData done");
+        return;
+      }
+    }
+    
     try {
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
@@ -97,8 +114,10 @@ class CalendarService {
       if (userDoc.exists()) {
         const moodle = userDoc.data().moodle;
         const status = moodle.status;
+        AsyncStorage.setItem('moodleStatus', status.toString());
         if (status === 1) {
           const token = moodle.token;
+          AsyncStorage.setItem('moodleToken', token);
           await this.saveCalendarData(token);
           console.log("save saveCalendarData done");
         }
@@ -132,16 +151,19 @@ class CalendarService {
 
   static async logOutMoodle(status) {
     try {
+      await AsyncStorage.removeItem("moodleCalendar");
+      await AsyncStorage.removeItem("moodleToken");
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
       //Xóa token + cập nhật status moodle token
       //Xóa Background chạy nền cập nhật 
-      await BackgroundFetch.unregisterTaskAsync(Constants.BACKGROUND_FETCH_TASK);
-      await updateDoc(userRef, { "moodle.status": status , "moodle.token": ""});
+      BackgroundFetch.unregisterTaskAsync(Constants.BACKGROUND_FETCH_TASK);
+      AsyncStorage.setItem('moodleStatus', status.toString());
+      updateDoc(userRef, { "moodle.status": status , "moodle.token": ""});
       //Xóa tất cả dữ liệu thông báo + moodle
       const calendarRef = doc(collection(firestore, "calendar"), user.uid);
       this.unRegisterMoodleNotification();
-      await updateDoc(calendarRef, { "calendar.moodle": [] });
+      updateDoc(calendarRef, { "calendar.moodle": [] });
       return true;
     } catch (error) {
       console.log(error);
@@ -166,14 +188,16 @@ class CalendarService {
     let nextMonthEvent = await this.fetchCalendarData(token, nextMonth, nextMonthYear);
     const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);  
     // =====================================DB===================================
+    await AsyncStorage.setItem('moodleCalendar', JSON.stringify(twoMonthEvents)); 
+
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "calendar"), user.uid);
     
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
-      await updateDoc(userRef, { "calendar.moodle": twoMonthEvents });
+      updateDoc(userRef, { "calendar.moodle": twoMonthEvents });
     } else {
-      await setDoc(userRef, { calendar: { moodle: twoMonthEvents } });
+      setDoc(userRef, { calendar: { moodle: twoMonthEvents } });
     }
 
     console.log("done save two month calendar function OKK");
@@ -287,6 +311,22 @@ class CalendarService {
 
   static async loadCalendarData() {
     console.log("inside load calendar function");
+    
+    const moodleCalendar = await AsyncStorage.getItem('moodleCalendar');
+    const userCalendar = await AsyncStorage.getItem('userCalendar');
+    if(moodleCalendar != null || userCalendar != null){
+      let storageResult = [];
+      if(moodleCalendar != null){
+        storageResult = storageResult.concat(JSON.parse(moodleCalendar));
+      }
+      
+      if(userCalendar != null){
+        storageResult = storageResult.concat(JSON.parse(userCalendar));
+      }
+      return storageResult;
+    }
+
+
     const user = auth.currentUser;
     const docRef = doc(firestore, "calendar", user.uid);
     const docSnap = await getDoc(docRef);
@@ -295,11 +335,16 @@ class CalendarService {
       let result = [];
       const moodleCalendars = jsonObject.moodle;
       if (moodleCalendars && moodleCalendars.length > 0) {
+        AsyncStorage.setItem('moodleCalendar', JSON.stringify(moodleCalendars));
         result = result.concat(moodleCalendars);
+      }else{
+        AsyncStorage.setItem('moodleCalendar', JSON.stringify([]));
       }
       const userCalendars = jsonObject.user;
       if (userCalendars && userCalendars.length > 0) {
         result = result.concat(userCalendars);
+      } else{
+        AsyncStorage.setItem('userCalendars', JSON.stringify([]));
       }
       return result;
     } else {
@@ -409,19 +454,19 @@ class CalendarService {
         isNotified: isNotified,
         identifier: identifier,
       };
-
+      await StorageUtils.pushElementToArray("userCalendar", item);
       /* ==================================DB Adding====================================== */
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
-        await updateDoc(
+        updateDoc(
           userRef,
           { "calendar.user": arrayUnion(item) },
           { merge: true }
         );
       } else {
-        await setDoc(userRef, { calendar: { user: [item] } });
+        setDoc(userRef, { calendar: { user: [item] } });
       }
     } catch (error) {
       console.log("error: ", error);
@@ -490,6 +535,7 @@ class CalendarService {
       isMoodle: elm.isMoodle,
       identifier: identifier,
     };
+    await StorageUtils.updateElementInArray('userCalendar', updatedData);
     try {
       const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
@@ -503,7 +549,7 @@ class CalendarService {
           ...updatedUserCalendarList[itemIndex],
           ...updatedData,
         };
-        await updateDoc(
+        updateDoc(
           userRef,
           { "calendar.user": updatedUserCalendarList },
           { merge: true }
@@ -519,6 +565,7 @@ class CalendarService {
 
   static deleteCalendar = async (c_item) => {
     const id = c_item.id;
+    await StorageUtils.removeElementFromArray('userCalendar', id);
     console.log("Delete Calendar: ", id);
     try {
       // ==================================Notification============================
@@ -531,7 +578,7 @@ class CalendarService {
       const userDoc = await getDoc(userRef);
       const userCalendar = userDoc.data().calendar.user;
       const updatedUserCalendar = userCalendar.filter((item) => item.id !== id);
-      await updateDoc(
+      updateDoc(
         userRef,
         { "calendar.user": updatedUserCalendar },
         { merge: true }
@@ -550,7 +597,7 @@ class CalendarService {
       if (userDoc.exists()) {
         const userData = userDoc.data().calendar.user;
         if(userData != undefined && userData.length > 0){
-          loadNotificationAndUpdateOne(userData, userRef, false);
+          await loadNotificationAndUpdateOne(userData, userRef, false);
         }
       }
     } catch (error) {
@@ -618,14 +665,15 @@ class CalendarService {
           updatedCalendar[i] = { ...updatedCalendar[i], identifier: "" };
         }
       }
+      await AsyncStorage.setItem('userCalendar', JSON.stringify(updatedCalendar)); 
       if (isMoodleProcess) {
-        await updateDoc(
+        updateDoc(
           userRef,
           { "calendar.moodle": updatedCalendar },
           { merge: true }
         );
       } else {
-        await updateDoc(
+        updateDoc(
           userRef,
           { "calendar.user": updatedCalendar },
           { merge: true }
@@ -652,22 +700,6 @@ class CalendarService {
     }
   }
 
-  static async runUpdateMoodle(){
-    try {
-        await CredentialService.autoLogin();
-        const user = auth.currentUser;
-        const userRef = doc(collection(firestore, 'user'), user.uid);
-        const userDoc = await getDoc(userRef);
-        if(userDoc.exists()){
-            if(userDoc.data().moodle.status == 1){
-              const token = userDoc.data().moodle.token;
-              await this.saveCalendarData(token);
-            }
-        }
-    } catch (error) {
-        console.log('Background fail: ', error);
-    }
-  }
 }
 
 export default CalendarService;
