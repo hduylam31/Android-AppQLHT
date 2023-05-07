@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import {
@@ -14,7 +14,7 @@ import TodolistService from "../../service/TodolistService";
 
 function toMinutes(time) {
   if (time === "") {
-    return null;
+    return -1;
   }
   const [hours, minutes] = time.split(":").map(Number);
   return hours * 60 + minutes;
@@ -22,7 +22,7 @@ function toMinutes(time) {
 
 const CategoryView = ({ label }) => (
   <View
-    className={`w-8 h-8 rounded-full mx-3 mt-1 flex items-center justify-center 
+    className={`w-8 h-8 rounded-full flex items-center justify-center mr-2
     ${label === "profile" ? "bg-[#DBECF6]" : ""}
     ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
     ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}}
@@ -102,9 +102,19 @@ const ToDoListScreen = () => {
       <Animatable.View
         animation="slideInLeft"
         delay={index * 10}
-        className="h-14 border-b-[#f3f2f4] border-b-2 my-1 flex flex-row justify-between content-center"
+        className="border-b-[#f3f2f4] border-b-2 flex flex-row justify-between content-center"
       >
-        <View className="flex flex-row w-[82%]">
+        <View className="flex-row w-[82%] justify-center items-center">
+          {/* <CheckBox
+            checked={item.isSelected}
+            onPress={() => toggleSelect(item.id)}
+            iconType="ionicon"
+            checkedIcon="checkmark-circle"
+            uncheckedIcon="ellipse-outline"
+            checkedColor="#4A3780"
+            size={20}
+            center={true}
+          /> */}
           <CategoryView label={item.category} />
           <View className="w-[70%]">
             <View className="flex-row">
@@ -152,9 +162,9 @@ const ToDoListScreen = () => {
         animation="slideInLeft"
         delay={index * 10}
         style={{ flex: 1 }}
-        className="w-full h-14 border-b-[#f3f2f4] border-b-2 my-1 flex-row justify-between content-center"
+        className="w-full border-b-[#f3f2f4] border-b-2 flex-row justify-between content-center"
       >
-        <View className="flex flex-row w-[82%] opacity-50">
+        <View className="flex flex-row w-[82%] opacity-50 justify-center items-center">
           <CategoryView label={item.category} />
           <View className="w-[70%]">
             <Text
@@ -183,6 +193,24 @@ const ToDoListScreen = () => {
       </Animatable.View>
     </TouchableOpacity>
   );
+
+  // Hiển thị phần mở rộng
+  const [showExtends, setShowExtends] = useState(false);
+
+  const [multiCheck, setMultiCheck] = useState();
+
+  // const toggleSelect = (id) => {
+  //   setData((prevData) =>
+  //     prevData.map((item) => {
+  //       if (item.id === id) {
+  //         return { ...item, isSelected: !item.isSelected };
+  //       } else {
+  //         return item;
+  //       }
+  //     })
+  //   );
+  // };
+
   return (
     <SafeAreaView className="flex-1">
       {/* Header */}
@@ -192,13 +220,53 @@ const ToDoListScreen = () => {
           <Text className="text-white text-2xl font-bold text-center">
             Danh sách công việc
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowExtends(true)}>
             <MaterialCommunityIcons
               name="dots-vertical"
               size={32}
               color="white"
             />
           </TouchableOpacity>
+          <Modal
+            visible={showExtends}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setShowExtends(false)}
+          >
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                backgroundColor: "rgba(0,0,0,0.4)",
+                justifyContent: "flex-start",
+                alignItems: "flex-end",
+                paddingRight: 15,
+                paddingTop: 60,
+              }}
+              onPress={() => setShowExtends(false)}
+            >
+              <View className="w-52 h-36 bg-white rounded-lg">
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("CalendarExtendTimeNoti");
+                  }}
+                  className="flex-1 justify-center items-center"
+                >
+                  <Text>Thời gian thông báo</Text>
+                </TouchableOpacity>
+                <TouchableOpacity className="flex-1 justify-center items-center">
+                  <Text>Sắp xếp theo</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("CalendarExtendMoodleEvent");
+                  }}
+                  className="flex-1 justify-center items-center"
+                >
+                  <Text>Xem tất cả sự kiện moodle</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </Modal>
         </View>
         {/* <View className="flex-row justify-between p-4">
           <TouchableOpacity>
