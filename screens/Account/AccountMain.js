@@ -14,7 +14,7 @@ import Constants from "../../domain/Constants";
 const AccountMain = () => {
   const [name, setName] = useState("");
 
-  async function loadName() {
+  async function loadName() {  
     const userName = await AccountService.loadUserInfo();
     setName(userName);
   }
@@ -40,6 +40,16 @@ const AccountMain = () => {
         NotificationUtils.removeAllNotification();
         await AsyncStorage.removeItem("username");
         await AsyncStorage.removeItem("password");
+        AsyncStorage.removeItem("name"); 
+        AsyncStorage.removeItem("noteList"); 
+        AsyncStorage.removeItem("scheduleList"); 
+        AsyncStorage.removeItem("todoList"); 
+        
+        AsyncStorage.removeItem("moodleStatus"); 
+        AsyncStorage.removeItem("moodleToken"); 
+        AsyncStorage.removeItem("moodleCalendar"); 
+        AsyncStorage.removeItem("userCalendar"); 
+
         try {
           await BackgroundFetch.unregisterTaskAsync(
             Constants.BACKGROUND_FETCH_TASK
