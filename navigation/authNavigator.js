@@ -30,6 +30,8 @@ import Account_Survey from "../screens/Account/Account_Survey";
 import CalendarExtendTimeNoti from "../screens/Calendar/CalendarExtendTimeNoti";
 import CalendarExtendTurnOnOffNoti from "../screens/Calendar/CalendarExtendTurnOnOffNoti";
 import CalendarExtendMoodleEvent from "../screens/Calendar/CalendarExtendMoodleEvent";
+import GroupTodoList from "../screens/ToDoList/GroupTodoList";
+import GroupTodoListEdit from "../screens/ToDoList/GroupTodoListEdit";
 
 const Auth = createNativeStackNavigator();
 
@@ -233,6 +235,23 @@ export default function AuthStack() {
       <Auth.Screen
         name="CalendarExtendMoodleEvent"
         component={CalendarExtendMoodleEvent}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+
+      <Auth.Screen
+        name="GroupTodoList"
+        component={GroupTodoList}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+      <Auth.Screen
+        name="GroupTodoListEdit"
+        component={GroupTodoListEdit}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,
