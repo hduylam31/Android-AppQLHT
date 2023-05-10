@@ -105,12 +105,50 @@ const Calendar_Add = () => {
     } else {
       console.log("Start addingg");
       try {
+        var rangeTimeInfo = {
+          "type": "",
+          "customType": "",
+          "customTime": ""
+        };
+        if(isNotified){
+          var rangeTime = -1;
+          if(timeNoti == "1") rangeTime=0;
+          if(timeNoti == "2") rangeTime=5*60;
+          if(timeNoti == "3") rangeTime=10*60;
+          if(timeNoti == "4") rangeTime=60*60;
+          if(timeNoti == "5") rangeTime=60*60*24; 
+          if(timeNoti == "6") {
+            switch (customTimeNoti) {
+              case "1":
+                rangeTime = parseInt(numberTimeNoti)*60;
+                break;
+              case "2":
+                rangeTime = parseInt(numberTimeNoti)*60*60;
+                break;
+              case "3":
+                rangeTime = parseInt(numberTimeNoti)*60*60*24;
+                break;
+              default:
+                rangeTime = 60*60*2;
+                break;   
+            }
+          }
+          
+          rangeTimeInfo = {
+            "time": rangeTime,
+            "type": timeNoti,
+            "customType": customTimeNoti,
+            "customTime": numberTimeNoti
+          }
+        }
+        
         await CalendarService.addUserCalendar(
           title,
           textDate,
           textTime,
           content,
-          isNotified
+          isNotified,
+          rangeTimeInfo
         );
         navigation.navigate("BottomBar", {
           screen: "Lịch",
@@ -124,7 +162,7 @@ const Calendar_Add = () => {
     }
   };
 
-  const [timeNoti, setTimeNoti] = useState(null);
+  const [timeNoti, setTimeNoti] = useState("4");
   const [customTimeNoti, setCustomTimeNoti] = useState("1");
   const [numberTimeNoti, setNumberTimeNoti] = useState("5");
 

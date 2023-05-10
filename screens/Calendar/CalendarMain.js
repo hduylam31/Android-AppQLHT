@@ -85,7 +85,7 @@ const CalendarMain = () => {
   });
 
   const [calendar, setCalendar] = useState([]);
-  const currentDate = new Date().toLocaleDateString();
+  const currentDate = new Date().toLocaleDateString(); 
 
   const [selectedDay, setSelectedDay] = useState(
     moment(currentDate, "DD/MM/YYYY").format("YYYY-MM-DD")
@@ -183,7 +183,7 @@ const CalendarMain = () => {
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Calendar_Edit", { item });
+        navigation.navigate("Calendar_Edit", { item }); 
       }}
     >
       <Animatable.View animation="slideInLeft" delay={index * 10}>

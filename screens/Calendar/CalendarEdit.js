@@ -94,6 +94,7 @@ const Calendar_Edit = () => {
 
   useEffect(() => {
     const loadData = () => {
+      console.log("item: ", item);
       setTitle(item.title);
       setTimeDate(item.timeString);
       const date = new Date(item.dateString);
@@ -101,6 +102,11 @@ const Calendar_Edit = () => {
       setDateText(dateFormat);
       setContent(item.description);
       setIsNotified(item.isNotified);
+      if(item.isNotified){
+        setTimeNoti(item.rangeTimeInfo.type);
+        setCustomTimeNoti(item.rangeTimeInfo.customType);
+        setNumberTimeNoti(item.rangeTimeInfo.customTime)
+      } 
     };
     loadData();
   }, []);
@@ -114,18 +120,54 @@ const Calendar_Edit = () => {
     } else {
       console.log("Start update");
       try {
+        var rangeTimeInfo = {
+          "type": "",
+          "customType": "",
+          "customTime": ""
+        };
+        if(isNotified){
+          var rangeTime = -1;
+          if(timeNoti == "1") rangeTime=0;
+          if(timeNoti == "2") rangeTime=5*60;
+          if(timeNoti == "3") rangeTime=10*60;
+          if(timeNoti == "4") rangeTime=60*60;
+          if(timeNoti == "5") rangeTime=60*60*24;
+          if(timeNoti == "6") {
+            switch (customTimeNoti) {
+              case "1":
+                rangeTime = parseInt(numberTimeNoti)*60;
+                break;
+              case "2":
+                rangeTime = parseInt(numberTimeNoti)*60*60;
+                break;
+              case "3":
+                rangeTime = parseInt(numberTimeNoti)*60*60*24;
+                break;
+              default:
+                rangeTime = 60*60*2;
+                break;   
+            }
+          }
+          
+          rangeTimeInfo = {
+            "time": rangeTime,
+            "type": timeNoti,
+            "customType": customTimeNoti,
+            "customTime": numberTimeNoti
+          }
+        }
+
         const newItem = {
           id: item.id,
-          title,
+          title, 
           textDate,
           textTime,
           content,
-          isNotified,
+          isNotified, 
           content,
           isMoodle: item.isMoodle,
+          rangeTimeInfo
         };
-        console.log("new Item: ", newItem);
-        console.log("Old Item: ", item);
         await CalendarService.updateUserCalendar(newItem, item);
         navigation.navigate("BottomBar", {
           screen: "Lịch",

@@ -127,6 +127,65 @@ class CalendarService {
     }
   }
 
+  static async turnOffCalendarNotification(isMoodleCalendar){
+    var calendarData = [];
+    const user = auth.currentUser;
+    const userRef2 = doc(collection(firestore, "user"), user.uid);
+    const userRef = doc(collection(firestore, "calendar"), user.uid);
+    const userDoc = await getDoc(userRef);
+    const calendarType = isMoodleCalendar ? "moodleCalendar" : "userCalendar";
+    
+    const calendarDataStorage = await AsyncStorage.getItem(calendarType);
+    if(calendarDataStorage != null){
+      calendarData = JSON.parse(calendarDataStorage);
+    } else{
+      if (userDoc.exists()) {
+        calendarData = userDoc.data().calendar.moodle;
+      }
+    }
+    if(calendarData.length != 0){
+      calendarData.forEach((item) => {
+        if(item.isNotified && item.identifier != ""){
+          NotificationUtils.cancelNotification(item.identifier);
+        }
+      })
+      await calendarData.map(item => {
+        if(item.isNotified && item.identifier != ""){
+          item.identifier = "";
+        }
+      });
+    }
+
+    if(isMoodleCalendar){
+      await AsyncStorage.setItem('moodleCalendar', JSON.stringify(calendarData));
+      updateDoc(userRef, { "calendar.moodle": calendarData });
+      updateDoc(userRef, { "isMoodleCalendarNotified": false });
+    }else{
+      await AsyncStorage.setItem('userCalendar', JSON.stringify(calendarData));
+      updateDoc(userRef, { "calendar.user": calendarData });
+      updateDoc(userRef, { "isUserCalendarNotified": false });
+    }
+  }
+
+  static async turnOnCalendarNotification(isMoodleCalendar){
+    var calendarData = [];
+    const user = auth.currentUser;
+    const userRef2 = doc(collection(firestore, "user"), user.uid);
+    const userRef = doc(collection(firestore, "calendar"), user.uid);
+    const userDoc = await getDoc(userRef);
+    const calendarType = isMoodleCalendar ? "moodleCalendar" : "userCalendar";
+
+    const calendarDataStorage = await AsyncStorage.getItem(calendarType);
+    if(calendarDataStorage != null){
+      calendarData = JSON.parse(calendarDataStorage);
+    } else{
+      if (userDoc.exists()) {
+        calendarData = userDoc.data().calendar.moodle;
+      }
+    }
+
+  }
+
   static async unRegisterMoodleNotification() {
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "calendar"), user.uid);
@@ -178,7 +237,7 @@ class CalendarService {
     const currentYear = currentDate.getFullYear();
     const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
     const nextMonthYear = currentMonth === 12 ? currentYear + 1 : currentYear;
-    let currentMonthEvent = await this.fetchCalendarData(token, currentMonth, currentYear);
+    let currentMonthEvent = await this.fetchCalendarData(token, 12, 2022);
     if (currentMonthEvent === "error") {
       console.log("error token");
       await this.logOutMoodle(-1);
@@ -297,6 +356,11 @@ class CalendarService {
               dateString: dateString,
               timeString: timeString,
               identifier: identifier,
+              rangeTimeInfo: { 
+                "type": "4",
+                "customType": "",
+                "customTime": ""
+              }
             };
             events.push(eventItem);
           });
@@ -397,7 +461,7 @@ class CalendarService {
     }
   }
 
-  static async addUserCalendar(title, textDate, textTime, content, isNotified) {
+  static async addUserCalendar(title, textDate, textTime, content, isNotified, rangeTimeInfo) {
     try {
       console.log("inside function");
 
@@ -424,11 +488,10 @@ class CalendarService {
         );
         const now = new Date(Date.now());
         const diff = deadlineDate - now;
-        const twoHours = 2 * 60 * 60 * 1000;
         if (diff > 0) {
           //2hours
           const twoHoursBeforeDeadlineTime = new Date(
-            deadlineDate.getTime() - twoHours
+            deadlineDate.getTime() - rangeTimeInfo.time*1000
           );
           const timeInfo = {
             year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
@@ -444,6 +507,7 @@ class CalendarService {
           );
         }
       }
+      
       const item = {
         id: documentId,
         title: title,
@@ -453,6 +517,11 @@ class CalendarService {
         isMoodle: "false",
         isNotified: isNotified,
         identifier: identifier,
+        rangeTimeInfo: {
+          "type": rangeTimeInfo.type,
+          "customType": rangeTimeInfo.customType,
+          "customTime": rangeTimeInfo.customTime
+        }
       };
       await StorageUtils.pushElementToArray("userCalendar", item);
       /* ==================================DB Adding====================================== */
@@ -486,8 +555,8 @@ class CalendarService {
 
     let identifier = "";
     // ==================================Notification============================
-    if (oldItem.isNotified && !elm.isNotified) {
-      // Chỉ xóa thông báo khi cập nhật Thông báo -> Không thông báo
+    if ( (oldItem.isNotified && !elm.isNotified)) {
+      // Chỉ xóa thông báo khi cập nhật Thông báo -> Không thông báo 
       NotificationUtils.cancelNotification(oldItem.identifier);
     } else {
       // Còn những trường hợp còn lại thì set thông báo mới, kiểm tra luôn vụ chỉ thông báo trước 2h
@@ -503,11 +572,11 @@ class CalendarService {
       const now = new Date(Date.now());
       const diff = deadlineDate - now;
       console.log("Diff: ", diff);
-      const twoHours = 2 * 60 * 60 * 1000;
+
       if (diff > 0 ) {
         //2hours
         const twoHoursBeforeDeadlineTime = new Date(
-          deadlineDate.getTime() - twoHours
+          deadlineDate.getTime() - elm.rangeTimeInfo.time*1000 
         );
         const timeInfo = {
           year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
@@ -534,6 +603,11 @@ class CalendarService {
       description: elm.content,
       isMoodle: elm.isMoodle,
       identifier: identifier,
+      rangeTimeInfo: {
+        "type": elm.rangeTimeInfo.type,
+        "customType": elm.rangeTimeInfo.customType,
+        "customTime": elm.rangeTimeInfo.customTime
+      }
     };
     await StorageUtils.updateElementInArray('userCalendar', updatedData);
     try {

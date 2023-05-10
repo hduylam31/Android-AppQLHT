@@ -10,7 +10,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react"; 
 import { useNavigation } from "@react-navigation/native";
 import { moodleLogin } from "../../assets";
 import { AntDesign } from "@expo/vector-icons";
@@ -31,7 +31,7 @@ const Login_Moodle = () => {
     } else if (password === "") {
       Alert.alert("Kết nối không thành công", "Vui lòng nhập mật khẩu");
     } else if (status === 1) {
-      //1 = ok, 0 = sai mật khẩu, -1 = lỗi
+      //1 = ok, 0 = sai mật khẩu, -1 = lỗi 
       navigation.navigate("BottomBar", {
         screen: "Lịch",
         params: {

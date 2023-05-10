@@ -10,6 +10,7 @@ import React, { useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useEffect } from "react";
 
 const CalendarExtendTurnOnOffNoti = () => {
   const navigation = useNavigation();
@@ -21,6 +22,13 @@ const CalendarExtendTurnOnOffNoti = () => {
 
   const [isNotifiedMoodle, setIsNotifiedMoodle] = useState(true);
   const [isNotifiedInv, setIsNotifiedInv] = useState(true);
+
+  useEffect(()=> {
+    function func(){
+      
+    }
+    func();
+  }, [isNotifiedMoodle])
 
   return (
     <TouchableWithoutFeedback>
