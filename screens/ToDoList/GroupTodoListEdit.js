@@ -5,7 +5,6 @@ import {
   FlatList,
   Modal,
   TextInput,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useLayoutEffect, useState, useEffect } from "react";
@@ -34,15 +33,15 @@ function toMinutes(time) {
 const CategoryView = ({ label }) => (
   <View
     className={`w-8 h-8 rounded-full flex items-center justify-center mr-2
-    ${label === "profile" ? "bg-[#DBECF6]" : ""}
-    ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
-    ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}}
-    ${label === "ellipsis1" ? "bg-[#FEF5D3]" : ""}`}
+      ${label === "profile" ? "bg-[#DBECF6]" : ""}
+      ${label === "dashboard" ? "bg-[#E7E2F3]" : ""}
+      ${label === "Trophy" ? "bg-[#FEF5D3]" : ""}}
+      ${label === "ellipsis1" ? "bg-[#FEF5D3]" : ""}`}
   >
     <AntDesign name={label} size={18} color="black" />
   </View>
 );
-const ToDoListScreen = () => {
+const GroupTodoListEdit = () => {
   const navigation = useNavigation();
 
   //======= BE: lấy data todolist của account đang đăng nhập =========
@@ -190,69 +189,6 @@ const ToDoListScreen = () => {
             <Text className={"text-xs font-normal"}>{item.hour}</Text>
           </View>
         </View>
-
-        <CheckBox
-          checked={item.isCompleted}
-          onPress={() => handleToggleCompleted(item)}
-          iconType="material-community"
-          checkedIcon="checkbox-marked"
-          uncheckedIcon="checkbox-blank-outline"
-          checkedColor="#4A3780"
-          size={20}
-        />
-      </Animatable.View>
-    </TouchableOpacity>
-  );
-  renderItemCompleted = ({ item, index }) => (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate("TodoList_Edit", { item });
-      }}
-    >
-      <Animatable.View
-        animation="slideInLeft"
-        delay={index * 10}
-        style={{ flex: 1 }}
-        className="w-full border-b-[#f3f2f4] border-b-2 flex-row justify-between content-center h-14"
-      >
-        <View className="flex-row w-[80%] opacity-50 justify-center items-center">
-          {showMultiCheck && (
-            <CheckBox
-              checked={selectedIds.includes(item.id)}
-              onPress={() => toggleCheckBox(item.id)}
-              iconType="ionicon"
-              checkedIcon="checkmark-circle"
-              uncheckedIcon="ellipse-outline"
-              checkedColor="#4A3780"
-              size={20}
-              center={true}
-            />
-          )}
-          <CategoryView label={item.category} />
-          <View className="w-[70%]">
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              className={"text-base font-semibold line-through"}
-            >
-              {item.title}
-            </Text>
-
-            <Text className={"text-xs font-normal line-through"}>
-              {item.hour}
-            </Text>
-          </View>
-        </View>
-
-        <CheckBox
-          checked={item.isCompleted}
-          onPress={() => handleToggleCompleted(item)}
-          iconType="material-community"
-          checkedIcon="checkbox-marked"
-          uncheckedIcon="checkbox-blank-outline"
-          checkedColor="#4A3780"
-          size={20}
-        />
       </Animatable.View>
     </TouchableOpacity>
   );
@@ -270,11 +206,7 @@ const ToDoListScreen = () => {
 
   const toggleCheckBox = (id) => {
     console.log("id", id);
-    if (id === "reset") {
-      setShowMultiCheck(false);
-      setIsCheckSelectAll(false);
-      setSelectedIds([]);
-    } else if (id === "all") {
+    if (id === "all") {
       setSelectedIds(isCheckSelectAll ? [] : todos.map((item) => item.id));
       setIsCheckSelectAll(!isCheckSelectAll);
     } else {
@@ -286,31 +218,6 @@ const ToDoListScreen = () => {
     }
   };
   console.log("aid", selectedIds);
-  const Data = [
-    { key: "Mặc định", value: "1" },
-    { key: "DS Công việc", value: "2" },
-    { key: "Thêm công việc", value: "3" },
-  ];
-  const [listGroup, setListGroup] = useState("1");
-
-  const AlertDelete = () => {
-    Alert.alert(
-      "Xóa công việc",
-      "Xóa công việc này khỏi danh sách công việc? ?",
-      [
-        {
-          text: "Đồng ý",
-          // onPress: handleDeleteTodolist,
-        },
-        {
-          text: "Hủy",
-          onPress: () => {
-            toggleCheckBox("reset");
-          },
-        },
-      ]
-    );
-  };
 
   return (
     <SafeAreaView className="flex-1">
@@ -335,7 +242,13 @@ const ToDoListScreen = () => {
                 </TouchableOpacity>
               </View>
             ) : (
-              <View className="w-8 h-8"></View>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <MaterialCommunityIcons
+                  name="arrow-left"
+                  size={32}
+                  color="white"
+                />
+              </TouchableOpacity>
             )}
             {showMultiCheck ? (
               selectedIds.length > 0 ? (
@@ -352,23 +265,13 @@ const ToDoListScreen = () => {
                 Danh sách công việc
               </Text>
             )}
-            {showMultiCheck ? (
-              <TouchableOpacity
-                onPress={() => {
-                  toggleCheckBox("reset");
-                }}
-              >
-                <MaterialCommunityIcons name="check" size={32} color="white" />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={() => setShowExtends(true)}>
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={32}
-                  color="white"
-                />
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity onPress={() => setShowExtends(true)}>
+              <MaterialCommunityIcons
+                name="dots-vertical"
+                size={32}
+                color="white"
+              />
+            </TouchableOpacity>
 
             {/* Mở rộng 3 chấm */}
             <Modal
@@ -388,7 +291,7 @@ const ToDoListScreen = () => {
                 }}
                 onPress={() => setShowExtends(false)}
               >
-                <View className="w-52 h-48 bg-white rounded-lg">
+                <View className="w-52 h-24 bg-white rounded-lg">
                   <TouchableOpacity
                     onPress={() => {
                       setShowMultiCheck(true);
@@ -408,25 +311,6 @@ const ToDoListScreen = () => {
                       color="black"
                     />
                     <Text>Sắp xếp theo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("GroupTodoList", {
-                        paramMoveData: "NoteMoveData",
-                      });
-                    }}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <Text className="ml-7">Nhóm công việc</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setShowSaveWorkGroup(true);
-                      setShowExtends(false);
-                    }}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <Text className="ml-7">Lưu DS công việc</Text>
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
@@ -521,48 +405,9 @@ const ToDoListScreen = () => {
         </View>
       </View>
       <View className="flex-1 bg-[#F1F5F9]">
-        <View className="flex-row items-center justify-end space-x-3 pr-2">
-          <Text className="text-sm">Nhóm CV</Text>
-          <SelectCountry
-            style={{
-              backgroundColor: "#FFFFFF",
-              height: 20,
-              width: "45%",
-              borderRadius: 6,
-            }}
-            containerStyle={{
-              borderRadius: 6,
-            }}
-            itemContainerStyle={{
-              borderRadius: 6,
-            }}
-            itemTextStyle={{
-              fontSize: 14,
-            }}
-            placeholderStyle={{
-              fontSize: 16,
-              paddingLeft: 16,
-              color: "#C7C7CD",
-            }}
-            selectedTextStyle={{ fontSize: 14, paddingLeft: 16 }}
-            iconStyle={{ width: 20, height: 20 }}
-            imageStyle={{
-              width: 0,
-              height: 0,
-            }}
-            data={Data}
-            labelField="key"
-            valueField="value"
-            value={listGroup}
-            onChange={(item) => {
-              setListGroup(item.value);
-            }}
-          />
-        </View>
-
         {/* Công việc hiện có  */}
         <View
-          className="w-[90%] h-[38%] bg-white rounded-2xl mx-[5%] mt-4"
+          className="w-[90%] bg-white rounded-2xl mx-[5%] mt-4"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 10, height: 10 },
@@ -572,41 +417,19 @@ const ToDoListScreen = () => {
           }}
         >
           <FlatList
-            data={todos.filter((todo) => !todo.isCompleted)}
+            data={todos}
             keyExtractor={(item) => item.id.toString()}
             renderItem={this.renderItem}
             ListEmptyComponent={ListEmptyComponent}
           />
         </View>
-        {/* Công việc đã hòan thành */}
-        <Text className="text-base font-semibold ml-[5%] my-[3%]">
-          Hoàn thành
-        </Text>
-        <View
-          className="w-[90%] h-[38%] bg-white rounded-2xl mx-[5%]"
-          style={{
-            shadowColor: "#000000",
-            shadowOffset: { width: 10, height: 10 },
-            shadowOpacity: 0.5,
-            shadowRadius: 10,
-            elevation: 10,
-          }}
-        >
-          <FlatList
-            data={todos.filter((todo) => todo.isCompleted)}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={this.renderItemCompleted}
-          />
-        </View>
       </View>
+
       {showMultiCheck ? (
         <View className="flex-row justify-between">
           <TouchableOpacity
             onPress={() => {
               setShowMultiCheck(false);
-              navigation.navigate("GroupTodoList", {
-                paramMoveData: "MoveData",
-              });
             }}
             className="w-[43%] h-10 absolute bottom-5 left-[5%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
             style={{
@@ -627,7 +450,9 @@ const ToDoListScreen = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={AlertDelete}
+            onPress={() => {
+              setShowMultiCheck(false);
+            }}
             className="w-[43%] h-10 absolute bottom-5 left-[52%] bg-[#c12d2d] rounded-2xl flex-row items-center justify-center space-x-2"
             style={{
               shadowColor: "#000000",
@@ -728,4 +553,4 @@ const ToDoListScreen = () => {
   );
 };
 
-export default ToDoListScreen;
+export default GroupTodoListEdit;
