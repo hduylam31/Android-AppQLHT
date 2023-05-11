@@ -160,7 +160,7 @@ const CalendarMain = () => {
       loadCalendar();
       LoadMoodleActive();
     }
-  }, [route]);
+  }, [route]); 
 
   const filteredMoodle = calendar.filter((item) => {
     const showMoodle =
@@ -200,7 +200,7 @@ const CalendarMain = () => {
             <Text
               numberOfLines={2}
               ellipsizeMode="tail"
-              className={"text-sm font-semibold"}
+              className={"text-sm font-semibold"} 
             >
               {item.title}
             </Text>

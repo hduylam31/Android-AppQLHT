@@ -63,11 +63,8 @@ class CredentialService {
       .then(async (userCredential) => {
         const user = userCredential.user;
         console.log("Successfully register withh", user.email);
-        console.log("1");
-        console.log("FireStore", firestore);
-        console.log("2");
         const userRef = doc(collection(firestore, "user"), user.uid);
-        await setDoc(userRef, { name });
+        await setDoc(userRef, { "name": name, "isMoodleCalendarNotified": true, "isUserCalendarNotified": true });
         console.log("Successfully register user name", name);
         return true;
       })

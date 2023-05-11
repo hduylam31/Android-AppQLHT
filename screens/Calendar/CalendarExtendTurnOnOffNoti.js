@@ -11,24 +11,48 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useEffect } from "react";
+import CalendarService from "../../service/CalendarService";
 
 const CalendarExtendTurnOnOffNoti = () => {
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
-    });
+    }); 
   });
 
-  const [isNotifiedMoodle, setIsNotifiedMoodle] = useState(true);
-  const [isNotifiedInv, setIsNotifiedInv] = useState(true);
+  useEffect(() => {
+    const loadData = async () => {
+      const isNoti = await CalendarService.isNoti();
+      console.log("isNoti: ", isNoti);
+      setIsNotifiedMoodle(isNoti.isMoodleCalendarNotified);
+      setIsNotifiedInv(isNoti.isUserCalendarNotified);
+    };
+    loadData(); 
+  }, []);
 
-  useEffect(()=> {
-    function func(){
-      
+  const [isNotifiedMoodle, setIsNotifiedMoodle] = useState(false);
+  const [isNotifiedInv, setIsNotifiedInv] = useState(false);
+
+  function processNotiMoodle(value){
+    setIsNotifiedMoodle(value);
+    console.log("isNotifiedMoodle: ", value);
+    if(value == true){ 
+      CalendarService.turnOnCalendarNotification(true);  
+    } else {
+      CalendarService.turnOffCalendarNotification(true);
     }
-    func();
-  }, [isNotifiedMoodle])
+  }
+
+  function processNotiUser(value){ 
+    setIsNotifiedInv(value);
+    console.log("isNotifiedUser: ", value);
+    if(value == true){ 
+      CalendarService.turnOnCalendarNotification(false);  
+    } else {
+      CalendarService.turnOffCalendarNotification(false);
+    }
+  }
 
   return (
     <TouchableWithoutFeedback>
@@ -64,7 +88,7 @@ const CalendarExtendTurnOnOffNoti = () => {
                 trackColor={{ false: "grey", true: "#3A4666" }}
                 thumbColor={isNotifiedMoodle ? "#f4f3f4" : "#f4f3f4"}
                 value={isNotifiedMoodle}
-                onValueChange={(newValue) => setIsNotifiedMoodle(newValue)}
+                onValueChange={(newValue) => processNotiMoodle(newValue)}
                 style={{ transform: [{ scaleX: 1 }, { scaleY: 1 }] }}
               />
             </TouchableOpacity>
@@ -79,7 +103,7 @@ const CalendarExtendTurnOnOffNoti = () => {
                 trackColor={{ false: "grey", true: "#3A4666" }}
                 thumbColor={isNotifiedInv ? "#f4f3f4" : "#f4f3f4"}
                 value={isNotifiedInv}
-                onValueChange={(newValue) => setIsNotifiedInv(newValue)}
+                onValueChange={(newValue) => processNotiUser(newValue)}
                 style={{ transform: [{ scaleX: 1 }, { scaleY: 1 }] }}
               />
             </TouchableOpacity>
