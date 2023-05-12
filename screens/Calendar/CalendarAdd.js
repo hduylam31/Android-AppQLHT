@@ -47,7 +47,7 @@ const Calendar_Add = () => {
   });
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+    const currentDate = new Date(selectedDay) || selectedDate || date;
     setShow(Platform.OS === "ios");
     setDate(currentDate);
 
@@ -106,43 +106,43 @@ const Calendar_Add = () => {
       console.log("Start addingg");
       try {
         var rangeTimeInfo = {
-          "type": "",
-          "customType": "",
-          "customTime": ""
+          type: "",
+          customType: "",
+          customTime: "",
         };
-        if(isNotified){
+        if (isNotified) {
           var rangeTime = -1;
-          if(timeNoti == "1") rangeTime=0;
-          if(timeNoti == "2") rangeTime=5*60;
-          if(timeNoti == "3") rangeTime=10*60;
-          if(timeNoti == "4") rangeTime=60*60;
-          if(timeNoti == "5") rangeTime=60*60*24; 
-          if(timeNoti == "6") {
+          if (timeNoti == "1") rangeTime = 0;
+          if (timeNoti == "2") rangeTime = 5 * 60;
+          if (timeNoti == "3") rangeTime = 10 * 60;
+          if (timeNoti == "4") rangeTime = 60 * 60;
+          if (timeNoti == "5") rangeTime = 60 * 60 * 24;
+          if (timeNoti == "6") {
             switch (customTimeNoti) {
               case "1":
-                rangeTime = parseInt(numberTimeNoti)*60;
+                rangeTime = parseInt(numberTimeNoti) * 60;
                 break;
               case "2":
-                rangeTime = parseInt(numberTimeNoti)*60*60;
+                rangeTime = parseInt(numberTimeNoti) * 60 * 60;
                 break;
               case "3":
-                rangeTime = parseInt(numberTimeNoti)*60*60*24;
+                rangeTime = parseInt(numberTimeNoti) * 60 * 60 * 24;
                 break;
               default:
-                rangeTime = 60*60*2;
-                break;   
+                rangeTime = 60 * 60 * 2;
+                break;
             }
           }
-          
+
           rangeTimeInfo = {
-            "time": rangeTime,
-            "type": timeNoti,
-            "customType": customTimeNoti,
-            "customTime": numberTimeNoti
-          }
+            time: rangeTime,
+            type: timeNoti,
+            customType: customTimeNoti,
+            customTime: numberTimeNoti,
+          };
         }
-        
-        await CalendarService.addUserCalendar( 
+
+        await CalendarService.addUserCalendar(
           title,
           textDate,
           textTime,
@@ -259,7 +259,7 @@ const Calendar_Add = () => {
               {show && (
                 <DateTimePicker
                   testID="dateTimePicker"
-                  value={date}
+                  value={date || new Date()}
                   mode={mode}
                   is24Hour={true}
                   display="default"
