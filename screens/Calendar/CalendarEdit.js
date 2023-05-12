@@ -102,11 +102,11 @@ const Calendar_Edit = () => {
       setDateText(dateFormat);
       setContent(item.description);
       setIsNotified(item.isNotified);
-      if(item.isNotified){
+      if (item.isNotified) {
         setTimeNoti(item.rangeTimeInfo.type);
         setCustomTimeNoti(item.rangeTimeInfo.customType);
-        setNumberTimeNoti(item.rangeTimeInfo.customTime)
-      } 
+        setNumberTimeNoti(item.rangeTimeInfo.customTime);
+      }
     };
     loadData();
   }, []);
@@ -121,52 +121,52 @@ const Calendar_Edit = () => {
       console.log("Start update");
       try {
         var rangeTimeInfo = {
-          "type": "",
-          "customType": "",
-          "customTime": ""
+          type: "",
+          customType: "",
+          customTime: "",
         };
-        if(isNotified){
+        if (isNotified) {
           var rangeTime = -1;
-          if(timeNoti == "1") rangeTime=0;
-          if(timeNoti == "2") rangeTime=5*60;
-          if(timeNoti == "3") rangeTime=10*60;
-          if(timeNoti == "4") rangeTime=60*60;
-          if(timeNoti == "5") rangeTime=60*60*24;
-          if(timeNoti == "6") {
+          if (timeNoti == "1") rangeTime = 0;
+          if (timeNoti == "2") rangeTime = 5 * 60;
+          if (timeNoti == "3") rangeTime = 10 * 60;
+          if (timeNoti == "4") rangeTime = 60 * 60;
+          if (timeNoti == "5") rangeTime = 60 * 60 * 24;
+          if (timeNoti == "6") {
             switch (customTimeNoti) {
               case "1":
-                rangeTime = parseInt(numberTimeNoti)*60;
+                rangeTime = parseInt(numberTimeNoti) * 60;
                 break;
               case "2":
-                rangeTime = parseInt(numberTimeNoti)*60*60;
+                rangeTime = parseInt(numberTimeNoti) * 60 * 60;
                 break;
               case "3":
-                rangeTime = parseInt(numberTimeNoti)*60*60*24;
+                rangeTime = parseInt(numberTimeNoti) * 60 * 60 * 24;
                 break;
               default:
-                rangeTime = 60*60*2;
-                break;   
+                rangeTime = 60 * 60 * 2;
+                break;
             }
           }
-          
+
           rangeTimeInfo = {
-            "time": rangeTime,
-            "type": timeNoti,
-            "customType": customTimeNoti,
-            "customTime": numberTimeNoti
-          }
+            time: rangeTime,
+            type: timeNoti,
+            customType: customTimeNoti,
+            customTime: numberTimeNoti,
+          };
         }
 
         const newItem = {
           id: item.id,
-          title, 
+          title,
           textDate,
           textTime,
           content,
-          isNotified, 
+          isNotified,
           content,
           isMoodle: item.isMoodle,
-          rangeTimeInfo
+          rangeTimeInfo,
         };
         await CalendarService.updateUserCalendar(newItem, item);
         navigation.navigate("BottomBar", {
@@ -368,46 +368,48 @@ const Calendar_Edit = () => {
               />
             </View>
             <Text className="text-base">Thời gian thông báo</Text>
-            <Dropdown
-              disable={isNotified ? false : true}
-              style={{
-                backgroundColor: "#FFFFFF",
-                height: 48,
-                borderRadius: 8,
-                shadowColor: "#000000",
-                shadowOffset: { width: 10, height: 10 },
-                shadowOpacity: 0.5,
-                shadowRadius: 10,
-                elevation: 10,
-              }}
-              containerStyle={{
-                borderRadius: 8,
-              }}
-              itemContainerStyle={{
-                borderRadius: 8,
-                height: 48,
-              }}
-              itemTextStyle={{
-                height: 48,
-              }}
-              placeholderStyle={{
-                fontSize: 16,
-                paddingLeft: 16,
-                color: "#C7C7CD",
-              }}
-              selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
-              iconStyle={{ marginRight: 16 }}
-              data={DataTimeNoti}
-              maxHeight={200}
-              labelField="key"
-              valueField="value"
-              placeholder="Thời gian thông báo"
-              value={isNotified ? timeNoti : ""}
-              onChange={(item) => {
-                setTimeNoti(item.value);
-              }}
-            />
-            {timeNoti === "6" && isNotified ? (
+            {item.isMoodle === "false" && (
+              <Dropdown
+                disable={isNotified ? false : true}
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  height: 48,
+                  borderRadius: 8,
+                  shadowColor: "#000000",
+                  shadowOffset: { width: 10, height: 10 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+                  elevation: 10,
+                }}
+                containerStyle={{
+                  borderRadius: 8,
+                }}
+                itemContainerStyle={{
+                  borderRadius: 8,
+                  height: 48,
+                }}
+                itemTextStyle={{
+                  height: 48,
+                }}
+                placeholderStyle={{
+                  fontSize: 16,
+                  paddingLeft: 16,
+                  color: "#C7C7CD",
+                }}
+                selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+                iconStyle={{ marginRight: 16 }}
+                data={DataTimeNoti}
+                maxHeight={200}
+                labelField="key"
+                valueField="value"
+                placeholder="Thời gian thông báo"
+                value={isNotified ? timeNoti : ""}
+                onChange={(item) => {
+                  setTimeNoti(item.value);
+                }}
+              />
+            )}
+            {timeNoti === "6" && isNotified && item.isMoodle === "false" ? (
               <View className="flex-row justify-between">
                 <TextInput
                   placeholder="Nhập số"
@@ -465,7 +467,6 @@ const Calendar_Edit = () => {
             ) : (
               <View></View>
             )}
-
             {/* Nội dung phần ghi chú */}
             <Text className="text-base">Ghi chú</Text>
             <TextInput
@@ -485,11 +486,11 @@ const Calendar_Edit = () => {
               textAlignVertical="top"
               editable={item.isMoodle === "true" ? false : true}
             ></TextInput>
-
             <View className="h-20"></View>
           </View>
           {/* Nút thêm */}
-          {isKeyboardShowing ? (
+
+          {isKeyboardShowing && item.isMoodle === "false" ? (
             <TouchableOpacity
               onPress={handleUpdateCalendar}
               className="bg-[#3A4666] rounded-2xl flex items-center justify-center mb-6 h-10 w-[90%] ml-[5%]"
@@ -509,7 +510,7 @@ const Calendar_Edit = () => {
             <View className="mt-10 mb-6"></View>
           )}
         </ScrollView>
-        {!isKeyboardShowing && (
+        {!isKeyboardShowing && item.isMoodle === "false" && (
           <View className="w-full h-16 bg-[#F1F5F9]">
             <TouchableOpacity
               onPress={handleUpdateCalendar}

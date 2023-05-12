@@ -29,6 +29,8 @@ const CalendarExtendTimeNoti = () => {
   const [customTimeIndvNoti, setCustomTimeIndvNoti] = useState("1");
   const [numberTimeIndvNoti, setNumberTimeIndvNoti] = useState("5");
 
+  const [turnOnButtonSave, setTurnOnButtonSave] = useState(false);
+
   return (
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -92,6 +94,7 @@ const CalendarExtendTimeNoti = () => {
               value={timeMoodleNoti}
               onChange={(item) => {
                 setTimeMoodleNoti(item.value);
+                setTurnOnButtonSave(true);
               }}
             />
             {timeMoodleNoti === "6" ? (
@@ -145,6 +148,7 @@ const CalendarExtendTimeNoti = () => {
                   value={customTimeMoodleNoti}
                   onChange={(item) => {
                     setCustomTimeMoodleNoti(item.value);
+                    setTurnOnButtonSave(true);
                   }}
                 />
               </View>
@@ -192,6 +196,7 @@ const CalendarExtendTimeNoti = () => {
               value={timeIndvNoti}
               onChange={(item) => {
                 setTimeIndvNoti(item.value);
+                setTurnOnButtonSave(true);
               }}
             />
             {timeIndvNoti === "6" ? (
@@ -245,6 +250,7 @@ const CalendarExtendTimeNoti = () => {
                   value={customTimeIndvNoti}
                   onChange={(item) => {
                     setCustomTimeIndvNoti(item.value);
+                    setTurnOnButtonSave(true);
                   }}
                 />
               </View>
@@ -254,6 +260,26 @@ const CalendarExtendTimeNoti = () => {
             <View className="h-3"></View>
           </View>
         </ScrollView>
+        <TouchableOpacity
+          onPress={() => {
+            setTurnOnButtonSave(false);
+          }}
+          disabled={turnOnButtonSave ? false : true}
+          className={`w-[90%] h-10 absolute bottom-14 ml-[5%] rounded-2xl flex items-center justify-center ${
+            turnOnButtonSave ? "bg-[#3A4666]" : "bg-[#6b6b6f]"
+          }`}
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: { width: 5, height: 5 },
+            shadowOpacity: 0.5,
+            shadowRadius: 5,
+            elevation: 5,
+          }}
+        >
+          <Text className="text-white text-center font-bold text-base">
+            Lưu
+          </Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
