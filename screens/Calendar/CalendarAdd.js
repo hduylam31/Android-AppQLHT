@@ -36,6 +36,10 @@ const Calendar_Add = () => {
   // const selectedDay = props.currentDate;
   const DaySelected = moment(selectedDay, "YYYY-MM-DD").format("DD/MM/YYYY");
   console.log("aaa", DaySelected);
+  const getTimeCurrent = new Date().toISOString();
+  const timeString = getTimeCurrent.substring(getTimeCurrent.indexOf("T"));
+  console.log(timeString);
+  const newDate = selectedDay.concat("", timeString);
 
   const [textDate, setDateText] = useState(DaySelected);
   const [textTime, setTimeDate] = useState("00:00");
@@ -47,17 +51,50 @@ const Calendar_Add = () => {
   });
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+    const currentDate = selectedDate;
     setShow(Platform.OS === "ios");
     setDate(currentDate);
-
+    console.log("currentDate", currentDate);
     let tempDate = new Date(currentDate);
-    let fDate =
-      tempDate.getDate() +
-      "/" +
-      (tempDate.getMonth() + 1) +
-      "/" +
-      tempDate.getFullYear();
+    let fDate;
+    // let fDate =
+    //   tempDate.getDate() +
+    //   "/" +
+    //   (tempDate.getMonth() + 1) +
+    //   "/" +
+    //   tempDate.getFullYear();
+    if (tempDate.getDate() < 10 && tempDate.getMonth() < 10) {
+      fDate =
+        "0" +
+        tempDate.getDate() +
+        "/0" +
+        (tempDate.getMonth() + 1) +
+        "/" +
+        tempDate.getFullYear();
+    } else if (tempDate.getDate() < 10 && tempDate.getMonth() > 10) {
+      fDate =
+        "0" +
+        tempDate.getDate() +
+        "/" +
+        (tempDate.getMonth() + 1) +
+        "/" +
+        tempDate.getFullYear();
+    } else if (tempDate.getDate() > 10 && tempDate.getMonth() < 10) {
+      fDate =
+        tempDate.getDate() +
+        "/0" +
+        (tempDate.getMonth() + 1) +
+        "/" +
+        tempDate.getFullYear();
+    } else {
+      fDate =
+        tempDate.getDate() +
+        "/" +
+        (tempDate.getMonth() + 1) +
+        "/" +
+        tempDate.getFullYear();
+    }
+
     if (tempDate.getHours() < 10 && tempDate.getMinutes() < 10) {
       fTime = "0" + tempDate.getHours() + ":0" + tempDate.getMinutes();
     } else if (tempDate.getHours() < 10) {
@@ -106,43 +143,43 @@ const Calendar_Add = () => {
       console.log("Start addingg");
       try {
         var rangeTimeInfo = {
-          "type": "",
-          "customType": "",
-          "customTime": ""
+          type: "",
+          customType: "",
+          customTime: "",
         };
-        if(isNotified){
+        if (isNotified) {
           var rangeTime = -1;
-          if(timeNoti == "1") rangeTime=0;
-          if(timeNoti == "2") rangeTime=5*60;
-          if(timeNoti == "3") rangeTime=10*60;
-          if(timeNoti == "4") rangeTime=60*60;
-          if(timeNoti == "5") rangeTime=60*60*24; 
-          if(timeNoti == "6") {
+          if (timeNoti == "1") rangeTime = 0;
+          if (timeNoti == "2") rangeTime = 5 * 60;
+          if (timeNoti == "3") rangeTime = 10 * 60;
+          if (timeNoti == "4") rangeTime = 60 * 60;
+          if (timeNoti == "5") rangeTime = 60 * 60 * 24;
+          if (timeNoti == "6") {
             switch (customTimeNoti) {
               case "1":
-                rangeTime = parseInt(numberTimeNoti)*60;
+                rangeTime = parseInt(numberTimeNoti) * 60;
                 break;
               case "2":
-                rangeTime = parseInt(numberTimeNoti)*60*60;
+                rangeTime = parseInt(numberTimeNoti) * 60 * 60;
                 break;
               case "3":
-                rangeTime = parseInt(numberTimeNoti)*60*60*24;
+                rangeTime = parseInt(numberTimeNoti) * 60 * 60 * 24;
                 break;
               default:
-                rangeTime = 60*60*2;
-                break;   
+                rangeTime = 60 * 60 * 2;
+                break;
             }
           }
-          
+
           rangeTimeInfo = {
-            "time": rangeTime,
-            "type": timeNoti,
-            "customType": customTimeNoti,
-            "customTime": numberTimeNoti
-          }
+            time: rangeTime,
+            type: timeNoti,
+            customType: customTimeNoti,
+            customTime: numberTimeNoti,
+          };
         }
-        
-        await CalendarService.addUserCalendar( 
+
+        await CalendarService.addUserCalendar(
           title,
           textDate,
           textTime,
@@ -259,7 +296,7 @@ const Calendar_Add = () => {
               {show && (
                 <DateTimePicker
                   testID="dateTimePicker"
-                  value={date}
+                  value={new Date(newDate)}
                   mode={mode}
                   is24Hour={true}
                   display="default"
