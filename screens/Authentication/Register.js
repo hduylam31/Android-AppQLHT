@@ -11,10 +11,11 @@ import {
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { ClockImage } from "../../assets"; 
+import { ClockImage } from "../../assets";
 import { AntDesign } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CredentialService from "../../service/CredentialService";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Register = () => {
   const navigation = useNavigation();
@@ -23,6 +24,8 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [repassword, setrePassword] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [showRepass, setShowRepass] = useState(false);
 
   let validateAndSet = (value, valueCompare, setValue) => {
     value !== valueCompare
@@ -138,29 +141,53 @@ const Register = () => {
                 onChangeText={(email) => setEmail(email)}
               ></TextInput>
             </View>
-            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
+            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%] flex-row justify-between items-center">
               <TextInput
-                className="text-lg pl-4"
+                className="text-lg pl-4 w-[85%]"
                 placeholderTextColor="#9A999B"
                 placeholder="Mật khẩu"
                 autoCapitalize="none"
-                secureTextEntry={true}
+                secureTextEntry={showPass ? false : true}
                 value={password}
                 onChangeText={(text) => setPassword(text)}
               ></TextInput>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowPass(!showPass);
+                }}
+              >
+                {showPass ? (
+                  <Ionicons name="eye-outline" size={28} color="black" />
+                ) : (
+                  <Ionicons name="eye-off-outline" size={28} color="black" />
+                )}
+              </TouchableOpacity>
             </View>
             <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
-              <TextInput
-                className="text-lg pl-4"
-                placeholderTextColor="#9A999B"
-                placeholder="Nhập lại mật khẩu"
-                secureTextEntry={true}
-                autoCapitalize="none"
-                value={repassword}
-                onChangeText={(value) =>
-                  validateAndSet(value, password, setrePassword)
-                }
-              ></TextInput>
+              <View className="flex-row justify-between items-center">
+                <TextInput
+                  className="text-lg pl-4 w-[85%]"
+                  placeholderTextColor="#9A999B"
+                  placeholder="Nhập lại mật khẩu"
+                  secureTextEntry={showRepass ? false : true}
+                  autoCapitalize="none"
+                  value={repassword}
+                  onChangeText={(value) =>
+                    validateAndSet(value, password, setrePassword)
+                  }
+                ></TextInput>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowRepass(!showRepass);
+                  }}
+                >
+                  {showRepass ? (
+                    <Ionicons name="eye-outline" size={28} color="black" />
+                  ) : (
+                    <Ionicons name="eye-off-outline" size={28} color="black" />
+                  )}
+                </TouchableOpacity>
+              </View>
               <Text className="mt-4 text-red-500">{validationMessage}</Text>
             </View>
           </View>
