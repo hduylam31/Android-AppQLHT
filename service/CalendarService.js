@@ -308,19 +308,22 @@ class CalendarService {
 
   static async saveCalendarData(token) {
     console.log("inside saveCalendarData function");
+    const notiConfig = await this.loadNotiConfig();
+    const rangeTime = notiConfig.moodleNotiConfig.time;
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
     const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
     const nextMonthYear = currentMonth === 12 ? currentYear + 1 : currentYear;
-    let currentMonthEvent = await this.fetchCalendarData(token, 12, 2022);
+    console.log("rangeTime: ", rangeTime);
+    let currentMonthEvent = await this.fetchCalendarData(token, 12, 2022, rangeTime);
     if (currentMonthEvent === "error") {
       console.log("error token");
       await this.logOutMoodle(-1);
       return;
     }
 
-    let nextMonthEvent = await this.fetchCalendarData(token, nextMonth, nextMonthYear);
+    let nextMonthEvent = await this.fetchCalendarData(token, nextMonth, nextMonthYear, rangeTime);
     const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);  
     // =====================================DB===================================
     await AsyncStorage.setItem('moodleCalendar', JSON.stringify(twoMonthEvents)); 
@@ -338,7 +341,7 @@ class CalendarService {
     console.log("done save two month calendar function OKK");
   }
 
-  static async fetchCalendarData(token, month, year) {
+  static async fetchCalendarData(token, month, year, rangeTime) {
     console.log("get calendar data");
     url =
       "https://courses.fit.hcmus.edu.vn/webservice/rest/server.php?wstoken=" +
@@ -398,7 +401,7 @@ class CalendarService {
             // const now = new Date(2022,12-1, 1,0,0); //test 01/12/2022 do dữ liệu đang tháng 11 và 12/2022
             const diff = deadlineDate - now;
             const threeDays = 60 * 1000 * 60 * 24 * 3;
-            const twoHours = 2 * 60 * 60 * 1000;
+            const twoHours = rangeTime * 1000;
             let identifier = "";
             if (diff > 0 && diff <= threeDays) {
               //chỉ lấy dữ liệu trong 2 ngày tiếp theo (test thì lấy 30 ngày)
@@ -422,10 +425,10 @@ class CalendarService {
                 })
               );
             }
-          }
+          
           // ==================================End Notification============================
 
-          const eventItemPromise = Promise.all(promises).then(() => {
+            const eventItemPromise = Promise.all(promises).then(() => {
             const eventItem = {
               id: id,
               title: eventName,
@@ -445,6 +448,7 @@ class CalendarService {
             events.push(eventItem);
           });
           promises.push(eventItemPromise);
+          }
         });
       });
     });
@@ -787,7 +791,7 @@ class CalendarService {
         const now = new Date(Date.now());
         // const now = new Date(2022,12-1, 1,0,0);
         const diff = deadlineDate - now;
-        const twoHours = 2 * 60 * 60 * 1000;
+        const twoHours = elem.rangeTimeInfo.time * 1000;
         const threeDays = 60 * 1000 * 60 * 24 * 3;
         if (diff > 0 && diff <= threeDays) {
           // > 2hours and < 2 day
@@ -855,6 +859,31 @@ class CalendarService {
           await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
         }
       }
+    }
+  }
+
+  static async saveNotiConfig(moodleConfig){
+    try {
+      console.log(moodleConfig, userConfig);
+      const user = auth.currentUser;
+      const userRef = doc(collection(firestore, "user"), user.uid);
+      updateDoc(userRef, {"moodleNotiConfig": moodleConfig});
+    } catch (error) {
+      console.log("saveNotiConfig: ", error);
+    }
+
+  }
+
+  static async loadNotiConfig(){
+    try {
+      const user = auth.currentUser;
+      const userRef = doc(collection(firestore, "user"), user.uid);
+      const userDoc = await getDoc(userRef);
+      return {
+        "moodleNotiConfig": userDoc.data().moodleNotiConfig
+      }
+    } catch (error) {
+      console.log("saveNotiConfig: ", error);
     }
   }
 

@@ -30,7 +30,7 @@ const Login_Moodle = () => {
       Alert.alert("Kết nối không thành công", "Vui lòng nhập tên tài khoản");
     } else if (password === "") {
       Alert.alert("Kết nối không thành công", "Vui lòng nhập mật khẩu");
-    } else if (status === 1) {
+    } else if (status === 1) { 
       //1 = ok, 0 = sai mật khẩu, -1 = lỗi 
       navigation.navigate("BottomBar", {
         screen: "Lịch",
