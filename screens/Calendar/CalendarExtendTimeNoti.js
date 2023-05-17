@@ -7,11 +7,12 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Dropdown } from "react-native-element-dropdown";
+import CalendarService from "../../service/CalendarService";
 
 const CalendarExtendTimeNoti = () => {
   const navigation = useNavigation();
@@ -20,6 +21,8 @@ const CalendarExtendTimeNoti = () => {
       headerShown: false,
     });
   });
+
+  
 
   const [timeMoodleNoti, setTimeMoodleNoti] = useState(null);
   const [customTimeMoodleNoti, setCustomTimeMoodleNoti] = useState("1");
@@ -30,6 +33,64 @@ const CalendarExtendTimeNoti = () => {
   const [numberTimeIndvNoti, setNumberTimeIndvNoti] = useState("5");
 
   const [turnOnButtonSave, setTurnOnButtonSave] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await CalendarService.loadNotiConfig();
+      console.log(data); 
+      const moodleNotiConfig = data.moodleNotiConfig;
+      setTimeMoodleNoti(moodleNotiConfig.type);
+      setCustomTimeMoodleNoti(moodleNotiConfig.customType);
+      setNumberTimeMoodleNoti(moodleNotiConfig.customTime)
+      console.log("timeMoodleNoti ", timeMoodleNoti);
+    };
+    loadData();
+  }, []);
+
+  function getTimeInfo(timeNoti, customTimeNoti, numberTimeNoti){
+    var rangeTimeInfo = {
+      type: "",
+      customType: "",
+      customTime: "",
+    };
+
+    var rangeTime = -1;
+    if (timeNoti == "1") rangeTime = 0;
+    if (timeNoti == "2") rangeTime = 5 * 60;
+    if (timeNoti == "3") rangeTime = 10 * 60;
+    if (timeNoti == "4") rangeTime = 60 * 60;
+    if (timeNoti == "5") rangeTime = 60 * 60 * 24;
+    if (timeNoti == "6") {
+      switch (customTimeNoti) {
+        case "1":
+          rangeTime = parseInt(numberTimeNoti) * 60;
+          break;
+        case "2":
+          rangeTime = parseInt(numberTimeNoti) * 60 * 60;
+          break;
+        case "3":
+          rangeTime = parseInt(numberTimeNoti) * 60 * 60 * 24;
+          break;
+        default:
+          rangeTime = 60 * 60 * 2;
+          break;
+      }
+    }
+
+    rangeTimeInfo = {
+      time: rangeTime,
+      type: timeNoti,
+      customType: customTimeNoti,
+      customTime: numberTimeNoti,
+    };
+    return rangeTimeInfo;
+  }
+
+  async function saveNotiConfig(){
+    console.log("hello");
+    const rangeTimeMoodleInfo = getTimeInfo(timeMoodleNoti, customTimeMoodleNoti, numberTimeMoodleNoti);
+    await CalendarService.saveNotiConfig(rangeTimeMoodleInfo);
+  }
 
   return (
     <TouchableWithoutFeedback>
@@ -157,111 +218,12 @@ const CalendarExtendTimeNoti = () => {
             )}
 
             {/* Thời gian thông báo sự kiện moodle */}
-            <Text className="text-base">
-              Thời gian thông báo sự kiện cá nhân
-            </Text>
-            <Dropdown
-              style={{
-                backgroundColor: "#FFFFFF",
-                height: 48,
-                borderRadius: 8,
-                shadowColor: "#000000",
-                shadowOffset: { width: 10, height: 10 },
-                shadowOpacity: 0.5,
-                shadowRadius: 10,
-                elevation: 10,
-              }}
-              containerStyle={{
-                borderRadius: 8,
-              }}
-              itemContainerStyle={{
-                borderRadius: 8,
-                height: 48,
-              }}
-              itemTextStyle={{
-                height: 48,
-              }}
-              placeholderStyle={{
-                fontSize: 16,
-                paddingLeft: 16,
-                color: "#C7C7CD",
-              }}
-              selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
-              iconStyle={{ marginRight: 16 }}
-              data={DataTimeNoti}
-              maxHeight={200}
-              labelField="key"
-              valueField="value"
-              placeholder="Thời gian thông báo sự kiện cá nhân"
-              value={timeIndvNoti}
-              onChange={(item) => {
-                setTimeIndvNoti(item.value);
-                setTurnOnButtonSave(true);
-              }}
-            />
-            {timeIndvNoti === "6" ? (
-              <View className="flex-row justify-between">
-                <TextInput
-                  keyboardType="numeric"
-                  className="w-[48%] bg-[#FFFFFF] px-4 py-2 rounded-lg resize-none text-base"
-                  style={{
-                    shadowColor: "#000000",
-                    shadowOffset: { width: 10, height: 10 },
-                    shadowOpacity: 0.5,
-                    shadowRadius: 10,
-                    elevation: 10,
-                  }}
-                  value={numberTimeIndvNoti}
-                  onChangeText={(text) => setNumberTimeIndvNoti(text)}
-                ></TextInput>
-                <Dropdown
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    height: 48,
-                    width: "48%",
-                    borderRadius: 8,
-                    shadowColor: "#000000",
-                    shadowOffset: { width: 10, height: 10 },
-                    shadowOpacity: 0.5,
-                    shadowRadius: 10,
-                    elevation: 10,
-                  }}
-                  containerStyle={{
-                    borderRadius: 8,
-                  }}
-                  itemContainerStyle={{
-                    borderRadius: 8,
-                    height: 48,
-                  }}
-                  itemTextStyle={{
-                    height: 48,
-                  }}
-                  placeholderStyle={{
-                    fontSize: 16,
-                    paddingLeft: 16,
-                    color: "#C7C7CD",
-                  }}
-                  selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
-                  iconStyle={{ marginRight: 16 }}
-                  data={DataCategoriTimeNoti}
-                  maxHeight={200}
-                  labelField="key"
-                  valueField="value"
-                  value={customTimeIndvNoti}
-                  onChange={(item) => {
-                    setCustomTimeIndvNoti(item.value);
-                    setTurnOnButtonSave(true);
-                  }}
-                />
-              </View>
-            ) : (
-              <View></View>
-            )}
             <View className="h-3"></View>
           </View>
         </ScrollView>
         <TouchableOpacity
           onPress={() => {
+            saveNotiConfig();
             setTurnOnButtonSave(false);
           }}
           disabled={turnOnButtonSave ? false : true}

@@ -48,15 +48,20 @@ const ToDoListScreen = () => {
   //======= BE: lấy data todolist của account đang đăng nhập =========
   const [todolists, setTodolists] = useState([]);
   const [todos, setTodos] = useState([]);
+  const [groupName, setGroupName] = useState("Mặc định");
 
   const loadTodolist = async () => {
-    const todolists = await TodolistService.loadTodolist();
-    setTodolists(todolists);
-    console.log("todolist2: ", todolists);
+    const todolistInfo = await TodolistService.loadTodolist();
+    if(todolistInfo != null){
+      const usingTodolists = todolistInfo.usingTodolists; 
+      setTodolists(usingTodolists); 
+      setGroupName(todolistInfo.usingGroupName);
+      console.log("todolist2: ", todolistInfo); 
+    }
   };
 
   useEffect(() => {
-    loadTodolist();
+    loadTodolist(); 
   }, []);
 
   const route = useRoute();
@@ -117,8 +122,8 @@ const ToDoListScreen = () => {
 
   // ===========================================================================
 
-  const handleToggleCompleted = (item) => {
-    TodolistService.updateCompletedStatus(item);
+  const handleToggleCompleted = (item) => { 
+    TodolistService.updateCompletedStatus(item);  
     const updatedTodos = todos.map((todo) => {
       if (todo.id === item.id) {
         return { ...todo, isCompleted: !todo.isCompleted };
@@ -274,13 +279,13 @@ const ToDoListScreen = () => {
       setShowMultiCheck(false);
       setIsCheckSelectAll(false);
       setSelectedIds([]);
-    } else if (id === "all") {
+    } else if (id === "all") { 
       setSelectedIds(isCheckSelectAll ? [] : todos.map((item) => item.id));
       setIsCheckSelectAll(!isCheckSelectAll);
     } else {
       if (selectedIds.includes(id)) {
         setSelectedIds(selectedIds.filter((item) => item !== id));
-      } else {
+      } else { 
         setSelectedIds([...selectedIds, id]);
       }
     }
@@ -311,6 +316,10 @@ const ToDoListScreen = () => {
       ]
     );
   };
+
+  async function saveGroupName(){
+    await TodolistService.saveGroupName(nameSaveWorkGroup);
+  } 
 
   return (
     <SafeAreaView className="flex-1">
@@ -411,8 +420,9 @@ const ToDoListScreen = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("GroupTodoList", {
+                      navigation.navigate("GroupTodoList", { 
                         paramMoveData: "NoteMoveData",
+                        usingGroupName: groupName
                       });
                     }}
                     className="flex-1 flex-row justify-start items-center"
@@ -518,48 +528,13 @@ const ToDoListScreen = () => {
             </Modal>
           </View>
           {showMultiCheck && <Text className="text-xs text-white">Tất cả</Text>}
-        </View>
-      </View>
+        </View> 
+      </View> 
       <View className="flex-1 bg-[#F1F5F9]">
         <View className="flex-row items-center justify-end space-x-3 pr-2">
-          <Text className="text-sm">Nhóm CV</Text>
-          <SelectCountry
-            style={{
-              backgroundColor: "#FFFFFF",
-              height: 20,
-              width: "45%",
-              borderRadius: 6,
-            }}
-            containerStyle={{
-              borderRadius: 6,
-            }}
-            itemContainerStyle={{
-              borderRadius: 6,
-            }}
-            itemTextStyle={{
-              fontSize: 14,
-            }}
-            placeholderStyle={{
-              fontSize: 16,
-              paddingLeft: 16,
-              color: "#C7C7CD",
-            }}
-            selectedTextStyle={{ fontSize: 14, paddingLeft: 16 }}
-            iconStyle={{ width: 20, height: 20 }}
-            imageStyle={{
-              width: 0,
-              height: 0,
-            }}
-            data={Data}
-            labelField="key"
-            valueField="value"
-            value={listGroup}
-            onChange={(item) => {
-              setListGroup(item.value);
-            }}
-          />
+          <Text className="text-sm">Nhóm CV: {groupName}</Text> 
         </View>
-
+ 
         {/* Công việc hiện có  */}
         <View
           className="w-[90%] h-[38%] bg-white rounded-2xl mx-[5%] mt-4"
@@ -650,7 +625,7 @@ const ToDoListScreen = () => {
       ) : (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("TodoList_Add");
+            navigation.navigate("TodoList_Add", {groupName});
           }}
           className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
           style={{
@@ -716,7 +691,10 @@ const ToDoListScreen = () => {
                   shadowRadius: 5,
                   elevation: 5,
                 }}
-                onPress={() => setShowSaveWorkGroup(false)}
+                onPress={() =>{
+                  setShowSaveWorkGroup(false);
+                  saveGroupName();
+                }}
               >
                 <Text className="font-semibold text-base text-white">Thêm</Text>
               </TouchableOpacity>

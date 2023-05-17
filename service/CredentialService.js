@@ -64,7 +64,13 @@ class CredentialService {
         const user = userCredential.user;
         console.log("Successfully register withh", user.email);
         const userRef = doc(collection(firestore, "user"), user.uid);
-        await setDoc(userRef, { "name": name, "isMoodleCalendarNotified": true, "isUserCalendarNotified": true });
+        await setDoc(userRef, 
+          { 
+            "name": name, 
+            "isMoodleCalendarNotified": true, 
+            "isUserCalendarNotified": true, 
+            "moodleNotiConfig": {"customTime": "5", "customType": "1", "time": 3600, "type": "4"}
+          });
         console.log("Successfully register user name", name);
         return true;
       })

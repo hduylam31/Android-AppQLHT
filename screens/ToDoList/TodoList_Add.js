@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -56,6 +56,9 @@ const TodoList_Add = () => {
     setSelectedCategory("profile"); // Thiết lập loại công việc mặc định là "Học tập" khi màn hình được khởi tạo
   }, []);
 
+  const route = useRoute();
+  const groupName = route.params.groupName;
+
   const navigation = useNavigation();
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState("date");
@@ -73,6 +76,7 @@ const TodoList_Add = () => {
       );
     } else {
       console.log("Start adding");
+      console.log("groupName: ", groupName); 
       try {
         // TodolistService.addTodolist
         await TodolistService.addTodolist(
@@ -80,7 +84,8 @@ const TodoList_Add = () => {
           selectedCategory,
           isNotified,
           textTime,
-          content
+          content,
+          groupName
         );
         navigation.navigate("BottomBar", {
           screen: "DS công việc",
