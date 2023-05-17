@@ -103,6 +103,7 @@ const TodoList_Edit = () => {
           text: value,
           isCompleted: item.isCompleted,
           identifier: item.identifier,
+          groupName: item.groupName,
         };
         await TodolistService.updateTodolist(new_item, item);
         navigation.navigate("BottomBar", {

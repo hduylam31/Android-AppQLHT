@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { CheckBox } from "@rneui/themed";
+import TodolistService from "../../service/TodolistService";
 
 const GroupTodoList = () => {
   const navigation = useNavigation();
@@ -24,8 +25,18 @@ const GroupTodoList = () => {
   });
 
   const route = useRoute();
-  const { paramMoveData } = route.params;
+  const { paramMoveData, usingGroupName } = route.params;
   const [moveData, setMoveData] = useState(false);
+  const [data, setData] = useState([]);
+ 
+  useEffect(()=>{
+    async function loadGroupNames(){   
+      const groupNames = await TodolistService.loadGroupNames();  
+      setData(groupNames); 
+      console.log("groupNames: ", groupNames);
+    }
+    loadGroupNames();  
+  }, [])
 
   useEffect(() => {
     if (paramMoveData === "MoveData") {
@@ -37,16 +48,16 @@ const GroupTodoList = () => {
     }
   }, [route]);
 
-  data = [
-    { id: 1, title: "Danh sách công việc 1" },
-    {
-      id: 2,
-      title: "DS công việc",
-    },
-    { id: 3, title: "AS công việc" },
-    { id: 4, title: "DS công việc 2" },
-    { id: 5, title: "DS công việc 5" },
-  ];
+  // data = [
+  //   { id: 1, title: "Danh sách công việc 1" },
+  //   {
+  //     id: 2,
+  //     title: "DS công việc",
+  //   },
+  //   { id: 3, title: "AS công việc" },
+  //   { id: 4, title: "DS công việc 2" },
+  //   { id: 5, title: "DS công việc 5" },
+  // ];
   const [todos, setTodos] = useState([]);
   const handleSortAZ = () => {
     const sortedTodos2 = data.sort((a, b) => {
@@ -81,20 +92,37 @@ const GroupTodoList = () => {
 
   const [selectedIds, setSelectedIds] = useState([]);
 
-  const toggleCheckBox = (id) => {
-    console.log("id", id);
-    if (id === "all") {
-      setSelectedIds(isCheckSelectAll ? [] : data.map((item) => item.id));
+  const toggleCheckBox = (title) => {
+    console.log("title", title);  
+    if (title === "all") {
+      setSelectedIds(isCheckSelectAll ? [] : data.map((item) => item.title));
       setIsCheckSelectAll(!isCheckSelectAll);
     } else {
-      if (selectedIds.includes(id)) {
-        setSelectedIds(selectedIds.filter((item) => item !== id));
+      if (selectedIds.includes(title)) {
+        setSelectedIds(selectedIds.filter((item) => item !== title));
       } else {
-        setSelectedIds([...selectedIds, id]);
+        setSelectedIds([...selectedIds, title]);
       }
     }
   };
-  console.log("aid", selectedIds);
+
+  console.log("selectedIds: ", selectedIds); 
+
+  async function changeToAnotherGroup(groupName){
+    console.log(groupName); 
+    if(usingGroupName == groupName){
+      navigation.goBack();
+    }else{
+      await TodolistService.changeUsingGroup(groupName);
+      navigation.navigate("BottomBar", {
+        screen: "DS công việc", 
+        params: {
+          screenTodoList: "AddToMain" 
+        },
+      });
+    }
+
+  }
 
   const AlertDelete = () => {
     Alert.alert(
@@ -346,13 +374,13 @@ const GroupTodoList = () => {
                 }}
               >
                 {data.map((item) => (
-                  <View key={item.id} className="mb-5 m-[4%] w-[25%] ">
+                  <View key={item.key} className="mb-5 m-[4%] w-[25%] ">
                     {showMultiCheck ? (
                       <View className="h-20 bg-white rounded-xl">
                         <View className="h-5 flex justify-center items-center rounded-t-xl bg-[#a6a2a1]"></View>
                         <CheckBox
-                          checked={selectedIds.includes(item.id)}
-                          onPress={() => toggleCheckBox(item.id)}
+                          checked={selectedIds.includes(item.title)}
+                          onPress={() => toggleCheckBox(item.title)}
                           iconType="ionicon"
                           checkedIcon="checkmark-circle"
                           uncheckedIcon="ellipse-outline"
@@ -363,9 +391,7 @@ const GroupTodoList = () => {
                       </View>
                     ) : (
                       <TouchableOpacity
-                        onPress={() => {
-                          navigation.navigate("GroupTodoListEdit");
-                        }}
+                        onPress={() => changeToAnotherGroup(item.title)} 
                         className="h-20 bg-white rounded-xl"
                       >
                         <View className="h-5 flex justify-center items-center rounded-t-xl bg-[#a6a2a1]"></View>
