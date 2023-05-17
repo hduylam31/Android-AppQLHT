@@ -52,16 +52,16 @@ const ToDoListScreen = () => {
 
   const loadTodolist = async () => {
     const todolistInfo = await TodolistService.loadTodolist();
-    if(todolistInfo != null){
-      const usingTodolists = todolistInfo.usingTodolists; 
-      setTodolists(usingTodolists); 
+    if (todolistInfo != null) {
+      const usingTodolists = todolistInfo.usingTodolists;
+      setTodolists(usingTodolists);
       setGroupName(todolistInfo.usingGroupName);
-      console.log("todolist2: ", todolistInfo); 
+      console.log("todolist2: ", todolistInfo);
     }
   };
 
   useEffect(() => {
-    loadTodolist(); 
+    loadTodolist();
   }, []);
 
   const route = useRoute();
@@ -122,8 +122,8 @@ const ToDoListScreen = () => {
 
   // ===========================================================================
 
-  const handleToggleCompleted = (item) => { 
-    TodolistService.updateCompletedStatus(item);  
+  const handleToggleCompleted = (item) => {
+    TodolistService.updateCompletedStatus(item);
     const updatedTodos = todos.map((todo) => {
       if (todo.id === item.id) {
         return { ...todo, isCompleted: !todo.isCompleted };
@@ -149,6 +149,7 @@ const ToDoListScreen = () => {
 
   renderItem = ({ item, index }) => (
     <TouchableOpacity
+      disabled={showMultiCheck ? true : false}
       onPress={() => {
         navigation.navigate("TodoList_Edit", { item });
       }}
@@ -161,8 +162,8 @@ const ToDoListScreen = () => {
         <View className="flex-row w-[80%] justify-center items-center">
           {showMultiCheck && (
             <CheckBox
-              checked={selectedIds.includes(item.id)}
-              onPress={() => toggleCheckBox(item.id)}
+              checked={selectedIds.includes(item)}
+              onPress={() => toggleCheckBox(item)}
               iconType="ionicon"
               checkedIcon="checkmark-circle"
               uncheckedIcon="ellipse-outline"
@@ -210,6 +211,7 @@ const ToDoListScreen = () => {
   );
   renderItemCompleted = ({ item, index }) => (
     <TouchableOpacity
+      disabled={showMultiCheck ? true : false}
       onPress={() => {
         navigation.navigate("TodoList_Edit", { item });
       }}
@@ -223,8 +225,8 @@ const ToDoListScreen = () => {
         <View className="flex-row w-[80%] opacity-50 justify-center items-center">
           {showMultiCheck && (
             <CheckBox
-              checked={selectedIds.includes(item.id)}
-              onPress={() => toggleCheckBox(item.id)}
+              checked={selectedIds.includes(item)}
+              onPress={() => toggleCheckBox(item)}
               iconType="ionicon"
               checkedIcon="checkmark-circle"
               uncheckedIcon="ellipse-outline"
@@ -279,13 +281,13 @@ const ToDoListScreen = () => {
       setShowMultiCheck(false);
       setIsCheckSelectAll(false);
       setSelectedIds([]);
-    } else if (id === "all") { 
-      setSelectedIds(isCheckSelectAll ? [] : todos.map((item) => item.id));
+    } else if (id === "all") {
+      setSelectedIds(isCheckSelectAll ? [] : todos.map((item) => item));
       setIsCheckSelectAll(!isCheckSelectAll);
     } else {
       if (selectedIds.includes(id)) {
         setSelectedIds(selectedIds.filter((item) => item !== id));
-      } else { 
+      } else {
         setSelectedIds([...selectedIds, id]);
       }
     }
@@ -317,9 +319,9 @@ const ToDoListScreen = () => {
     );
   };
 
-  async function saveGroupName(){
+  async function saveGroupName() {
     await TodolistService.saveGroupName(nameSaveWorkGroup);
-  } 
+  }
 
   return (
     <SafeAreaView className="flex-1">
@@ -420,9 +422,9 @@ const ToDoListScreen = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("GroupTodoList", { 
+                      navigation.navigate("GroupTodoList", {
                         paramMoveData: "NoteMoveData",
-                        usingGroupName: groupName
+                        usingGroupName: groupName,
                       });
                     }}
                     className="flex-1 flex-row justify-start items-center"
@@ -528,13 +530,13 @@ const ToDoListScreen = () => {
             </Modal>
           </View>
           {showMultiCheck && <Text className="text-xs text-white">Tất cả</Text>}
-        </View> 
-      </View> 
+        </View>
+      </View>
       <View className="flex-1 bg-[#F1F5F9]">
         <View className="flex-row items-center justify-end space-x-3 pr-2">
-          <Text className="text-sm">Nhóm CV: {groupName}</Text> 
+          <Text className="text-sm">Nhóm CV: {groupName}</Text>
         </View>
- 
+
         {/* Công việc hiện có  */}
         <View
           className="w-[90%] h-[38%] bg-white rounded-2xl mx-[5%] mt-4"
@@ -625,7 +627,7 @@ const ToDoListScreen = () => {
       ) : (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("TodoList_Add", {groupName});
+            navigation.navigate("TodoList_Add", { groupName });
           }}
           className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
           style={{
@@ -691,7 +693,7 @@ const ToDoListScreen = () => {
                   shadowRadius: 5,
                   elevation: 5,
                 }}
-                onPress={() =>{
+                onPress={() => {
                   setShowSaveWorkGroup(false);
                   saveGroupName();
                 }}
