@@ -23,6 +23,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import NoteService from "../../service/NoteService";
+import * as ImagePicker from "expo-image-picker";
 
 const NoteList_Add = () => {
   const navigation = useNavigation();
@@ -30,7 +31,6 @@ const NoteList_Add = () => {
   const [title, setTitle] = useState("");
 
   const [note, setNote] = useState("");
-  console.log(note);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -92,6 +92,52 @@ const NoteList_Add = () => {
   //   });
   // };
 
+  // const pickImage = () => {
+  //   ImagePicker.openPicker({
+  //     width: 300,
+  //     height: 300,
+  //     cropping: true,
+  //   }).then((image) => {
+  //     console.log(image);
+  //     convertBase64(image);
+  //   });
+  // };
+
+  // const convertBase64 = (image) => {
+  //   ImgToBase64.getBase64String(image.path)
+  //     .then((base64String) => {
+  //       const str = `data:${image.mine};base64,${base64String}`;
+  //       richText.current.insertImage(str);
+  //     })
+  //     .catch((err) => doSomethingWith(err));
+  // };
+
+  const pickImage = async () => {
+    // Kiểm tra quyền truy cập vào thư viện hình ảnh
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission denied to access media library");
+      return;
+    }
+
+    // Chọn hình ảnh từ thư viện
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      base64: true,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 0.3,
+    });
+    console.log(result);
+    if (!result.canceled) {
+      // const imageUri = result.assets[0].uri;
+      const imageUri64 = `data:image/jpg;base64,${result.assets[0].base64}`;
+
+      // Thêm hình ảnh vào trình soạn thảo
+      // const html = `<img src="${imageUri}" alt="Image"/>`;
+      richText.current.insertImage(imageUri64);
+    }
+  };
   return (
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -119,7 +165,7 @@ const NoteList_Add = () => {
         <View className="p-2 border-b-2 border-b-[#9A999B] bg-white">
           <TextInput
             placeholder="Tiêu đề"
-            style={{ fontSize: 16 }}
+            style={{ fontSize: 20, fontWeight: "bold" }}
             className="w-[100%] pl-2 resize-none"
             multiline={true}
             value={title}
@@ -155,6 +201,7 @@ const NoteList_Add = () => {
             selectedButtonStyle={{ backgroundColor: "transparent" }}
             editor={richText}
             actions={[
+              actions.insertImage,
               actions.undo,
               actions.redo,
               actions.setBold,
@@ -170,6 +217,9 @@ const NoteList_Add = () => {
               actions.removeFormat,
               actions.setStrikethrough,
             ]}
+            onPressAddImage={() => {
+              pickImage();
+            }}
             iconMap={{
               [actions.heading2]: () => (
                 <Text className="mb-1 text-lg">H1</Text>

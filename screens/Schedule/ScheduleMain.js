@@ -8,6 +8,7 @@ import {
   Image,
   StyleSheet,
   textStyle,
+  Alert,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -90,10 +91,17 @@ const ScheduleMain = () => {
     ],
   };
 
+  const element = (rowIndex, colIndex) => (
+    <TouchableOpacity>
+      {/* <View style={styles.btn}>
+        <Text style={styles.btnText}> </Text>
+      </View> */}
+    </TouchableOpacity>
+  );
+
   getCellColor = (rowIndex, colIndex) => {
     rowIndex++;
     colIndex++;
-    let day;
 
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
@@ -484,7 +492,7 @@ const ScheduleMain = () => {
                       }}
                     >
                       {rowData.map((cellData, colIndex) => (
-                        <View
+                        <TouchableOpacity
                           key={colIndex}
                           style={{
                             flex: 1,
@@ -496,9 +504,14 @@ const ScheduleMain = () => {
                               colIndex
                             ),
                           }}
+                          data={
+                            this.getCellColor(rowIndex, colIndex) === "#1CB0D4"
+                              ? element(rowIndex, colIndex)
+                              : cellData
+                          }
                         >
-                          <Text>{cellData}</Text>
-                        </View>
+                          {/* <Text>{cellData}</Text> */}
+                        </TouchableOpacity>
                       ))}
                     </View>
                   ))}

@@ -53,10 +53,10 @@ const NoteList_Edit = () => {
 
   const handleUpdateNoteList = async () => {
     console.log("Start update");
-    if(title == c_item.title && note == c_item.note){
+    if (title == c_item.title && note == c_item.note) {
       console.log("No Update");
       navigation.goBack();
-      return; 
+      return;
     }
     try {
       await NoteService.updateNote({
@@ -155,7 +155,7 @@ const NoteList_Edit = () => {
         <View className="p-2 border-b-2 border-b-[#9A999B] bg-white">
           <TextInput
             placeholder="Tiêu đề"
-            style={{ fontSize: 16 }}
+            style={{ fontSize: 20, fontWeight: "bold" }}
             className="w-[100%] pl-2 resize-none"
             multiline={true}
             value={title}
