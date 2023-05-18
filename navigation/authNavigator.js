@@ -32,6 +32,7 @@ import CalendarExtendTurnOnOffNoti from "../screens/Calendar/CalendarExtendTurnO
 import CalendarExtendMoodleEvent from "../screens/Calendar/CalendarExtendMoodleEvent";
 import GroupTodoList from "../screens/ToDoList/GroupTodoList";
 import GroupTodoListEdit from "../screens/ToDoList/GroupTodoListEdit";
+import NoteListFolderSecret from "../screens/NoteList/NoteListFolderSecret";
 
 const Auth = createNativeStackNavigator();
 
@@ -252,6 +253,14 @@ export default function AuthStack() {
       <Auth.Screen
         name="GroupTodoListEdit"
         component={GroupTodoListEdit}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+      <Auth.Screen
+        name="NoteListFolderSecret"
+        component={NoteListFolderSecret}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,

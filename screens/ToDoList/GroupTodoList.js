@@ -7,6 +7,7 @@ import {
   FlatList,
   Modal,
   Alert,
+  TextInput,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -28,15 +29,15 @@ const GroupTodoList = () => {
   const { paramMoveData, usingGroupName } = route.params;
   const [moveData, setMoveData] = useState(false);
   const [data, setData] = useState([]);
- 
-  useEffect(()=>{
-    async function loadGroupNames(){   
-      const groupNames = await TodolistService.loadGroupNames();  
-      setData(groupNames); 
-      console.log("groupNames: ", groupNames);
-    }
-    loadGroupNames();  
-  }, [])
+
+  async function loadGroupNames() {
+    const groupNames = await TodolistService.loadGroupNames();
+    setData(groupNames);
+    console.log("groupNames: ", groupNames);
+  }
+  useEffect(() => {
+    loadGroupNames();
+  }, []);
 
   useEffect(() => {
     if (paramMoveData === "MoveData") {
@@ -91,9 +92,16 @@ const GroupTodoList = () => {
   const [isCheckSelectAll, setIsCheckSelectAll] = useState(false);
 
   const [selectedIds, setSelectedIds] = useState([]);
+  const [showSaveWorkGroup, setShowSaveWorkGroup] = useState(false);
+  const [nameSaveWorkGroup, setNameSaveWorkGroup] = useState();
+
+  async function saveGroupName() {
+    await TodolistService.saveGroupName(nameSaveWorkGroup);
+    loadGroupNames();
+  }
 
   const toggleCheckBox = (title) => {
-    console.log("title", title);  
+    console.log("title", title);
     if (title === "all") {
       setSelectedIds(isCheckSelectAll ? [] : data.map((item) => item.title));
       setIsCheckSelectAll(!isCheckSelectAll);
@@ -106,28 +114,27 @@ const GroupTodoList = () => {
     }
   };
 
-  console.log("selectedIds: ", selectedIds); 
+  console.log("selectedIds: ", selectedIds);
 
-  async function changeToAnotherGroup(groupName){
-    console.log(groupName); 
-    if(usingGroupName == groupName){
+  async function changeToAnotherGroup(groupName) {
+    console.log(groupName);
+    if (usingGroupName == groupName) {
       navigation.goBack();
-    }else{
+    } else {
       await TodolistService.changeUsingGroup(groupName);
       navigation.navigate("BottomBar", {
-        screen: "DS công việc", 
+        screen: "DS công việc",
         params: {
-          screenTodoList: "AddToMain" 
+          screenTodoList: "AddToMain",
         },
       });
     }
-
   }
 
   const AlertDelete = () => {
     Alert.alert(
-      "Xóa công việc",
-      "Xóa công việc này khỏi danh sách công việc? ?",
+      "Xóa nhóm công việc",
+      "Xóa nhóm công việc này khỏi danh sách nhóm công việc ?",
       [
         {
           text: "Đồng ý",
@@ -191,7 +198,7 @@ const GroupTodoList = () => {
                   </Text>
                 ) : (
                   <Text className="text-white text-2xl font-bold text-center">
-                    Chọn công việc
+                    Chọn nhóm công việc
                   </Text>
                 )
               ) : (
@@ -255,7 +262,7 @@ const GroupTodoList = () => {
                       }}
                       className="flex-1 flex-row justify-start items-center"
                     >
-                      <Text className="ml-7">Chọn công việc</Text>
+                      <Text className="ml-7">Chọn nhóm công việc</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       onPress={() => setShowExtendsSort(true)}
@@ -391,14 +398,14 @@ const GroupTodoList = () => {
                       </View>
                     ) : (
                       <TouchableOpacity
-                        onPress={() => changeToAnotherGroup(item.title)} 
+                        onPress={() => changeToAnotherGroup(item.title)}
                         className="h-20 bg-white rounded-xl"
                       >
                         <View className="h-5 flex justify-center items-center rounded-t-xl bg-[#a6a2a1]"></View>
                       </TouchableOpacity>
                     )}
 
-                    <View className="w-24">
+                    <View className="w-24 justify-center items-center">
                       <Text numberOfLines={2} ellipsizeMode="tail">
                         {item.title}
                       </Text>
@@ -409,7 +416,7 @@ const GroupTodoList = () => {
             </View>
           </View>
         </View>
-        {showMultiCheck && !moveData && (
+        {showMultiCheck && !moveData ? (
           <TouchableOpacity
             onPress={AlertDelete}
             className="w-[90%] h-10 absolute bottom-5 left-[5%] bg-[#c12d2d] rounded-2xl flex-row items-center justify-center space-x-2"
@@ -430,8 +437,7 @@ const GroupTodoList = () => {
               Xóa
             </Text>
           </TouchableOpacity>
-        )}
-        {showMultiCheck && moveData && (
+        ) : showMultiCheck && moveData ? (
           <TouchableOpacity
             onPress={() => {
               setShowMultiCheck(false);
@@ -451,9 +457,90 @@ const GroupTodoList = () => {
               color="white"
             />
             <Text className="text-white text-center font-bold text-base">
-              Di chuyển
+              Lưu
             </Text>
           </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              setShowSaveWorkGroup(true);
+            }}
+            className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+            style={{
+              shadowColor: "#000000",
+              shadowOffset: { width: 5, height: 5 },
+              shadowOpacity: 0.5,
+              shadowRadius: 5,
+              elevation: 5,
+            }}
+          >
+            <Text className="text-white text-center font-bold text-base">
+              Thêm nhóm công việc
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Tạo nhóm công việc */}
+        {showSaveWorkGroup && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.4)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View className="bg-white justify-center items-center rounded-xl p-5">
+              <Text className="text-lg font-bold text-[#3A4666]">
+                Tạo nhóm công việc
+              </Text>
+              <TextInput
+                placeholder="Tên nhóm công việc"
+                className="bg-[#FFFFFF] w-64 px-4 py-3 text-base resize-none border-b-[#9A999B] border-b-2 mt-2 mb-8"
+                value={nameSaveWorkGroup}
+                onChangeText={(text) => setNameSaveWorkGroup(text)}
+              ></TextInput>
+              <View className="flex-row justify-between items-center space-x-5">
+                <TouchableOpacity
+                  className="w-[35%] justify-center items-center rounded-xl bg-white"
+                  style={{
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 5, height: 5 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 5,
+                    elevation: 5,
+                  }}
+                  onPress={() => setShowSaveWorkGroup(false)}
+                >
+                  <Text className="font-semibold text-base text-[#3A4666]">
+                    Thoát
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="w-[35%] justify-center items-center rounded-xl bg-[#3A4666]"
+                  style={{
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 5, height: 5 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 5,
+                    elevation: 5,
+                  }}
+                  onPress={() => {
+                    setShowSaveWorkGroup(false);
+                    saveGroupName();
+                  }}
+                >
+                  <Text className="font-semibold text-base text-white">
+                    Thêm
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
         )}
       </SafeAreaView>
     </TouchableWithoutFeedback>

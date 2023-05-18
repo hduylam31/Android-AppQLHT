@@ -17,9 +17,13 @@ import * as Animatable from "react-native-animatable";
 import NoteService from "../../service/NoteService";
 import { CheckBox } from "@rneui/themed";
 
-const NoteListMain = () => {
+const NoteListFolderSecret = () => {
   const navigation = useNavigation();
   const [data, setData] = useState([]);
+
+  const route1 = useRoute();
+  const { paramMovetoSecretFolder } = route1.params;
+  const [moveData, setMoveData] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -27,22 +31,15 @@ const NoteListMain = () => {
     });
   });
 
-  // data = [
-  //   { id: 1, title: "Vật dụng cần", note: "Kem răng" },
-  //   {
-  //     id: 2,
-  //     title: "Vật dụng mua",
-  //     note: "Kem đánh răng là một chất tẩy sạch răng dạng hỗn hợp nhão hay gel được sử dụng với bàn chải đánh răng như một phụ kiện để tẩy sạch, duy trì thẩm mỹ và sức khoẻ của răng. Kem đánh răng dùng để thúc đẩy",
-  //   },
-  //   { id: 3, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 4, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 5, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 6, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 7, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 8, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 9, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 10, title: "Vật dụng cần mua", note: "Kem đánh" },
-  // ];
+  useEffect(() => {
+    if (paramMovetoSecretFolder === "MoveData") {
+      setMoveData(true);
+      setShowMultiCheck(true);
+    } else {
+      setMoveData(false);
+      setShowMultiCheck(false);
+    }
+  }, [route]);
 
   // thay loadCalendar thanh loadNoteList 2 useEffect phia duoi
   const loadNoteList = async () => {
@@ -132,6 +129,25 @@ const NoteListMain = () => {
     );
   };
 
+  //   const AlertSecret = () => {
+  //     Alert.alert(
+  //       "Thêm vào thư mục bảo mật",
+  //       "Thêm ghi chú này vào thư mục bảo mật?",
+  //       [
+  //         {
+  //           text: "Đồng ý",
+  //           // onPress: handleDeleteTodolist,
+  //         },
+  //         {
+  //           text: "Hủy",
+  //           onPress: () => {
+  //             toggleCheckBox("reset");
+  //           },
+  //         },
+  //       ]
+  //     );
+  //   };
+
   const handleSortAZ = () => {
     const sortedNote2 = data.sort((a, b) => {
       const aTitle = a.title.split(" ")[0].charAt(0);
@@ -161,23 +177,27 @@ const NoteListMain = () => {
         <View className="bg-[#3A4666] h-[10%]">
           <View className="flex-row p-4 justify-between items-center">
             {showMultiCheck ? (
-              <View>
-                <TouchableOpacity
-                  className="items-center justify-center w-8 h-8"
-                  onPress={() => {
-                    setIsCheckSelectAll(!isCheckSelectAll);
-                    toggleCheckBox("all");
-                  }}
-                >
-                  {isCheckSelectAll ? (
-                    <Ionicons name="checkmark-circle" size={32} color="white" />
-                  ) : (
-                    <Ionicons name="ellipse-outline" size={32} color="white" />
-                  )}
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                className="items-center justify-center w-8 h-8"
+                onPress={() => {
+                  setIsCheckSelectAll(!isCheckSelectAll);
+                  toggleCheckBox("all");
+                }}
+              >
+                {isCheckSelectAll ? (
+                  <Ionicons name="checkmark-circle" size={32} color="white" />
+                ) : (
+                  <Ionicons name="ellipse-outline" size={32} color="white" />
+                )}
+              </TouchableOpacity>
             ) : (
-              <View className="w-8 h-8"></View>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <MaterialCommunityIcons
+                  name="arrow-left"
+                  size={32}
+                  color="white"
+                />
+              </TouchableOpacity>
             )}
             {showMultiCheck ? (
               selectedIds.length > 0 ? (
@@ -191,7 +211,7 @@ const NoteListMain = () => {
               )
             ) : (
               <Text className="text-white text-2xl font-bold text-center">
-                Danh sách ghi chú
+                Thư mục bảo mật
               </Text>
             )}
 
@@ -251,15 +271,8 @@ const NoteListMain = () => {
                     />
                     <Text>Sắp xếp theo</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("NoteListFolderSecret", {
-                        paramMovetoSecretFolder: "NotMoveData",
-                      });
-                    }}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <Text className="ml-7">Thư mục bảo mật</Text>
+                  <TouchableOpacity className="flex-1 flex-row justify-start items-center">
+                    <Text className="ml-7">Thiết lập mật mã</Text>
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
@@ -411,11 +424,7 @@ const NoteListMain = () => {
         {showMultiCheck ? (
           <View className="flex-row justify-between">
             <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("NoteListFolderSecret", {
-                  paramMovetoSecretFolder: "MoveData",
-                });
-              }}
+              //   onPress={AlertSecert}
               className="w-[27%] h-10 absolute bottom-5 left-[5%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
               style={{
                 shadowColor: "#000000",
@@ -476,27 +485,11 @@ const NoteListMain = () => {
             </TouchableOpacity>
           </View>
         ) : (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("NoteList_Add");
-            }}
-            className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
-            style={{
-              shadowColor: "#000000",
-              shadowOffset: { width: 5, height: 5 },
-              shadowOpacity: 0.5,
-              shadowRadius: 5,
-              elevation: 5,
-            }}
-          >
-            <Text className="text-white text-center font-bold text-base">
-              Thêm ghi chú
-            </Text>
-          </TouchableOpacity>
+          <View></View>
         )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
 
-export default NoteListMain;
+export default NoteListFolderSecret;

@@ -319,10 +319,6 @@ const ToDoListScreen = () => {
     );
   };
 
-  async function saveGroupName() {
-    await TodolistService.saveGroupName(nameSaveWorkGroup);
-  }
-
   return (
     <SafeAreaView className="flex-1">
       {/* Header */}
@@ -399,7 +395,7 @@ const ToDoListScreen = () => {
                 }}
                 onPress={() => setShowExtends(false)}
               >
-                <View className="w-52 h-48 bg-white rounded-lg">
+                <View className="w-52 h-36 bg-white rounded-lg">
                   <TouchableOpacity
                     onPress={() => {
                       setShowMultiCheck(true);
@@ -430,15 +426,6 @@ const ToDoListScreen = () => {
                     className="flex-1 flex-row justify-start items-center"
                   >
                     <Text className="ml-7">Nhóm công việc</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setShowSaveWorkGroup(true);
-                      setShowExtends(false);
-                    }}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <Text className="ml-7">Lưu DS công việc</Text>
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
@@ -596,10 +583,10 @@ const ToDoListScreen = () => {
           >
             <MaterialCommunityIcons
               name="folder-move-outline"
-              size={24}
+              size={20}
               color="white"
             />
-            <Text className="text-white text-center font-bold text-base">
+            <Text className="text-white text-center font-semibold text-sm">
               Di chuyển
             </Text>
           </TouchableOpacity>
@@ -616,10 +603,10 @@ const ToDoListScreen = () => {
           >
             <MaterialCommunityIcons
               name="trash-can-outline"
-              size={24}
+              size={20}
               color="white"
             />
-            <Text className="text-white text-center font-bold text-base">
+            <Text className="text-white text-center font-semibold text-sm">
               Xóa
             </Text>
           </TouchableOpacity>
@@ -642,67 +629,6 @@ const ToDoListScreen = () => {
             Thêm công việc
           </Text>
         </TouchableOpacity>
-      )}
-
-      {/* Tạo nhóm công việc */}
-      {showSaveWorkGroup && (
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.4)",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <View className="bg-white justify-center items-center rounded-xl p-5">
-            <Text className="text-lg font-bold text-[#3A4666]">
-              Tạo nhóm công việc
-            </Text>
-            <TextInput
-              placeholder="Tên nhóm công việc"
-              className="bg-[#FFFFFF] w-64 px-4 py-3 text-base resize-none border-b-[#9A999B] border-b-2 mt-2 mb-8"
-              value={nameSaveWorkGroup}
-              onChangeText={(text) => setNameSaveWorkGroup(text)}
-            ></TextInput>
-            <View className="flex-row justify-between items-center space-x-5">
-              <TouchableOpacity
-                className="w-[35%] justify-center items-center rounded-xl bg-white"
-                style={{
-                  shadowColor: "#000000",
-                  shadowOffset: { width: 5, height: 5 },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 5,
-                  elevation: 5,
-                }}
-                onPress={() => setShowSaveWorkGroup(false)}
-              >
-                <Text className="font-semibold text-base text-[#3A4666]">
-                  Thoát
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="w-[35%] justify-center items-center rounded-xl bg-[#3A4666]"
-                style={{
-                  shadowColor: "#000000",
-                  shadowOffset: { width: 5, height: 5 },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 5,
-                  elevation: 5,
-                }}
-                onPress={() => {
-                  setShowSaveWorkGroup(false);
-                  saveGroupName();
-                }}
-              >
-                <Text className="font-semibold text-base text-white">Thêm</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
       )}
     </SafeAreaView>
   );
