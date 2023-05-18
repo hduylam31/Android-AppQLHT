@@ -26,7 +26,8 @@ const GroupTodoList = () => {
   });
 
   const route = useRoute();
-  const { paramMoveData, usingGroupName } = route.params;
+  const { paramMoveData, usingGroupName, items } = route.params;
+  console.log("items: ", items);
   const [moveData, setMoveData] = useState(false);
   const [data, setData] = useState([]);
 
@@ -100,8 +101,23 @@ const GroupTodoList = () => {
     loadGroupNames();
   }
 
+  async function handleMoveData(){  
+    if(selectedIds.includes(usingGroupName)){
+      Alert.alert("Thông báo", "Không thể di chuyển tới nhóm công việc hiện tại");
+    }else{
+      TodolistService.moveToOtherGroup(items, selectedIds[0]);
+      navigation.navigate("BottomBar", {  
+        screen: "DS công việc",  
+        params: { 
+          movedItems: items 
+        },  
+      });
+    }
+     
+  }
+
   const toggleCheckBox = (title) => {
-    console.log("title", title);
+    console.log("title", title); 
     if (title === "all") {
       setSelectedIds(isCheckSelectAll ? [] : data.map((item) => item.title));
       setIsCheckSelectAll(!isCheckSelectAll);
@@ -121,24 +137,34 @@ const GroupTodoList = () => {
     if (usingGroupName == groupName) {
       navigation.goBack();
     } else {
-      await TodolistService.changeUsingGroup(groupName);
-      navigation.navigate("BottomBar", {
-        screen: "DS công việc",
-        params: {
-          screenTodoList: "AddToMain",
-        },
+      TodolistService.changeUsingGroup(usingGroupName, groupName);
+      navigation.navigate("BottomBar", { 
+        screen: "DS công việc",  
+        params: { 
+          usingGroupName: groupName
+        },  
       });
     }
   }
 
-  const AlertDelete = () => {
+  function handleDeleteTodolist(){
+    if(selectedIds.includes(usingGroupName)){
+      Alert.alert("Thông báo", "Bạn không thể xóa nhóm công việc đang sử dụng");
+    }else{
+      TodolistService.deleteGroups(selectedIds);
+      var newGroupNames = data.filter(item => !selectedIds.includes(item.title));
+      setData(newGroupNames);
+    }
+  }
+
+  const AlertDelete = () => { 
     Alert.alert(
       "Xóa nhóm công việc",
       "Xóa nhóm công việc này khỏi danh sách nhóm công việc ?",
       [
         {
           text: "Đồng ý",
-          // onPress: handleDeleteTodolist,
+          onPress: handleDeleteTodolist,
         },
         {
           text: "Hủy",
@@ -441,6 +467,7 @@ const GroupTodoList = () => {
           <TouchableOpacity
             onPress={() => {
               setShowMultiCheck(false);
+              handleMoveData();
             }}
             className="w-[90%] h-10 absolute bottom-5 left-[5%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
             style={{

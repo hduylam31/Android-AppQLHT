@@ -42,7 +42,7 @@ class TodolistService{
                 identifier: identifier,
                 groupName: groupName
             };
-            await StorageUtils.pushElementToArray("todoList", item);
+            // await StorageUtils.pushElementToArray("todoList", item);
 
             /* ==================================DB Adding====================================== */
             const userRef = doc(collection(firestore, 'todolist'), user.uid);
@@ -99,7 +99,7 @@ class TodolistService{
             hour: vTimeNotified,text: newItem.text,isCompleted: newItem.isCompleted,
             identifier: identifier, groupName: newItem.groupName
         }
-        await StorageUtils.updateElementInArray('todoList', updatedData);
+        // await StorageUtils.updateElementInArray('todoList', updatedData);
 
         const userRef = doc(collection(firestore, 'todolist'), user.uid);
         try {
@@ -122,7 +122,7 @@ class TodolistService{
 
     static deleteTodolist = async (c_item) => {
         console.log("Delete Todolist");
-        await StorageUtils.removeElementFromArray('todoList', c_item.id);
+        // await StorageUtils.removeElementFromArray('todoList', c_item.id);
         const user = auth.currentUser;
         const userRef = doc(collection(firestore, 'todolist'), user.uid);
         try {
@@ -141,10 +141,12 @@ class TodolistService{
         }
     };
 
-    static deleteTodolistFromIds = async(items)=> {
+    static deleteTodolists = async(items)=> {
+        console.log("items: ", items);
         const user = auth.currentUser;
         const userRef = doc(collection(firestore, 'todolist'), user.uid);
         var ids = items.map(item => item.id);
+        console.log("ids: ", ids);
         try {
             // ==================================Notification============================
             Promise.all(items.forEach(item => {
@@ -163,45 +165,43 @@ class TodolistService{
         }
     }
 
-    static moveToOtherGroup = async(item, newGroupName) => {
-        const newItem = {...item, groupName: newGroupName}
+    static moveToOtherGroup = async(items, newGroupName) => {
+        const moveIds = items.map(item => item.id);
         const user = auth.currentUser;
         const userRef = doc(collection(firestore, 'todolist'), user.uid);
+        const userDoc = await getDoc(userRef);
+        const todolist = userDoc.data().todolist;
+        console.log("updatedTodolist: ", updatedTodolist);
         try {
-            // ==================================Notification============================
-            if(newItem.isNotified && !newItem.isCompleted){
-                NotificationUtils.cancelNotification(newItem.identifier);
-            }
-            // =====================================DB===================================
-            const userDoc = await getDoc(userRef);
-            const todolist = userDoc.data().todolist;
-            const updatedTodolist = todolist.map(item => {
-                if(item.id == newItem.id){
-                    return newItem;
-                }else{
-                    return item;
-                }
-            });
+            var updatedTodolist = todolist.map(item => {
+                    if(moveIds.includes(item.id)){
+                        const identifier = item.identifier;
+                        const newItem = {...item, groupName: newGroupName, identifier: ""};
+                        if(newItem.isNotified && !newItem.isCompleted && identifier != ""){
+                            NotificationUtils.cancelNotification(identifier);
+                        }
+                        return newItem;
+                    }else{
+                        return item;
+                    }
+                })
             await updateDoc(userRef, { todolist: updatedTodolist }, {merge: true});
         } catch (error) {
             console.log("error: ", error);
         }
 
     }
-
-    static deleteGroup = async(groupName) => {
+    
+    static deleteGroups = async(groupNames) => {
         const user = auth.currentUser;
         const userRef = doc(firestore, "todolist", user.uid);
-        if (docSnap.exists()) {
-            const userDoc = await getDoc(userRef);
-            const todolist = userDoc.data().todolist;
-            const group = userDoc.data().group;
-            
-            const newTodolist = todolist.filter(item => item.groupName != groupName)
-            const newGroup = group.filter(item => item.name != groupName)
-            await updateDoc(userRef, { group: newGroup, todolist: newTodolist }, {merge: true}); 
-        }
-    } 
+        const userDoc = await getDoc(userRef);
+        const todolist = userDoc.data().todolist;
+        const group = userDoc.data().group;
+        const newTodolist = todolist.filter(item => !groupNames.includes(item.groupName));
+        const newGroup = group.filter(item => !groupNames.includes(item.name))
+        await updateDoc(userRef, { group: newGroup, todolist: newTodolist }, {merge: true}); 
+    }
 
     static loadTodolist = async() => {
         const user = auth.currentUser;
@@ -220,6 +220,24 @@ class TodolistService{
           } else {
             console.log("No such document!");
             return null;
+          }
+    }
+
+    static loadTodolistByGroupName = async(groupName) => {
+        const user = auth.currentUser;
+        console.log("inside load todolist function");
+        const docRef = doc(firestore, "todolist", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const jsonObject = docSnap.data();
+            const todolists = jsonObject.todolist;
+
+            const usingTodolists = todolists.filter(item => item.groupName == groupName);
+
+            return usingTodolists ;
+          } else {
+            console.log("No such document!");
+            return [];
           }
     }
 
@@ -274,7 +292,7 @@ class TodolistService{
         }
     }
 
-    static changeUsingGroup = async(usingGroupName) => {
+    static changeUsingGroup = async(currentGroupName, usingGroupName) => {
         try {
             const user = auth.currentUser;
             const userRef = doc(firestore, "todolist", user.uid);
@@ -285,18 +303,19 @@ class TodolistService{
                 console.log("changeUsingGroup: ", newArray);
                 await updateDoc(userRef, {group: newArray}, {merge: true});
 
-                var todolists = userDoc.data.todolist;
-                var todolistGroup = todolists.filter(item => item.groupName == usingGroupName);
+                var todolists = userDoc.data().todolist; 
+                var todolistGroup = todolists.filter(item => item.groupName == currentGroupName);
                 this.unRegisterNotification(todolistGroup);
             }
         } catch (error) {
-            console.log("saveGroupName: ", error);
+            console.log("changeUsingGroup: ", error);
         }
     }
 
     static unRegisterNotification = (todolists) => {
+        console.log("unRegisterNotification with: ", todolists);
         todolists.forEach(item => {
-            if(item.isNotified && item.identifier != ""){
+            if(item.isNotified && item.identifier != "" && !item.isCompleted){
                 NotificationUtils.cancelNotification(item.identifier);
             }
         })
@@ -335,7 +354,7 @@ class TodolistService{
                     return item;
                 }
             });
-            await AsyncStorage.setItem('todoList', JSON.stringify(updatedTodolist));
+            // await AsyncStorage.setItem('todoList', JSON.stringify(updatedTodolist));
             updateDoc(userRef, { todolist: updatedTodolist });
             console.log("Update status Ok");
         } catch (error) {
@@ -344,13 +363,18 @@ class TodolistService{
         
     }
 
-    static async loadNotificationAndUpdateDb(){
+    static async updateTodolistAsync(updatedTodolist){
+        const user = auth.currentUser;
+        const userRef = doc(collection(firestore, 'todolist'), user.uid);
+        updateDoc(userRef, { todolist: updatedTodolist }, {merge: true}); 
+    }
+
+    static async loadNotificationAndUpdateDbByGroupName(groupName){
         try {
-            const usingTodolistInfo = await this.loadTodolist();
-            if(usingTodolistInfo == null) return;
-            const todolist = usingTodolistInfo.usingTodolists;
+            const todolist = await this.loadTodolistByGroupName(groupName);
+            if(todolist.length == 0) return [];
             const updatedTodolist = [...todolist];
-            const itemIndexes = todolist.filter(item => item.identifier != "" && item.isCompleted == false)
+            const itemIndexes = todolist.filter(item => item.isNotified && item.isCompleted == false)
                                         .map(item => todolist.findIndex(obj => obj.id == item.id));
             for(const i of itemIndexes) {
                 const elem = todolist[i];
@@ -363,8 +387,38 @@ class TodolistService{
                 const identifier = await NotificationUtils.setNotificationAndGetIdentifer(elem.title, elem.text, timeInfo);
                 updatedTodolist[i] = {...updatedTodolist[i], identifier: identifier};
             };
-            await AsyncStorage.setItem('todoList', JSON.stringify(updatedTodolist)); 
-            updateDoc(userRef, { todolist: updatedTodolist }, {merge: true});
+            // await AsyncStorage.setItem('todoList', JSON.stringify(updatedTodolist)); 
+            this.updateTodolistAsync(updatedTodolist) 
+            return updatedTodolist;
+        } catch (error) {
+            console.log("error: ", error);
+        }
+    }
+
+    static async loadNotificationAndUpdateDb(){
+        try {
+            const usingTodolistInfo = await this.loadTodolist();
+            if(usingTodolistInfo == null) return;
+            const todolist = usingTodolistInfo.usingTodolists;
+            const updatedTodolist = [...todolist];
+            const itemIndexes = todolist.filter(item => item.isNotified && item.isCompleted == false)
+                                        .map(item => todolist.findIndex(obj => obj.id == item.id));
+            for(const i of itemIndexes) {
+                const elem = todolist[i];
+                const timeArray = elem.hour.split(":");
+                const timeInfo = {
+                    hour: Number(timeArray[0]),
+                    minute: Number(timeArray[1]),
+                    isRepeated: true
+                }
+                const identifier = await NotificationUtils.setNotificationAndGetIdentifer(elem.title, elem.text, timeInfo);
+                updatedTodolist[i] = {...updatedTodolist[i], identifier: identifier};
+            };
+            // await AsyncStorage.setItem('todoList', JSON.stringify(updatedTodolist)); 
+
+            const user = auth.currentUser;
+            const userRef = doc(collection(firestore, 'todolist'), user.uid);
+            updateDoc(userRef, { todolist: updatedTodolist }, {merge: true}); 
             
         } catch (error) {
             console.log("error: ", error);

@@ -51,6 +51,7 @@ const ToDoListScreen = () => {
   const [groupName, setGroupName] = useState("Mặc định");
 
   const loadTodolist = async () => {
+    console.log("load load load........");
     const todolistInfo = await TodolistService.loadTodolist();
     if (todolistInfo != null) {
       const usingTodolists = todolistInfo.usingTodolists;
@@ -58,6 +59,7 @@ const ToDoListScreen = () => {
       setGroupName(todolistInfo.usingGroupName);
       console.log("todolist2: ", todolistInfo);
     }
+    setSelectedIds([]);
   };
 
   useEffect(() => {
@@ -65,7 +67,32 @@ const ToDoListScreen = () => {
   }, []);
 
   const route = useRoute();
-  useEffect(() => {
+
+  useEffect(() => {  
+    async function triggerGroupProcess(){ 
+      var usingGroupName = route?.params?.usingGroupName; 
+      if (usingGroupName) {
+        var data = await TodolistService.loadNotificationAndUpdateDbByGroupName(usingGroupName);
+        console.log("usingGroupName: ", usingGroupName);
+        console.log("New data: ", data); 
+        setTodolists(data);
+        setTodos(data);  
+        setGroupName(usingGroupName); 
+      }
+ 
+      var movedItems = route?.params?.movedItems;
+      if(movedItems){
+        var movedItemIds = movedItems.map(item => item.id);
+        var newTodolist = todolists.filter(item => !movedItemIds.includes(item.id));
+        setTodolists(newTodolist);
+        setTodos(newTodolist);  
+      }
+      setSelectedIds([]);
+    }
+    triggerGroupProcess();
+  }, [route]);
+
+  useEffect(() => { 
     if (
       route?.params?.screenTodoList === "AddToMain" ||
       route?.params?.screenTodoList === "EditToMain" ||
@@ -300,14 +327,28 @@ const ToDoListScreen = () => {
   ];
   const [listGroup, setListGroup] = useState("1");
 
-  const AlertDelete = () => {
-    Alert.alert(
+  function handleDeleteTodolist(){
+    if(selectedIds.length > 0){
+      TodolistService.deleteTodolists(selectedIds);
+      console.log("Delete OK");
+      var deleteIds = selectedIds.map(item => item.id);
+      var newTodolist = todolists.filter(item => !deleteIds.includes(item.id));
+      setTodolists(newTodolist);  
+      setTodos(newTodolist);
+    }else{
+      Alert.alert("Thông báo", "Vui lòng chọn tối thiểu một công việc");
+    }
+    setSelectedIds([]);
+  }
+
+  const AlertDelete = () => {  
+    Alert.alert( 
       "Xóa công việc",
       "Xóa công việc này khỏi danh sách công việc? ?",
       [
         {
           text: "Đồng ý",
-          // onPress: handleDeleteTodolist,
+          onPress: handleDeleteTodolist,
         },
         {
           text: "Hủy",
@@ -568,9 +609,16 @@ const ToDoListScreen = () => {
           <TouchableOpacity
             onPress={() => {
               setShowMultiCheck(false);
-              navigation.navigate("GroupTodoList", {
-                paramMoveData: "MoveData",
-              });
+              if(selectedIds.length > 0){
+                navigation.navigate("GroupTodoList", {
+                  paramMoveData: "MoveData", 
+                  items: selectedIds,
+                  usingGroupName: groupName
+                }); 
+
+              } else{
+                Alert.alert("Thông báo", "Vui lòng chọn ít nhất một công việc");
+              }
             }}
             className="w-[43%] h-10 absolute bottom-5 left-[5%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
             style={{

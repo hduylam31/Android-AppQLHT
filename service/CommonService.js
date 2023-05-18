@@ -10,12 +10,12 @@ import NotificationUtils from "./NotificationUtils";
 class CommonService{
 
     static async loadAllNotificationAndUpdateDB(isAutoLogin){
-        try {
+        try { 
             await NotificationUtils.removeAllNotification();
             await CalendarService.loadAutoUpdateMoodleBackground(isAutoLogin); 
             console.log("Load background running OK");
             if(!isAutoLogin){
-                await CalendarService.loadNotificationAndUpdateDb(); 
+                await CalendarService.loadNotificationAndUpdateDb();  
                 TodolistService.loadNotificationAndUpdateDb(); 
             }
             console.log("Load notification Ok"); 
