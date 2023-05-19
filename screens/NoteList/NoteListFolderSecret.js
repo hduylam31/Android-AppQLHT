@@ -265,7 +265,9 @@ const NoteListFolderSecret = () => {
                     <Text className="ml-7">Chọn ghi chú</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => setShowExtendsSort(true)}
+                    onPress={() => {
+                      setShowExtendsSort(true);
+                    }}
                     className="flex-1 flex-row justify-start items-center"
                   >
                     <MaterialCommunityIcons
@@ -275,8 +277,13 @@ const NoteListFolderSecret = () => {
                     />
                     <Text>Sắp xếp theo</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity className="flex-1 flex-row justify-start items-center">
-                    <Text className="ml-7">Thiết lập mật mã</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("ChangePassFolderSecret");
+                    }}
+                    className="flex-1 flex-row justify-start items-center"
+                  >
+                    <Text className="ml-7">Thay đổi mật mã</Text>
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
