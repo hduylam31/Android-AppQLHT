@@ -132,6 +132,25 @@ const NoteListMain = () => {
     );
   };
 
+  const AlertSecret = () => {
+    Alert.alert(
+      "Thêm vào thư mục bảo mật",
+      "Thêm ghi chú này vào thư mục bảo mật?",
+      [
+        {
+          text: "Đồng ý",
+          // onPress: handleDeleteTodolist,
+        },
+        {
+          text: "Hủy",
+          onPress: () => {
+            toggleCheckBox("reset");
+          },
+        },
+      ]
+    );
+  };
+
   const handleSortAZ = () => {
     const sortedNote2 = data.sort((a, b) => {
       const aTitle = a.title.split(" ")[0].charAt(0);
@@ -253,9 +272,7 @@ const NoteListMain = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("NoteListFolderSecret", {
-                        paramMovetoSecretFolder: "NotMoveData",
-                      });
+                      navigation.navigate("UnlockFolderSecret");
                     }}
                     className="flex-1 flex-row justify-start items-center"
                   >
@@ -411,11 +428,7 @@ const NoteListMain = () => {
         {showMultiCheck ? (
           <View className="flex-row justify-between">
             <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("NoteListFolderSecret", {
-                  paramMovetoSecretFolder: "MoveData",
-                });
-              }}
+              onPress={AlertSecret}
               className="w-[27%] h-10 absolute bottom-5 left-[5%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
               style={{
                 shadowColor: "#000000",

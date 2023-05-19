@@ -33,6 +33,7 @@ import CalendarExtendMoodleEvent from "../screens/Calendar/CalendarExtendMoodleE
 import GroupTodoList from "../screens/ToDoList/GroupTodoList";
 import GroupTodoListEdit from "../screens/ToDoList/GroupTodoListEdit";
 import NoteListFolderSecret from "../screens/NoteList/NoteListFolderSecret";
+import UnlockFolderSecret from "../screens/NoteList/UnlockFolderSecret";
 
 const Auth = createNativeStackNavigator();
 
@@ -261,6 +262,14 @@ export default function AuthStack() {
       <Auth.Screen
         name="NoteListFolderSecret"
         component={NoteListFolderSecret}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+      <Auth.Screen
+        name="UnlockFolderSecret"
+        component={UnlockFolderSecret}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,

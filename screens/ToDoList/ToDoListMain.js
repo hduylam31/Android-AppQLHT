@@ -68,31 +68,35 @@ const ToDoListScreen = () => {
 
   const route = useRoute();
 
-  useEffect(() => {  
-    async function triggerGroupProcess(){ 
-      var usingGroupName = route?.params?.usingGroupName; 
+  useEffect(() => {
+    async function triggerGroupProcess() {
+      var usingGroupName = route?.params?.usingGroupName;
       if (usingGroupName) {
-        var data = await TodolistService.loadNotificationAndUpdateDbByGroupName(usingGroupName);
+        var data = await TodolistService.loadNotificationAndUpdateDbByGroupName(
+          usingGroupName
+        );
         console.log("usingGroupName: ", usingGroupName);
-        console.log("New data: ", data); 
+        console.log("New data: ", data);
         setTodolists(data);
-        setTodos(data);  
-        setGroupName(usingGroupName); 
+        setTodos(data);
+        setGroupName(usingGroupName);
       }
- 
+
       var movedItems = route?.params?.movedItems;
-      if(movedItems){
-        var movedItemIds = movedItems.map(item => item.id);
-        var newTodolist = todolists.filter(item => !movedItemIds.includes(item.id));
+      if (movedItems) {
+        var movedItemIds = movedItems.map((item) => item.id);
+        var newTodolist = todolists.filter(
+          (item) => !movedItemIds.includes(item.id)
+        );
         setTodolists(newTodolist);
-        setTodos(newTodolist);  
+        setTodos(newTodolist);
       }
       setSelectedIds([]);
     }
     triggerGroupProcess();
   }, [route]);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (
       route?.params?.screenTodoList === "AddToMain" ||
       route?.params?.screenTodoList === "EditToMain" ||
@@ -225,6 +229,7 @@ const ToDoListScreen = () => {
         </View>
 
         <CheckBox
+          disabled={showMultiCheck ? true : false}
           checked={item.isCompleted}
           onPress={() => handleToggleCompleted(item)}
           iconType="material-community"
@@ -279,6 +284,7 @@ const ToDoListScreen = () => {
         </View>
 
         <CheckBox
+          disabled={showMultiCheck ? true : false}
           checked={item.isCompleted}
           onPress={() => handleToggleCompleted(item)}
           iconType="material-community"
@@ -327,22 +333,24 @@ const ToDoListScreen = () => {
   ];
   const [listGroup, setListGroup] = useState("1");
 
-  function handleDeleteTodolist(){
-    if(selectedIds.length > 0){
+  function handleDeleteTodolist() {
+    if (selectedIds.length > 0) {
       TodolistService.deleteTodolists(selectedIds);
       console.log("Delete OK");
-      var deleteIds = selectedIds.map(item => item.id);
-      var newTodolist = todolists.filter(item => !deleteIds.includes(item.id));
-      setTodolists(newTodolist);  
+      var deleteIds = selectedIds.map((item) => item.id);
+      var newTodolist = todolists.filter(
+        (item) => !deleteIds.includes(item.id)
+      );
+      setTodolists(newTodolist);
       setTodos(newTodolist);
-    }else{
+    } else {
       Alert.alert("Thông báo", "Vui lòng chọn tối thiểu một công việc");
     }
     setSelectedIds([]);
   }
 
-  const AlertDelete = () => {  
-    Alert.alert( 
+  const AlertDelete = () => {
+    Alert.alert(
       "Xóa công việc",
       "Xóa công việc này khỏi danh sách công việc? ?",
       [
@@ -609,14 +617,13 @@ const ToDoListScreen = () => {
           <TouchableOpacity
             onPress={() => {
               setShowMultiCheck(false);
-              if(selectedIds.length > 0){
+              if (selectedIds.length > 0) {
                 navigation.navigate("GroupTodoList", {
-                  paramMoveData: "MoveData", 
+                  paramMoveData: "MoveData",
                   items: selectedIds,
-                  usingGroupName: groupName
-                }); 
-
-              } else{
+                  usingGroupName: groupName,
+                });
+              } else {
                 Alert.alert("Thông báo", "Vui lòng chọn ít nhất một công việc");
               }
             }}

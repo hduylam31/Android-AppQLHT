@@ -96,7 +96,7 @@ const NoteListFolderSecret = () => {
   console.log("aid", selectedIds);
 
   const AlertDelete = () => {
-    Alert.alert("Xóa ghi chú", "Xóa ghi chú này khỏi danh sách ghi chú ?", [
+    Alert.alert("Xóa ghi chú", "Xóa ghi chú này khỏi thư mục bảo mật ?", [
       {
         text: "Đồng ý",
         // onPress: handleDeleteTodolist,
@@ -191,7 +191,11 @@ const NoteListFolderSecret = () => {
                 )}
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity onPress={() => navigation.goBack()}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Ghi chú");
+                }}
+              >
                 <MaterialCommunityIcons
                   name="arrow-left"
                   size={32}
@@ -424,28 +428,8 @@ const NoteListFolderSecret = () => {
         {showMultiCheck ? (
           <View className="flex-row justify-between">
             <TouchableOpacity
-              //   onPress={AlertSecert}
-              className="w-[27%] h-10 absolute bottom-5 left-[5%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
-              style={{
-                shadowColor: "#000000",
-                shadowOffset: { width: 5, height: 5 },
-                shadowOpacity: 0.5,
-                shadowRadius: 5,
-                elevation: 5,
-              }}
-            >
-              <MaterialCommunityIcons
-                name="folder-lock"
-                size={20}
-                color="white"
-              />
-              <Text className="text-white text-center font-semibold text-sm">
-                Bảo mật
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
               onPress={AlertStar}
-              className="w-[27%] h-10 absolute bottom-5 left-[37%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
+              className="w-[43%] h-10 absolute bottom-5 left-[5%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 5, height: 5 },
@@ -465,7 +449,7 @@ const NoteListFolderSecret = () => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={AlertDelete}
-              className="w-[27%] h-10 absolute bottom-5 left-[69%] bg-[#c12d2d] rounded-2xl flex-row items-center justify-center space-x-2"
+              className="w-[43%] h-10 absolute bottom-5 left-[52%] bg-[#c12d2d] rounded-2xl flex-row items-center justify-center space-x-2"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 5, height: 5 },
