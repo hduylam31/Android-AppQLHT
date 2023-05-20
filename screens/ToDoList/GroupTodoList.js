@@ -42,6 +42,7 @@ const GroupTodoList = () => {
 
   useEffect(() => {
     if (paramMoveData === "MoveData") {
+      setIsCheckSelectOne(true);
       setMoveData(true);
       setShowMultiCheck(true);
     } else {
@@ -91,6 +92,7 @@ const GroupTodoList = () => {
 
   const [showMultiCheck, setShowMultiCheck] = useState(false);
   const [isCheckSelectAll, setIsCheckSelectAll] = useState(false);
+  const [isCheckSelectOne, setIsCheckSelectOne] = useState(false);
 
   const [selectedIds, setSelectedIds] = useState([]);
   const [showSaveWorkGroup, setShowSaveWorkGroup] = useState(false);
@@ -101,26 +103,37 @@ const GroupTodoList = () => {
     loadGroupNames();
   }
 
-  async function handleMoveData(){  
-    if(selectedIds.includes(usingGroupName)){
-      Alert.alert("Thông báo", "Không thể di chuyển tới nhóm công việc hiện tại");
-    }else{
+  async function handleMoveData() {
+    if (selectedIds.includes(usingGroupName)) {
+      Alert.alert(
+        "Thông báo",
+        "Không thể di chuyển tới nhóm công việc hiện tại"
+      );
+    } else {
       TodolistService.moveToOtherGroup(items, selectedIds[0]);
-      navigation.navigate("BottomBar", {  
-        screen: "DS công việc",  
-        params: { 
-          movedItems: items 
-        },  
+      navigation.navigate("BottomBar", {
+        screen: "DS công việc",
+        params: {
+          movedItems: items,
+        },
       });
     }
-     
   }
 
   const toggleCheckBox = (title) => {
-    console.log("title", title); 
+    console.log("title", title);
     if (title === "all") {
       setSelectedIds(isCheckSelectAll ? [] : data.map((item) => item.title));
       setIsCheckSelectAll(!isCheckSelectAll);
+    } else if (isCheckSelectOne) {
+      console.log("selectedIds", selectedIds);
+      if (selectedIds === null || selectedIds !== title) {
+        // Nếu checkbox đã được chọn trước đó không phải là checkbox hiện tại, bỏ chọn nó và chọn checkbox hiện tại
+        setSelectedIds([title]);
+      } else {
+        // Nếu checkbox đã được chọn trước đó là checkbox hiện tại, bỏ chọn nó
+        setSelectedIds(null);
+      }
     } else {
       if (selectedIds.includes(title)) {
         setSelectedIds(selectedIds.filter((item) => item !== title));
@@ -138,26 +151,28 @@ const GroupTodoList = () => {
       navigation.goBack();
     } else {
       TodolistService.changeUsingGroup(usingGroupName, groupName);
-      navigation.navigate("BottomBar", { 
-        screen: "DS công việc",  
-        params: { 
-          usingGroupName: groupName
-        },  
+      navigation.navigate("BottomBar", {
+        screen: "DS công việc",
+        params: {
+          usingGroupName: groupName,
+        },
       });
     }
   }
 
-  function handleDeleteTodolist(){
-    if(selectedIds.includes(usingGroupName)){
+  function handleDeleteTodolist() {
+    if (selectedIds.includes(usingGroupName)) {
       Alert.alert("Thông báo", "Bạn không thể xóa nhóm công việc đang sử dụng");
-    }else{
+    } else {
       TodolistService.deleteGroups(selectedIds);
-      var newGroupNames = data.filter(item => !selectedIds.includes(item.title));
+      var newGroupNames = data.filter(
+        (item) => !selectedIds.includes(item.title)
+      );
       setData(newGroupNames);
     }
   }
 
-  const AlertDelete = () => { 
+  const AlertDelete = () => {
     Alert.alert(
       "Xóa nhóm công việc",
       "Xóa nhóm công việc này khỏi danh sách nhóm công việc ?",
@@ -184,7 +199,7 @@ const GroupTodoList = () => {
         <View className="bg-[#3A4666] h-[10%]">
           <View className="p-4">
             <View className="flex-row justify-between items-center">
-              {showMultiCheck ? (
+              {showMultiCheck && !isCheckSelectOne ? (
                 <View>
                   <TouchableOpacity
                     className="items-center justify-center w-8 h-8"
