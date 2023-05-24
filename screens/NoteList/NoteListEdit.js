@@ -59,10 +59,12 @@ const NoteList_Edit = () => {
       return;
     }
     try {
-      await NoteService.updateNote({
+      await NoteService.updateNote({ 
         c_id: c_item.id,
         title,
-        note,
+        note,  
+        createdDay: c_item.createdDay,  
+        isLoved: c_item.isLoved
       });
       navigation.navigate("BottomBar", {
         screen: "Ghi chú",

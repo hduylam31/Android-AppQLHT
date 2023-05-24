@@ -27,28 +27,12 @@ const NoteListMain = () => {
     });
   });
 
-  // data = [
-  //   { id: 1, title: "Vật dụng cần", note: "Kem răng" },
-  //   {
-  //     id: 2,
-  //     title: "Vật dụng mua",
-  //     note: "Kem đánh răng là một chất tẩy sạch răng dạng hỗn hợp nhão hay gel được sử dụng với bàn chải đánh răng như một phụ kiện để tẩy sạch, duy trì thẩm mỹ và sức khoẻ của răng. Kem đánh răng dùng để thúc đẩy",
-  //   },
-  //   { id: 3, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 4, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 5, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 6, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 7, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 8, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 9, title: "Vật dụng cần mua", note: "Kem đánh" },
-  //   { id: 10, title: "Vật dụng cần mua", note: "Kem đánh" },
-  // ];
-
   // thay loadCalendar thanh loadNoteList 2 useEffect phia duoi
   const loadNoteList = async () => {
     try {
-      const notelist = await NoteService.loadNoteData();
+      const notelist = await NoteService.loadNoteData(); 
       setData(notelist);
+      console.log(notelist);
     } catch (error) {
       console.log(error);
     }
@@ -62,8 +46,8 @@ const NoteListMain = () => {
     if (
       route?.params?.screenNoteList === "AddToMain" ||
       route?.params?.screenNoteList === "EditToMain" ||
-      route?.params?.screenNoteList === "DeleteToMain"
-    ) {
+      route?.params?.screenNoteList === "DeleteToMain" 
+    ) { 
       loadNoteList();
     }
   }, [route]);
@@ -98,11 +82,19 @@ const NoteListMain = () => {
   };
   console.log("aid", selectedIds);
 
+  function handleDeleteNotes(){
+    const ids = selectedIds.map(item => item.id);
+    NoteService.deleteNotes(ids);
+    const newData = data.filter(item => !ids.includes(item.id));
+    setData(newData);
+    setSelectedIds([]);
+  }
+
   const AlertDelete = () => {
     Alert.alert("Xóa ghi chú", "Xóa ghi chú này khỏi danh sách ghi chú ?", [
       {
         text: "Đồng ý",
-        // onPress: handleDeleteTodolist,
+        onPress: handleDeleteNotes,
       },
       {
         text: "Hủy",
@@ -113,6 +105,20 @@ const NoteListMain = () => {
     ]);
   };
 
+  function handleLovedNote(){ 
+    NoteService.updateLovedStatus(selectedIds);
+    const ids = selectedIds.map(item => item.id);  
+    const newData = data.map(item => {
+      if(ids.includes(item.id)){
+        return {...item, isLoved: !item.isLoved}
+      }else{
+        return item;
+      }
+    })
+    setData(newData);
+    setSelectedIds([]);
+  }
+
   const AlertStar = () => {
     Alert.alert(
       "Thêm vào mục yêu thích",
@@ -120,7 +126,7 @@ const NoteListMain = () => {
       [
         {
           text: "Đồng ý",
-          // onPress: handleDeleteTodolist,
+          onPress: handleLovedNote,
         },
         {
           text: "Hủy",

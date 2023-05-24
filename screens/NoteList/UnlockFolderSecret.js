@@ -13,6 +13,7 @@ import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Animatable from "react-native-animatable";
+import NoteService from "../../service/NoteService";
 
 const UnlockFolderSecret = () => {
   const navigation = useNavigation();
@@ -24,9 +25,21 @@ const UnlockFolderSecret = () => {
   });
 
   const [passwordUnlock, setPasswordUnlock] = useState("");
-  const [password, setPassword] = useState("aa");
+  const [password, setPassword] = useState(""); 
   const [repassword, setRepassword] = useState("");
   const [showPass, setShowPass] = useState(false);
+
+  function openSecretFolder(){
+    console.log("haha: ", passwordUnlock);
+
+  }
+
+  function saveSecretFolderPassword(){ 
+    console.log("haha: ", password);
+    if(password != "" && password == repassword){
+      // NoteService.saveSecretFolderPassword(password);           
+    }
+  }
 
   return (
     <SafeAreaView className="bg-[#3A4666] flex-1">
@@ -98,9 +111,9 @@ const UnlockFolderSecret = () => {
       )}
       {password === "" ? (
         <TouchableOpacity
-          //   onPress={() => {
-          //     navigation.navigate("Login");
-          //   }}
+            onPress={() => {
+              saveSecretFolderPassword();
+            }}
           className="mt-10"
         >
           <Animatable.View
@@ -121,9 +134,7 @@ const UnlockFolderSecret = () => {
       ) : (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("NoteListFolderSecret", {
-              paramMovetoSecretFolder: "NotMoveData",
-            });
+            openSecretFolder();
           }}
           className="mt-10"
         >

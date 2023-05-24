@@ -24,6 +24,7 @@ import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import NoteService from "../../service/NoteService";
 import * as ImagePicker from "expo-image-picker";
+import DateTimeUtils from "../../service/DateTimeUtils";
 
 const NoteList_Add = () => {
   const navigation = useNavigation();
@@ -50,7 +51,7 @@ const NoteList_Add = () => {
       (title === "" && note !== "")
     ) {
       try {
-        await NoteService.addNote(title, note);
+        await NoteService.addNote(title, note); 
         navigation.navigate("BottomBar", {
           screen: "Ghi chú",
           params: {
