@@ -25,19 +25,18 @@ const UnlockFolderSecret = () => {
   });
 
   const [passwordUnlock, setPasswordUnlock] = useState("");
-  const [password, setPassword] = useState(""); 
+  const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [showPass, setShowPass] = useState(false);
 
-  function openSecretFolder(){
+  function openSecretFolder() {
     console.log("haha: ", passwordUnlock);
-
   }
 
-  function saveSecretFolderPassword(){ 
+  function saveSecretFolderPassword() {
     console.log("haha: ", password);
-    if(password != "" && password == repassword){
-      // NoteService.saveSecretFolderPassword(password);           
+    if (password != "" && password == repassword) {
+      // NoteService.saveSecretFolderPassword(password);
     }
   }
 
@@ -50,7 +49,7 @@ const UnlockFolderSecret = () => {
         <MaterialCommunityIcons name="folder-lock" size={32} color="white" />
         <View className="h-8 w-8"></View>
       </View>
-      {password === "" ? (
+      {passwordUnlock === "" ? (
         <View className="justify-center items-center px-4">
           <Text className="text-[#FFFFFF] text-3xl font-bold">
             Thư mục bảo mật
@@ -109,11 +108,11 @@ const UnlockFolderSecret = () => {
           </View>
         </View>
       )}
-      {password === "" ? (
+      {passwordUnlock === "" ? (
         <TouchableOpacity
-            onPress={() => {
-              saveSecretFolderPassword();
-            }}
+          onPress={() => {
+            saveSecretFolderPassword();
+          }}
           className="mt-10"
         >
           <Animatable.View

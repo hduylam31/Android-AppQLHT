@@ -30,7 +30,7 @@ const NoteListMain = () => {
   // thay loadCalendar thanh loadNoteList 2 useEffect phia duoi
   const loadNoteList = async () => {
     try {
-      const notelist = await NoteService.loadNoteData(); 
+      const notelist = await NoteService.loadNoteData();
       setData(notelist);
       console.log(notelist);
     } catch (error) {
@@ -46,8 +46,8 @@ const NoteListMain = () => {
     if (
       route?.params?.screenNoteList === "AddToMain" ||
       route?.params?.screenNoteList === "EditToMain" ||
-      route?.params?.screenNoteList === "DeleteToMain" 
-    ) { 
+      route?.params?.screenNoteList === "DeleteToMain"
+    ) {
       loadNoteList();
     }
   }, [route]);
@@ -82,10 +82,10 @@ const NoteListMain = () => {
   };
   console.log("aid", selectedIds);
 
-  function handleDeleteNotes(){
-    const ids = selectedIds.map(item => item.id);
+  function handleDeleteNotes() {
+    const ids = selectedIds.map((item) => item.id);
     NoteService.deleteNotes(ids);
-    const newData = data.filter(item => !ids.includes(item.id));
+    const newData = data.filter((item) => !ids.includes(item.id));
     setData(newData);
     setSelectedIds([]);
   }
@@ -105,16 +105,16 @@ const NoteListMain = () => {
     ]);
   };
 
-  function handleLovedNote(){ 
+  function handleLovedNote() {
     NoteService.updateLovedStatus(selectedIds);
-    const ids = selectedIds.map(item => item.id);  
-    const newData = data.map(item => {
-      if(ids.includes(item.id)){
-        return {...item, isLoved: !item.isLoved}
-      }else{
+    const ids = selectedIds.map((item) => item.id);
+    const newData = data.map((item) => {
+      if (ids.includes(item.id)) {
+        return { ...item, isLoved: !item.isLoved };
+      } else {
         return item;
       }
-    })
+    });
     setData(newData);
     setSelectedIds([]);
   }
@@ -176,6 +176,30 @@ const NoteListMain = () => {
     });
     setData(sortedNote3);
     setSelectedCategorySort("SortZA");
+    setShowExtendsSort(false);
+    setShowExtends(false);
+  };
+
+  const handleSortCreatedDay = () => {
+    const sortedNote4 = data.sort((a, b) => {
+      const dateA = new Date(a.createdDay.split("/").reverse().join("/"));
+      const dateB = new Date(b.createdDay.split("/").reverse().join("/"));
+      return dateA - dateB;
+    });
+    setData(sortedNote4);
+    setSelectedCategorySort("SortCreatedDay");
+    setShowExtendsSort(false);
+    setShowExtends(false);
+  };
+
+  const handleSortUpdatedDay = () => {
+    const sortedNote5 = data.sort((a, b) => {
+      const dateA = new Date(a.updatedDay.split("/").reverse().join("/"));
+      const dateB = new Date(b.updatedDay.split("/").reverse().join("/"));
+      return dateA - dateB;
+    });
+    setData(sortedNote5);
+    setSelectedCategorySort("SortUpdatedDay");
     setShowExtendsSort(false);
     setShowExtends(false);
   };
@@ -312,7 +336,7 @@ const NoteListMain = () => {
                   setShowExtends(false);
                 }}
               >
-                <View className="w-52 h-36 bg-white rounded-lg">
+                <View className="w-52 h-60 bg-white rounded-lg">
                   <TouchableOpacity
                     onPress={() => setShowExtendsSort(false)}
                     className="flex-1 flex-row justify-start items-center"
@@ -354,6 +378,36 @@ const NoteListMain = () => {
                     )}
                     <Text>Thứ tự tiêu để từ Z-A</Text>
                   </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleSortCreatedDay}
+                    className="flex-1 flex-row justify-start items-center"
+                  >
+                    {selectedCategorySort === "SortCreatedDay" ? (
+                      <MaterialCommunityIcons
+                        name="circle-medium"
+                        size={28}
+                        color="black"
+                      />
+                    ) : (
+                      <View className="w-7 h-7"></View>
+                    )}
+                    <Text>Thứ tự ngày tạo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleSortUpdatedDay}
+                    className="flex-1 flex-row justify-start items-center"
+                  >
+                    {selectedCategorySort === "SortUpdatedDay" ? (
+                      <MaterialCommunityIcons
+                        name="circle-medium"
+                        size={28}
+                        color="black"
+                      />
+                    ) : (
+                      <View className="w-7 h-7"></View>
+                    )}
+                    <Text>Thứ tự ngày cập nhật</Text>
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             </Modal>
@@ -365,8 +419,6 @@ const NoteListMain = () => {
               contentContainerStyle={{
                 flexDirection: "row",
                 flexWrap: "wrap",
-                justifyContent: "space-between",
-                padding: "4%",
               }}
             >
               {data.map(
@@ -376,15 +428,13 @@ const NoteListMain = () => {
                     .replace(/&nbsp;/g, "")
                     .trim()),
                   (
-                    <View
-                      key={item.id}
-                      className="w-[48%] h-40 mb-[4%] bg-white rounded-xl"
-                    >
+                    <View key={item.id} className="mb-5 m-[4%] w-[42%]">
                       <TouchableOpacity
                         disabled={showMultiCheck ? true : false}
                         onPress={() => {
                           navigation.navigate("NoteList_Edit", { item });
                         }}
+                        className="bg-white rounded-xl h-36"
                       >
                         <View
                           className={`flex-row ${
@@ -414,6 +464,7 @@ const NoteListMain = () => {
                           </Text>
                           {showMultiCheck && <View className="w-5 h-5"></View>}
                         </View>
+
                         <View className="h-full px-3">
                           <Text
                             numberOfLines={3}
@@ -424,6 +475,18 @@ const NoteListMain = () => {
                           </Text>
                         </View>
                       </TouchableOpacity>
+                      <View className="justify-center items-center flex-row space-x-2 mt-1">
+                        <Text>{item.createdDay}</Text>
+                        {item.isLoved ? (
+                          <MaterialCommunityIcons
+                            name="star"
+                            size={16}
+                            color="#FE8668"
+                          />
+                        ) : (
+                          <View></View>
+                        )}
+                      </View>
                     </View>
                   )
                 )
