@@ -31,10 +31,13 @@ const NoteListMain = () => {
   const loadNoteList = async () => {
     try {
       const notelist = await NoteService.loadNoteData();
-      setData(notelist);
-      console.log(notelist);
+      const notSecretData = notelist.filter(item => !item.isSecret);
+      setData(notSecretData);
+      const secretPass = await NoteService.loadSecretPasswordData();
+      setSecretPassword(secretPass);
+      console.log("Load data done");
     } catch (error) {
-      console.log(error);
+      console.log(error); 
     }
   };
   useEffect(() => {
@@ -62,6 +65,7 @@ const NoteListMain = () => {
   const [showSaveWorkGroup, setShowSaveWorkGroup] = useState(false);
   const [nameSaveWorkGroup, setNameSaveWorkGroup] = useState();
   const [selectedIds, setSelectedIds] = useState([]);
+  const [secretPassword, setSecretPassword] = useState("");
 
   const toggleCheckBox = (id) => {
     console.log("id", id);
@@ -106,23 +110,48 @@ const NoteListMain = () => {
   };
 
   function handleLovedNote() {
-    NoteService.updateLovedStatus(selectedIds);
-    const ids = selectedIds.map((item) => item.id);
-    const newData = data.map((item) => {
-      if (ids.includes(item.id)) {
-        return { ...item, isLoved: !item.isLoved };
-      } else {
-        return item;
-      }
-    });
-    setData(newData);
+    if(selectedIds.some(item => !item.isLoved)){
+      const newIds = selectedIds.filter(item => !item.isLoved);
+      NoteService.updateLovedStatus(newIds);
+      const ids = newIds.map((item) => item.id);
+      const newData = data.map((item) => {
+        if (ids.includes(item.id)) {
+          return { ...item, isLoved: !item.isLoved };
+        } else {
+          return item;
+        }
+      });
+      setData(newData); 
+    }else{
+      NoteService.updateLovedStatus(selectedIds);
+      const ids = selectedIds.map((item) => item.id);
+      const newData = data.map((item) => {
+        if (ids.includes(item.id)) {
+          return { ...item, isLoved: !item.isLoved };
+        } else {
+          return item;
+        }
+      });
+      setData(newData);
+    }
+    
+
     setSelectedIds([]);
   }
 
   const AlertStar = () => {
+    var title = "";
+    var detail = "";
+    if(selectedIds.some(item => !item.isLoved)){
+      title = "Thêm vào mục yêu thích";
+      detail = "Thêm ghi chú này vào danh sách yêu thích?";
+    } else{
+      title = "Loại bỏ mục yêu thích";
+      detail = "Loại bỏ ghi chú này từ danh sách yêu thích?";
+    }
     Alert.alert(
-      "Thêm vào mục yêu thích",
-      "Thêm ghi chú này vào danh sách yêu thích?",
+      title,
+      detail,
       [
         {
           text: "Đồng ý",
@@ -138,6 +167,13 @@ const NoteListMain = () => {
     );
   };
 
+  function moveToSecretFolder(){
+    NoteService.updateSecretFolder(selectedIds); 
+    const ids = selectedIds.map((item) => item.id);
+    const newData = data.filter(item => !ids.includes(item.id));
+    setData(newData);
+  }
+
   const AlertSecret = () => {
     Alert.alert(
       "Thêm vào thư mục bảo mật",
@@ -145,7 +181,7 @@ const NoteListMain = () => {
       [
         {
           text: "Đồng ý",
-          // onPress: handleDeleteTodolist,
+          onPress: moveToSecretFolder,
         },
         {
           text: "Hủy",
@@ -302,7 +338,7 @@ const NoteListMain = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("UnlockFolderSecret");
+                      navigation.navigate("UnlockFolderSecret", {secretPassword});
                     }}
                     className="flex-1 flex-row justify-start items-center"
                   >
@@ -430,7 +466,7 @@ const NoteListMain = () => {
                   (
                     <View key={item.id} className="mb-5 m-[4%] w-[42%]">
                       <TouchableOpacity
-                        disabled={showMultiCheck ? true : false}
+                        disabled={showMultiCheck ? true : false} 
                         onPress={() => {
                           navigation.navigate("NoteList_Edit", { item });
                         }}

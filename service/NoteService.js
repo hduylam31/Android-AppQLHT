@@ -6,8 +6,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import StorageUtils from "./StorageUtils";
 import DateTimeUtils from "./DateTimeUtils";
 import SecurityUtils from "./SecurityUtils";
+import { Alert } from "react-native-web";
 
 class NoteService{
+
+    static async loadSecretPasswordData(){
+      const user = auth.currentUser;
+      const docRef = doc(firestore, "notelist", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const password = docSnap.data().password;
+        if(password != undefined && password != ""){
+          return password;
+        } 
+        return "";
+      } else {
+        return "";
+      }
+    }
 
     static async loadNoteData() {
         const noteList = await AsyncStorage.getItem('noteList');
@@ -38,7 +54,8 @@ class NoteService{
             note: note,
             createdDay: nowDate,
             updatedDay: nowDate,
-            isLoved: false
+            isLoved: false,
+            isSecret: false
         };
         await StorageUtils.pushElementToArray("noteList", item);
 
@@ -61,7 +78,8 @@ class NoteService{
           note: elm.note,
           createdDay: elm.createdDay,
           updatedDay: nowDate,
-          isLoved: elm.isLoved
+          isLoved: elm.isLoved,
+          isSecret: elm.isSecret
         };
         console.log("Update element: ", updatedData);
         await StorageUtils.updateElementInArray('noteList', updatedData);
@@ -114,7 +132,7 @@ class NoteService{
       console.log("delete OKK");
     };
 
-    static async updateLovedStatus(items){    
+    static async updateLovedStatus(items){     
       try {
         console.log("updateLovedStatus");
         const ids = items.map(item => item.id);
@@ -137,23 +155,73 @@ class NoteService{
         }
     }
 
+    static async updateSecretFolder(items){     
+      try {
+        console.log("updateSecretFolder");
+        const ids = items.map(item => item.id);
+        await StorageUtils.updateSecretElementsInArray('noteList', items); 
+        const user = auth.currentUser;
+        const userRef = doc(collection(firestore, 'notelist'), user.uid);
+        const userDoc = await getDoc(userRef);
+        const noteList = userDoc.data().notelist;
+        const updatedNoteList = noteList.map(item => {
+          if(ids.includes(item.id)){
+            return {...item, isSecret: !item.isSecret}
+          }else{
+            return item;
+          }
+        });
+        updateDoc(userRef, { notelist: updatedNoteList }, {merge: true});
+        console.log("update okk");
+        } catch (error) {
+          console.log("updateSecretFolder: ", error);
+        }
+    }
+
     static async saveSecretFolderPassword(password){   
       try {
         const user = auth.currentUser;
         const userRef = doc(collection(firestore, 'notelist'), user.uid);
         const userDoc = await getDoc(userRef); 
         const hashPassword = await SecurityUtils.encrypt(password, user.uid);    
-        console.log("password: ", password);
-        console.log("hashPassword: ", hashPassword); 
         if(userDoc.exists()){
             updateDoc(userRef, {password: hashPassword}, {merge: true});
         }else{
             setDoc(userRef, { password: hashPassword });
         }
+        return hashPassword;
       } catch (error) {
         console.log("saveSecretFolderPassword: ", error);
+        return "";
+      }
+    }  
+
+    static async login(password, encryptPassword){
+      const user = auth.currentUser;
+      const hashPassword = await SecurityUtils.encrypt(password, user.uid); 
+      console.log("user pass: ", hashPassword);
+      console.log("encryptPasswoed pass: ", encryptPassword);
+      return hashPassword == encryptPassword;
+    }
+
+    static async changePassword(oldPass, newPass){
+      try {
+        const user = auth.currentUser;
+        const oldHash = await this.loadSecretPasswordData(); 
+        const hashPassword = await SecurityUtils.encrypt(oldPass, user.uid);
+
+        if(oldHash != hashPassword){
+          return "";
+        }
+        const newHashPassword = await this.saveSecretFolderPassword(newPass);
+        return newHashPassword;
+      } catch (error) {
+        console.log("changePassword: ", error);
+        return "";
       }
     }
+
+
 }
 
 export default NoteService;

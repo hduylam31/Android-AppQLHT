@@ -6,12 +6,14 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Alert
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import * as Animatable from "react-native-animatable";
+import NoteService from "../../service/NoteService";
 
 const ChangePassFolderSecret = () => {
   const navigation = useNavigation();
@@ -25,6 +27,21 @@ const ChangePassFolderSecret = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [repassword, setRepassword] = useState("");
+
+  async function changePassFolderSecret(){
+    console.log("haha");
+    if(newPassword != "" && newPassword == repassword){
+      const status = await NoteService.changePassword(oldPassword, newPassword);
+      if(status == ""){
+        Alert.alert("Lỗi", "Mật khẩu cũ không chính xác");  
+      } else{
+        Alert.alert("Thông báo", "Thay đổi mật khẩu thành công");
+        await new Promise(r => setTimeout(r, 1000));
+        navigation.navigate("UnlockFolderSecret", {secretPassword: status}); 
+      }
+    }
+    
+  }
 
   return (
     <SafeAreaView className="bg-[#3A4666] flex-1">
@@ -68,9 +85,7 @@ const ChangePassFolderSecret = () => {
       </View>
 
       <TouchableOpacity
-        //   onPress={() => {
-        //     navigation.navigate("Login");
-        //   }}
+          onPress={changePassFolderSecret}
         className="mt-10"
       >
         <Animatable.View

@@ -45,8 +45,9 @@ const NoteListFolderSecret = () => {
   const loadNoteList = async () => {
     try {
       const notelist = await NoteService.loadNoteData();
-      setData(notelist);
-    } catch (error) {
+      const secretData = notelist.filter(item => item.isSecret);
+      setData(secretData);
+    } catch (error) { 
       console.log(error);
     }
   };
@@ -193,7 +194,12 @@ const NoteListFolderSecret = () => {
             ) : (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("Ghi chú");
+                  navigation.navigate("BottomBar", {
+                    screen: "Ghi chú",
+                    params: {
+                      screenNoteList: "EditToMain",
+                    },
+                  });
                 }}
               >
                 <MaterialCommunityIcons

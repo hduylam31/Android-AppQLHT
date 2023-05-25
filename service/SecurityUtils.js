@@ -3,10 +3,15 @@ import * as Crypto from 'expo-crypto';
 class SecurityUtils{
     
     static async generateComplexSalt(rawSalt){
+        const n = rawSalt.length > 18 ? 3 : 2
         const reversedStr = rawSalt.split('').reverse().join('');
-        const slicedStr = reversedStr.substring(0, 4); 
-        const repeatedStr = slicedStr.repeat(2); 
-        const finalSalt = repeatedStr.substring(0, 6);
+        let result = "";
+        for (let i = 0; i < reversedStr.length; i++) {
+            if (i % n !== 0) { 
+                result += reversedStr[i];
+            }
+        }
+        const finalSalt = result.repeat(2); 
         return finalSalt; 
     }
 

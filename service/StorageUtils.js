@@ -71,6 +71,24 @@ class StorageUtils{
         console.log(error);
       }
     }
+
+    static async updateSecretElementsInArray(key, updatedElements) {
+      try {
+        const existingArray = await AsyncStorage.getItem(key);
+        let newArray = existingArray ? JSON.parse(existingArray) : [];
+    
+        updatedElements.forEach(updatedElement => {
+          const index = newArray.findIndex(item => item.id === updatedElement.id);
+          if (index !== -1) {
+            newArray[index] = { ...newArray[index], isSecret: !updatedElement.isSecret };
+          }
+        });
+        console.log("new: ", newArray);
+        await AsyncStorage.setItem(key, JSON.stringify(newArray));
+      } catch (error) {
+        console.log(error);
+      }
+    }
 }
 
 export default StorageUtils;

@@ -316,7 +316,7 @@ class CalendarService {
     const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
     const nextMonthYear = currentMonth === 12 ? currentYear + 1 : currentYear;
     console.log("rangeTime: ", rangeTime);
-    let currentMonthEvent = await this.fetchCalendarData(token, 12, 2022, rangeTime);
+    let currentMonthEvent = await this.fetchCalendarData(token, currentMonth, currentYear, rangeTime);
     if (currentMonthEvent === "error") {
       console.log("error token");
       await this.logOutMoodle(-1);

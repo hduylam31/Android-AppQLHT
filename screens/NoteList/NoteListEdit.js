@@ -64,7 +64,8 @@ const NoteList_Edit = () => {
         title,
         note,  
         createdDay: c_item.createdDay,  
-        isLoved: c_item.isLoved
+        isLoved: c_item.isLoved,
+        isSecret: c_item.isSecret
       });
       navigation.navigate("BottomBar", {
         screen: "Ghi chú",

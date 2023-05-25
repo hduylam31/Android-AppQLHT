@@ -6,9 +6,10 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Alert
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -24,32 +25,60 @@ const UnlockFolderSecret = () => {
     });
   });
 
+  const route = useRoute();
+  const storePassword = route.params.secretPassword;
+
   const [passwordUnlock, setPasswordUnlock] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [showPass, setShowPass] = useState(false);
+ 
+  async function openSecretFolder() {
+    console.log("passwordUnlock: ", passwordUnlock); 
+    console.log("storePassword: ", storePassword); 
+    if(passwordUnlock != ""){
+      const isAuth = await NoteService.login(passwordUnlock, storePassword); 
+      console.log("isAuth: ", isAuth);    
+      if(isAuth){
+        navigation.navigate("NoteListFolderSecret", {
+          paramMovetoSecretFolder: "NotMoveData",
+        });
+      }else{
+        Alert.alert("Thông báo", "Sai mật khẩu!");
+      }
 
-  function openSecretFolder() {
-    console.log("haha: ", passwordUnlock);
-  }
+    }
+  } 
 
   function saveSecretFolderPassword() {
     console.log("haha: ", password);
     if (password != "" && password == repassword) {
-      // NoteService.saveSecretFolderPassword(password);
+      NoteService.saveSecretFolderPassword(password); 
+      navigation.navigate("NoteListFolderSecret", {
+        paramMovetoSecretFolder: "NotMoveData",
+      });
     }
   }
-
+  
   return (
     <SafeAreaView className="bg-[#3A4666] flex-1">
       <View className="p-4 flex-row justify-between items-center mt-10">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate("BottomBar", {
+            screen: "Ghi chú",
+            params: {
+              screenNoteList: "EditToMain",
+            },
+          });
+        }
+          
+        }>
           <AntDesign name="arrowleft" size={32} color="white" />
         </TouchableOpacity>
         <MaterialCommunityIcons name="folder-lock" size={32} color="white" />
         <View className="h-8 w-8"></View>
       </View>
-      {passwordUnlock === "" ? (
+      {storePassword === "" ? (
         <View className="justify-center items-center px-4">
           <Text className="text-[#FFFFFF] text-3xl font-bold">
             Thư mục bảo mật
@@ -108,7 +137,7 @@ const UnlockFolderSecret = () => {
           </View>
         </View>
       )}
-      {passwordUnlock === "" ? (
+      {storePassword === "" ? (
         <TouchableOpacity
           onPress={() => {
             saveSecretFolderPassword();

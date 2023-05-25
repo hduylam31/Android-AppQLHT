@@ -34,7 +34,7 @@ const NoteList_Add = () => {
   const [note, setNote] = useState("");
 
   useLayoutEffect(() => {
-    navigation.setOptions({
+    navigation.setOptions({ 
       headerShown: false,
     });
   });
