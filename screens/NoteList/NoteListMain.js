@@ -515,7 +515,7 @@ const NoteListMain = () => {
             </Modal>
           </View>
         </View>
-        {filterData.length === 0 ? (
+        {filterData.length === 0 && showSearchBar ? (
           <View className="flex-1 justify-center items-center">
             <Text>Không tìm thấy kết quả</Text>
           </View>
