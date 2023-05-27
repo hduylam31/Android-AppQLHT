@@ -38,8 +38,7 @@ const UnlockFolderSecret = () => {
     console.log("storePassword: ", storePassword);
     if (passwordUnlock === "") {
       Alert.alert("Không thể mở thư mục", "Vui lòng nhập mật mã!");
-    }
-    if (passwordUnlock != "") {
+    } else if (passwordUnlock != "") {
       const isAuth = await NoteService.login(passwordUnlock, storePassword);
       console.log("isAuth: ", isAuth);
       if (isAuth) {
@@ -54,7 +53,29 @@ const UnlockFolderSecret = () => {
 
   function saveSecretFolderPassword() {
     console.log("haha: ", password);
-    if (password != "" && password == repassword) {
+    const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>+-]/;
+    const uppercaseRegex = /[A-Z]/;
+    const lowercaseRegex = /[a-z]/;
+    if (password.length < 6) {
+      Alert.alert("Không thể thiết lập mật mã", "Mật mã phải trên 6 kí tự");
+    } else if (!specialCharacterRegex.test(password)) {
+      Alert.alert(
+        "Không thể thiết lập mật mã",
+        "Mật mã phải mật khẩu chứa ít nhất một ký tự đặc biệt"
+      );
+    } else if (!uppercaseRegex.test(password)) {
+      Alert.alert(
+        "Không thể thiết lập mật mã",
+        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết hoa"
+      );
+    } else if (!lowercaseRegex.test(password)) {
+      Alert.alert(
+        "Không thể thiết lập mật mã",
+        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết thường"
+      );
+    } else if (password !== repassword) {
+      Alert.alert("Không thể thiết lập mật mã", "Nhập lại mật mã không khớp");
+    } else if (password != "" && password == repassword) {
       NoteService.saveSecretFolderPassword(password);
       navigation.navigate("NoteListFolderSecret", {
         paramMovetoSecretFolder: "NotMoveData",
@@ -85,23 +106,31 @@ const UnlockFolderSecret = () => {
           <Text className="text-[#FFFFFF] text-3xl font-bold">
             Thư mục bảo mật
           </Text>
-          <Text className="text-[#FFFFFF] text-base font-light mt-[25%]">
+          <Text className="text-[#FFFFFF] text-xl font-light mt-[20%]">
             Thiết lập mật mã
           </Text>
+
+          <Text className="text-[#FFFFFF] text-sm font-light mt-2 text-center">
+            (mật mã phải trên 6 kí tự, chứa kí tự đặc biệt {"\n"} có cả chữ hoa
+            và chữ thường)
+          </Text>
+
           <View className="w-full h-48 bg-white mt-[5%] rounded-2xl p-4">
             <TextInput
               placeholder="Mật mã"
               autoCapitalize="none"
+              secureTextEntry={true}
               value={password}
               onChangeText={(password) => setPassword(password)}
-              className=" bg-white pl-4 border-b-[#9A999B] border-b-2 flex-1"
+              className=" bg-white border-b-[#9A999B] border-b-2 flex-1"
             ></TextInput>
             <TextInput
               placeholder="Nhập lại mật mã"
               autoCapitalize="none"
+              secureTextEntry={true}
               value={repassword}
               onChangeText={(repassword) => setRepassword(repassword)}
-              className=" bg-white pl-4 border-b-[#9A999B] border-b-2 mb-8 flex-1"
+              className=" bg-white border-b-[#9A999B] border-b-2 mb-8 flex-1"
             ></TextInput>
           </View>
         </View>
