@@ -35,6 +35,7 @@ import GroupTodoListEdit from "../screens/ToDoList/GroupTodoListEdit";
 import NoteListFolderSecret from "../screens/NoteList/NoteListFolderSecret";
 import UnlockFolderSecret from "../screens/NoteList/UnlockFolderSecret";
 import ChangePassFolderSecret from "../screens/NoteList/ChangePassFolderSecret";
+import ResetPassFolderSecret from "../screens/NoteList/ResetPassFolderSecret";
 
 const Auth = createNativeStackNavigator();
 
@@ -279,6 +280,14 @@ export default function AuthStack() {
       <Auth.Screen
         name="ChangePassFolderSecret"
         component={ChangePassFolderSecret}
+        option={{
+          headerShown: false,
+          ...TransitionPresets.RevealFromBottomAndroid,
+        }}
+      />
+      <Auth.Screen
+        name="ResetPassFolderSecret"
+        component={ResetPassFolderSecret}
         option={{
           headerShown: false,
           ...TransitionPresets.RevealFromBottomAndroid,

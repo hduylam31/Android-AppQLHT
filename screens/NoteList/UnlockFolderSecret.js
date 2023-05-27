@@ -36,6 +36,9 @@ const UnlockFolderSecret = () => {
   async function openSecretFolder() {
     console.log("passwordUnlock: ", passwordUnlock);
     console.log("storePassword: ", storePassword);
+    if (passwordUnlock === "") {
+      Alert.alert("Không thể mở thư mục", "Vui lòng nhập mật mã!");
+    }
     if (passwordUnlock != "") {
       const isAuth = await NoteService.login(passwordUnlock, storePassword);
       console.log("isAuth: ", isAuth);
@@ -44,7 +47,7 @@ const UnlockFolderSecret = () => {
           paramMovetoSecretFolder: "NotMoveData",
         });
       } else {
-        Alert.alert("Thông báo", "Sai mật khẩu!");
+        Alert.alert("Không thể mở thư mục", "Sai mật mã!");
       }
     }
   }
@@ -121,6 +124,7 @@ const UnlockFolderSecret = () => {
               }
               className="pl-4 w-[85%]"
             ></TextInput>
+
             <TouchableOpacity
               onPress={() => {
                 setShowPass(!showPass);
@@ -134,6 +138,16 @@ const UnlockFolderSecret = () => {
               )}
             </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            className="self-end mt-3"
+            onPress={() => {
+              navigation.navigate("ResetPassFolderSecret");
+            }}
+          >
+            <Text className="font-light italic text-sm text-right underline text-white">
+              Quên mật mã
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
       {storePassword === "" ? (
