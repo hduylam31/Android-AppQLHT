@@ -61,12 +61,7 @@ const NoteList_Add = () => {
             },
           });
         }else{
-          navigation.navigate("BottomBar", {
-            screen: "Ghi chú 2",
-            params: {
-              screenNoteList: "AddToMain",
-            },
-          });
+          navigation.navigate("NoteListFolderSecret", {screenNoteList: "AddToMain"});
         }
       } catch (error) {
         console.log("Fail due to: ", error);
