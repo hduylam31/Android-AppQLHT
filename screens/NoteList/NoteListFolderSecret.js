@@ -97,11 +97,19 @@ const NoteListFolderSecret = () => {
   };
   console.log("aid", selectedIds);
 
+  function handleDeleteNotes() {
+    const ids = selectedIds.map((item) => item.id);
+    NoteService.deleteNotes(ids);
+    const newData = data.filter((item) => !ids.includes(item.id));
+    setData(newData);
+    setSelectedIds([]);
+  }
+
   const AlertDelete = () => {
-    Alert.alert("Xóa ghi chú", "Xóa ghi chú này khỏi thư mục bảo mật ?", [
+    Alert.alert("Xóa ghi chú", "Xóa ghi chú này khỏi danh sách ghi chú ?", [
       {
         text: "Đồng ý",
-        // onPress: handleDeleteTodolist,
+        onPress: handleDeleteNotes,
       },
       {
         text: "Hủy",
@@ -112,24 +120,66 @@ const NoteListFolderSecret = () => {
     ]);
   };
 
+  function handleLovedNote() {
+    if (selectedIds.some((item) => !item.isLoved)) { 
+      const newIds = selectedIds.filter((item) => !item.isLoved);
+      NoteService.updateLovedStatus(newIds);
+      const ids = newIds.map((item) => item.id);
+      const newData = data.map((item) => {
+        if (ids.includes(item.id)) {
+          return { ...item, isLoved: !item.isLoved };
+        } else {
+          return item;
+        }
+      });
+      setData(newData);
+    } else {
+      NoteService.updateLovedStatus(selectedIds);
+      const ids = selectedIds.map((item) => item.id);
+      const newData = data.map((item) => {
+        if (ids.includes(item.id)) {
+          return { ...item, isLoved: !item.isLoved };
+        } else {
+          return item;
+        }
+      });
+      setData(newData);
+    }
+
+    setSelectedIds([]);
+  }
+
   const AlertStar = () => {
-    Alert.alert(
-      "Thêm vào mục yêu thích",
-      "Thêm ghi chú này vào danh sách yêu thích?",
-      [
-        {
-          text: "Đồng ý",
-          // onPress: handleDeleteTodolist,
+    var title = "";
+    var detail = "";
+    if (selectedIds.some((item) => !item.isLoved)) {
+      title = "Thêm vào mục yêu thích";
+      detail = "Thêm ghi chú này vào danh sách yêu thích?";
+    } else {
+      title = "Loại bỏ mục yêu thích";
+      detail = "Loại bỏ ghi chú này từ danh sách yêu thích?";
+    }
+    Alert.alert(title, detail, [
+      {
+        text: "Đồng ý",
+        onPress: handleLovedNote,
+      },
+      {
+        text: "Hủy",
+        onPress: () => {
+          toggleCheckBox("reset");
         },
-        {
-          text: "Hủy",
-          onPress: () => {
-            toggleCheckBox("reset");
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
+
+  function moveToNormalFolder() {
+    NoteService.updateSecretFolder(selectedIds);
+    const ids = selectedIds.map((item) => item.id);
+    const newData = data.filter((item) => !ids.includes(item.id));
+    setData(newData);
+    setSelectedIds([]);
+  }
 
   const AlertMove = () => {
     Alert.alert(
@@ -138,7 +188,7 @@ const NoteListFolderSecret = () => {
       [
         {
           text: "Đồng ý",
-          // onPress: handleDeleteTodolist,
+          onPress: moveToNormalFolder,
         },
         {
           text: "Hủy",
@@ -572,7 +622,7 @@ const NoteListFolderSecret = () => {
         ) : (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("NoteList_Add");
+              navigation.navigate("NoteList_Add", {isSecret: true});
             }}
             className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
             style={{

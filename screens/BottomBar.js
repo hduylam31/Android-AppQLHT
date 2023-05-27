@@ -8,6 +8,7 @@ import AccountMain from "./Account/AccountMain";
 import CalendarMain from "./Calendar/CalendarMain";
 import ScheduleMain from "./Schedule/ScheduleMain";
 import NoteListMain from "./NoteList/NoteListMain";
+import NoteListFolderSecret from "./NoteList/NoteListFolderSecret";
 
 const Tab = createBottomTabNavigator();
 
@@ -46,6 +47,7 @@ const BottomBar = () => {
     >
       <Tab.Screen name="Lịch" component={CalendarMain} />
       <Tab.Screen name="Ghi chú" component={NoteListMain} />
+      <Tab.Screen name="Ghi chú 2" component={NoteListFolderSecret} />
       <Tab.Screen name="DS công việc" component={ToDoListScreen} />
       <Tab.Screen name="TKB" component={ScheduleMain} />
       <Tab.Screen name="Tài khoản" component={AccountMain} />

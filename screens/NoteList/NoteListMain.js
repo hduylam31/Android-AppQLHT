@@ -169,6 +169,7 @@ const NoteListMain = () => {
     const ids = selectedIds.map((item) => item.id);
     const newData = data.filter((item) => !ids.includes(item.id));
     setData(newData);
+    setSelectedIds([]);
   }
 
   const AlertSecret = () => {
@@ -675,7 +676,7 @@ const NoteListMain = () => {
         ) : (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("NoteList_Add");
+              navigation.navigate("NoteList_Add", {isSecret: false});
             }}
             className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
             style={{

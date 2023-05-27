@@ -29,8 +29,9 @@ import DateTimeUtils from "../../service/DateTimeUtils";
 const NoteList_Add = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const [title, setTitle] = useState("");
 
+  const isSecret = route.params.isSecret;
+  const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
 
   useLayoutEffect(() => {
@@ -51,13 +52,22 @@ const NoteList_Add = () => {
       (title === "" && note !== "")
     ) {
       try {
-        await NoteService.addNote(title, note); 
-        navigation.navigate("BottomBar", {
-          screen: "Ghi chú",
-          params: {
-            screenNoteList: "AddToMain",
-          },
-        });
+        await NoteService.addNote(title, note, isSecret); 
+        if(!isSecret){
+          navigation.navigate("BottomBar", {
+            screen: "Ghi chú",
+            params: {
+              screenNoteList: "AddToMain",
+            },
+          });
+        }else{
+          navigation.navigate("BottomBar", {
+            screen: "Ghi chú 2",
+            params: {
+              screenNoteList: "AddToMain",
+            },
+          });
+        }
       } catch (error) {
         console.log("Fail due to: ", error);
       }

@@ -44,7 +44,7 @@ class NoteService{
         }
     }
 
-    static async addNote(title, note){
+    static async addNote(title, note, isSecret){
         const user = auth.currentUser;
         const documentId = generateUUID(6);
         const nowDate = DateTimeUtils.getNow();
@@ -55,7 +55,7 @@ class NoteService{
             createdDay: nowDate,
             updatedDay: nowDate,
             isLoved: false,
-            isSecret: false
+            isSecret: isSecret
         };
         await StorageUtils.pushElementToArray("noteList", item);
 
@@ -134,7 +134,7 @@ class NoteService{
 
     static async updateLovedStatus(items){     
       try {
-        console.log("updateLovedStatus");
+        console.log("updateLovedStatus with: ", items);
         const ids = items.map(item => item.id);
         await StorageUtils.updateLovedElementsInArray('noteList', items); 
         const user = auth.currentUser;
