@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  Alert
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -32,47 +32,46 @@ const UnlockFolderSecret = () => {
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [showPass, setShowPass] = useState(false);
- 
+
   async function openSecretFolder() {
-    console.log("passwordUnlock: ", passwordUnlock); 
-    console.log("storePassword: ", storePassword); 
-    if(passwordUnlock != ""){
-      const isAuth = await NoteService.login(passwordUnlock, storePassword); 
-      console.log("isAuth: ", isAuth);    
-      if(isAuth){
+    console.log("passwordUnlock: ", passwordUnlock);
+    console.log("storePassword: ", storePassword);
+    if (passwordUnlock != "") {
+      const isAuth = await NoteService.login(passwordUnlock, storePassword);
+      console.log("isAuth: ", isAuth);
+      if (isAuth) {
         navigation.navigate("NoteListFolderSecret", {
           paramMovetoSecretFolder: "NotMoveData",
         });
-      }else{
+      } else {
         Alert.alert("Thông báo", "Sai mật khẩu!");
       }
-
     }
-  } 
+  }
 
   function saveSecretFolderPassword() {
     console.log("haha: ", password);
     if (password != "" && password == repassword) {
-      NoteService.saveSecretFolderPassword(password); 
+      NoteService.saveSecretFolderPassword(password);
       navigation.navigate("NoteListFolderSecret", {
         paramMovetoSecretFolder: "NotMoveData",
       });
     }
   }
-  
+
   return (
     <SafeAreaView className="bg-[#3A4666] flex-1">
       <View className="p-4 flex-row justify-between items-center mt-10">
-        <TouchableOpacity onPress={() => {
-          navigation.navigate("BottomBar", {
-            screen: "Ghi chú",
-            params: {
-              screenNoteList: "EditToMain",
-            },
-          });
-        }
-          
-        }>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("BottomBar", {
+              screen: "Ghi chú",
+              params: {
+                screenNoteList: "EditToMain",
+              },
+            });
+          }}
+        >
           <AntDesign name="arrowleft" size={32} color="white" />
         </TouchableOpacity>
         <MaterialCommunityIcons name="folder-lock" size={32} color="white" />

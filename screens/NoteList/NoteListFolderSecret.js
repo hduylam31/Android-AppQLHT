@@ -16,6 +16,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import NoteService from "../../service/NoteService";
 import { CheckBox } from "@rneui/themed";
+import moment from "moment";
 
 const NoteListFolderSecret = () => {
   const navigation = useNavigation();
@@ -45,9 +46,9 @@ const NoteListFolderSecret = () => {
   const loadNoteList = async () => {
     try {
       const notelist = await NoteService.loadNoteData();
-      const secretData = notelist.filter(item => item.isSecret);
+      const secretData = notelist.filter((item) => item.isSecret);
       setData(secretData);
-    } catch (error) { 
+    } catch (error) {
       console.log(error);
     }
   };
@@ -130,24 +131,24 @@ const NoteListFolderSecret = () => {
     );
   };
 
-  //   const AlertSecret = () => {
-  //     Alert.alert(
-  //       "Thêm vào thư mục bảo mật",
-  //       "Thêm ghi chú này vào thư mục bảo mật?",
-  //       [
-  //         {
-  //           text: "Đồng ý",
-  //           // onPress: handleDeleteTodolist,
-  //         },
-  //         {
-  //           text: "Hủy",
-  //           onPress: () => {
-  //             toggleCheckBox("reset");
-  //           },
-  //         },
-  //       ]
-  //     );
-  //   };
+  const AlertMove = () => {
+    Alert.alert(
+      "Di chuyển ghi chú",
+      "Di chuyển ghi chú ra khỏi thư mục bảo mật? ",
+      [
+        {
+          text: "Đồng ý",
+          // onPress: handleDeleteTodolist,
+        },
+        {
+          text: "Hủy",
+          onPress: () => {
+            toggleCheckBox("reset");
+          },
+        },
+      ]
+    );
+  };
 
   const handleSortAZ = () => {
     const sortedNote2 = data.sort((a, b) => {
@@ -168,6 +169,30 @@ const NoteListFolderSecret = () => {
     });
     setData(sortedNote3);
     setSelectedCategorySort("SortZA");
+    setShowExtendsSort(false);
+    setShowExtends(false);
+  };
+
+  const handleSortCreatedDay = () => {
+    const sortedNote4 = data.sort((a, b) => {
+      const dateA = moment(a.createdDay, "DD/MM/YYYY");
+      const dateB = moment(b.createdDay, "DD/MM/YYYY");
+      return dateA - dateB;
+    });
+    setData(sortedNote4);
+    setSelectedCategorySort("SortCreatedDay");
+    setShowExtendsSort(false);
+    setShowExtends(false);
+  };
+
+  const handleSortUpdatedDay = () => {
+    const sortedNote5 = data.sort((a, b) => {
+      const dateA = moment(a.updatedDay, "DD/MM/YYYY");
+      const dateB = moment(b.updatedDay, "DD/MM/YYYY");
+      return dateA - dateB;
+    });
+    setData(sortedNote5);
+    setSelectedCategorySort("SortUpdatedDay");
     setShowExtendsSort(false);
     setShowExtends(false);
   };
@@ -319,7 +344,7 @@ const NoteListFolderSecret = () => {
                   setShowExtends(false);
                 }}
               >
-                <View className="w-52 h-36 bg-white rounded-lg">
+                <View className="w-52 h-60 bg-white rounded-lg">
                   <TouchableOpacity
                     onPress={() => setShowExtendsSort(false)}
                     className="flex-1 flex-row justify-start items-center"
@@ -361,6 +386,36 @@ const NoteListFolderSecret = () => {
                     )}
                     <Text>Thứ tự tiêu để từ Z-A</Text>
                   </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleSortCreatedDay}
+                    className="flex-1 flex-row justify-start items-center"
+                  >
+                    {selectedCategorySort === "SortCreatedDay" ? (
+                      <MaterialCommunityIcons
+                        name="circle-medium"
+                        size={28}
+                        color="black"
+                      />
+                    ) : (
+                      <View className="w-7 h-7"></View>
+                    )}
+                    <Text>Thứ tự ngày tạo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleSortUpdatedDay}
+                    className="flex-1 flex-row justify-start items-center"
+                  >
+                    {selectedCategorySort === "SortUpdatedDay" ? (
+                      <MaterialCommunityIcons
+                        name="circle-medium"
+                        size={28}
+                        color="black"
+                      />
+                    ) : (
+                      <View className="w-7 h-7"></View>
+                    )}
+                    <Text>Thứ tự ngày cập nhật</Text>
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             </Modal>
@@ -372,8 +427,6 @@ const NoteListFolderSecret = () => {
               contentContainerStyle={{
                 flexDirection: "row",
                 flexWrap: "wrap",
-                justifyContent: "space-between",
-                padding: "4%",
               }}
             >
               {data.map(
@@ -383,15 +436,13 @@ const NoteListFolderSecret = () => {
                     .replace(/&nbsp;/g, "")
                     .trim()),
                   (
-                    <View
-                      key={item.id}
-                      className="w-[48%] h-40 mb-[4%] bg-white rounded-xl"
-                    >
+                    <View key={item.id} className="mb-5 m-[4%] w-[42%]">
                       <TouchableOpacity
                         disabled={showMultiCheck ? true : false}
                         onPress={() => {
                           navigation.navigate("NoteList_Edit", { item });
                         }}
+                        className="bg-white rounded-xl h-36"
                       >
                         <View
                           className={`flex-row ${
@@ -421,6 +472,7 @@ const NoteListFolderSecret = () => {
                           </Text>
                           {showMultiCheck && <View className="w-5 h-5"></View>}
                         </View>
+
                         <View className="h-full px-3">
                           <Text
                             numberOfLines={3}
@@ -431,6 +483,22 @@ const NoteListFolderSecret = () => {
                           </Text>
                         </View>
                       </TouchableOpacity>
+                      <View className="justify-center items-center flex-row space-x-2 mt-1">
+                        <Text>
+                          {selectedCategorySort === "SortUpdatedDay"
+                            ? item.updatedDay
+                            : item.createdDay}
+                        </Text>
+                        {item.isLoved ? (
+                          <MaterialCommunityIcons
+                            name="star"
+                            size={16}
+                            color="#FE8668"
+                          />
+                        ) : (
+                          <View></View>
+                        )}
+                      </View>
                     </View>
                   )
                 )
@@ -441,8 +509,28 @@ const NoteListFolderSecret = () => {
         {showMultiCheck ? (
           <View className="flex-row justify-between">
             <TouchableOpacity
+              onPress={AlertMove}
+              className="w-[27%] h-10 absolute bottom-5 left-[5%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 5, height: 5 },
+                shadowOpacity: 0.5,
+                shadowRadius: 5,
+                elevation: 5,
+              }}
+            >
+              <MaterialCommunityIcons
+                name="folder-move-outline"
+                size={20}
+                color="white"
+              />
+              <Text className="text-white text-center font-semibold text-sm">
+                Di chuyển
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={AlertStar}
-              className="w-[43%] h-10 absolute bottom-5 left-[5%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
+              className="w-[27%] h-10 absolute bottom-5 left-[37%] bg-[#3A4666] rounded-2xl flex-row items-center justify-center space-x-2"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 5, height: 5 },
@@ -462,7 +550,7 @@ const NoteListFolderSecret = () => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={AlertDelete}
-              className="w-[43%] h-10 absolute bottom-5 left-[52%] bg-[#c12d2d] rounded-2xl flex-row items-center justify-center space-x-2"
+              className="w-[27%] h-10 absolute bottom-5 left-[69%] bg-[#c12d2d] rounded-2xl flex-row items-center justify-center space-x-2"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 5, height: 5 },
@@ -482,7 +570,23 @@ const NoteListFolderSecret = () => {
             </TouchableOpacity>
           </View>
         ) : (
-          <View></View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("NoteList_Add");
+            }}
+            className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+            style={{
+              shadowColor: "#000000",
+              shadowOffset: { width: 5, height: 5 },
+              shadowOpacity: 0.5,
+              shadowRadius: 5,
+              elevation: 5,
+            }}
+          >
+            <Text className="text-white text-center font-bold text-base">
+              Thêm ghi chú
+            </Text>
+          </TouchableOpacity>
         )}
       </SafeAreaView>
     </TouchableWithoutFeedback>

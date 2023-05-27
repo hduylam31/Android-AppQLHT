@@ -7,6 +7,7 @@ import {
   ScrollView,
   Modal,
   Alert,
+  TextInput,
 } from "react-native";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -16,6 +17,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import NoteService from "../../service/NoteService";
 import { CheckBox } from "@rneui/themed";
+import moment from "moment";
 
 const NoteListMain = () => {
   const navigation = useNavigation();
@@ -31,13 +33,13 @@ const NoteListMain = () => {
   const loadNoteList = async () => {
     try {
       const notelist = await NoteService.loadNoteData();
-      const notSecretData = notelist.filter(item => !item.isSecret);
+      const notSecretData = notelist.filter((item) => !item.isSecret);
       setData(notSecretData);
       const secretPass = await NoteService.loadSecretPasswordData();
       setSecretPassword(secretPass);
       console.log("Load data done");
     } catch (error) {
-      console.log(error); 
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -110,8 +112,8 @@ const NoteListMain = () => {
   };
 
   function handleLovedNote() {
-    if(selectedIds.some(item => !item.isLoved)){
-      const newIds = selectedIds.filter(item => !item.isLoved);
+    if (selectedIds.some((item) => !item.isLoved)) {
+      const newIds = selectedIds.filter((item) => !item.isLoved);
       NoteService.updateLovedStatus(newIds);
       const ids = newIds.map((item) => item.id);
       const newData = data.map((item) => {
@@ -121,8 +123,8 @@ const NoteListMain = () => {
           return item;
         }
       });
-      setData(newData); 
-    }else{
+      setData(newData);
+    } else {
       NoteService.updateLovedStatus(selectedIds);
       const ids = selectedIds.map((item) => item.id);
       const newData = data.map((item) => {
@@ -134,7 +136,6 @@ const NoteListMain = () => {
       });
       setData(newData);
     }
-    
 
     setSelectedIds([]);
   }
@@ -142,35 +143,31 @@ const NoteListMain = () => {
   const AlertStar = () => {
     var title = "";
     var detail = "";
-    if(selectedIds.some(item => !item.isLoved)){
+    if (selectedIds.some((item) => !item.isLoved)) {
       title = "Thêm vào mục yêu thích";
       detail = "Thêm ghi chú này vào danh sách yêu thích?";
-    } else{
+    } else {
       title = "Loại bỏ mục yêu thích";
       detail = "Loại bỏ ghi chú này từ danh sách yêu thích?";
     }
-    Alert.alert(
-      title,
-      detail,
-      [
-        {
-          text: "Đồng ý",
-          onPress: handleLovedNote,
+    Alert.alert(title, detail, [
+      {
+        text: "Đồng ý",
+        onPress: handleLovedNote,
+      },
+      {
+        text: "Hủy",
+        onPress: () => {
+          toggleCheckBox("reset");
         },
-        {
-          text: "Hủy",
-          onPress: () => {
-            toggleCheckBox("reset");
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
-  function moveToSecretFolder(){
-    NoteService.updateSecretFolder(selectedIds); 
+  function moveToSecretFolder() {
+    NoteService.updateSecretFolder(selectedIds);
     const ids = selectedIds.map((item) => item.id);
-    const newData = data.filter(item => !ids.includes(item.id));
+    const newData = data.filter((item) => !ids.includes(item.id));
     setData(newData);
   }
 
@@ -218,8 +215,8 @@ const NoteListMain = () => {
 
   const handleSortCreatedDay = () => {
     const sortedNote4 = data.sort((a, b) => {
-      const dateA = new Date(a.createdDay.split("/").reverse().join("/"));
-      const dateB = new Date(b.createdDay.split("/").reverse().join("/"));
+      const dateA = moment(a.createdDay, "DD/MM/YYYY");
+      const dateB = moment(b.createdDay, "DD/MM/YYYY");
       return dateA - dateB;
     });
     setData(sortedNote4);
@@ -230,8 +227,8 @@ const NoteListMain = () => {
 
   const handleSortUpdatedDay = () => {
     const sortedNote5 = data.sort((a, b) => {
-      const dateA = new Date(a.updatedDay.split("/").reverse().join("/"));
-      const dateB = new Date(b.updatedDay.split("/").reverse().join("/"));
+      const dateA = moment(a.updatedDay, "DD/MM/YYYY");
+      const dateB = moment(b.updatedDay, "DD/MM/YYYY");
       return dateA - dateB;
     });
     setData(sortedNote5);
@@ -240,12 +237,34 @@ const NoteListMain = () => {
     setShowExtends(false);
   };
 
+  const [filterData, setFilterData] = useState([]);
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const searchFilter = (text) => {
+    if (text) {
+      const newData = data.filter((item) => {
+        const itemData =
+          (item.note ? item.note.toUpperCase() : "".toUpperCase()) +
+          (item.title ? item.title.toUpperCase() : "".toUpperCase());
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+
+      setFilterData(newData);
+      setSearch(text);
+    } else {
+      setFilterData(data);
+      setSearch(text);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-[10%]">
+        <View className="bg-[#3A4666] h-20">
           <View className="flex-row p-4 justify-between items-center">
-            {showMultiCheck ? (
+            {showMultiCheck && !showSearchBar ? (
               <View>
                 <TouchableOpacity
                   className="items-center justify-center w-8 h-8"
@@ -261,10 +280,24 @@ const NoteListMain = () => {
                   )}
                 </TouchableOpacity>
               </View>
+            ) : !showMultiCheck && showSearchBar ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setShowSearchBar(false);
+                  setFilterData(data);
+                }}
+                className="pr-2"
+              >
+                <MaterialCommunityIcons
+                  name="arrow-left"
+                  size={32}
+                  color="white"
+                />
+              </TouchableOpacity>
             ) : (
               <View className="w-8 h-8"></View>
             )}
-            {showMultiCheck ? (
+            {showMultiCheck && !showSearchBar ? (
               selectedIds.length > 0 ? (
                 <Text className="text-white text-2xl font-bold text-center">
                   Đã chọn {selectedIds.length}
@@ -274,13 +307,31 @@ const NoteListMain = () => {
                   Chọn ghi chú
                 </Text>
               )
+            ) : !showMultiCheck && showSearchBar ? (
+              <View className="flex-row justify-between items-center bg-white rounded-xl px-2">
+                <TextInput
+                  className="pl-2 bg-white w-[80%] rounded-xl h-8"
+                  placeholder="Tìm kiếm"
+                  value={search}
+                  onChangeText={(text) => searchFilter(text)}
+                  onSubmitEditing={() => {
+                    searchFilter(search);
+                  }}
+                ></TextInput>
+                <Ionicons
+                  onPress={() => searchFilter("")}
+                  name="close"
+                  size={28}
+                  color="black"
+                />
+              </View>
             ) : (
               <Text className="text-white text-2xl font-bold text-center">
                 Danh sách ghi chú
               </Text>
             )}
 
-            {showMultiCheck ? (
+            {showMultiCheck && !showSearchBar ? (
               <TouchableOpacity
                 onPress={() => {
                   toggleCheckBox("reset");
@@ -288,14 +339,26 @@ const NoteListMain = () => {
               >
                 <MaterialCommunityIcons name="check" size={32} color="white" />
               </TouchableOpacity>
+            ) : !showMultiCheck && showSearchBar ? (
+              <View></View>
             ) : (
-              <TouchableOpacity onPress={() => setShowExtends(true)}>
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={32}
-                  color="white"
-                />
-              </TouchableOpacity>
+              <View className="flex-row justify-between items-center">
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowSearchBar(!showSearchBar);
+                    searchFilter("");
+                  }}
+                >
+                  <Ionicons name="ios-search-sharp" size={24} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowExtends(true)}>
+                  <MaterialCommunityIcons
+                    name="dots-vertical"
+                    size={32}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
             )}
             {/* Mở rộng 3 chấm */}
             <Modal
@@ -338,7 +401,9 @@ const NoteListMain = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("UnlockFolderSecret", {secretPassword});
+                      navigation.navigate("UnlockFolderSecret", {
+                        secretPassword,
+                      });
                     }}
                     className="flex-1 flex-row justify-start items-center"
                   >
@@ -449,88 +514,100 @@ const NoteListMain = () => {
             </Modal>
           </View>
         </View>
-        <View className="flex-1 bg-[#F1F5F9]">
-          <View className="h-[80%]">
-            <ScrollView
-              contentContainerStyle={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-              }}
-            >
-              {data.map(
-                (item) => (
-                  (replaceHTML = item.note.replace(/<(.|\n)*?>/g, "").trim()),
-                  (replaceWhiteSpace = replaceHTML
-                    .replace(/&nbsp;/g, "")
-                    .trim()),
-                  (
-                    <View key={item.id} className="mb-5 m-[4%] w-[42%]">
-                      <TouchableOpacity
-                        disabled={showMultiCheck ? true : false} 
-                        onPress={() => {
-                          navigation.navigate("NoteList_Edit", { item });
-                        }}
-                        className="bg-white rounded-xl h-36"
-                      >
-                        <View
-                          className={`flex-row ${
-                            showMultiCheck
-                              ? "justify-between pr-5"
-                              : "justify-center"
-                          } items-center rounded-t-xl bg-[#9CA2B2] h-8`}
-                        >
-                          {showMultiCheck && (
-                            <CheckBox
-                              checked={selectedIds.includes(item)}
-                              onPress={() => toggleCheckBox(item)}
-                              iconType="ionicon"
-                              checkedIcon="checkmark-circle"
-                              uncheckedIcon="ellipse-outline"
-                              checkedColor="#4A3780"
-                              uncheckedColor="white"
-                              size={20}
-                              containerStyle={{
-                                padding: 0,
-                                backgroundColor: "#9CA2B2",
-                              }}
-                            />
-                          )}
-                          <Text numberOfLines={1} ellipsizeMode="tail">
-                            {item.title}
-                          </Text>
-                          {showMultiCheck && <View className="w-5 h-5"></View>}
-                        </View>
-
-                        <View className="h-full px-3">
-                          <Text
-                            numberOfLines={3}
-                            ellipsizeMode="tail"
-                            className={"text-sm"}
-                          >
-                            {replaceWhiteSpace}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                      <View className="justify-center items-center flex-row space-x-2 mt-1">
-                        <Text>{item.createdDay}</Text>
-                        {item.isLoved ? (
-                          <MaterialCommunityIcons
-                            name="star"
-                            size={16}
-                            color="#FE8668"
-                          />
-                        ) : (
-                          <View></View>
-                        )}
-                      </View>
-                    </View>
-                  )
-                )
-              )}
-            </ScrollView>
+        {filterData.length === 0 ? (
+          <View className="flex-1 justify-center items-center">
+            <Text>Không tìm thấy kết quả</Text>
           </View>
-        </View>
-        {showMultiCheck ? (
+        ) : (
+          <View className="flex-1 bg-[#F1F5F9]">
+            <View className={`${showSearchBar ? "h-[100%]" : "h-[80%]"}`}>
+              <ScrollView
+                contentContainerStyle={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {(showSearchBar ? filterData : data).map(
+                  (item) => (
+                    (replaceHTML = item.note.replace(/<(.|\n)*?>/g, "").trim()),
+                    (replaceWhiteSpace = replaceHTML
+                      .replace(/&nbsp;/g, "")
+                      .trim()),
+                    (
+                      <View key={item.id} className="mb-5 m-[4%] w-[42%]">
+                        <TouchableOpacity
+                          disabled={showMultiCheck ? true : false}
+                          onPress={() => {
+                            navigation.navigate("NoteList_Edit", { item });
+                          }}
+                          className="bg-white rounded-xl h-36"
+                        >
+                          <View
+                            className={`flex-row ${
+                              showMultiCheck
+                                ? "justify-between pr-5"
+                                : "justify-center"
+                            } items-center rounded-t-xl bg-[#9CA2B2] h-8`}
+                          >
+                            {showMultiCheck && (
+                              <CheckBox
+                                checked={selectedIds.includes(item)}
+                                onPress={() => toggleCheckBox(item)}
+                                iconType="ionicon"
+                                checkedIcon="checkmark-circle"
+                                uncheckedIcon="ellipse-outline"
+                                checkedColor="#4A3780"
+                                uncheckedColor="white"
+                                size={20}
+                                containerStyle={{
+                                  padding: 0,
+                                  backgroundColor: "#9CA2B2",
+                                }}
+                              />
+                            )}
+                            <Text numberOfLines={1} ellipsizeMode="tail">
+                              {item.title}
+                            </Text>
+                            {showMultiCheck && (
+                              <View className="w-5 h-5"></View>
+                            )}
+                          </View>
+
+                          <View className="h-full px-3">
+                            <Text
+                              numberOfLines={3}
+                              ellipsizeMode="tail"
+                              className={"text-sm"}
+                            >
+                              {replaceWhiteSpace}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                        <View className="justify-center items-center flex-row space-x-2 mt-1">
+                          <Text>
+                            {selectedCategorySort === "SortUpdatedDay"
+                              ? item.updatedDay
+                              : item.createdDay}
+                          </Text>
+                          {item.isLoved ? (
+                            <MaterialCommunityIcons
+                              name="star"
+                              size={16}
+                              color="#FE8668"
+                            />
+                          ) : (
+                            <View></View>
+                          )}
+                        </View>
+                      </View>
+                    )
+                  )
+                )}
+              </ScrollView>
+            </View>
+          </View>
+        )}
+        {showMultiCheck && !showSearchBar ? (
           <View className="flex-row justify-between">
             <TouchableOpacity
               onPress={AlertSecret}
@@ -593,6 +670,8 @@ const NoteListMain = () => {
               </Text>
             </TouchableOpacity>
           </View>
+        ) : !showMultiCheck && showSearchBar ? (
+          <View></View>
         ) : (
           <TouchableOpacity
             onPress={() => {
