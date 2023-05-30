@@ -34,7 +34,7 @@ class AccountService{
             await AsyncStorage.setItem("name", name);
             const user = auth.currentUser;
             const userRef = doc(collection(firestore, 'user'), user.uid);
-            await updateDoc(userRef, {name: name})
+            updateDoc(userRef, {name: name})
             
         } catch (error) {
             console.log("saveUserInfo: ", error);

@@ -8,6 +8,10 @@ class StorageUtils{
         try {
           const existingArray = await AsyncStorage.getItem(key);
           let newArray = existingArray ? JSON.parse(existingArray) : [];
+          if(key == 'groupTodolist'){
+            if(newArray.some(item => item.name == newElement.name)) return;
+          } 
+
           newArray.push(newElement);
           await AsyncStorage.setItem(key, JSON.stringify(newArray));
         } catch (error) {
@@ -19,7 +23,11 @@ class StorageUtils{
         try {
           const existingArray = await AsyncStorage.getItem(key);
           let newArray = existingArray ? JSON.parse(existingArray) : [];
-          newArray = newArray.filter(item => item.id !== id);
+          if(key == 'groupTodolist'){
+            newArray = newArray.filter(item => item.name != id);
+          } else{
+            newArray = newArray.filter(item => item.id !== id);
+          }
           await AsyncStorage.setItem(key, JSON.stringify(newArray));
         } catch (error) {
           console.log(error);
@@ -30,15 +38,18 @@ class StorageUtils{
       try {
         const existingArray = await AsyncStorage.getItem(key);
         let newArray = existingArray ? JSON.parse(existingArray) : [];
-    
         // Lọc các phần tử có id không nằm trong mảng ids
-        newArray = newArray.filter(item => !ids.includes(item.id));
-    
+        if(key == 'groupTodolist'){
+          newArray = newArray.filter(item => !ids.includes(item.name));
+        } else {
+          newArray = newArray.filter(item => !ids.includes(item.id));
+        }
         await AsyncStorage.setItem(key, JSON.stringify(newArray));
       } catch (error) {
         console.log(error);
       }
     }
+
 
     static async updateElementInArray(key, updatedElement) {
         try {
@@ -54,6 +65,23 @@ class StorageUtils{
         }
     }
 
+    static async updateElementsInArray(key, updatedElements) {
+      try {
+        const existingArray = await AsyncStorage.getItem(key);
+        let newArray = existingArray ? JSON.parse(existingArray) : [];
+    
+        updatedElements.forEach(updatedElement => { 
+          const index = newArray.findIndex(item => item.id === updatedElement.id);
+          if (index !== -1) {
+            newArray[index] = { ...newArray[index], ...updatedElement };
+          }
+        }); 
+        await AsyncStorage.setItem(key, JSON.stringify(newArray));
+      } catch (error) {
+        console.log(error);
+      } 
+    }
+
     static async updateLovedElementsInArray(key, updatedElements) {
       try {
         const existingArray = await AsyncStorage.getItem(key);
@@ -65,7 +93,6 @@ class StorageUtils{
             newArray[index] = { ...newArray[index], isLoved: !updatedElement.isLoved };
           }
         });
-        console.log("new: ", newArray);
         await AsyncStorage.setItem(key, JSON.stringify(newArray));
       } catch (error) {
         console.log(error);
@@ -83,7 +110,23 @@ class StorageUtils{
             newArray[index] = { ...newArray[index], isSecret: !updatedElement.isSecret };
           }
         });
-        console.log("new: ", newArray);
+        await AsyncStorage.setItem(key, JSON.stringify(newArray));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    static async updateNewGroupItemsInArray(key, updatedElements, newGroupName) {
+      try {
+        const existingArray = await AsyncStorage.getItem(key);
+        let newArray = existingArray ? JSON.parse(existingArray) : [];
+    
+        updatedElements.forEach(updatedElement => {
+          const index = newArray.findIndex(item => item.id === updatedElement.id);
+          if (index !== -1) {
+            newArray[index] = { ...newArray[index], groupName: newGroupName, identifier: "" };
+          }
+        });
         await AsyncStorage.setItem(key, JSON.stringify(newArray));
       } catch (error) {
         console.log(error);

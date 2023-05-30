@@ -28,12 +28,12 @@ const ResetPassFolderSecret = () => {
   const [newPassword, setNewPassword] = useState("");
   const [repassword, setRepassword] = useState("");
 
-  async function changePassFolderSecret() {
+  async function resetPassFolderSecret() {
     console.log("haha");
     if (newPassword != "" && newPassword == repassword) {
-      const status = await NoteService.changePassword(oldPassword, newPassword);
+      const status = await NoteService.resetPassword(accountPassword, newPassword);
       if (status == "") {
-        Alert.alert("Lỗi", "Mật khẩu cũ không chính xác");
+        Alert.alert("Lỗi", "Mật khẩu tài khoản không chính xác");
       } else {
         Alert.alert("Thông báo", "Thay đổi mật khẩu thành công");
         await new Promise((r) => setTimeout(r, 1000));
@@ -83,7 +83,7 @@ const ResetPassFolderSecret = () => {
         </View>
       </View>
 
-      <TouchableOpacity onPress={changePassFolderSecret} className="mt-10">
+      <TouchableOpacity onPress={resetPassFolderSecret} className="mt-10">
         <Animatable.View
           easing="ease-in-out"
           iterationCount={"infinite"}

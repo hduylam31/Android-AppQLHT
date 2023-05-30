@@ -31,8 +31,8 @@ const GroupTodoList = () => {
   const [moveData, setMoveData] = useState(false);
   const [data, setData] = useState([]);
 
-  async function loadGroupNames() {
-    const groupNames = await TodolistService.loadGroupNames();
+  async function loadGroupNames() { 
+    const groupNames = await TodolistService.loadGroupNames(); 
     setData(groupNames);
     console.log("groupNames: ", groupNames);
   }

@@ -6,6 +6,9 @@ import { collection, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove} fr
 import { auth, firestore } from "../firebase";
 import CredentialService from "./CredentialService";
 import NotificationUtils from "./NotificationUtils";
+import NoteService from "./NoteService";
+import ScheduleService from "./ScheduleService";
+import AccountService from "./AccountService";
 
 class CommonService{
 
@@ -17,7 +20,12 @@ class CommonService{
             if(!isAutoLogin){
                 await CalendarService.loadNotificationAndUpdateDb();  
                 TodolistService.loadNotificationAndUpdateDb(); 
+            } else{
+                TodolistService.loadTodolist(); 
             }
+            NoteService.loadNoteData();
+            ScheduleService.loadScheduleData();
+            AccountService.loadUserInfo(); 
             console.log("Load notification Ok"); 
         } catch (error) {
             console.log("loadAllNotificationAndUpdateDB: ", error);

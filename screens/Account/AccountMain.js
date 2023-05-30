@@ -44,6 +44,7 @@ const AccountMain = () => {
         AsyncStorage.removeItem("noteList"); 
         AsyncStorage.removeItem("scheduleList"); 
         AsyncStorage.removeItem("todoList"); 
+        AsyncStorage.removeItem("groupTodolist"); 
         
         AsyncStorage.removeItem("moodleStatus"); 
         AsyncStorage.removeItem("moodleToken"); 
@@ -70,7 +71,7 @@ const AccountMain = () => {
   });
 
   const AlertSignOut = () => {
-    Alert.alert("Đăng xuất", "Bạn muốn đăng xuất ?", [
+    Alert.alert("Đăng xuất", "Bạn muốn đăng xuất ?", [ 
       {
         text: "Đồng ý",
         onPress: handleSignOut,

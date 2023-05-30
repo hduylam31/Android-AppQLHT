@@ -292,7 +292,12 @@ class CalendarService {
       const userRef = doc(collection(firestore, "user"), user.uid);
       //Xóa token + cập nhật status moodle token
       //Xóa Background chạy nền cập nhật 
-      BackgroundFetch.unregisterTaskAsync(Constants.BACKGROUND_FETCH_TASK);
+      try {
+        BackgroundFetch.unregisterTaskAsync(Constants.BACKGROUND_FETCH_TASK);
+      } catch (error) {
+        console.log("Ke loi nay di: ", error);
+      }
+      
       AsyncStorage.setItem('moodleStatus', status.toString());
       updateDoc(userRef, { "moodle.status": status , "moodle.token": ""});
       //Xóa tất cả dữ liệu thông báo + moodle

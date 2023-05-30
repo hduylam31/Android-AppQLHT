@@ -6,7 +6,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import StorageUtils from "./StorageUtils";
 import DateTimeUtils from "./DateTimeUtils";
 import SecurityUtils from "./SecurityUtils";
-import { Alert } from "react-native-web";
+import { Alert } from "react-native";
+
 
 class NoteService{
 
@@ -219,6 +220,14 @@ class NoteService{
         console.log("changePassword: ", error);
         return "";
       }
+    }
+
+    static async resetPassword(appPass, newPass){
+      const currentAppPass = await AsyncStorage.getItem("password");
+      if(appPass != currentAppPass){
+        return "";
+      } 
+      return await this.saveSecretFolderPassword(newPass);
     }
 
 
