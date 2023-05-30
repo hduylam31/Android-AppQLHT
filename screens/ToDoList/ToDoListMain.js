@@ -57,38 +57,38 @@ const ToDoListScreen = () => {
       const usingTodolists = todolistInfo.usingTodolists;
       setTodolists(usingTodolists);
       setGroupName(todolistInfo.usingGroupName);
-      console.log("todolist2: ", todolistInfo);
+      console.log("todolist2: ", todolistInfo); 
     }
     setSelectedIds([]);
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     loadTodolist();
   }, []);
-
+ 
   const route = useRoute();
 
   useEffect(() => {
     async function triggerGroupProcess() {
-      var usingGroupName = route?.params?.usingGroupName;
-      if (usingGroupName) {
+      var usingGroupName = route?.params?.usingGroupName;      
+      if (usingGroupName) { 
         var data = await TodolistService.loadNotificationAndUpdateDbByGroupName(
-          usingGroupName
-        );
-        console.log("usingGroupName: ", usingGroupName);
+          usingGroupName 
+        );  
+        console.log("usingGroupName: ", usingGroupName); 
         console.log("New data: ", data);
-        setTodolists(data);
-        setTodos(data);
-        setGroupName(usingGroupName);
+        setTodolists(data);  
+        setTodos(data);    
+        setGroupName(usingGroupName);   
       }
 
-      var movedItems = route?.params?.movedItems;
-      if (movedItems) {
+      var movedItems = route?.params?.movedItems; 
+      if (movedItems) { 
         var movedItemIds = movedItems.map((item) => item.id);
-        var newTodolist = todolists.filter(
-          (item) => !movedItemIds.includes(item.id)
+        var newTodolist = todolists.filter( 
+          (item) => !movedItemIds.includes(item.id) 
         );
-        setTodolists(newTodolist);
+        setTodolists(newTodolist); 
         setTodos(newTodolist);
       }
       setSelectedIds([]);
@@ -616,7 +616,7 @@ const ToDoListScreen = () => {
         <View className="flex-row justify-between">
           <TouchableOpacity
             onPress={() => {
-              setShowMultiCheck(false);
+              setShowMultiCheck(false); 
               if (selectedIds.length > 0) {
                 navigation.navigate("GroupTodoList", {
                   paramMoveData: "MoveData",

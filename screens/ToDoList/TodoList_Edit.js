@@ -19,7 +19,7 @@ import TodolistService from "../../service/TodolistService";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const CategoryButton = ({ label, onPress, selected }) => (
-  <TouchableOpacity
+  <TouchableOpacity 
     className={`p-[1px] mx-2 rounded-[8px] border-2  ${
       selected ? "border-[#3A4666]" : "border-[#FFFFFF]"
     } ${label === "profile" ? "bg-[#DBECF6]" : ""}
@@ -94,7 +94,7 @@ const TodoList_Edit = () => {
     } else {
       try {
         // TodolistService.addTodolist
-        const new_item = {
+        const new_item = { 
           id: item.id,
           title: title,
           category: selectedCategory,
@@ -102,7 +102,7 @@ const TodoList_Edit = () => {
           hour: textTime,
           text: value,
           isCompleted: item.isCompleted,
-          identifier: item.identifier,
+          identifier: item.identifier, 
           groupName: item.groupName,
         };
         await TodolistService.updateTodolist(new_item, item);
