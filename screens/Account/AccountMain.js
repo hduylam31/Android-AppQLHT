@@ -14,7 +14,7 @@ import Constants from "../../domain/Constants";
 const AccountMain = () => {
   const [name, setName] = useState("");
 
-  async function loadName() {  
+  async function loadName() {
     const userName = await AccountService.loadUserInfo();
     setName(userName);
   }
@@ -40,16 +40,16 @@ const AccountMain = () => {
         NotificationUtils.removeAllNotification();
         await AsyncStorage.removeItem("username");
         await AsyncStorage.removeItem("password");
-        AsyncStorage.removeItem("name"); 
-        AsyncStorage.removeItem("noteList"); 
-        AsyncStorage.removeItem("scheduleList"); 
-        AsyncStorage.removeItem("todoList"); 
-        AsyncStorage.removeItem("groupTodolist"); 
-        
-        AsyncStorage.removeItem("moodleStatus"); 
-        AsyncStorage.removeItem("moodleToken"); 
-        AsyncStorage.removeItem("moodleCalendar"); 
-        AsyncStorage.removeItem("userCalendar"); 
+        AsyncStorage.removeItem("name");
+        AsyncStorage.removeItem("noteList");
+        AsyncStorage.removeItem("scheduleList");
+        AsyncStorage.removeItem("todoList");
+        AsyncStorage.removeItem("groupTodolist");
+
+        AsyncStorage.removeItem("moodleStatus");
+        AsyncStorage.removeItem("moodleToken");
+        AsyncStorage.removeItem("moodleCalendar");
+        AsyncStorage.removeItem("userCalendar");
 
         try {
           await BackgroundFetch.unregisterTaskAsync(
@@ -71,7 +71,7 @@ const AccountMain = () => {
   });
 
   const AlertSignOut = () => {
-    Alert.alert("Đăng xuất", "Bạn muốn đăng xuất ?", [ 
+    Alert.alert("Đăng xuất", "Bạn muốn đăng xuất ?", [
       {
         text: "Đồng ý",
         onPress: handleSignOut,
@@ -128,11 +128,11 @@ const AccountMain = () => {
             elevation: 10,
           }}
         >
-          <Ionicons name="key-outline" size={30} color="black" />
+          <Ionicons name="key-outline" size={28} color="black" />
           <Text className="text-[#3A4666] text-base">Đổi mật khẩu</Text>
           <MaterialCommunityIcons
             name="chevron-right"
-            size={30}
+            size={28}
             color="black"
           />
         </TouchableOpacity>
@@ -151,13 +151,13 @@ const AccountMain = () => {
         >
           <MaterialCommunityIcons
             name="book-open-variant"
-            size={30}
+            size={28}
             color="black"
           />
           <Text className="text-[#3A4666] text-base">Xem hướng dẫn</Text>
           <MaterialCommunityIcons
             name="chevron-right"
-            size={30}
+            size={28}
             color="black"
           />
         </TouchableOpacity>
@@ -176,13 +176,13 @@ const AccountMain = () => {
         >
           <MaterialCommunityIcons
             name="application-edit-outline"
-            size={30}
+            size={28}
             color="black"
           />
           <Text className="text-[#3A4666] text-base">Khảo sát, đánh giá</Text>
           <MaterialCommunityIcons
             name="chevron-right"
-            size={30}
+            size={28}
             color="black"
           />
         </TouchableOpacity>

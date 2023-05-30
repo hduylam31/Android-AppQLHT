@@ -19,7 +19,7 @@ import TodolistService from "../../service/TodolistService";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const CategoryButton = ({ label, onPress, selected }) => (
-  <TouchableOpacity 
+  <TouchableOpacity
     className={`p-[1px] mx-2 rounded-[8px] border-2  ${
       selected ? "border-[#3A4666]" : "border-[#FFFFFF]"
     } ${label === "profile" ? "bg-[#DBECF6]" : ""}
@@ -94,7 +94,7 @@ const TodoList_Edit = () => {
     } else {
       try {
         // TodolistService.addTodolist
-        const new_item = { 
+        const new_item = {
           id: item.id,
           title: title,
           category: selectedCategory,
@@ -102,7 +102,7 @@ const TodoList_Edit = () => {
           hour: textTime,
           text: value,
           isCompleted: item.isCompleted,
-          identifier: item.identifier, 
+          identifier: item.identifier,
           groupName: item.groupName,
         };
         await TodolistService.updateTodolist(new_item, item);
@@ -208,16 +208,18 @@ const TodoList_Edit = () => {
         <View className="bg-[#3A4666] h-15">
           <View className="flex-row justify-between items-center p-4">
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <AntDesign name="arrowleft" size={30} color="white" />
+              <AntDesign name="arrowleft" size={28} color="white" />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Cập nhật công việc</Text>
+              <Text className="text-white text-xl font-medium">
+                Cập nhật công việc
+              </Text>
             </View>
 
             <TouchableOpacity onPress={AlertDelete}>
               <MaterialCommunityIcons
                 name="trash-can-outline"
-                size={30}
+                size={28}
                 color="white"
               />
             </TouchableOpacity>

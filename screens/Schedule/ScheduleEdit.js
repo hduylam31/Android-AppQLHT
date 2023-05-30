@@ -183,16 +183,18 @@ const Schedule_Edit = () => {
         <View className="bg-[#3A4666] h-15">
           <View className="flex-row justify-between items-center p-4">
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <AntDesign name="arrowleft" size={30} color="white" />
+              <AntDesign name="arrowleft" size={28} color="white" />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Cập nhật TKB</Text>
+              <Text className="text-white text-xl font-medium">
+                Cập nhật TKB
+              </Text>
             </View>
 
             <TouchableOpacity onPress={AlertDelete}>
               <MaterialCommunityIcons
                 name="trash-can-outline"
-                size={30}
+                size={28}
                 color="white"
               />
             </TouchableOpacity>

@@ -62,7 +62,7 @@ const CalendarExtendMoodleEvent = () => {
         }}
       >
         <Animatable.View animation="slideInLeft" delay={index * 10}>
-          <View className="h-12 flex-row">
+          <View className="flex-row h-14">
             <View className={"w-[12%] flex ml-[3%]"}>
               <Text className={"text-sm font-normal "}>{item.timeString}</Text>
             </View>

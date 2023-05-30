@@ -66,7 +66,7 @@ const Account_EditInfor = () => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
                 name="arrow-left"
-                size={32}
+                size={28}
                 color="white"
               />
             </TouchableOpacity>
@@ -119,7 +119,7 @@ const Account_EditInfor = () => {
               elevation: 10,
             }}
           >
-            <Text className="text-white text-center font-bold text-xl">
+            <Text className="text-white text-center font-bold text-base">
               Lưu
             </Text>
           </TouchableOpacity>

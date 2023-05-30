@@ -37,6 +37,10 @@ const ScheduleMain = () => {
   const isFocused = useIsFocused();
   let [data, setData] = useState([]);
   let [dayLessonMap, setDayLessonMap] = useState({});
+  const [onpressDay, setOnpressDay] = useState("");
+  const [onpressLessonOfDay, setOnpressLessonOfDay] = useState("");
+
+  console.log(data);
 
   const state = {
     tableHead: ["Tiết", "T.2", "T.3", "T.4", "T.5", "T.6", "T.7", "CN"],
@@ -91,14 +95,97 @@ const ScheduleMain = () => {
     ],
   };
 
-  const element = (rowIndex, colIndex) => (
-    <TouchableOpacity>
-      {/* <View style={styles.btn}>
-        <Text style={styles.btnText}> </Text>
-      </View> */}
-    </TouchableOpacity>
-  );
+  //==============================================
+  function compareObjects(a, b) {
+    const dayOrder = {
+      "T.2": 0,
+      "T.3": 1,
+      "T.4": 2,
+      "T.5": 3,
+      "T.6": 4,
+      "T.7": 5,
+      CN: 6,
+    };
 
+    const dayA = a.DayOfWeek;
+    const dayB = b.DayOfWeek;
+    const startA = parseFloat(a.lessonStart);
+    const startB = parseFloat(b.lessonStart);
+
+    // Sắp xếp theo thứ tự DayOfWeek
+    if (dayOrder[dayA] < dayOrder[dayB]) {
+      return -1;
+    } else if (dayOrder[dayA] > dayOrder[dayB]) {
+      return 1;
+    }
+
+    // Nếu cùng thuộc cùng một DayOfWeek, sắp xếp theo lessonStart
+    if (startA < startB) {
+      return -1;
+    } else if (startA > startB) {
+      return 1;
+    }
+
+    return 0;
+  }
+
+  // Sắp xếp mảng các object
+  data.sort(compareObjects);
+
+  console.log(data);
+
+  //=============================
+  const element = (rowIndex, colIndex) => {
+    rowIndex++;
+    colIndex++;
+    let day; // Biến day được khai báo ở đây và có thể sử dụng trong phạm vi của hàm.
+    if (colIndex === 1) {
+      day = "T.2";
+    } else if (colIndex === 2) {
+      day = "T.3";
+    } else if (colIndex === 3) {
+      day = "T.4";
+    } else if (colIndex === 4) {
+      day = "T.5";
+    } else if (colIndex === 5) {
+      day = "T.6";
+    } else if (colIndex === 6) {
+      day = "T.7";
+    } else if (colIndex === 7) {
+      day = "CN";
+    }
+    setOnpressDay(day);
+    console.log("onpressDay", onpressDay);
+
+    for (let i = 0; i < 30; i++)
+      if (i === rowIndex) {
+        setOnpressLessonOfDay((i + 1) / 2);
+      }
+
+    console.log("onpressLessonOfDay", onpressLessonOfDay);
+  };
+
+  checkNumberStart = (a, lessonStartNumber, lessonEndNumber) => {
+    if (lessonStartNumber % 1 === 0) {
+      a = lessonStartNumber * 2 - 1;
+      return a;
+    } else {
+      a = Math.trunc(lessonStartNumber) * 2;
+      return a;
+    }
+  };
+
+  checkNumberEnd = (b, lessonStartNumber, lessonEndNumber) => {
+    if (lessonEndNumber % 1 === 0) {
+      b = lessonEndNumber * 2;
+      return b;
+    } else {
+      b = Math.trunc(lessonEndNumber) * 2 - 1;
+      return b;
+    }
+  };
+
+  //let backgroundColorBefore = 0;
   getCellColor = (rowIndex, colIndex) => {
     rowIndex++;
     colIndex++;
@@ -108,108 +195,59 @@ const ScheduleMain = () => {
       const day = item.DayOfWeek;
       const lessonStartNumber = Number(item.lessonStart);
       const lessonEndNumber = Number(item.lessonEnd);
+      const titleItem = item.title;
 
-      if (day === "T.2") {
-        if (
-          colIndex === 1 &&
-          rowIndex >= lessonStartNumber + lessonStartNumber - 1
-        ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
-            return "#1CB0D4";
-          } else if (
-            lessonEndNumber % 1 === 0 &&
-            rowIndex < lessonEndNumber * 2 + 1
-          ) {
-            return "#1CB0D4";
-          }
-        }
-      } else if (day === "T.3") {
-        if (
-          colIndex === 2 &&
-          rowIndex >= lessonStartNumber + lessonStartNumber - 1
-        ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
-            return "#1CB0D4";
-          } else if (
-            lessonEndNumber % 1 === 0 &&
-            rowIndex < lessonEndNumber * 2 + 1
-          ) {
-            return "#1CB0D4";
-          }
-        }
-      } else if (day === "T.4") {
-        if (
-          colIndex === 3 &&
-          rowIndex >= lessonStartNumber + lessonStartNumber - 1
-        ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
-            return "#1CB0D4";
-          } else if (
-            lessonEndNumber % 1 === 0 &&
-            rowIndex < lessonEndNumber * 2 + 1
-          ) {
-            return "#1CB0D4";
-          }
-        }
-      } else if (day === "T.5") {
-        if (
-          colIndex === 4 &&
-          rowIndex >= lessonStartNumber + lessonStartNumber - 1
-        ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
-            return "#1CB0D4";
-          } else if (
-            lessonEndNumber % 1 === 0 &&
-            rowIndex < lessonEndNumber * 2 + 1
-          ) {
-            return "#1CB0D4";
-          }
-        }
-      } else if (day === "T.6") {
-        if (
-          colIndex === 5 &&
-          rowIndex >= lessonStartNumber + lessonStartNumber - 1
-        ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
-            return "#1CB0D4";
-          } else if (
-            lessonEndNumber % 1 === 0 &&
-            rowIndex < lessonEndNumber * 2 + 1
-          ) {
-            return "#1CB0D4";
-          }
-        }
-      } else if (day === "T.7") {
-        if (
-          colIndex === 6 &&
-          rowIndex >= lessonStartNumber + lessonStartNumber - 1
-        ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
-            return "#1CB0D4";
-          } else if (
-            lessonEndNumber % 1 === 0 &&
-            rowIndex < lessonEndNumber * 2 + 1
-          ) {
-            return "#1CB0D4";
-          }
-        }
-      } else if (day === "CN") {
-        if (
-          colIndex === 7 &&
-          rowIndex >= lessonStartNumber + lessonStartNumber - 1
-        ) {
-          if (lessonEndNumber % 1 != 0 && rowIndex < lessonEndNumber * 2 - 1) {
-            return "#1CB0D4";
-          } else if (
-            lessonEndNumber % 1 === 0 &&
-            rowIndex < lessonEndNumber * 2 + 1
-          ) {
-            return "#1CB0D4";
+      const a = checkNumberStart(a, lessonStartNumber, lessonEndNumber);
+      const b = checkNumberEnd(b, lessonStartNumber, lessonEndNumber);
+
+      if (a <= rowIndex && rowIndex <= b) {
+        if (titleItem != undefined) {
+          if (day === "T.2" && colIndex === 1) {
+            if (i % 2 === 0) {
+              return "#B5A9D8";
+            } else {
+              return "#ADD8A9";
+            }
+          } else if (day === "T.3" && colIndex === 2) {
+            if (i % 2 === 0) {
+              return "#B5A9D8";
+            } else {
+              return "#ADD8A9";
+            }
+          } else if (day === "T.4" && colIndex === 3) {
+            if (i % 2 === 0) {
+              return "#B5A9D8";
+            } else {
+              return "#ADD8A9";
+            }
+          } else if (day === "T.5" && colIndex === 4) {
+            if (i % 2 === 0) {
+              return "#B5A9D8";
+            } else {
+              return "#ADD8A9";
+            }
+          } else if (day === "T.6" && colIndex === 5) {
+            if (i % 2 === 0) {
+              return "#B5A9D8";
+            } else {
+              return "#ADD8A9";
+            }
+          } else if (day === "T.7" && colIndex === 6) {
+            if (i % 2 === 0) {
+              return "#B5A9D8";
+            } else {
+              return "#ADD8A9";
+            }
+          } else if (day === "CN" && colIndex === 7) {
+            if (i % 2 === 0) {
+              return "#B5A9D8";
+            } else {
+              return "#ADD8A9";
+            }
           }
         }
       }
     }
-
     return "#FFFFFF";
   };
 
@@ -381,13 +419,13 @@ const ScheduleMain = () => {
         <View className="h-[30%] bg-[#3A4666]">
           <View className="flex-row justify-between items-center p-4">
             <View className="w-8 h-8 "></View>
-            <Text className="text-white text-2xl font-bold">
+            <Text className="text-white text-[22px] font-semibold">
               Thời khóa biểu
             </Text>
             <TouchableOpacity>
               <MaterialCommunityIcons
                 name="dots-vertical"
-                size={32}
+                size={28}
                 color="white"
               />
             </TouchableOpacity>
@@ -447,24 +485,22 @@ const ScheduleMain = () => {
           )}
         </View>
         {selectedTab && (
-          <View
-            style={{
-              weight: "80%",
-              padding: 16,
-              backgroundColor: "#ffffff",
-              borderWidth: 0.5,
-              borderRadius: 10,
-              position: "absolute",
-              width: "95%",
-            }}
-            className="self-center top-[18%]"
-          >
-            <View>
+          <View className="absolute w-full top-36 h-[80%]">
+            <View
+              style={{
+                padding: 12,
+                backgroundColor: "#ffffff",
+                borderWidth: 0.5,
+                borderRadius: 10,
+                width: "90%",
+                marginLeft: "5%",
+              }}
+            >
               <Row
                 data={state.tableHead}
                 flexArr={[2, 1, 1, 1, 1, 1, 1, 1, 1]}
                 style={{
-                  height: 40,
+                  height: 32,
                   backgroundColor: "#FFC3B3",
                 }}
                 textStyle={{ textAlign: "center", fontWeight: "bold" }}
@@ -488,7 +524,7 @@ const ScheduleMain = () => {
                       style={{
                         flexDirection: "row",
                         backgroundColor: "#FFFFFF",
-                        height: 15,
+                        height: 13,
                       }}
                     >
                       {rowData.map((cellData, colIndex) => (
@@ -505,10 +541,9 @@ const ScheduleMain = () => {
                             ),
                           }}
                           data={
-                            this.getCellColor(rowIndex, colIndex) === "#1CB0D4"
-                              ? element(rowIndex, colIndex)
-                              : cellData
+                            this.getCellColor(rowIndex, colIndex) != "#FFFFFF"
                           }
+                          onPress={() => element(rowIndex, colIndex)}
                         >
                           {/* <Text>{cellData}</Text> */}
                         </TouchableOpacity>
@@ -517,6 +552,20 @@ const ScheduleMain = () => {
                   ))}
                 </View>
               </View>
+            </View>
+            <View>
+              <FlatList
+                data={data.filter(
+                  (ScheduleData) =>
+                    ScheduleData.DayOfWeek === onpressDay &&
+                    Number(ScheduleData.lessonStart) <=
+                      Number(onpressLessonOfDay) &&
+                    Number(ScheduleData.lessonEnd) + 0.5 >=
+                      Number(onpressLessonOfDay)
+                )}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={this.renderItem}
+              />
             </View>
           </View>
         )}

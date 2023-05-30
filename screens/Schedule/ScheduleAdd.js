@@ -120,7 +120,9 @@ const Schedule_Add = () => {
               <AntDesign name="arrowleft" size={30} color="white" />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Thêm TKB mới</Text>
+              <Text className="text-white text-xl font-medium">
+                Thêm TKB mới
+              </Text>
             </View>
             <View className="w-8 h-8"></View>
             {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên

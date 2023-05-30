@@ -31,8 +31,8 @@ const GroupTodoList = () => {
   const [moveData, setMoveData] = useState(false);
   const [data, setData] = useState([]);
 
-  async function loadGroupNames() { 
-    const groupNames = await TodolistService.loadGroupNames(); 
+  async function loadGroupNames() {
+    const groupNames = await TodolistService.loadGroupNames();
     setData(groupNames);
     console.log("groupNames: ", groupNames);
   }
@@ -196,8 +196,8 @@ const GroupTodoList = () => {
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-[10%]">
-          <View className="p-4">
+        <View className="bg-[#3A4666] h-[60px]">
+          <View className="px-4 py-3">
             <View className="flex-row justify-between items-center">
               {showMultiCheck && !isCheckSelectOne ? (
                 <View>
@@ -211,13 +211,13 @@ const GroupTodoList = () => {
                     {isCheckSelectAll ? (
                       <Ionicons
                         name="checkmark-circle"
-                        size={32}
+                        size={22}
                         color="white"
                       />
                     ) : (
                       <Ionicons
                         name="ellipse-outline"
-                        size={32}
+                        size={22}
                         color="white"
                       />
                     )}
@@ -227,34 +227,28 @@ const GroupTodoList = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                   <MaterialCommunityIcons
                     name="arrow-left"
-                    size={32}
+                    size={28}
                     color="white"
                   />
                 </TouchableOpacity>
               )}
               {showMultiCheck ? (
                 selectedIds.length > 0 ? (
-                  <Text className="text-white text-2xl font-bold text-center">
+                  <Text className="text-white text-xl font-medium text-center">
                     Đã chọn {selectedIds.length}
                   </Text>
                 ) : (
-                  <Text className="text-white text-2xl font-bold text-center">
+                  <Text className="text-white text-xl font-medium text-center">
                     Chọn nhóm công việc
                   </Text>
                 )
               ) : (
-                <Text className="text-white text-2xl font-bold text-center">
+                <Text className="text-white text-xl font-medium text-center">
                   Nhóm công việc
                 </Text>
               )}
               {showMultiCheck && moveData ? (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <MaterialCommunityIcons
-                    name="arrow-left"
-                    size={32}
-                    color="white"
-                  />
-                </TouchableOpacity>
+                <View className="w-7 h-7"></View>
               ) : showMultiCheck && !moveData ? (
                 <TouchableOpacity
                   onPress={() => {
@@ -405,7 +399,7 @@ const GroupTodoList = () => {
                 </TouchableOpacity>
               </Modal>
             </View>
-            {showMultiCheck && (
+            {showMultiCheck && !isCheckSelectOne && (
               <Text className="text-xs text-white">Tất cả</Text>
             )}
 

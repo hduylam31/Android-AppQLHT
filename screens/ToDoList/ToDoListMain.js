@@ -57,38 +57,38 @@ const ToDoListScreen = () => {
       const usingTodolists = todolistInfo.usingTodolists;
       setTodolists(usingTodolists);
       setGroupName(todolistInfo.usingGroupName);
-      console.log("todolist2: ", todolistInfo); 
+      console.log("todolist2: ", todolistInfo);
     }
     setSelectedIds([]);
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     loadTodolist();
   }, []);
- 
+
   const route = useRoute();
 
   useEffect(() => {
     async function triggerGroupProcess() {
-      var usingGroupName = route?.params?.usingGroupName;      
-      if (usingGroupName) { 
+      var usingGroupName = route?.params?.usingGroupName;
+      if (usingGroupName) {
         var data = await TodolistService.loadNotificationAndUpdateDbByGroupName(
-          usingGroupName 
-        );  
-        console.log("usingGroupName: ", usingGroupName); 
+          usingGroupName
+        );
+        console.log("usingGroupName: ", usingGroupName);
         console.log("New data: ", data);
-        setTodolists(data);  
-        setTodos(data);    
-        setGroupName(usingGroupName);   
+        setTodolists(data);
+        setTodos(data);
+        setGroupName(usingGroupName);
       }
 
-      var movedItems = route?.params?.movedItems; 
-      if (movedItems) { 
+      var movedItems = route?.params?.movedItems;
+      if (movedItems) {
         var movedItemIds = movedItems.map((item) => item.id);
-        var newTodolist = todolists.filter( 
-          (item) => !movedItemIds.includes(item.id) 
+        var newTodolist = todolists.filter(
+          (item) => !movedItemIds.includes(item.id)
         );
-        setTodolists(newTodolist); 
+        setTodolists(newTodolist);
         setTodos(newTodolist);
       }
       setSelectedIds([]);
@@ -254,7 +254,7 @@ const ToDoListScreen = () => {
         style={{ flex: 1 }}
         className="w-full border-b-[#f3f2f4] border-b-2 flex-row justify-between content-center h-14"
       >
-        <View className="flex-row w-[80%] opacity-50 justify-center items-center">
+        <View className="flex-row w-[80%] justify-center items-center">
           {showMultiCheck && (
             <CheckBox
               checked={selectedIds.includes(item)}
@@ -267,8 +267,10 @@ const ToDoListScreen = () => {
               center={true}
             />
           )}
-          <CategoryView label={item.category} />
-          <View className="w-[70%]">
+          <View className="opacity-50">
+            <CategoryView label={item.category} />
+          </View>
+          <View className="w-[70%] opacity-50">
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
@@ -371,8 +373,8 @@ const ToDoListScreen = () => {
   return (
     <SafeAreaView className="flex-1">
       {/* Header */}
-      <View className=" bg-[#3A4666] h-[10%]">
-        <View className="p-4">
+      <View className=" bg-[#3A4666] h-[8%]">
+        <View className="px-4 py-3">
           <View className="justify-between items-center flex-row">
             {showMultiCheck ? (
               <View>
@@ -384,27 +386,27 @@ const ToDoListScreen = () => {
                   }}
                 >
                   {isCheckSelectAll ? (
-                    <Ionicons name="checkmark-circle" size={32} color="white" />
+                    <Ionicons name="checkmark-circle" size={22} color="white" />
                   ) : (
-                    <Ionicons name="ellipse-outline" size={32} color="white" />
+                    <Ionicons name="ellipse-outline" size={22} color="white" />
                   )}
                 </TouchableOpacity>
               </View>
             ) : (
-              <View className="w-8 h-8"></View>
+              <View className="w-7 h-7"></View>
             )}
             {showMultiCheck ? (
               selectedIds.length > 0 ? (
-                <Text className="text-white text-2xl font-bold text-center">
+                <Text className="text-white text-xl font-medium text-center">
                   Đã chọn {selectedIds.length}
                 </Text>
               ) : (
-                <Text className="text-white text-2xl font-bold text-center">
+                <Text className="text-white text-xl font-medium text-center">
                   Chọn công việc
                 </Text>
               )
             ) : (
-              <Text className="text-white text-2xl font-bold text-center">
+              <Text className="text-white text-[22px] font-semibold text-center">
                 Danh sách công việc
               </Text>
             )}
@@ -414,13 +416,13 @@ const ToDoListScreen = () => {
                   toggleCheckBox("reset");
                 }}
               >
-                <MaterialCommunityIcons name="check" size={32} color="white" />
+                <MaterialCommunityIcons name="check" size={28} color="white" />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setShowExtends(true)}>
                 <MaterialCommunityIcons
                   name="dots-vertical"
-                  size={32}
+                  size={28}
                   color="white"
                 />
               </TouchableOpacity>
@@ -616,7 +618,7 @@ const ToDoListScreen = () => {
         <View className="flex-row justify-between">
           <TouchableOpacity
             onPress={() => {
-              setShowMultiCheck(false); 
+              setShowMultiCheck(false);
               if (selectedIds.length > 0) {
                 navigation.navigate("GroupTodoList", {
                   paramMoveData: "MoveData",

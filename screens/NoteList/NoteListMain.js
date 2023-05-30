@@ -268,16 +268,16 @@ const NoteListMain = () => {
             {showMultiCheck && !showSearchBar ? (
               <View>
                 <TouchableOpacity
-                  className="items-center justify-center w-8 h-8"
+                  className="items-center justify-center w-7 h-7"
                   onPress={() => {
                     setIsCheckSelectAll(!isCheckSelectAll);
                     toggleCheckBox("all");
                   }}
                 >
                   {isCheckSelectAll ? (
-                    <Ionicons name="checkmark-circle" size={28} color="white" />
+                    <Ionicons name="checkmark-circle" size={22} color="white" />
                   ) : (
-                    <Ionicons name="ellipse-outline" size={28} color="white" />
+                    <Ionicons name="ellipse-outline" size={22} color="white" />
                   )}
                 </TouchableOpacity>
               </View>
@@ -296,7 +296,7 @@ const NoteListMain = () => {
                 />
               </TouchableOpacity>
             ) : (
-              <View className="w-8 h-8"></View>
+              <View className="w-7 h-7"></View>
             )}
             {showMultiCheck && !showSearchBar ? (
               selectedIds.length > 0 ? (

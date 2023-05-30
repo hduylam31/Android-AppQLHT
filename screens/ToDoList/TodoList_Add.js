@@ -76,7 +76,7 @@ const TodoList_Add = () => {
       );
     } else {
       console.log("Start adding");
-      console.log("groupName: ", groupName); 
+      console.log("groupName: ", groupName);
       try {
         // TodolistService.addTodolist
         await TodolistService.addTodolist(
@@ -168,10 +168,12 @@ const TodoList_Add = () => {
         <View className="bg-[#3A4666] h-15">
           <View className="flex-row justify-between items-center p-4">
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <AntDesign name="arrowleft" size={30} color="white" />
+              <AntDesign name="arrowleft" size={28} color="white" />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Thêm công việc mới</Text>
+              <Text className="text-white text-xl font-medium">
+                Thêm công việc mới
+              </Text>
             </View>
             <View className="w-8 h-8"></View>
           </View>

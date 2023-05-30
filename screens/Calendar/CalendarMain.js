@@ -189,7 +189,7 @@ const CalendarMain = () => {
       }}
     >
       <Animatable.View animation="slideInLeft" delay={index * 10}>
-        <View className="h-13 flex-row">
+        <View className="h-14 flex-row">
           <View className={"w-[12%] flex ml-[3%]"}>
             <Text className={"text-sm font-normal "}>{item.timeString}</Text>
           </View>
@@ -335,7 +335,7 @@ const CalendarMain = () => {
         }}
       >
         <Animatable.View animation="slideInLeft" delay={index * 10}>
-          <View className="h-13 flex-row">
+          <View className="h-14 flex-row">
             <View className={"w-[12%] flex ml-[3%]"}>
               <Text className={"text-sm font-normal "}>{item.timeString}</Text>
             </View>
@@ -576,10 +576,7 @@ const CalendarMain = () => {
                 markedDates={marked}
                 onDayPress={(date) => {
                   setSelectedDay(date.dateString);
-                  // props.onDaySelect && props.onDaySelect(date);
                 }}
-                // markedDates={marked}
-                // {...props}
               />
               <View className="max-h-60">
                 {filteredMoodle.length > 0 && (
@@ -602,7 +599,7 @@ const CalendarMain = () => {
                 )}
                 {filteredIndividual.length > 0 && (
                   <View
-                    className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
+                    className=" bg-white rounded-xl mx-4 mt-[4%] flex-1 flex-row"
                     style={{
                       shadowColor: "#000000",
                       shadowOffset: { width: 10, height: 10 },
