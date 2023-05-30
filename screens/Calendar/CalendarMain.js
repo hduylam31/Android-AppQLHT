@@ -7,6 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   Alert,
+  TextInput,
 } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -17,6 +18,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Animatable from "react-native-animatable";
 import CalendarService from "../../service/CalendarService";
 import { MoodleIcon } from "../../assets";
@@ -85,7 +87,7 @@ const CalendarMain = () => {
   });
 
   const [calendar, setCalendar] = useState([]);
-  const currentDate = new Date().toLocaleDateString(); 
+  const currentDate = new Date().toLocaleDateString();
 
   const [selectedDay, setSelectedDay] = useState(
     moment(currentDate, "DD/MM/YYYY").format("YYYY-MM-DD")
@@ -160,7 +162,7 @@ const CalendarMain = () => {
       loadCalendar();
       LoadMoodleActive();
     }
-  }, [route]); 
+  }, [route]);
 
   const filteredMoodle = calendar.filter((item) => {
     const showMoodle =
@@ -183,13 +185,13 @@ const CalendarMain = () => {
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Calendar_Edit", { item }); 
+        navigation.navigate("Calendar_Edit", { item });
       }}
     >
       <Animatable.View animation="slideInLeft" delay={index * 10}>
-        <View className="h-12 flex-row">
+        <View className="h-13 flex-row">
           <View className={"w-[12%] flex ml-[3%]"}>
-            <Text className={"text-sm font-semibold "}>{item.timeString}</Text>
+            <Text className={"text-sm font-normal "}>{item.timeString}</Text>
           </View>
           <View
             className={`w-[2%] h-[80%] mx-[3%] my-1 ${
@@ -200,7 +202,7 @@ const CalendarMain = () => {
             <Text
               numberOfLines={2}
               ellipsizeMode="tail"
-              className={"text-sm font-semibold"} 
+              className={"text-base font-normal"}
             >
               {item.title}
             </Text>
@@ -290,70 +292,200 @@ const CalendarMain = () => {
 
   console.log("ShowExtend", showExtends);
 
+  const [filterData, setFilterData] = useState([]);
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const searchFilter = (text) => {
+    if (text) {
+      const newData = calendar.filter((item) => {
+        const itemData =
+          (item.title ? item.title.toUpperCase() : "".toUpperCase()) +
+          (item.description
+            ? item.description.toUpperCase()
+            : "".toUpperCase());
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+
+      setFilterData(newData);
+      setSearch(text);
+    } else {
+      setFilterData(calendar);
+      setSearch(text);
+    }
+  };
+
+  renderItemSearch = ({ item, index }) => (
+    <>
+      <Text className="pl-4 mt-4 text-base font-semibold">
+        {item.dateString}
+      </Text>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Calendar_Edit", { item });
+        }}
+        className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
+        style={{
+          shadowColor: "#000000",
+          shadowOffset: { width: 10, height: 10 },
+          shadowOpacity: 0.5,
+          shadowRadius: 10,
+          elevation: 10,
+        }}
+      >
+        <Animatable.View animation="slideInLeft" delay={index * 10}>
+          <View className="h-13 flex-row">
+            <View className={"w-[12%] flex ml-[3%]"}>
+              <Text className={"text-sm font-normal "}>{item.timeString}</Text>
+            </View>
+            <View
+              className={`w-[2%] h-[80%] mx-[3%] my-1 ${
+                item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
+              }`}
+            ></View>
+            <View className="w-[70%] flex-row">
+              <Text
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                className={"text-base font-normal"}
+              >
+                {item.title}
+              </Text>
+              <View className={"mt-1 ml-1"}>
+                {!item.isNotified && (
+                  <MaterialCommunityIcons
+                    name="bell-off-outline"
+                    size={14}
+                    color="black"
+                  />
+                )}
+              </View>
+            </View>
+          </View>
+        </Animatable.View>
+        <View className="w-[94%] ml-[3%] h-[2px] bg-[#f3f2f4]"></View>
+      </TouchableOpacity>
+      <View className="h-1"></View>
+    </>
+  );
+
   if (isLoading) {
     return <AppLoader />;
   }
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-[30%]">
-          <View className="flex-row justify-between items-center p-4">
-            <View className="flex-row">
-              {/* Chỗ để icon moodle */}
-              {isMoodleActive === 0 ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Login_Moodle");
-                  }}
-                >
-                  <Animatable.Image
-                    animation="fadeIn"
-                    easing="ease-in-out"
-                    source={MoodleIcon}
-                  />
-                </TouchableOpacity>
-              ) : isMoodleActive === 1 ? (
-                <TouchableOpacity onPress={AlertLogoutMoodle}>
-                  <Animatable.Image
-                    animation="fadeIn"
-                    easing="ease-in-out"
-                    source={MoodleIcon}
-                  />
-                  <View className="absolute right-0 bottom-0">
-                    <AntDesign name="checkcircle" size={10} color="green" />
-                  </View>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity onPress={AlertErrorMoodle}>
-                  <Animatable.Image
-                    animation="fadeIn"
-                    easing="ease-in-out"
-                    source={MoodleIcon}
-                  />
-                  <View className="absolute right-0 bottom-0">
-                    <AntDesign
-                      name="exclamationcircle"
-                      size={10}
-                      color="#FBB500"
+        <View className={`bg-[#3A4666] ${showSearchBar ? "h-20" : "h-[30%]"}`}>
+          <View
+            className={`flex-row justify-between items-center py-4 pl-4 ${
+              showSearchBar ? "pr-4" : "pr-1"
+            }`}
+          >
+            {showSearchBar ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setShowSearchBar(false);
+                  setFilterData(calendar);
+                }}
+                className="pr-2"
+              >
+                <MaterialCommunityIcons
+                  name="arrow-left"
+                  size={32}
+                  color="white"
+                />
+              </TouchableOpacity>
+            ) : (
+              <View className="flex-row">
+                {/* Chỗ để icon moodle */}
+                {isMoodleActive === 0 ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("Login_Moodle");
+                    }}
+                  >
+                    <Animatable.Image
+                      animation="fadeIn"
+                      easing="ease-in-out"
+                      source={MoodleIcon}
                     />
-                  </View>
-                </TouchableOpacity>
-              )}
-              <View className="w-8 h-8"></View>
-            </View>
+                  </TouchableOpacity>
+                ) : isMoodleActive === 1 ? (
+                  <TouchableOpacity onPress={AlertLogoutMoodle}>
+                    <Animatable.Image
+                      animation="fadeIn"
+                      easing="ease-in-out"
+                      source={MoodleIcon}
+                    />
+                    <View className="absolute right-0 bottom-0">
+                      <AntDesign name="checkcircle" size={10} color="green" />
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity onPress={AlertErrorMoodle}>
+                    <Animatable.Image
+                      animation="fadeIn"
+                      easing="ease-in-out"
+                      source={MoodleIcon}
+                    />
+                    <View className="absolute right-0 bottom-0">
+                      <AntDesign
+                        name="exclamationcircle"
+                        size={10}
+                        color="#FBB500"
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
 
-            <View>
-              <Text className="text-white text-2xl font-bold">Lịch</Text>
-            </View>
+            {showSearchBar ? (
+              <View className="flex-row justify-between items-center bg-white rounded-xl px-2">
+                <TextInput
+                  className="pl-2 bg-white w-[80%] rounded-xl h-8"
+                  placeholder="Tìm kiếm"
+                  value={search}
+                  onChangeText={(text) => searchFilter(text)}
+                  onSubmitEditing={() => {
+                    searchFilter(search);
+                  }}
+                ></TextInput>
+                <Ionicons
+                  onPress={() => searchFilter("")}
+                  name="close"
+                  size={28}
+                  color="black"
+                />
+              </View>
+            ) : (
+              <Text className="text-white text-[22px] font-semibold">Lịch</Text>
+            )}
 
             {/* Chỗ để iconSearch */}
-            <TouchableOpacity onPress={() => setShowExtends(true)}>
-              <MaterialCommunityIcons
-                name="dots-vertical"
-                size={32}
-                color="white"
-              />
-            </TouchableOpacity>
+            {showSearchBar ? (
+              <View></View>
+            ) : (
+              <View className="flex-row justify-between items-center">
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowSearchBar(!showSearchBar);
+                    searchFilter("");
+                  }}
+                >
+                  <Ionicons name="ios-search-sharp" size={24} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowExtends(true)}>
+                  <MaterialCommunityIcons
+                    name="dots-vertical"
+                    size={28}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
             <Modal
               visible={showExtends}
               transparent={true}
@@ -400,94 +532,117 @@ const CalendarMain = () => {
             </Modal>
           </View>
         </View>
-        <View className="bg-[#F1F5F9] h-full"></View>
-        <View className="absolute w-full bottom-20 h-[83%]">
-          <Calendar
-            theme={{
-              "stylesheet.calendar.header": {
-                dayTextAtIndex0: {
-                  color: "red",
-                },
-                dayTextAtIndex6: {
-                  color: "blue",
-                },
-              },
+
+        {showSearchBar ? (
+          filterData.length > 0 ? (
+            <View className="bg-[#F1F5F9] h-full">
+              <FlatList
+                data={filterData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={this.renderItemSearch}
+              />
+            </View>
+          ) : (
+            <View className="flex-1 justify-center items-center bg-[#F1F5F9]">
+              <Text>Không tìm thấy kết quả</Text>
+            </View>
+          )
+        ) : (
+          <>
+            <View className="bg-[#F1F5F9] h-full"></View>
+            <View className="absolute w-full bottom-20 h-[83%]">
+              <Calendar
+                theme={{
+                  "stylesheet.calendar.header": {
+                    dayTextAtIndex0: {
+                      color: "red",
+                    },
+                    dayTextAtIndex6: {
+                      color: "blue",
+                    },
+                  },
+                }}
+                style={{
+                  borderRadius: 8,
+                  margin: 16,
+                  shadowColor: "#000000",
+                  shadowOffset: { width: 10, height: 10 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+                  elevation: 10,
+                }}
+                enableSwipeMonths={true}
+                markingType={"multi-dot"}
+                markedDates={marked}
+                onDayPress={(date) => {
+                  setSelectedDay(date.dateString);
+                  // props.onDaySelect && props.onDaySelect(date);
+                }}
+                // markedDates={marked}
+                // {...props}
+              />
+              <View className="max-h-60">
+                {filteredMoodle.length > 0 && (
+                  <View
+                    className=" bg-white rounded-xl mx-4 mt-[4%] flex-1 flex-row"
+                    style={{
+                      shadowColor: "#000000",
+                      shadowOffset: { width: 10, height: 10 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 10,
+                    }}
+                  >
+                    <FlatList
+                      data={filteredMoodle}
+                      keyExtractor={(item) => item.id.toString()}
+                      renderItem={this.renderItem}
+                    />
+                  </View>
+                )}
+                {filteredIndividual.length > 0 && (
+                  <View
+                    className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
+                    style={{
+                      shadowColor: "#000000",
+                      shadowOffset: { width: 10, height: 10 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 10,
+                    }}
+                  >
+                    <FlatList
+                      data={filteredIndividual}
+                      keyExtractor={(item) => item.id.toString()}
+                      renderItem={this.renderItem}
+                    />
+                  </View>
+                )}
+              </View>
+            </View>
+          </>
+        )}
+        {showSearchBar ? (
+          <View></View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Calendar_Add", { selectedDay });
             }}
+            className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
             style={{
-              borderRadius: 8,
-              margin: "5%",
               shadowColor: "#000000",
-              shadowOffset: { width: 10, height: 10 },
+              shadowOffset: { width: 5, height: 5 },
               shadowOpacity: 0.5,
-              shadowRadius: 10,
-              elevation: 10,
+              shadowRadius: 5,
+              elevation: 5,
             }}
-            enableSwipeMonths={true}
-            markingType={"multi-dot"}
-            markedDates={marked}
-            onDayPress={(date) => {
-              setSelectedDay(date.dateString);
-              // props.onDaySelect && props.onDaySelect(date);
-            }}
-            // markedDates={marked}
-            // {...props}
-          />
-          <View className="max-h-60">
-            {filteredMoodle.length > 0 && (
-              <View
-                className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
-                style={{
-                  shadowColor: "#000000",
-                  shadowOffset: { width: 10, height: 10 },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 10,
-                  elevation: 10,
-                }}
-              >
-                <FlatList
-                  data={filteredMoodle}
-                  keyExtractor={(item) => item.id.toString()}
-                  renderItem={this.renderItem}
-                />
-              </View>
-            )}
-            {filteredIndividual.length > 0 && (
-              <View
-                className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
-                style={{
-                  shadowColor: "#000000",
-                  shadowOffset: { width: 10, height: 10 },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 10,
-                  elevation: 10,
-                }}
-              >
-                <FlatList
-                  data={filteredIndividual}
-                  keyExtractor={(item) => item.id.toString()}
-                  renderItem={this.renderItem}
-                />
-              </View>
-            )}
-          </View>
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Calendar_Add", { selectedDay });
-          }}
-          className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
-          style={{
-            shadowColor: "#000000",
-            shadowOffset: { width: 5, height: 5 },
-            shadowOpacity: 0.5,
-            shadowRadius: 5,
-            elevation: 5,
-          }}
-        >
-          <Text className="text-white text-center font-bold text-base">
-            Thêm sự kiện mới
-          </Text>
-        </TouchableOpacity>
+          >
+            <Text className="text-white text-center font-bold text-base">
+              Thêm sự kiện mới
+            </Text>
+          </TouchableOpacity>
+        )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

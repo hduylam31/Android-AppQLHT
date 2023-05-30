@@ -59,13 +59,13 @@ const NoteList_Edit = () => {
       return;
     }
     try {
-      await NoteService.updateNote({ 
+      await NoteService.updateNote({
         c_id: c_item.id,
         title,
-        note,  
-        createdDay: c_item.createdDay,  
+        note,
+        createdDay: c_item.createdDay,
         isLoved: c_item.isLoved,
-        isSecret: c_item.isSecret
+        isSecret: c_item.isSecret,
       });
       navigation.navigate("BottomBar", {
         screen: "Ghi chú",
@@ -135,7 +135,9 @@ const NoteList_Edit = () => {
               <AntDesign name="arrowleft" size={30} color="white" />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Cập nhật ghi chú</Text>
+              <Text className="text-white text-xl font-medium">
+                Cập nhật ghi chú
+              </Text>
             </View>
             {isKeyboardShowing ? (
               <TouchableOpacity

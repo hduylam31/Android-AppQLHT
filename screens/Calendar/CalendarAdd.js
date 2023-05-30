@@ -220,7 +220,9 @@ const Calendar_Add = () => {
               />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Thêm sự kiện mới</Text>
+              <Text className="text-white text-xl font-medium">
+                Thêm sự kiện mới
+              </Text>
             </View>
             <View className="w-8 h-8"></View>
             {/* <TouchableOpacity onPress={handleAddingUserCalendar}>

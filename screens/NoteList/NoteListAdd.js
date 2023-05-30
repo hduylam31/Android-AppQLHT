@@ -35,7 +35,7 @@ const NoteList_Add = () => {
   const [note, setNote] = useState("");
 
   useLayoutEffect(() => {
-    navigation.setOptions({ 
+    navigation.setOptions({
       headerShown: false,
     });
   });
@@ -52,16 +52,18 @@ const NoteList_Add = () => {
       (title === "" && note !== "")
     ) {
       try {
-        await NoteService.addNote(title, note, isSecret); 
-        if(!isSecret){
+        await NoteService.addNote(title, note, isSecret);
+        if (!isSecret) {
           navigation.navigate("BottomBar", {
             screen: "Ghi chú",
             params: {
               screenNoteList: "AddToMain",
             },
           });
-        }else{
-          navigation.navigate("NoteListFolderSecret", {screenNoteList: "AddToMain"});
+        } else {
+          navigation.navigate("NoteListFolderSecret", {
+            screenNoteList: "AddToMain",
+          });
         }
       } catch (error) {
         console.log("Fail due to: ", error);
@@ -154,7 +156,9 @@ const NoteList_Add = () => {
               <AntDesign name="arrowleft" size={30} color="white" />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Thêm ghi chú mới</Text>
+              <Text className="text-white text-xl font-medium">
+                Thêm ghi chú mới
+              </Text>
             </View>
 
             {isKeyboardShowing ? (

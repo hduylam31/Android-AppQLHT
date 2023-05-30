@@ -246,9 +246,13 @@ const Calendar_Edit = () => {
               />
             </TouchableOpacity>
             {item.isMoodle === "false" ? (
-              <Text className="text-white text-xl">Cập nhật sự kiện</Text>
+              <Text className="text-white text-xl font-medium">
+                Cập nhật sự kiện
+              </Text>
             ) : (
-              <Text className="text-white text-xl">Xem thông tin sự kiện</Text>
+              <Text className="text-white text-xl font-medium">
+                Xem thông tin sự kiện
+              </Text>
             )}
 
             {item.isMoodle === "false" ? (

@@ -18,7 +18,7 @@ const CalendarExtendTurnOnOffNoti = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
-    }); 
+    });
   });
 
   useEffect(() => {
@@ -28,27 +28,27 @@ const CalendarExtendTurnOnOffNoti = () => {
       setIsNotifiedMoodle(isNoti.isMoodleCalendarNotified);
       setIsNotifiedInv(isNoti.isUserCalendarNotified);
     };
-    loadData(); 
+    loadData();
   }, []);
 
   const [isNotifiedMoodle, setIsNotifiedMoodle] = useState(false);
   const [isNotifiedInv, setIsNotifiedInv] = useState(false);
 
-  function processNotiMoodle(value){
+  function processNotiMoodle(value) {
     setIsNotifiedMoodle(value);
     console.log("isNotifiedMoodle: ", value);
-    if(value == true){ 
-      CalendarService.turnOnCalendarNotification(true);  
+    if (value == true) {
+      CalendarService.turnOnCalendarNotification(true);
     } else {
       CalendarService.turnOffCalendarNotification(true);
     }
   }
 
-  function processNotiUser(value){ 
+  function processNotiUser(value) {
     setIsNotifiedInv(value);
     console.log("isNotifiedUser: ", value);
-    if(value == true){ 
-      CalendarService.turnOnCalendarNotification(false);  
+    if (value == true) {
+      CalendarService.turnOnCalendarNotification(false);
     } else {
       CalendarService.turnOffCalendarNotification(false);
     }
@@ -68,7 +68,9 @@ const CalendarExtendTurnOnOffNoti = () => {
               />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Bật/Tắt thông báo</Text>
+              <Text className="text-white text-xl font-medium">
+                Bật/Tắt thông báo
+              </Text>
             </View>
             <View className="w-8 h-8"></View>
 
@@ -83,7 +85,7 @@ const CalendarExtendTurnOnOffNoti = () => {
               //   }}
               className="flex-row px-5 justify-between items-center border-b-2 border-b-[#f3f2f4]"
             >
-              <Text>Thông báo sự kiện moodle</Text>
+              <Text className="text-base">Thông báo sự kiện moodle</Text>
               <Switch
                 trackColor={{ false: "grey", true: "#3A4666" }}
                 thumbColor={isNotifiedMoodle ? "#f4f3f4" : "#f4f3f4"}
@@ -98,7 +100,7 @@ const CalendarExtendTurnOnOffNoti = () => {
               //   }}
               className="flex-row px-5 justify-between items-center"
             >
-              <Text>Thông báo sự kiện cá nhân hóa</Text>
+              <Text className="text-base">Thông báo sự kiện cá nhân hóa</Text>
               <Switch
                 trackColor={{ false: "grey", true: "#3A4666" }}
                 thumbColor={isNotifiedInv ? "#f4f3f4" : "#f4f3f4"}
@@ -109,6 +111,20 @@ const CalendarExtendTurnOnOffNoti = () => {
             </TouchableOpacity>
           </View>
         </ScrollView>
+        <TouchableOpacity
+          className="w-[90%] h-10 absolute bottom-14 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: { width: 5, height: 5 },
+            shadowOpacity: 0.5,
+            shadowRadius: 5,
+            elevation: 5,
+          }}
+        >
+          <Text className="text-white text-center font-bold text-base">
+            Lưu
+          </Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

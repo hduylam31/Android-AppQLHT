@@ -121,7 +121,7 @@ const NoteListFolderSecret = () => {
   };
 
   function handleLovedNote() {
-    if (selectedIds.some((item) => !item.isLoved)) { 
+    if (selectedIds.some((item) => !item.isLoved)) {
       const newIds = selectedIds.filter((item) => !item.isLoved);
       NoteService.updateLovedStatus(newIds);
       const ids = newIds.map((item) => item.id);
@@ -286,11 +286,11 @@ const NoteListFolderSecret = () => {
             )}
             {showMultiCheck ? (
               selectedIds.length > 0 ? (
-                <Text className="text-white text-2xl font-bold text-center">
+                <Text className="text-white text-xl font-medium text-center">
                   Đã chọn {selectedIds.length}
                 </Text>
               ) : (
-                <Text className="text-white text-2xl font-bold text-center">
+                <Text className="text-white text-xl font-medium text-center">
                   Chọn ghi chú
                 </Text>
               )
@@ -622,7 +622,7 @@ const NoteListFolderSecret = () => {
         ) : (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("NoteList_Add", {isSecret: true});
+              navigation.navigate("NoteList_Add", { isSecret: true });
             }}
             className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
             style={{

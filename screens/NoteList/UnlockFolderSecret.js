@@ -96,17 +96,17 @@ const UnlockFolderSecret = () => {
             });
           }}
         >
-          <AntDesign name="arrowleft" size={32} color="white" />
+          <AntDesign name="arrowleft" size={28} color="white" />
         </TouchableOpacity>
-        <MaterialCommunityIcons name="folder-lock" size={32} color="white" />
+        <MaterialCommunityIcons name="folder-lock" size={28} color="white" />
         <View className="h-8 w-8"></View>
       </View>
       {storePassword === "" ? (
         <View className="justify-center items-center px-4">
-          <Text className="text-[#FFFFFF] text-3xl font-bold">
+          <Text className="text-[#FFFFFF] text-[22px] font-semibold">
             Thư mục bảo mật
           </Text>
-          <Text className="text-[#FFFFFF] text-xl font-light mt-[20%]">
+          <Text className="text-[#FFFFFF] text-lg mt-[20%]">
             Thiết lập mật mã
           </Text>
 
@@ -136,12 +136,10 @@ const UnlockFolderSecret = () => {
         </View>
       ) : (
         <View className="justify-center items-center px-4">
-          <Text className="text-[#FFFFFF] text-3xl font-bold">
+          <Text className="text-[#FFFFFF] text-[22px] font-semibold">
             Thư mục bảo mật
           </Text>
-          <Text className="text-[#FFFFFF] text-base font-light mt-[25%]">
-            Nhập mật mã
-          </Text>
+          <Text className="text-[#FFFFFF] text-lg mt-[25%]">Nhập mật mã</Text>
           <View className="h-10 w-full bg-white rounded-2xl flex-row justify-between items-center mt-5">
             <TextInput
               placeholder="Mật mã"

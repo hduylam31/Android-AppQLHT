@@ -263,8 +263,8 @@ const NoteListMain = () => {
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-20">
-          <View className="flex-row p-4 justify-between items-center">
+        <View className="bg-[#3A4666] h-[8%]">
+          <View className="flex-row px-4 py-3 justify-between items-center">
             {showMultiCheck && !showSearchBar ? (
               <View>
                 <TouchableOpacity
@@ -275,9 +275,9 @@ const NoteListMain = () => {
                   }}
                 >
                   {isCheckSelectAll ? (
-                    <Ionicons name="checkmark-circle" size={32} color="white" />
+                    <Ionicons name="checkmark-circle" size={28} color="white" />
                   ) : (
-                    <Ionicons name="ellipse-outline" size={32} color="white" />
+                    <Ionicons name="ellipse-outline" size={28} color="white" />
                   )}
                 </TouchableOpacity>
               </View>
@@ -291,7 +291,7 @@ const NoteListMain = () => {
               >
                 <MaterialCommunityIcons
                   name="arrow-left"
-                  size={32}
+                  size={28}
                   color="white"
                 />
               </TouchableOpacity>
@@ -300,11 +300,11 @@ const NoteListMain = () => {
             )}
             {showMultiCheck && !showSearchBar ? (
               selectedIds.length > 0 ? (
-                <Text className="text-white text-2xl font-bold text-center">
+                <Text className="text-white text-xl font-medium text-center">
                   Đã chọn {selectedIds.length}
                 </Text>
               ) : (
-                <Text className="text-white text-2xl font-bold text-center">
+                <Text className="text-white text-xl font-medium text-center">
                   Chọn ghi chú
                 </Text>
               )
@@ -327,7 +327,7 @@ const NoteListMain = () => {
                 />
               </View>
             ) : (
-              <Text className="text-white text-2xl font-bold text-center">
+              <Text className="text-white text-[22px] font-semibold text-center">
                 Danh sách ghi chú
               </Text>
             )}
@@ -338,7 +338,7 @@ const NoteListMain = () => {
                   toggleCheckBox("reset");
                 }}
               >
-                <MaterialCommunityIcons name="check" size={32} color="white" />
+                <MaterialCommunityIcons name="check" size={28} color="white" />
               </TouchableOpacity>
             ) : !showMultiCheck && showSearchBar ? (
               <View></View>
@@ -355,7 +355,7 @@ const NoteListMain = () => {
                 <TouchableOpacity onPress={() => setShowExtends(true)}>
                   <MaterialCommunityIcons
                     name="dots-vertical"
-                    size={32}
+                    size={28}
                     color="white"
                   />
                 </TouchableOpacity>
@@ -585,7 +585,7 @@ const NoteListMain = () => {
                           </View>
                         </TouchableOpacity>
                         <View className="justify-center items-center flex-row space-x-2 mt-1">
-                          <Text>
+                          <Text className="text-sm font-normal">
                             {selectedCategorySort === "SortUpdatedDay"
                               ? item.updatedDay
                               : item.createdDay}
@@ -676,7 +676,7 @@ const NoteListMain = () => {
         ) : (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("NoteList_Add", {isSecret: false});
+              navigation.navigate("NoteList_Add", { isSecret: false });
             }}
             className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
             style={{

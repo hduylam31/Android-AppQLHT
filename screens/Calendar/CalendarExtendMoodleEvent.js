@@ -64,9 +64,7 @@ const CalendarExtendMoodleEvent = () => {
         <Animatable.View animation="slideInLeft" delay={index * 10}>
           <View className="h-12 flex-row">
             <View className={"w-[12%] flex ml-[3%]"}>
-              <Text className={"text-sm font-semibold "}>
-                {item.timeString}
-              </Text>
+              <Text className={"text-sm font-normal "}>{item.timeString}</Text>
             </View>
             <View
               className={`w-[2%] h-[80%] mx-[3%] my-1 ${
@@ -77,7 +75,7 @@ const CalendarExtendMoodleEvent = () => {
               <Text
                 numberOfLines={2}
                 ellipsizeMode="tail"
-                className={"text-sm font-semibold"}
+                className={"text-base font-normal"}
               >
                 {item.title}
               </Text>
@@ -95,7 +93,7 @@ const CalendarExtendMoodleEvent = () => {
         </Animatable.View>
         <View className="w-[94%] ml-[3%] h-[2px] bg-[#f3f2f4]"></View>
       </TouchableOpacity>
-      <View className="h-3"></View>
+      <View className="h-1"></View>
     </>
   );
 
@@ -113,7 +111,9 @@ const CalendarExtendMoodleEvent = () => {
               />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Sự kiện moodle</Text>
+              <Text className="text-white text-xl font-medium">
+                Sự kiện moodle
+              </Text>
             </View>
             <View className="w-8 h-8"></View>
 

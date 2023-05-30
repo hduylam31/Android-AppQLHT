@@ -22,8 +22,6 @@ const CalendarExtendTimeNoti = () => {
     });
   });
 
-  
-
   const [timeMoodleNoti, setTimeMoodleNoti] = useState(null);
   const [customTimeMoodleNoti, setCustomTimeMoodleNoti] = useState("1");
   const [numberTimeMoodleNoti, setNumberTimeMoodleNoti] = useState("5");
@@ -37,17 +35,17 @@ const CalendarExtendTimeNoti = () => {
   useEffect(() => {
     const loadData = async () => {
       const data = await CalendarService.loadNotiConfig();
-      console.log(data); 
+      console.log(data);
       const moodleNotiConfig = data.moodleNotiConfig;
       setTimeMoodleNoti(moodleNotiConfig.type);
       setCustomTimeMoodleNoti(moodleNotiConfig.customType);
-      setNumberTimeMoodleNoti(moodleNotiConfig.customTime)
+      setNumberTimeMoodleNoti(moodleNotiConfig.customTime);
       console.log("timeMoodleNoti ", timeMoodleNoti);
     };
     loadData();
   }, []);
 
-  function getTimeInfo(timeNoti, customTimeNoti, numberTimeNoti){
+  function getTimeInfo(timeNoti, customTimeNoti, numberTimeNoti) {
     var rangeTimeInfo = {
       type: "",
       customType: "",
@@ -86,9 +84,13 @@ const CalendarExtendTimeNoti = () => {
     return rangeTimeInfo;
   }
 
-  async function saveNotiConfig(){
+  async function saveNotiConfig() {
     console.log("hello");
-    const rangeTimeMoodleInfo = getTimeInfo(timeMoodleNoti, customTimeMoodleNoti, numberTimeMoodleNoti);
+    const rangeTimeMoodleInfo = getTimeInfo(
+      timeMoodleNoti,
+      customTimeMoodleNoti,
+      numberTimeMoodleNoti
+    );
     await CalendarService.saveNotiConfig(rangeTimeMoodleInfo);
   }
 
@@ -106,7 +108,9 @@ const CalendarExtendTimeNoti = () => {
               />
             </TouchableOpacity>
             <View>
-              <Text className="text-white text-xl">Thời gian thông báo</Text>
+              <Text className="text-white text-xl font-medium">
+                Thời gian thông báo
+              </Text>
             </View>
             <View className="w-8 h-8"></View>
 
