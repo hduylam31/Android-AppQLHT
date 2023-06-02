@@ -117,7 +117,7 @@ const Account_ChangePass = () => {
                 Xin chào!
               </Text>
               <Text className="text-white font-bold text-xl ml-10 mt-4">
-                Rất vui khi gặp bạn ở đây
+                Bạn muốn đổi mật khẩu ?
               </Text>
             </View>
           </View>

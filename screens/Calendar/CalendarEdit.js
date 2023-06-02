@@ -241,7 +241,7 @@ const Calendar_Edit = () => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
                 name="arrow-left"
-                size={30}
+                size={28}
                 color="white"
               />
             </TouchableOpacity>
@@ -287,7 +287,7 @@ const Calendar_Edit = () => {
                 shadowRadius: 10,
                 elevation: 10,
               }}
-              // editable={item.isMoodle === "true" ? false : true}
+              editable={item.isMoodle === "true" ? false : true}
             ></TextInput>
 
             <View className="flex-row justify-between items-center">
@@ -308,11 +308,11 @@ const Calendar_Edit = () => {
                   }}
                 >
                   <Text
-                  // className={`text-base ${
-                  //   item.isMoodle === "true"
-                  //     ? "text-[#666666] opacity-50"
-                  //     : ""
-                  // }`}
+                    className={`text-base ${
+                      item.isMoodle === "true"
+                        ? "text-[#666666] opacity-50"
+                        : ""
+                    }`}
                   >
                     {textDate}
                   </Text>
@@ -336,11 +336,11 @@ const Calendar_Edit = () => {
                   }}
                 >
                   <Text
-                  // className={`text-base ${
-                  //   item.isMoodle === "true"
-                  //     ? "text-[#666666] opacity-50"
-                  //     : ""
-                  // }`}
+                    className={`text-base ${
+                      item.isMoodle === "true"
+                        ? "text-[#666666] opacity-50"
+                        : ""
+                    }`}
                   >
                     {textTime}
                   </Text>
@@ -360,8 +360,8 @@ const Calendar_Edit = () => {
               )}
             </View>
           </LockedView>
-          <View className="px-5 space-y-2">
-            <Text className="text-base">Bật thông báo</Text>
+          <View className="px-5">
+            <Text className="text-base mt-2">Bật thông báo</Text>
             <View className="items-start" pointerEvents="auto">
               <Switch
                 trackColor={{ false: "grey", true: "#3A4666" }}
@@ -371,47 +371,51 @@ const Calendar_Edit = () => {
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               />
             </View>
-            <Text className="text-base">Thời gian thông báo</Text>
-            {item.isMoodle === "false" && (
-              <Dropdown
-                disable={isNotified ? false : true}
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  height: 48,
-                  borderRadius: 8,
-                  shadowColor: "#000000",
-                  shadowOffset: { width: 10, height: 10 },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 10,
-                  elevation: 10,
-                }}
-                containerStyle={{
-                  borderRadius: 8,
-                }}
-                itemContainerStyle={{
-                  borderRadius: 8,
-                  height: 48,
-                }}
-                itemTextStyle={{
-                  height: 48,
-                }}
-                placeholderStyle={{
-                  fontSize: 16,
-                  paddingLeft: 16,
-                  color: "#C7C7CD",
-                }}
-                selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
-                iconStyle={{ marginRight: 16 }}
-                data={DataTimeNoti}
-                maxHeight={200}
-                labelField="key"
-                valueField="value"
-                placeholder="Thời gian thông báo"
-                value={isNotified ? timeNoti : ""}
-                onChange={(item) => {
-                  setTimeNoti(item.value);
-                }}
-              />
+            {item.isMoodle === "false" ? (
+              <>
+                <Text className="text-base mb-2">Thời gian thông báo</Text>
+                <Dropdown
+                  disable={isNotified ? false : true}
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    height: 48,
+                    borderRadius: 8,
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 10, height: 10 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 10,
+                    elevation: 10,
+                  }}
+                  containerStyle={{
+                    borderRadius: 8,
+                  }}
+                  itemContainerStyle={{
+                    borderRadius: 8,
+                    height: 48,
+                  }}
+                  itemTextStyle={{
+                    height: 48,
+                  }}
+                  placeholderStyle={{
+                    fontSize: 16,
+                    paddingLeft: 16,
+                    color: "#C7C7CD",
+                  }}
+                  selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+                  iconStyle={{ marginRight: 16 }}
+                  data={DataTimeNoti}
+                  maxHeight={200}
+                  labelField="key"
+                  valueField="value"
+                  placeholder="Thời gian thông báo"
+                  value={isNotified ? timeNoti : ""}
+                  onChange={(item) => {
+                    setTimeNoti(item.value);
+                  }}
+                />
+              </>
+            ) : (
+              <View></View>
             )}
             {timeNoti === "6" && isNotified && item.isMoodle === "false" ? (
               <View className="flex-row justify-between">
@@ -472,10 +476,11 @@ const Calendar_Edit = () => {
               <View></View>
             )}
             {/* Nội dung phần ghi chú */}
-            <Text className="text-base">Ghi chú</Text>
+
+            <Text className="text-base mt-2">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-52 bg-[#FFFFFF] px-4 pt-4  text-base rounded-lg resize-none"
+              className="w-[100%] h-52 bg-[#FFFFFF] px-4 pt-4 mt-2 text-base rounded-lg resize-none"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
@@ -488,7 +493,7 @@ const Calendar_Edit = () => {
               numberOfLines={8}
               onChangeText={(value) => setContent(value)}
               textAlignVertical="top"
-              // editable={item.isMoodle === "true" ? false : true}
+              editable={item.isMoodle === "true" ? false : true}
             ></TextInput>
             <View className="h-20"></View>
           </View>

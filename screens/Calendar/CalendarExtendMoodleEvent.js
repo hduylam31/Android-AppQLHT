@@ -67,7 +67,7 @@ const CalendarExtendMoodleEvent = () => {
               <Text className={"text-sm font-normal "}>{item.timeString}</Text>
             </View>
             <View
-              className={`w-[2%] h-[80%] mx-[3%] my-1 ${
+              className={`w-1 h-[80%] mx-[3%] my-1 ${
                 item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
               }`}
             ></View>
