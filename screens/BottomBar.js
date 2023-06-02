@@ -13,6 +13,7 @@ const Tab = createBottomTabNavigator();
 
 const BottomBar = () => {
   const navigation = useNavigation();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -23,6 +24,8 @@ const BottomBar = () => {
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: "#3A4666",
         tabBarInactiveTintColor: "gray",
+        tabBarHideOnKeyboard: true,
+
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -45,8 +48,28 @@ const BottomBar = () => {
       })}
     >
       <Tab.Screen name="Lịch" component={CalendarMain} />
-      <Tab.Screen name="Ghi chú" component={NoteListMain} />
-      <Tab.Screen name="DS công việc" component={ToDoListScreen} />
+      <Tab.Screen
+        name="Ghi chú"
+        component={NoteListMain}
+        options={({ route }) => ({
+          tabBarStyle:
+            route.params && route.params.showMultiCheck
+              ? { display: "none" }
+              : null,
+        })}
+      />
+      <Tab.Screen
+        name="DS công việc"
+        component={ToDoListScreen}
+        // options={{ tabBarStyle: { display: "none" } }}
+        // initialParams={{ showMultiCheck: showMultiCheck }}
+        options={({ route }) => ({
+          tabBarStyle:
+            route.params && route.params.showMultiCheck
+              ? { display: "none" }
+              : null,
+        })}
+      />
       <Tab.Screen name="TKB" component={ScheduleMain} />
       <Tab.Screen name="Tài khoản" component={AccountMain} />
     </Tab.Navigator>

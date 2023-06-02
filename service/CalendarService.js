@@ -15,16 +15,16 @@ import NotificationUtils from "./NotificationUtils";
 import AutoUpdateService from "./AutoUpdateService";
 import CredentialService from "./CredentialService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as he from 'he';
-import * as BackgroundFetch from 'expo-background-fetch';
+import * as he from "he";
+import * as BackgroundFetch from "expo-background-fetch";
 import Constants from "../domain/Constants";
 import StorageUtils from "./StorageUtils";
 
 class CalendarService {
   static async isMoodleActive() {
     try {
-      const moodleStatusStorage = await AsyncStorage.getItem('moodleStatus');
-      if(moodleStatusStorage != null){
+      const moodleStatusStorage = await AsyncStorage.getItem("moodleStatus");
+      if (moodleStatusStorage != null) {
         return parseInt(moodleStatusStorage);
       }
 
@@ -34,7 +34,7 @@ class CalendarService {
       if (userDoc.exists()) {
         const moodleStatus = userDoc.data().moodle.status;
         if (moodleStatus) {
-          AsyncStorage.setItem('moodleStatus', moodleStatus.toString());
+          AsyncStorage.setItem("moodleStatus", moodleStatus.toString());
           return moodleStatus;
         } else {
           return 0;
@@ -52,9 +52,9 @@ class CalendarService {
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
         return {
-          "isMoodleCalendarNotified": userDoc.data().isMoodleCalendarNotified,
-          "isUserCalendarNotified": userDoc.data().isUserCalendarNotified
-        }
+          isMoodleCalendarNotified: userDoc.data().isMoodleCalendarNotified,
+          isUserCalendarNotified: userDoc.data().isUserCalendarNotified,
+        };
       }
     } catch (error) {
       return true;
@@ -65,7 +65,7 @@ class CalendarService {
     console.log("get token");
     url =
       "https://courses.fit.hcmus.edu.vn/login/token.php?username=" +
-      encodeURIComponent(username) + 
+      encodeURIComponent(username) +
       "&password=" +
       encodeURIComponent(password) +
       "&service=moodle_mobile_app";
@@ -79,27 +79,26 @@ class CalendarService {
     if (data.errorcode === "invalidlogin" || !data.token) {
       return "error";
     }
-    AsyncStorage.setItem('moodleToken', data.token);
+    AsyncStorage.setItem("moodleToken", data.token);
     return data.token;
   }
 
-  static async processLoginMoodle(username, password) { 
+  static async processLoginMoodle(username, password) {
     try {
-      const moodleToken = await this.getMoodleToken(username, password); 
+      const moodleToken = await this.getMoodleToken(username, password);
       if (moodleToken !== "error") {
         console.log("Login moodle OK with token: ", moodleToken);
         //save token to user colection
-        await AsyncStorage.setItem('moodleStatus', '1');
+        await AsyncStorage.setItem("moodleStatus", "1");
         const user = auth.currentUser;
         const userRef = doc(collection(firestore, "user"), user.uid);
         updateDoc(userRef, { moodle: { token: moodleToken, status: 1 } });
         //load calendar moodle data
         await this.saveCalendarData(moodleToken);
-        //Auto update Background 
-        await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();  
+        //Auto update Background
+        await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
         return 1;
       } else {
-        alert("Sai thông tin đăng nhập!");
         return 0;
       }
     } catch (error) {
@@ -113,16 +112,16 @@ class CalendarService {
   static async reloadMoodleCalendar() {
     console.log("inside reloadMoodleCalendar function");
 
-    const moodleStatus = await AsyncStorage.getItem('moodleStatus');
-    if(moodleStatus != null && parseInt(moodleStatus) == 1){
-      const moodleToken = await AsyncStorage.getItem('moodleToken');
-      if(moodleToken != null){
+    const moodleStatus = await AsyncStorage.getItem("moodleStatus");
+    if (moodleStatus != null && parseInt(moodleStatus) == 1) {
+      const moodleToken = await AsyncStorage.getItem("moodleToken");
+      if (moodleToken != null) {
         await this.saveCalendarData(moodleToken);
         console.log("save saveCalendarData done");
         return;
       }
     }
-    
+
     try {
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
@@ -130,10 +129,10 @@ class CalendarService {
       if (userDoc.exists()) {
         const moodle = userDoc.data().moodle;
         const status = moodle.status;
-        AsyncStorage.setItem('moodleStatus', status.toString());
+        AsyncStorage.setItem("moodleStatus", status.toString());
         if (status === 1) {
           const token = moodle.token;
-          AsyncStorage.setItem('moodleToken', token);
+          AsyncStorage.setItem("moodleToken", token);
           await this.saveCalendarData(token);
           console.log("save saveCalendarData done");
         }
@@ -143,7 +142,7 @@ class CalendarService {
     }
   }
 
-  static async turnOffCalendarNotification(isMoodleCalendar){
+  static async turnOffCalendarNotification(isMoodleCalendar) {
     try {
       console.log("inside turnOffCalendarNotification");
       var calendarData = [];
@@ -152,45 +151,53 @@ class CalendarService {
       const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
       const calendarType = isMoodleCalendar ? "moodleCalendar" : "userCalendar";
-      
+
       //Get all data
       const calendarDataStorage = await AsyncStorage.getItem(calendarType);
-      if(calendarDataStorage != null){
+      if (calendarDataStorage != null) {
         calendarData = JSON.parse(calendarDataStorage);
-      } else{
+      } else {
         if (userDoc.exists()) {
           calendarData = userDoc.data().calendar.moodle;
         }
       }
       // Delete all noti + update identifer = ""
-      if(calendarData.length > 0){
+      if (calendarData.length > 0) {
         calendarData.forEach((item) => {
-          if(item.isNotified && item.identifier != ""){
+          if (item.isNotified && item.identifier != "") {
             NotificationUtils.cancelNotification(item.identifier);
           }
-        })
-        await Promise.all(calendarData.map(item => {
-          if(item.isNotified && item.identifier != ""){
-            item.identifier = "";
-          }
-        }));
+        });
+        await Promise.all(
+          calendarData.map((item) => {
+            if (item.isNotified && item.identifier != "") {
+              item.identifier = "";
+            }
+          })
+        );
       }
-      //Update data in DB + Cache, Save global 
-      if(isMoodleCalendar){
-        await AsyncStorage.setItem('moodleCalendar', JSON.stringify(calendarData));
+      //Update data in DB + Cache, Save global
+      if (isMoodleCalendar) {
+        await AsyncStorage.setItem(
+          "moodleCalendar",
+          JSON.stringify(calendarData)
+        );
         updateDoc(userRef, { "calendar.moodle": calendarData });
-        updateDoc(userRef2, { "isMoodleCalendarNotified": false });
-      }else{
-        await AsyncStorage.setItem('userCalendar', JSON.stringify(calendarData));
+        updateDoc(userRef2, { isMoodleCalendarNotified: false });
+      } else {
+        await AsyncStorage.setItem(
+          "userCalendar",
+          JSON.stringify(calendarData)
+        );
         updateDoc(userRef, { "calendar.user": calendarData });
-        updateDoc(userRef2, { "isUserCalendarNotified": false });
+        updateDoc(userRef2, { isUserCalendarNotified: false });
       }
     } catch (error) {
       console.log("turnOffCalendarNotification: ", error);
     }
   }
 
-  static async turnOnCalendarNotification(isMoodleCalendar){
+  static async turnOnCalendarNotification(isMoodleCalendar) {
     try {
       console.log("inside turnOnCalendarNotification");
       var calendarData = [];
@@ -201,65 +208,73 @@ class CalendarService {
       const calendarType = isMoodleCalendar ? "moodleCalendar" : "userCalendar";
       //Get all data
       const calendarDataStorage = await AsyncStorage.getItem(calendarType);
-      if(calendarDataStorage != null){
+      if (calendarDataStorage != null) {
         calendarData = JSON.parse(calendarDataStorage);
-      } else{
+      } else {
         if (userDoc.exists()) {
           calendarData = userDoc.data().calendar.moodle;
         }
       }
       //Check if item is Notified => set identifer
-      if(calendarData.length > 0){
-        await Promise.all(calendarData.map(async (item) => {
-          if(item.isNotified && item.identifier == ""){
-            const timeArray = item.timeString.split(":");
-            const [year, month, day] = item.dateString.split("-"); 
-            const deadlineDate = new Date(
-              year,
-              month - 1,
-              day,
-              timeArray[0],
-              timeArray[1]
-            );
-            const now = new Date(Date.now());
-            const diff = deadlineDate - now;
-      
-            if (diff > 0 ) {
-              //2hours
-              const twoHoursBeforeDeadlineTime = new Date(
-                deadlineDate.getTime() - item.rangeTimeInfo.time*1000 
+      if (calendarData.length > 0) {
+        await Promise.all(
+          calendarData.map(async (item) => {
+            if (item.isNotified && item.identifier == "") {
+              const timeArray = item.timeString.split(":");
+              const [year, month, day] = item.dateString.split("-");
+              const deadlineDate = new Date(
+                year,
+                month - 1,
+                day,
+                timeArray[0],
+                timeArray[1]
               );
-              const timeInfo = {
-                year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
-                month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
-                day: Number(twoHoursBeforeDeadlineTime.getDate()),
-                hour: Number(twoHoursBeforeDeadlineTime.getHours()),
-                minute: Number(twoHoursBeforeDeadlineTime.getMinutes()),
-              };
-              identifier = await NotificationUtils.setNotificationAndGetIdentifer(
-                item.description,
-                item.title,
-                timeInfo
-              );
-              item.identifier = identifier;
+              const now = new Date(Date.now());
+              const diff = deadlineDate - now;
+
+              if (diff > 0) {
+                //2hours
+                const twoHoursBeforeDeadlineTime = new Date(
+                  deadlineDate.getTime() - item.rangeTimeInfo.time * 1000
+                );
+                const timeInfo = {
+                  year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
+                  month: Number(twoHoursBeforeDeadlineTime.getMonth() + 1),
+                  day: Number(twoHoursBeforeDeadlineTime.getDate()),
+                  hour: Number(twoHoursBeforeDeadlineTime.getHours()),
+                  minute: Number(twoHoursBeforeDeadlineTime.getMinutes()),
+                };
+                identifier =
+                  await NotificationUtils.setNotificationAndGetIdentifer(
+                    item.description,
+                    item.title,
+                    timeInfo
+                  );
+                item.identifier = identifier;
+              }
             }
-          }
-        }))
+          })
+        );
       }
-      //Update data in DB + Cache, Save global 
-      if(isMoodleCalendar){
-        await AsyncStorage.setItem('moodleCalendar', JSON.stringify(calendarData));
+      //Update data in DB + Cache, Save global
+      if (isMoodleCalendar) {
+        await AsyncStorage.setItem(
+          "moodleCalendar",
+          JSON.stringify(calendarData)
+        );
         updateDoc(userRef, { "calendar.moodle": calendarData });
-        updateDoc(userRef2, { "isMoodleCalendarNotified": true });
-      }else{
-        await AsyncStorage.setItem('userCalendar', JSON.stringify(calendarData));
+        updateDoc(userRef2, { isMoodleCalendarNotified: true });
+      } else {
+        await AsyncStorage.setItem(
+          "userCalendar",
+          JSON.stringify(calendarData)
+        );
         updateDoc(userRef, { "calendar.user": calendarData });
-        updateDoc(userRef2, { "isUserCalendarNotified": true });
-      }  
+        updateDoc(userRef2, { isUserCalendarNotified: true });
+      }
     } catch (error) {
       console.log("turnOnCalendarNotification: ", error);
     }
-    
   }
 
   static async unRegisterMoodleNotification() {
@@ -268,7 +283,7 @@ class CalendarService {
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
       const moodleData = userDoc.data().calendar.moodle;
-      if(!moodleData) return;
+      if (!moodleData) return;
       console.log("unRegisterMoodleNotification......");
       const identifiers = [];
       moodleData.forEach((item) => {
@@ -291,15 +306,15 @@ class CalendarService {
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
       //Xóa token + cập nhật status moodle token
-      //Xóa Background chạy nền cập nhật 
+      //Xóa Background chạy nền cập nhật
       try {
         BackgroundFetch.unregisterTaskAsync(Constants.BACKGROUND_FETCH_TASK);
       } catch (error) {
         console.log("Ke loi nay di: ", error);
       }
-      
-      AsyncStorage.setItem('moodleStatus', status.toString());
-      updateDoc(userRef, { "moodle.status": status , "moodle.token": ""});
+
+      AsyncStorage.setItem("moodleStatus", status.toString());
+      updateDoc(userRef, { "moodle.status": status, "moodle.token": "" });
       //Xóa tất cả dữ liệu thông báo + moodle
       const calendarRef = doc(collection(firestore, "calendar"), user.uid);
       this.unRegisterMoodleNotification();
@@ -321,21 +336,34 @@ class CalendarService {
     const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
     const nextMonthYear = currentMonth === 12 ? currentYear + 1 : currentYear;
     console.log("rangeTime: ", rangeTime);
-    let currentMonthEvent = await this.fetchCalendarData(token, currentMonth, currentYear, rangeTime);
+    let currentMonthEvent = await this.fetchCalendarData(
+      token,
+      currentMonth,
+      currentYear,
+      rangeTime
+    );
     if (currentMonthEvent === "error") {
       console.log("error token");
       await this.logOutMoodle(-1);
       return;
     }
 
-    let nextMonthEvent = await this.fetchCalendarData(token, nextMonth, nextMonthYear, rangeTime);
-    const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);  
+    let nextMonthEvent = await this.fetchCalendarData(
+      token,
+      nextMonth,
+      nextMonthYear,
+      rangeTime
+    );
+    const twoMonthEvents = currentMonthEvent.concat(nextMonthEvent);
     // =====================================DB===================================
-    await AsyncStorage.setItem('moodleCalendar', JSON.stringify(twoMonthEvents)); 
+    await AsyncStorage.setItem(
+      "moodleCalendar",
+      JSON.stringify(twoMonthEvents)
+    );
 
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "calendar"), user.uid);
-    
+
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
       updateDoc(userRef, { "calendar.moodle": twoMonthEvents });
@@ -391,7 +419,7 @@ class CalendarService {
           });
           const id = generateUUID(6);
           // ==================================Notification============================
-          if(notiConfig.isMoodleCalendarNotified){
+          if (notiConfig.isMoodleCalendarNotified) {
             //Thông báo cách tối thiểu 2h
             const [year, month, day] = dateString.split("-");
             const timeArray = timeString.split(":");
@@ -430,29 +458,29 @@ class CalendarService {
                 })
               );
             }
-          
-          // ==================================End Notification============================
+
+            // ==================================End Notification============================
 
             const eventItemPromise = Promise.all(promises).then(() => {
-            const eventItem = {
-              id: id,
-              title: eventName,
-              description: coureName,
-              isMoodle: "true",
-              isNotified: true,
-              dateString: dateString,
-              timeString: timeString,
-              identifier: identifier,
-              rangeTimeInfo: { 
-                "time": twoHours/1000,
-                "type": "4",
-                "customType": "",
-                "customTime": ""
-              }
-            };
-            events.push(eventItem);
-          });
-          promises.push(eventItemPromise);
+              const eventItem = {
+                id: id,
+                title: eventName,
+                description: coureName,
+                isMoodle: "true",
+                isNotified: true,
+                dateString: dateString,
+                timeString: timeString,
+                identifier: identifier,
+                rangeTimeInfo: {
+                  time: twoHours / 1000,
+                  type: "4",
+                  customType: "",
+                  customTime: "",
+                },
+              };
+              events.push(eventItem);
+            });
+            promises.push(eventItemPromise);
           }
         });
       });
@@ -464,21 +492,20 @@ class CalendarService {
 
   static async loadCalendarData() {
     console.log("inside load calendar function");
-    
-    const moodleCalendar = await AsyncStorage.getItem('moodleCalendar');
-    const userCalendar = await AsyncStorage.getItem('userCalendar');
-    if(moodleCalendar != null || userCalendar != null){
+
+    const moodleCalendar = await AsyncStorage.getItem("moodleCalendar");
+    const userCalendar = await AsyncStorage.getItem("userCalendar");
+    if (moodleCalendar != null || userCalendar != null) {
       let storageResult = [];
-      if(moodleCalendar != null){
+      if (moodleCalendar != null) {
         storageResult = storageResult.concat(JSON.parse(moodleCalendar));
       }
-      
-      if(userCalendar != null){
+
+      if (userCalendar != null) {
         storageResult = storageResult.concat(JSON.parse(userCalendar));
       }
       return storageResult;
     }
-
 
     const user = auth.currentUser;
     const docRef = doc(firestore, "calendar", user.uid);
@@ -488,16 +515,16 @@ class CalendarService {
       let result = [];
       const moodleCalendars = jsonObject.moodle;
       if (moodleCalendars && moodleCalendars.length > 0) {
-        AsyncStorage.setItem('moodleCalendar', JSON.stringify(moodleCalendars));
+        AsyncStorage.setItem("moodleCalendar", JSON.stringify(moodleCalendars));
         result = result.concat(moodleCalendars);
-      }else{
-        AsyncStorage.setItem('moodleCalendar', JSON.stringify([]));
+      } else {
+        AsyncStorage.setItem("moodleCalendar", JSON.stringify([]));
       }
       const userCalendars = jsonObject.user;
       if (userCalendars && userCalendars.length > 0) {
         result = result.concat(userCalendars);
-      } else{
-        AsyncStorage.setItem('userCalendars', JSON.stringify([]));
+      } else {
+        AsyncStorage.setItem("userCalendars", JSON.stringify([]));
       }
       return result;
     } else {
@@ -550,7 +577,14 @@ class CalendarService {
     }
   }
 
-  static async addUserCalendar(title, textDate, textTime, content, isNotified, rangeTimeInfo) {
+  static async addUserCalendar(
+    title,
+    textDate,
+    textTime,
+    content,
+    isNotified,
+    rangeTimeInfo
+  ) {
     try {
       console.log("inside function");
       const notiConfig = await this.isNoti();
@@ -580,7 +614,7 @@ class CalendarService {
         if (diff > 0) {
           //2hours
           const twoHoursBeforeDeadlineTime = new Date(
-            deadlineDate.getTime() - rangeTimeInfo.time*1000
+            deadlineDate.getTime() - rangeTimeInfo.time * 1000
           );
           const timeInfo = {
             year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
@@ -596,7 +630,7 @@ class CalendarService {
           );
         }
       }
-      
+
       const item = {
         id: documentId,
         title: title,
@@ -607,11 +641,11 @@ class CalendarService {
         isNotified: isNotified,
         identifier: identifier,
         rangeTimeInfo: {
-          "time": rangeTimeInfo.time,
-          "type": rangeTimeInfo.type,
-          "customType": rangeTimeInfo.customType,
-          "customTime": rangeTimeInfo.customTime
-        }
+          time: rangeTimeInfo.time,
+          type: rangeTimeInfo.type,
+          customType: rangeTimeInfo.customType,
+          customTime: rangeTimeInfo.customTime,
+        },
       };
       await StorageUtils.pushElementToArray("userCalendar", item);
       /* ==================================DB Adding====================================== */
@@ -647,10 +681,14 @@ class CalendarService {
 
     const notiConfig = await this.isNoti();
     // ==================================Notification============================
-    if ( (oldItem.isNotified && !elm.isNotified && notiConfig.isUserCalendarNotified)) {
-      // Chỉ xóa thông báo khi cập nhật Thông báo -> Không thông báo 
+    if (
+      oldItem.isNotified &&
+      !elm.isNotified &&
+      notiConfig.isUserCalendarNotified
+    ) {
+      // Chỉ xóa thông báo khi cập nhật Thông báo -> Không thông báo
       NotificationUtils.cancelNotification(oldItem.identifier);
-    } else if(notiConfig.isUserCalendarNotified){
+    } else if (notiConfig.isUserCalendarNotified) {
       // Còn những trường hợp còn lại thì set thông báo mới, kiểm tra luôn vụ chỉ thông báo trước 2h
       await NotificationUtils.cancelNotification(oldItem.identifier);
       //Thông báo cách tối thiểu 2h
@@ -665,10 +703,10 @@ class CalendarService {
       const diff = deadlineDate - now;
       console.log("Diff: ", diff);
 
-      if (diff > 0 ) {
+      if (diff > 0) {
         //2hours
         const twoHoursBeforeDeadlineTime = new Date(
-          deadlineDate.getTime() - elm.rangeTimeInfo.time*1000 
+          deadlineDate.getTime() - elm.rangeTimeInfo.time * 1000
         );
         const timeInfo = {
           year: Number(twoHoursBeforeDeadlineTime.getFullYear()),
@@ -696,13 +734,13 @@ class CalendarService {
       isMoodle: elm.isMoodle,
       identifier: identifier,
       rangeTimeInfo: {
-        "time": elm.rangeTimeInfo.time,
-        "type": elm.rangeTimeInfo.type,
-        "customType": elm.rangeTimeInfo.customType,
-        "customTime": elm.rangeTimeInfo.customTime
-      }
+        time: elm.rangeTimeInfo.time,
+        type: elm.rangeTimeInfo.type,
+        customType: elm.rangeTimeInfo.customType,
+        customTime: elm.rangeTimeInfo.customTime,
+      },
     };
-    await StorageUtils.updateElementInArray('userCalendar', updatedData);
+    await StorageUtils.updateElementInArray("userCalendar", updatedData);
     try {
       const userRef = doc(collection(firestore, "calendar"), user.uid);
       const userDoc = await getDoc(userRef);
@@ -732,7 +770,7 @@ class CalendarService {
 
   static deleteCalendar = async (c_item) => {
     const id = c_item.id;
-    await StorageUtils.removeElementFromArray('userCalendar', id);
+    await StorageUtils.removeElementFromArray("userCalendar", id);
     console.log("Delete Calendar: ", id);
     try {
       // ==================================Notification============================
@@ -763,7 +801,7 @@ class CalendarService {
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
         const userData = userDoc.data().calendar.user;
-        if(userData != undefined && userData.length > 0){
+        if (userData != undefined && userData.length > 0) {
           await loadNotificationAndUpdateOne(userData, userRef, false);
         }
       }
@@ -832,7 +870,10 @@ class CalendarService {
           updatedCalendar[i] = { ...updatedCalendar[i], identifier: "" };
         }
       }
-      await AsyncStorage.setItem('userCalendar', JSON.stringify(updatedCalendar)); 
+      await AsyncStorage.setItem(
+        "userCalendar",
+        JSON.stringify(updatedCalendar)
+      );
       if (isMoodleProcess) {
         updateDoc(
           userRef,
@@ -849,49 +890,47 @@ class CalendarService {
     }
   }
 
-  static async loadAutoUpdateMoodleBackground(isAutoLogin){
+  static async loadAutoUpdateMoodleBackground(isAutoLogin) {
     const user = auth.currentUser;
     const userRef = doc(collection(firestore, "user"), user.uid);
     const userDoc = await getDoc(userRef);
-    if (userDoc.exists()){
+    if (userDoc.exists()) {
       //Reload the data moodle
       const data = userDoc.data();
-      if(data.moodle.status == 1){
+      if (data.moodle.status == 1) {
         await this.reloadMoodleCalendar();
         console.log("reloadMoodleCalendar done");
         //Auto update Background
-        if(!isAutoLogin){
+        if (!isAutoLogin) {
           await AutoUpdateService.registerAutoUpdateMoodleBackgroundTask();
         }
       }
     }
   }
 
-  static async saveNotiConfig(moodleConfig){
+  static async saveNotiConfig(moodleConfig) {
     try {
       console.log(moodleConfig, userConfig);
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
-      updateDoc(userRef, {"moodleNotiConfig": moodleConfig});
+      updateDoc(userRef, { moodleNotiConfig: moodleConfig });
     } catch (error) {
       console.log("saveNotiConfig: ", error);
     }
-
   }
 
-  static async loadNotiConfig(){
+  static async loadNotiConfig() {
     try {
       const user = auth.currentUser;
       const userRef = doc(collection(firestore, "user"), user.uid);
       const userDoc = await getDoc(userRef);
       return {
-        "moodleNotiConfig": userDoc.data().moodleNotiConfig
-      }
+        moodleNotiConfig: userDoc.data().moodleNotiConfig,
+      };
     } catch (error) {
       console.log("saveNotiConfig: ", error);
     }
   }
-
 }
 
 export default CalendarService;

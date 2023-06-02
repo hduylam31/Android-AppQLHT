@@ -287,7 +287,7 @@ const Calendar_Edit = () => {
                 shadowRadius: 10,
                 elevation: 10,
               }}
-              editable={item.isMoodle === "true" ? false : true}
+              // editable={item.isMoodle === "true" ? false : true}
             ></TextInput>
 
             <View className="flex-row justify-between items-center">
@@ -308,11 +308,11 @@ const Calendar_Edit = () => {
                   }}
                 >
                   <Text
-                    className={`text-base ${
-                      item.isMoodle === "true"
-                        ? "text-[#666666] opacity-50"
-                        : ""
-                    }`}
+                  // className={`text-base ${
+                  //   item.isMoodle === "true"
+                  //     ? "text-[#666666] opacity-50"
+                  //     : ""
+                  // }`}
                   >
                     {textDate}
                   </Text>
@@ -336,11 +336,11 @@ const Calendar_Edit = () => {
                   }}
                 >
                   <Text
-                    className={`text-base ${
-                      item.isMoodle === "true"
-                        ? "text-[#666666] opacity-50"
-                        : ""
-                    }`}
+                  // className={`text-base ${
+                  //   item.isMoodle === "true"
+                  //     ? "text-[#666666] opacity-50"
+                  //     : ""
+                  // }`}
                   >
                     {textTime}
                   </Text>
@@ -488,7 +488,7 @@ const Calendar_Edit = () => {
               numberOfLines={8}
               onChangeText={(value) => setContent(value)}
               textAlignVertical="top"
-              editable={item.isMoodle === "true" ? false : true}
+              // editable={item.isMoodle === "true" ? false : true}
             ></TextInput>
             <View className="h-20"></View>
           </View>

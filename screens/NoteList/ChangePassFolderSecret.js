@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  Alert
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -28,19 +28,52 @@ const ChangePassFolderSecret = () => {
   const [newPassword, setNewPassword] = useState("");
   const [repassword, setRepassword] = useState("");
 
-  async function changePassFolderSecret(){
+  async function changePassFolderSecret() {
     console.log("haha");
-    if(newPassword != "" && newPassword == repassword){
+    const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>+-]/;
+    const uppercaseRegex = /[A-Z]/;
+    const lowercaseRegex = /[a-z]/;
+    if (oldPassword === "") {
+      Alert.alert("Không thể thay đổi mật mã", "Mật mã cũ không được để trống");
+    } else if (newPassword === "") {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Mật mã mới không được để trống"
+      );
+    } else if (repassword === "") {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Nhập lại Mật mã không được để trống"
+      );
+    } else if (newPassword.length < 6) {
+      Alert.alert("Không thể thay đổi mật mã", "Mật mã phải trên 6 kí tự");
+    } else if (!specialCharacterRegex.test(newPassword)) {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Mật mã phải mật khẩu chứa ít nhất một ký tự đặc biệt"
+      );
+    } else if (!uppercaseRegex.test(newPassword)) {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết hoa"
+      );
+    } else if (!lowercaseRegex.test(newPassword)) {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết thường"
+      );
+    } else if (newPassword !== repassword) {
+      Alert.alert("Không thể thay đổi mật mã", "Nhập lại mật mã không khớp");
+    } else if (newPassword != "" && newPassword == repassword) {
       const status = await NoteService.changePassword(oldPassword, newPassword);
-      if(status == ""){
-        Alert.alert("Lỗi", "Mật khẩu cũ không chính xác");  
-      } else{
-        Alert.alert("Thông báo", "Thay đổi mật khẩu thành công");
-        await new Promise(r => setTimeout(r, 1000));
-        navigation.navigate("UnlockFolderSecret", {secretPassword: status}); 
+      if (status == "") {
+        Alert.alert("Không thể thay đổi mật mã", "Mật mã cũ không chính xác");
+      } else {
+        Alert.alert("Thông báo", "Thay đổi mật mã thành công");
+        await new Promise((r) => setTimeout(r, 1000));
+        navigation.navigate("UnlockFolderSecret", { secretPassword: status });
       }
     }
-    
   }
 
   return (
@@ -56,13 +89,12 @@ const ChangePassFolderSecret = () => {
         <Text className="text-[#FFFFFF] text-3xl font-bold">
           Thư mục bảo mật
         </Text>
-        <Text className="text-[#FFFFFF] text-base font-light mt-[25%]">
-          Thay đổi mật mã
-        </Text>
+        <Text className="text-[#FFFFFF] text-lg mt-[25%]">Thay đổi mật mã</Text>
         <View className="w-full h-60 bg-white mt-[5%] rounded-2xl p-4">
           <TextInput
             placeholder="Mật mã cũ"
             autoCapitalize="none"
+            secureTextEntry={true}
             value={oldPassword}
             onChangeText={(password) => setOldPassword(password)}
             className=" bg-white pl-4 border-b-[#9A999B] border-b-2 flex-1"
@@ -70,6 +102,7 @@ const ChangePassFolderSecret = () => {
           <TextInput
             placeholder="Mật mã mới"
             autoCapitalize="none"
+            secureTextEntry={true}
             value={newPassword}
             onChangeText={(password) => setNewPassword(password)}
             className=" bg-white pl-4 border-b-[#9A999B] border-b-2 flex-1"
@@ -77,6 +110,7 @@ const ChangePassFolderSecret = () => {
           <TextInput
             placeholder="Nhập lại mật mã mới"
             autoCapitalize="none"
+            secureTextEntry={true}
             value={repassword}
             onChangeText={(repassword) => setRepassword(repassword)}
             className=" bg-white pl-4 border-b-[#9A999B] border-b-2 mb-8 flex-1"
@@ -84,10 +118,7 @@ const ChangePassFolderSecret = () => {
         </View>
       </View>
 
-      <TouchableOpacity
-          onPress={changePassFolderSecret}
-        className="mt-10"
-      >
+      <TouchableOpacity onPress={changePassFolderSecret} className="mt-10">
         <Animatable.View
           easing="ease-in-out"
           iterationCount={"infinite"}

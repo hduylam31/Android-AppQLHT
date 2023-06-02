@@ -45,6 +45,8 @@ const UnlockFolderSecret = () => {
         navigation.navigate("NoteListFolderSecret", {
           paramMovetoSecretFolder: "NotMoveData",
         });
+        setPasswordUnlock("");
+        setShowPass(false);
       } else {
         Alert.alert("Không thể mở thư mục", "Sai mật mã!");
       }
@@ -56,7 +58,14 @@ const UnlockFolderSecret = () => {
     const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>+-]/;
     const uppercaseRegex = /[A-Z]/;
     const lowercaseRegex = /[a-z]/;
-    if (password.length < 6) {
+    if (password === "") {
+      Alert.alert("Không thể thiết lập mật mã", "Mật mã không được để trống");
+    } else if (repassword === "") {
+      Alert.alert(
+        "Không thể thiết lập mật mã",
+        "Nhập lại Mật mã không được để trống"
+      );
+    } else if (password.length < 6) {
       Alert.alert("Không thể thiết lập mật mã", "Mật mã phải trên 6 kí tự");
     } else if (!specialCharacterRegex.test(password)) {
       Alert.alert(

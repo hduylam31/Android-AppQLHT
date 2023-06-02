@@ -96,11 +96,15 @@ const GroupTodoList = () => {
 
   const [selectedIds, setSelectedIds] = useState([]);
   const [showSaveWorkGroup, setShowSaveWorkGroup] = useState(false);
-  const [nameSaveWorkGroup, setNameSaveWorkGroup] = useState();
+  const [nameSaveWorkGroup, setNameSaveWorkGroup] = useState("");
 
   async function saveGroupName() {
-    await TodolistService.saveGroupName(nameSaveWorkGroup);
-    loadGroupNames();
+    if (nameSaveWorkGroup === "") {
+      Alert.alert("Thông báo", "Tên nhóm công việc không được bỏ trống");
+    } else {
+      await TodolistService.saveGroupName(nameSaveWorkGroup);
+      loadGroupNames();
+    }
   }
 
   async function handleMoveData() {
@@ -122,7 +126,11 @@ const GroupTodoList = () => {
 
   const toggleCheckBox = (title) => {
     console.log("title", title);
-    if (title === "all") {
+    if (title === "reset") {
+      setShowMultiCheck(false);
+      setIsCheckSelectAll(false);
+      setSelectedIds([]);
+    } else if (title === "all") {
       setSelectedIds(isCheckSelectAll ? [] : data.map((item) => item.title));
       setIsCheckSelectAll(!isCheckSelectAll);
     } else if (isCheckSelectOne) {
@@ -169,27 +177,31 @@ const GroupTodoList = () => {
         (item) => !selectedIds.includes(item.title)
       );
       setData(newGroupNames);
+      setShowMultiCheck(false);
     }
   }
 
   const AlertDelete = () => {
-    Alert.alert(
-      "Xóa nhóm công việc",
-      "Xóa nhóm công việc này khỏi danh sách nhóm công việc ?",
-      [
-        {
-          text: "Đồng ý",
-          onPress: handleDeleteTodolist,
-        },
-        {
-          text: "Hủy",
-          onPress: () => {
-            setShowMultiCheck(false);
-            // toggleCheckBox("reset");
+    if (selectedIds.length > 0) {
+      Alert.alert(
+        "Xóa nhóm công việc",
+        "Xóa nhóm công việc này khỏi danh sách nhóm công việc ?",
+        [
+          {
+            text: "Đồng ý",
+            onPress: handleDeleteTodolist,
           },
-        },
-      ]
-    );
+          {
+            text: "Hủy",
+            onPress: () => {
+              toggleCheckBox("reset");
+            },
+          },
+        ]
+      );
+    } else {
+      Alert.alert("Thông báo", "Vui lòng chọn ít nhất một nhóm công việc");
+    }
   };
 
   return (
@@ -197,7 +209,7 @@ const GroupTodoList = () => {
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-[60px]">
-          <View className="px-4 py-3">
+          <View className={` py-3 pl-4 ${showMultiCheck ? "pr-4" : "pr-1"}`}>
             <View className="flex-row justify-between items-center">
               {showMultiCheck && !isCheckSelectOne ? (
                 <View>
@@ -224,7 +236,11 @@ const GroupTodoList = () => {
                   </TouchableOpacity>
                 </View>
               ) : (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                >
                   <MaterialCommunityIcons
                     name="arrow-left"
                     size={28}
@@ -252,12 +268,12 @@ const GroupTodoList = () => {
               ) : showMultiCheck && !moveData ? (
                 <TouchableOpacity
                   onPress={() => {
-                    setShowMultiCheck(false);
+                    toggleCheckBox("reset");
                   }}
                 >
                   <MaterialCommunityIcons
                     name="check"
-                    size={32}
+                    size={28}
                     color="white"
                   />
                 </TouchableOpacity>
@@ -265,7 +281,7 @@ const GroupTodoList = () => {
                 <TouchableOpacity onPress={() => setShowExtends(true)}>
                   <MaterialCommunityIcons
                     name="dots-vertical"
-                    size={32}
+                    size={28}
                     color="white"
                   />
                 </TouchableOpacity>
@@ -550,7 +566,10 @@ const GroupTodoList = () => {
                     shadowRadius: 5,
                     elevation: 5,
                   }}
-                  onPress={() => setShowSaveWorkGroup(false)}
+                  onPress={() => {
+                    setShowSaveWorkGroup(false);
+                    setNameSaveWorkGroup("");
+                  }}
                 >
                   <Text className="font-semibold text-base text-[#3A4666]">
                     Thoát
@@ -568,6 +587,7 @@ const GroupTodoList = () => {
                   onPress={() => {
                     setShowSaveWorkGroup(false);
                     saveGroupName();
+                    setNameSaveWorkGroup("");
                   }}
                 >
                   <Text className="font-semibold text-base text-white">

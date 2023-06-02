@@ -22,6 +22,7 @@ import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import TodolistService from "../../service/TodolistService";
 import { SelectCountry } from "react-native-element-dropdown";
+import BottomBar from "../BottomBar";
 
 function toMinutes(time) {
   if (time === "") {
@@ -90,6 +91,7 @@ const ToDoListScreen = () => {
         );
         setTodolists(newTodolist);
         setTodos(newTodolist);
+        setShowMultiCheck(false);
       }
       setSelectedIds([]);
     }
@@ -181,6 +183,7 @@ const ToDoListScreen = () => {
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       disabled={showMultiCheck ? true : false}
+      onLongPress={() => setShowMultiCheck(true)}
       onPress={() => {
         navigation.navigate("TodoList_Edit", { item });
       }}
@@ -244,6 +247,7 @@ const ToDoListScreen = () => {
   renderItemCompleted = ({ item, index }) => (
     <TouchableOpacity
       disabled={showMultiCheck ? true : false}
+      onLongPress={() => setShowMultiCheck(true)}
       onPress={() => {
         navigation.navigate("TodoList_Edit", { item });
       }}
@@ -328,6 +332,25 @@ const ToDoListScreen = () => {
     }
   };
   console.log("aid", selectedIds);
+
+  useEffect(() => {
+    if (selectedIds.length === todos.length) {
+      setIsCheckSelectAll(true);
+    } else {
+      setIsCheckSelectAll(false);
+    }
+  }, [selectedIds]);
+
+  useEffect(() => {
+    if (showMultiCheck) {
+      navigation.navigate("DS công việc", { showMultiCheck: showMultiCheck });
+    } else {
+      navigation.navigate("BottomBar", {
+        screen: "DS công việc",
+      });
+    }
+  }, [showMultiCheck]);
+
   const Data = [
     { key: "Mặc định", value: "1" },
     { key: "DS Công việc", value: "2" },
@@ -336,45 +359,43 @@ const ToDoListScreen = () => {
   const [listGroup, setListGroup] = useState("1");
 
   function handleDeleteTodolist() {
-    if (selectedIds.length > 0) {
-      TodolistService.deleteTodolists(selectedIds);
-      console.log("Delete OK");
-      var deleteIds = selectedIds.map((item) => item.id);
-      var newTodolist = todolists.filter(
-        (item) => !deleteIds.includes(item.id)
-      );
-      setTodolists(newTodolist);
-      setTodos(newTodolist);
-    } else {
-      Alert.alert("Thông báo", "Vui lòng chọn tối thiểu một công việc");
-    }
-    setSelectedIds([]);
+    TodolistService.deleteTodolists(selectedIds);
+    console.log("Delete OK");
+    var deleteIds = selectedIds.map((item) => item.id);
+    var newTodolist = todolists.filter((item) => !deleteIds.includes(item.id));
+    setTodolists(newTodolist);
+    setTodos(newTodolist);
+    setShowMultiCheck(false);
   }
 
   const AlertDelete = () => {
-    Alert.alert(
-      "Xóa công việc",
-      "Xóa công việc này khỏi danh sách công việc? ?",
-      [
-        {
-          text: "Đồng ý",
-          onPress: handleDeleteTodolist,
-        },
-        {
-          text: "Hủy",
-          onPress: () => {
-            toggleCheckBox("reset");
+    if (selectedIds.length > 0) {
+      Alert.alert(
+        "Xóa công việc",
+        "Xóa công việc này khỏi danh sách công việc ?",
+        [
+          {
+            text: "Đồng ý",
+            onPress: handleDeleteTodolist,
           },
-        },
-      ]
-    );
+          {
+            text: "Hủy",
+            onPress: () => {
+              toggleCheckBox("reset");
+            },
+          },
+        ]
+      );
+    } else {
+      Alert.alert("Thông báo", "Vui lòng chọn ít nhất một công việc");
+    }
   };
 
   return (
     <SafeAreaView className="flex-1">
       {/* Header */}
       <View className=" bg-[#3A4666] h-[8%]">
-        <View className="px-4 py-3">
+        <View className={` py-3 pl-4 ${showMultiCheck ? "pr-4" : "pr-1"}`}>
           <View className="justify-between items-center flex-row">
             {showMultiCheck ? (
               <View>
@@ -567,7 +588,7 @@ const ToDoListScreen = () => {
               </TouchableOpacity>
             </Modal>
           </View>
-          {showMultiCheck && <Text className="text-xs text-white">Tất cả</Text>}
+          {showMultiCheck && <Text className="text-white text-xs">Tất cả</Text>}
         </View>
       </View>
       <View className="flex-1 bg-[#F1F5F9]">
@@ -618,7 +639,6 @@ const ToDoListScreen = () => {
         <View className="flex-row justify-between">
           <TouchableOpacity
             onPress={() => {
-              setShowMultiCheck(false);
               if (selectedIds.length > 0) {
                 navigation.navigate("GroupTodoList", {
                   paramMoveData: "MoveData",

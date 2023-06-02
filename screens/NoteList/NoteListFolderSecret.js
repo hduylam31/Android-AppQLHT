@@ -97,27 +97,41 @@ const NoteListFolderSecret = () => {
   };
   console.log("aid", selectedIds);
 
+  useEffect(() => {
+    if (selectedIds.length === data.length) {
+      setIsCheckSelectAll(true);
+    } else {
+      setIsCheckSelectAll(false);
+    }
+  }, [selectedIds]);
+
   function handleDeleteNotes() {
     const ids = selectedIds.map((item) => item.id);
     NoteService.deleteNotes(ids);
     const newData = data.filter((item) => !ids.includes(item.id));
     setData(newData);
+    setShowMultiCheck(false);
+    setIsCheckSelectAll(false);
     setSelectedIds([]);
   }
 
   const AlertDelete = () => {
-    Alert.alert("Xóa ghi chú", "Xóa ghi chú này khỏi danh sách ghi chú ?", [
-      {
-        text: "Đồng ý",
-        onPress: handleDeleteNotes,
-      },
-      {
-        text: "Hủy",
-        onPress: () => {
-          toggleCheckBox("reset");
+    if (selectedIds.length > 0) {
+      Alert.alert("Xóa ghi chú", "Xóa ghi chú này khỏi thư mục bảo mật ?", [
+        {
+          text: "Đồng ý",
+          onPress: handleDeleteNotes,
         },
-      },
-    ]);
+        {
+          text: "Hủy",
+          onPress: () => {
+            toggleCheckBox("reset");
+          },
+        },
+      ]);
+    } else {
+      Alert.alert("Thông báo", "Vui lòng chọn ít nhất một ghi chú");
+    }
   };
 
   function handleLovedNote() {
@@ -146,49 +160,26 @@ const NoteListFolderSecret = () => {
       setData(newData);
     }
 
+    setShowMultiCheck(false);
+    setIsCheckSelectAll(false);
     setSelectedIds([]);
   }
 
   const AlertStar = () => {
-    var title = "";
-    var detail = "";
-    if (selectedIds.some((item) => !item.isLoved)) {
-      title = "Thêm vào mục yêu thích";
-      detail = "Thêm ghi chú này vào danh sách yêu thích?";
-    } else {
-      title = "Loại bỏ mục yêu thích";
-      detail = "Loại bỏ ghi chú này từ danh sách yêu thích?";
-    }
-    Alert.alert(title, detail, [
-      {
-        text: "Đồng ý",
-        onPress: handleLovedNote,
-      },
-      {
-        text: "Hủy",
-        onPress: () => {
-          toggleCheckBox("reset");
-        },
-      },
-    ]);
-  };
-
-  function moveToNormalFolder() {
-    NoteService.updateSecretFolder(selectedIds);
-    const ids = selectedIds.map((item) => item.id);
-    const newData = data.filter((item) => !ids.includes(item.id));
-    setData(newData);
-    setSelectedIds([]);
-  }
-
-  const AlertMove = () => {
-    Alert.alert(
-      "Di chuyển ghi chú",
-      "Di chuyển ghi chú ra khỏi thư mục bảo mật? ",
-      [
+    if (selectedIds.length > 0) {
+      var title = "";
+      var detail = "";
+      if (selectedIds.some((item) => !item.isLoved)) {
+        title = "Thêm vào mục yêu thích";
+        detail = "Thêm ghi chú này vào danh sách yêu thích?";
+      } else {
+        title = "Loại bỏ mục yêu thích";
+        detail = "Loại bỏ ghi chú này từ danh sách yêu thích?";
+      }
+      Alert.alert(title, detail, [
         {
           text: "Đồng ý",
-          onPress: moveToNormalFolder,
+          onPress: handleLovedNote,
         },
         {
           text: "Hủy",
@@ -196,8 +187,43 @@ const NoteListFolderSecret = () => {
             toggleCheckBox("reset");
           },
         },
-      ]
-    );
+      ]);
+    } else {
+      Alert.alert("Thông báo", "Vui lòng chọn ít nhất một ghi chú");
+    }
+  };
+
+  function moveToNormalFolder() {
+    NoteService.updateSecretFolder(selectedIds);
+    const ids = selectedIds.map((item) => item.id);
+    const newData = data.filter((item) => !ids.includes(item.id));
+    setData(newData);
+    setShowMultiCheck(false);
+    setIsCheckSelectAll(false);
+    setSelectedIds([]);
+  }
+
+  const AlertMove = () => {
+    if (selectedIds.length > 0) {
+      Alert.alert(
+        "Di chuyển ghi chú",
+        "Di chuyển ghi chú ra khỏi thư mục bảo mật? ",
+        [
+          {
+            text: "Đồng ý",
+            onPress: moveToNormalFolder,
+          },
+          {
+            text: "Hủy",
+            onPress: () => {
+              toggleCheckBox("reset");
+            },
+          },
+        ]
+      );
+    } else {
+      Alert.alert("Thông báo", "Vui lòng chọn ít nhất một ghi chú");
+    }
   };
 
   const handleSortAZ = () => {
@@ -250,20 +276,24 @@ const NoteListFolderSecret = () => {
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-[10%]">
-          <View className="flex-row p-4 justify-between items-center">
+        <View className="bg-[#3A4666] h-[8%]">
+          <View
+            className={`flex-row justify-between items-center py-3 pl-4 ${
+              showMultiCheck ? "pr-4" : "pr-1"
+            }`}
+          >
             {showMultiCheck ? (
               <TouchableOpacity
-                className="items-center justify-center w-8 h-8"
+                className="items-center justify-center w-7 h-7"
                 onPress={() => {
                   setIsCheckSelectAll(!isCheckSelectAll);
                   toggleCheckBox("all");
                 }}
               >
                 {isCheckSelectAll ? (
-                  <Ionicons name="checkmark-circle" size={32} color="white" />
+                  <Ionicons name="checkmark-circle" size={22} color="white" />
                 ) : (
-                  <Ionicons name="ellipse-outline" size={32} color="white" />
+                  <Ionicons name="ellipse-outline" size={22} color="white" />
                 )}
               </TouchableOpacity>
             ) : (
@@ -279,7 +309,7 @@ const NoteListFolderSecret = () => {
               >
                 <MaterialCommunityIcons
                   name="arrow-left"
-                  size={32}
+                  size={28}
                   color="white"
                 />
               </TouchableOpacity>
@@ -295,7 +325,7 @@ const NoteListFolderSecret = () => {
                 </Text>
               )
             ) : (
-              <Text className="text-white text-2xl font-bold text-center">
+              <Text className="text-white text-[22px] font-semibold text-center">
                 Thư mục bảo mật
               </Text>
             )}

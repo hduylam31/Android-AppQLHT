@@ -189,16 +189,16 @@ const CalendarMain = () => {
       }}
     >
       <Animatable.View animation="slideInLeft" delay={index * 10}>
-        <View className="h-14 flex-row">
-          <View className={"w-[12%] flex ml-[3%]"}>
+        <View className="flex-row py-1 px-2 justify-between items-center">
+          <View className={"ml-[3%]"}>
             <Text className={"text-sm font-normal "}>{item.timeString}</Text>
           </View>
           <View
-            className={`w-[2%] h-[80%] mx-[3%] my-1 ${
+            className={`w-1 h-[80%] ${
               item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
             }`}
           ></View>
-          <View className="w-[70%] flex-row">
+          <View className="w-[75%] flex-row">
             <Text
               numberOfLines={2}
               ellipsizeMode="tail"
@@ -325,7 +325,7 @@ const CalendarMain = () => {
         onPress={() => {
           navigation.navigate("Calendar_Edit", { item });
         }}
-        className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-1 flex-row"
+        className=" bg-white rounded-xl mx-[3%] mt-[4%] flex-row"
         style={{
           shadowColor: "#000000",
           shadowOffset: { width: 10, height: 10 },
@@ -335,7 +335,7 @@ const CalendarMain = () => {
         }}
       >
         <Animatable.View animation="slideInLeft" delay={index * 10}>
-          <View className="h-14 flex-row">
+          <View className="h-[52px] flex-row">
             <View className={"w-[12%] flex ml-[3%]"}>
               <Text className={"text-sm font-normal "}>{item.timeString}</Text>
             </View>
@@ -376,9 +376,9 @@ const CalendarMain = () => {
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
-        <View className={`bg-[#3A4666] ${showSearchBar ? "h-20" : "h-[30%]"}`}>
+        <View className={`bg-[#3A4666] ${showSearchBar ? "h-14" : "h-[30%]"}`}>
           <View
-            className={`flex-row justify-between items-center py-4 pl-4 ${
+            className={`flex-row justify-between items-center py-3 pl-4 ${
               showSearchBar ? "pr-4" : "pr-1"
             }`}
           >
@@ -507,25 +507,25 @@ const CalendarMain = () => {
                     onPress={() => {
                       navigation.navigate("CalendarExtendTimeNoti");
                     }}
-                    className="flex-1 justify-center items-center"
+                    className="flex-1 flex-row justify-start items-center"
                   >
-                    <Text>Thời gian thông báo</Text>
+                    <Text className="ml-7">Thời gian thông báo</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("CalendarExtendTurnOnOffNoti");
                     }}
-                    className="flex-1 justify-center items-center"
+                    className="flex-1 flex-row justify-start items-center"
                   >
-                    <Text>Bật/Tắt thông báo</Text>
+                    <Text className="ml-7">Bật/Tắt thông báo</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("CalendarExtendMoodleEvent");
                     }}
-                    className="flex-1 justify-center items-center"
+                    className="flex-1 flex-row justify-start items-center"
                   >
-                    <Text>Xem tất cả sự kiện moodle</Text>
+                    <Text className="ml-7">Xem tất cả sự kiện moodle</Text>
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
@@ -536,11 +536,13 @@ const CalendarMain = () => {
         {showSearchBar ? (
           filterData.length > 0 ? (
             <View className="bg-[#F1F5F9] h-full">
-              <FlatList
-                data={filterData}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={this.renderItemSearch}
-              />
+              <View className="h-[90%]">
+                <FlatList
+                  data={filterData}
+                  keyExtractor={(item) => item.id.toString()}
+                  renderItem={this.renderItemSearch}
+                />
+              </View>
             </View>
           ) : (
             <View className="flex-1 justify-center items-center bg-[#F1F5F9]">

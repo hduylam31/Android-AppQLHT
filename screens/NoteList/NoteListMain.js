@@ -71,6 +71,7 @@ const NoteListMain = () => {
 
   const toggleCheckBox = (id) => {
     console.log("id", id);
+
     if (id === "reset") {
       setShowMultiCheck(false);
       setIsCheckSelectAll(false);
@@ -86,29 +87,54 @@ const NoteListMain = () => {
       }
     }
   };
+  console.log("selectedIds.length", selectedIds.length);
   console.log("aid", selectedIds);
+
+  useEffect(() => {
+    if (selectedIds.length === data.length) {
+      setIsCheckSelectAll(true);
+    } else {
+      setIsCheckSelectAll(false);
+    }
+  }, [selectedIds]);
+
+  useEffect(() => {
+    if (showMultiCheck) {
+      navigation.navigate("Ghi chú", { showMultiCheck: showMultiCheck });
+    } else {
+      navigation.navigate("BottomBar", {
+        screen: "Ghi chú",
+      });
+    }
+  }, [showMultiCheck]);
 
   function handleDeleteNotes() {
     const ids = selectedIds.map((item) => item.id);
     NoteService.deleteNotes(ids);
     const newData = data.filter((item) => !ids.includes(item.id));
     setData(newData);
+    setShowMultiCheck(false);
+    setIsCheckSelectAll(false);
     setSelectedIds([]);
   }
 
   const AlertDelete = () => {
-    Alert.alert("Xóa ghi chú", "Xóa ghi chú này khỏi danh sách ghi chú ?", [
-      {
-        text: "Đồng ý",
-        onPress: handleDeleteNotes,
-      },
-      {
-        text: "Hủy",
-        onPress: () => {
-          toggleCheckBox("reset");
+    if (selectedIds.length > 0) {
+      Alert.alert("Xóa ghi chú", "Xóa ghi chú này khỏi danh sách ghi chú ?", [
+        {
+          text: "Đồng ý",
+          onPress: handleDeleteNotes,
         },
-      },
-    ]);
+        {
+          text: "Hủy",
+          onPress: () => {
+            toggleCheckBox("reset");
+          },
+        },
+      ]);
+    } else {
+      Alert.alert("Thông báo", "Vui lòng chọn ít nhất một ghi chú");
+    }
   };
 
   function handleLovedNote() {
@@ -136,50 +162,26 @@ const NoteListMain = () => {
       });
       setData(newData);
     }
-
+    setShowMultiCheck(false);
+    setIsCheckSelectAll(false);
     setSelectedIds([]);
   }
 
   const AlertStar = () => {
-    var title = "";
-    var detail = "";
-    if (selectedIds.some((item) => !item.isLoved)) {
-      title = "Thêm vào mục yêu thích";
-      detail = "Thêm ghi chú này vào danh sách yêu thích?";
-    } else {
-      title = "Loại bỏ mục yêu thích";
-      detail = "Loại bỏ ghi chú này từ danh sách yêu thích?";
-    }
-    Alert.alert(title, detail, [
-      {
-        text: "Đồng ý",
-        onPress: handleLovedNote,
-      },
-      {
-        text: "Hủy",
-        onPress: () => {
-          toggleCheckBox("reset");
-        },
-      },
-    ]);
-  };
-
-  function moveToSecretFolder() {
-    NoteService.updateSecretFolder(selectedIds);
-    const ids = selectedIds.map((item) => item.id);
-    const newData = data.filter((item) => !ids.includes(item.id));
-    setData(newData);
-    setSelectedIds([]);
-  }
-
-  const AlertSecret = () => {
-    Alert.alert(
-      "Thêm vào thư mục bảo mật",
-      "Thêm ghi chú này vào thư mục bảo mật?",
-      [
+    if (selectedIds.length > 0) {
+      var title = "";
+      var detail = "";
+      if (selectedIds.some((item) => !item.isLoved)) {
+        title = "Thêm vào mục yêu thích";
+        detail = "Thêm ghi chú này vào mục yêu thích?";
+      } else {
+        title = "Loại bỏ mục yêu thích";
+        detail = "Loại bỏ ghi chú này từ mục yêu thích?";
+      }
+      Alert.alert(title, detail, [
         {
           text: "Đồng ý",
-          onPress: moveToSecretFolder,
+          onPress: handleLovedNote,
         },
         {
           text: "Hủy",
@@ -187,8 +189,43 @@ const NoteListMain = () => {
             toggleCheckBox("reset");
           },
         },
-      ]
-    );
+      ]);
+    } else {
+      Alert.alert("Thông báo", "Vui lòng chọn ít nhất một ghi chú");
+    }
+  };
+
+  function moveToSecretFolder() {
+    NoteService.updateSecretFolder(selectedIds);
+    const ids = selectedIds.map((item) => item.id);
+    const newData = data.filter((item) => !ids.includes(item.id));
+    setData(newData);
+    setShowMultiCheck(false);
+    setIsCheckSelectAll(false);
+    setSelectedIds([]);
+  }
+
+  const AlertSecret = () => {
+    if (selectedIds.length > 0) {
+      Alert.alert(
+        "Thêm vào thư mục bảo mật",
+        "Thêm ghi chú này vào thư mục bảo mật?",
+        [
+          {
+            text: "Đồng ý",
+            onPress: moveToSecretFolder,
+          },
+          {
+            text: "Hủy",
+            onPress: () => {
+              toggleCheckBox("reset");
+            },
+          },
+        ]
+      );
+    } else {
+      Alert.alert("Thông báo", "Vui lòng chọn ít nhất một ghi chú");
+    }
   };
 
   const handleSortAZ = () => {
@@ -238,6 +275,28 @@ const NoteListMain = () => {
     setShowExtends(false);
   };
 
+  const handleSortLoved = () => {
+    const sortedNote6 = data.sort((a, b) => {
+      if (a.isLoved && !b.isLoved) {
+        return -1;
+      } else if (!a.isLoved && b.isLoved) {
+        return 1;
+      }
+
+      // Giữ nguyên thứ tự của các phần tử khác
+      return 0;
+    });
+    if (selectedCategorySort === "SortLoved") {
+      handleSortCreatedDay();
+      setSelectedCategorySort("NotSortLoved");
+      setShowExtends(false);
+    } else {
+      setData(sortedNote6);
+      setSelectedCategorySort("SortLoved");
+      setShowExtends(false);
+    }
+  };
+
   const [filterData, setFilterData] = useState([]);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [search, setSearch] = useState("");
@@ -264,255 +323,282 @@ const NoteListMain = () => {
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
         <View className="bg-[#3A4666] h-[8%]">
-          <View className="flex-row px-4 py-3 justify-between items-center">
-            {showMultiCheck && !showSearchBar ? (
-              <View>
-                <TouchableOpacity
-                  className="items-center justify-center w-7 h-7"
-                  onPress={() => {
-                    setIsCheckSelectAll(!isCheckSelectAll);
-                    toggleCheckBox("all");
-                  }}
-                >
-                  {isCheckSelectAll ? (
-                    <Ionicons name="checkmark-circle" size={22} color="white" />
-                  ) : (
-                    <Ionicons name="ellipse-outline" size={22} color="white" />
-                  )}
-                </TouchableOpacity>
-              </View>
-            ) : !showMultiCheck && showSearchBar ? (
-              <TouchableOpacity
-                onPress={() => {
-                  setShowSearchBar(false);
-                  setFilterData(data);
-                }}
-                className="pr-2"
-              >
-                <MaterialCommunityIcons
-                  name="arrow-left"
-                  size={28}
-                  color="white"
-                />
-              </TouchableOpacity>
-            ) : (
-              <View className="w-7 h-7"></View>
-            )}
-            {showMultiCheck && !showSearchBar ? (
-              selectedIds.length > 0 ? (
-                <Text className="text-white text-xl font-medium text-center">
-                  Đã chọn {selectedIds.length}
-                </Text>
-              ) : (
-                <Text className="text-white text-xl font-medium text-center">
-                  Chọn ghi chú
-                </Text>
-              )
-            ) : !showMultiCheck && showSearchBar ? (
-              <View className="flex-row justify-between items-center bg-white rounded-xl px-2">
-                <TextInput
-                  className="pl-2 bg-white w-[80%] rounded-xl h-8"
-                  placeholder="Tìm kiếm"
-                  value={search}
-                  onChangeText={(text) => searchFilter(text)}
-                  onSubmitEditing={() => {
-                    searchFilter(search);
-                  }}
-                ></TextInput>
-                <Ionicons
-                  onPress={() => searchFilter("")}
-                  name="close"
-                  size={28}
-                  color="black"
-                />
-              </View>
-            ) : (
-              <Text className="text-white text-[22px] font-semibold text-center">
-                Danh sách ghi chú
-              </Text>
-            )}
-
-            {showMultiCheck && !showSearchBar ? (
-              <TouchableOpacity
-                onPress={() => {
-                  toggleCheckBox("reset");
-                }}
-              >
-                <MaterialCommunityIcons name="check" size={28} color="white" />
-              </TouchableOpacity>
-            ) : !showMultiCheck && showSearchBar ? (
-              <View></View>
-            ) : (
-              <View className="flex-row justify-between items-center">
+          <View className={`py-3 pl-4 ${showMultiCheck ? "pr-4" : "pr-1"}`}>
+            <View className="justify-between items-center flex-row">
+              {showMultiCheck && !showSearchBar ? (
+                <View>
+                  <TouchableOpacity
+                    className="items-center justify-center w-7 h-7"
+                    onPress={() => {
+                      setIsCheckSelectAll(!isCheckSelectAll);
+                      toggleCheckBox("all");
+                    }}
+                  >
+                    {isCheckSelectAll ? (
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={22}
+                        color="white"
+                      />
+                    ) : (
+                      <Ionicons
+                        name="ellipse-outline"
+                        size={22}
+                        color="white"
+                      />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              ) : !showMultiCheck && showSearchBar ? (
                 <TouchableOpacity
                   onPress={() => {
-                    setShowSearchBar(!showSearchBar);
-                    searchFilter("");
+                    setShowSearchBar(false);
+                    setFilterData(data);
                   }}
+                  className="pr-2"
                 >
-                  <Ionicons name="ios-search-sharp" size={24} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setShowExtends(true)}>
                   <MaterialCommunityIcons
-                    name="dots-vertical"
+                    name="arrow-left"
                     size={28}
                     color="white"
                   />
                 </TouchableOpacity>
-              </View>
-            )}
-            {/* Mở rộng 3 chấm */}
-            <Modal
-              visible={showExtends}
-              transparent={true}
-              animationType="slide-up"
-              onRequestClose={() => setShowExtends(false)}
-            >
-              <TouchableOpacity
-                style={{
-                  flex: 1,
-                  backgroundColor: "rgba(0,0,0,0.4)",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-end",
-                  paddingRight: 15,
-                  paddingTop: 60,
-                }}
-                onPress={() => setShowExtends(false)}
-              >
-                <View className="w-52 h-36 bg-white rounded-lg">
+              ) : (
+                <View className="w-7 h-7"></View>
+              )}
+              {showMultiCheck && !showSearchBar ? (
+                selectedIds.length > 0 ? (
+                  <Text className="text-white text-xl font-medium text-center">
+                    Đã chọn {selectedIds.length}
+                  </Text>
+                ) : (
+                  <Text className="text-white text-xl font-medium text-center">
+                    Chọn ghi chú
+                  </Text>
+                )
+              ) : !showMultiCheck && showSearchBar ? (
+                <View className="flex-row justify-between items-center bg-white rounded-xl px-2">
+                  <TextInput
+                    className="pl-2 bg-white w-[80%] rounded-xl h-8"
+                    placeholder="Tìm kiếm"
+                    value={search}
+                    onChangeText={(text) => searchFilter(text)}
+                    onSubmitEditing={() => {
+                      searchFilter(search);
+                    }}
+                  ></TextInput>
+                  <Ionicons
+                    onPress={() => searchFilter("")}
+                    name="close"
+                    size={28}
+                    color="black"
+                  />
+                </View>
+              ) : (
+                <Text className="text-white text-[22px] font-semibold text-center">
+                  Danh sách ghi chú
+                </Text>
+              )}
+
+              {showMultiCheck && !showSearchBar ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    toggleCheckBox("reset");
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="check"
+                    size={28}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              ) : !showMultiCheck && showSearchBar ? (
+                <View></View>
+              ) : (
+                <View className="flex-row justify-between items-center">
                   <TouchableOpacity
                     onPress={() => {
-                      setShowMultiCheck(true);
-                      setShowExtends(false);
+                      setShowSearchBar(!showSearchBar);
+                      searchFilter("");
                     }}
-                    className="flex-1 flex-row justify-start items-center"
                   >
-                    <Text className="ml-7">Chọn ghi chú</Text>
+                    <Ionicons name="ios-search-sharp" size={24} color="white" />
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setShowExtendsSort(true)}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
+                  <TouchableOpacity onPress={() => setShowExtends(true)}>
                     <MaterialCommunityIcons
-                      name="chevron-right"
+                      name="dots-vertical"
                       size={28}
-                      color="black"
+                      color="white"
                     />
-                    <Text>Sắp xếp theo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("UnlockFolderSecret", {
-                        secretPassword,
-                      });
-                    }}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <Text className="ml-7">Thư mục bảo mật</Text>
                   </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            </Modal>
+              )}
+              {/* Mở rộng 3 chấm */}
+              <Modal
+                visible={showExtends}
+                transparent={true}
+                animationType="slide-up"
+                onRequestClose={() => setShowExtends(false)}
+              >
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    backgroundColor: "rgba(0,0,0,0.4)",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-end",
+                    paddingRight: 15,
+                    paddingTop: 60,
+                  }}
+                  onPress={() => setShowExtends(false)}
+                >
+                  <View className="w-52 h-48 bg-white rounded-lg">
+                    <TouchableOpacity
+                      onPress={() => {
+                        setShowMultiCheck(true);
+                        setShowExtends(false);
+                      }}
+                      className="flex-1 flex-row justify-start items-center"
+                    >
+                      <Text className="ml-7">Chọn ghi chú</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => setShowExtendsSort(true)}
+                      className="flex-1 flex-row justify-start items-center"
+                    >
+                      <MaterialCommunityIcons
+                        name="chevron-right"
+                        size={28}
+                        color="black"
+                      />
+                      <Text>Sắp xếp theo</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleSortLoved}
+                      className="flex-1 flex-row justify-start items-center"
+                    >
+                      {selectedCategorySort === "SortLoved" ? (
+                        <Text className="ml-7">Bỏ ghim mục yêu thích</Text>
+                      ) : (
+                        <Text className="ml-7">Ghim mục yêu thích</Text>
+                      )}
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("UnlockFolderSecret", {
+                          secretPassword,
+                        });
+                      }}
+                      className="flex-1 flex-row justify-start items-center"
+                    >
+                      <Text className="ml-7">Thư mục bảo mật</Text>
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              </Modal>
 
-            {/* Mở rộng phần sắp xếp */}
-            <Modal
-              visible={showExtendsSort}
-              transparent={true}
-              animationType="slide-up"
-              onRequestClose={() => {
-                setShowExtendsSort(false);
-                setShowExtends(false);
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  flex: 1,
-                  backgroundColor: "rgba(0,0,0,0.4)",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-end",
-                  paddingRight: 15,
-                  paddingTop: 110,
-                }}
-                onPress={() => {
+              {/* Mở rộng phần sắp xếp */}
+              <Modal
+                visible={showExtendsSort}
+                transparent={true}
+                animationType="slide-up"
+                onRequestClose={() => {
                   setShowExtendsSort(false);
                   setShowExtends(false);
                 }}
               >
-                <View className="w-52 h-60 bg-white rounded-lg">
-                  <TouchableOpacity
-                    onPress={() => setShowExtendsSort(false)}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <MaterialCommunityIcons
-                      name="chevron-down"
-                      size={28}
-                      color="black"
-                    />
-                    <Text>Sắp xếp theo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleSortAZ}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    {selectedCategorySort === "SortAZ" ? (
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    backgroundColor: "rgba(0,0,0,0.4)",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-end",
+                    paddingRight: 15,
+                    paddingTop: 110,
+                  }}
+                  onPress={() => {
+                    setShowExtendsSort(false);
+                    setShowExtends(false);
+                  }}
+                >
+                  <View className="w-52 h-60 bg-white rounded-lg">
+                    <TouchableOpacity
+                      onPress={() => setShowExtendsSort(false)}
+                      className="flex-1 flex-row justify-start items-center"
+                    >
                       <MaterialCommunityIcons
-                        name="circle-medium"
+                        name="chevron-down"
                         size={28}
                         color="black"
                       />
-                    ) : (
-                      <View className="w-7 h-7"></View>
-                    )}
-                    <Text>Thứ tự tiêu để từ A-Z</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleSortZA}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    {selectedCategorySort === "SortZA" ? (
-                      <MaterialCommunityIcons
-                        name="circle-medium"
-                        size={28}
-                        color="black"
-                      />
-                    ) : (
-                      <View className="w-7 h-7"></View>
-                    )}
-                    <Text>Thứ tự tiêu để từ Z-A</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleSortCreatedDay}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    {selectedCategorySort === "SortCreatedDay" ? (
-                      <MaterialCommunityIcons
-                        name="circle-medium"
-                        size={28}
-                        color="black"
-                      />
-                    ) : (
-                      <View className="w-7 h-7"></View>
-                    )}
-                    <Text>Thứ tự ngày tạo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleSortUpdatedDay}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    {selectedCategorySort === "SortUpdatedDay" ? (
-                      <MaterialCommunityIcons
-                        name="circle-medium"
-                        size={28}
-                        color="black"
-                      />
-                    ) : (
-                      <View className="w-7 h-7"></View>
-                    )}
-                    <Text>Thứ tự ngày cập nhật</Text>
-                  </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
-            </Modal>
+                      <Text>Sắp xếp theo</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleSortAZ}
+                      className="flex-1 flex-row justify-start items-center"
+                    >
+                      {selectedCategorySort === "SortAZ" ? (
+                        <MaterialCommunityIcons
+                          name="circle-medium"
+                          size={28}
+                          color="black"
+                        />
+                      ) : (
+                        <View className="w-7 h-7"></View>
+                      )}
+                      <Text>Thứ tự tiêu để từ A-Z</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleSortZA}
+                      className="flex-1 flex-row justify-start items-center"
+                    >
+                      {selectedCategorySort === "SortZA" ? (
+                        <MaterialCommunityIcons
+                          name="circle-medium"
+                          size={28}
+                          color="black"
+                        />
+                      ) : (
+                        <View className="w-7 h-7"></View>
+                      )}
+                      <Text>Thứ tự tiêu để từ Z-A</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleSortCreatedDay}
+                      className="flex-1 flex-row justify-start items-center"
+                    >
+                      {selectedCategorySort === "SortCreatedDay" ? (
+                        <MaterialCommunityIcons
+                          name="circle-medium"
+                          size={28}
+                          color="black"
+                        />
+                      ) : (
+                        <View className="w-7 h-7"></View>
+                      )}
+                      <Text>Thứ tự ngày tạo</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleSortUpdatedDay}
+                      className="flex-1 flex-row justify-start items-center"
+                    >
+                      {selectedCategorySort === "SortUpdatedDay" ? (
+                        <MaterialCommunityIcons
+                          name="circle-medium"
+                          size={28}
+                          color="black"
+                        />
+                      ) : (
+                        <View className="w-7 h-7"></View>
+                      )}
+                      <Text>Thứ tự ngày cập nhật</Text>
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              </Modal>
+            </View>
+            {showMultiCheck && (
+              <Text className="text-white text-xs">Tất cả</Text>
+            )}
           </View>
         </View>
         {filterData.length === 0 && showSearchBar ? (
@@ -538,6 +624,7 @@ const NoteListMain = () => {
                       <View key={item.id} className="mb-5 m-[4%] w-[42%]">
                         <TouchableOpacity
                           disabled={showMultiCheck ? true : false}
+                          onLongPress={() => setShowMultiCheck(true)}
                           onPress={() => {
                             navigation.navigate("NoteList_Edit", { item });
                           }}

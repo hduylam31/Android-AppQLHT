@@ -30,12 +30,55 @@ const ResetPassFolderSecret = () => {
 
   async function resetPassFolderSecret() {
     console.log("haha");
-    if (newPassword != "" && newPassword == repassword) {
-      const status = await NoteService.resetPassword(accountPassword, newPassword);
+    const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>+-]/;
+    const uppercaseRegex = /[A-Z]/;
+    const lowercaseRegex = /[a-z]/;
+    if (accountPassword === "") {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Mật khẩu tài khoản không được để trống"
+      );
+    } else if (newPassword === "") {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Mật mã mới không được để trống"
+      );
+    } else if (repassword === "") {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Nhập lại Mật mã không được để trống"
+      );
+    } else if (newPassword.length < 6) {
+      Alert.alert("Không thể thay đổi mật mã", "Mật mã phải trên 6 kí tự");
+    } else if (!specialCharacterRegex.test(newPassword)) {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Mật mã phải mật khẩu chứa ít nhất một ký tự đặc biệt"
+      );
+    } else if (!uppercaseRegex.test(newPassword)) {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết hoa"
+      );
+    } else if (!lowercaseRegex.test(newPassword)) {
+      Alert.alert(
+        "Không thể thay đổi mật mã",
+        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết thường"
+      );
+    } else if (newPassword !== repassword) {
+      Alert.alert("Không thể thay đổi mật mã", "Nhập lại mật mã không khớp");
+    } else if (newPassword != "" && newPassword == repassword) {
+      const status = await NoteService.resetPassword(
+        accountPassword,
+        newPassword
+      );
       if (status == "") {
-        Alert.alert("Lỗi", "Mật khẩu tài khoản không chính xác");
+        Alert.alert(
+          "Lẫy lại mật mã không thành công",
+          "Mật khẩu tài khoản không chính xác"
+        );
       } else {
-        Alert.alert("Thông báo", "Thay đổi mật khẩu thành công");
+        Alert.alert("Thông báo", "Thay đổi mật mã thành công");
         await new Promise((r) => setTimeout(r, 1000));
         navigation.navigate("UnlockFolderSecret", { secretPassword: status });
       }

@@ -417,7 +417,7 @@ const ScheduleMain = () => {
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1 relative">
         <View className="h-[30%] bg-[#3A4666]">
-          <View className="flex-row justify-between items-center p-4">
+          <View className="flex-row justify-between items-center pl-4 pr-1 py-3">
             <View className="w-8 h-8 "></View>
             <Text className="text-white text-[22px] font-semibold">
               Thời khóa biểu
@@ -485,7 +485,7 @@ const ScheduleMain = () => {
           )}
         </View>
         {selectedTab && (
-          <View className="absolute w-full top-36 h-[80%]">
+          <View className="absolute w-full top-32 h-[80%]">
             <View
               style={{
                 padding: 12,
