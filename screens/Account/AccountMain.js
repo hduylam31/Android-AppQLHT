@@ -102,7 +102,7 @@ const AccountMain = () => {
           onPress={() => {
             navigation.navigate("Account_EditInfor", { name });
           }}
-          className="mt-5 w-[50%] h-12 rounded-3xl bg-white justify-center items-center"
+          className="mt-5 rounded-3xl bg-white justify-center items-center px-5 py-2"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 10, height: 10 },
@@ -193,7 +193,7 @@ const AccountMain = () => {
       </View>
       <TouchableOpacity
         onPress={AlertSignOut}
-        className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+        className="w-[90%] h-[5.5%] absolute bottom-[2%] ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
         style={{
           shadowColor: "#000000",
           shadowOffset: { width: 5, height: 5 },

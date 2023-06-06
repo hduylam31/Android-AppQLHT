@@ -415,10 +415,10 @@ const ScheduleMain = () => {
 
   return (
     <TouchableWithoutFeedback>
-      <SafeAreaView className="flex-1 relative">
+      <SafeAreaView className="flex-1">
         <View className="h-[30%] bg-[#3A4666]">
-          <View className="flex-row justify-between items-center pl-4 pr-1 py-3">
-            <View className="w-8 h-8 "></View>
+          <View className="flex-row justify-between items-center h-[26%] pl-4 pr-1">
+            <View className="w-4 h-4 "></View>
             <Text className="text-white text-[22px] font-semibold">
               Thời khóa biểu
             </Text>
@@ -574,7 +574,7 @@ const ScheduleMain = () => {
           onPress={() => {
             navigation.navigate("Schedule_Add", dayLessonMap);
           }}
-          className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          className="w-[90%] h-[5.5%] absolute bottom-[2%] ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 5, height: 5 },

@@ -80,13 +80,13 @@ const ChangePassFolderSecret = () => {
     <SafeAreaView className="bg-[#3A4666] flex-1">
       <View className="p-4 flex-row justify-between items-center mt-10">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={32} color="white" />
+          <AntDesign name="arrowleft" size={28} color="white" />
         </TouchableOpacity>
-        <MaterialCommunityIcons name="folder-lock" size={32} color="white" />
+        <MaterialCommunityIcons name="folder-lock" size={28} color="white" />
         <View className="h-8 w-8"></View>
       </View>
       <View className="justify-center items-center px-4">
-        <Text className="text-[#FFFFFF] text-3xl font-bold">
+        <Text className="text-[#FFFFFF] text-[22px] font-semibold">
           Thư mục bảo mật
         </Text>
         <Text className="text-[#FFFFFF] text-lg mt-[25%]">Thay đổi mật mã</Text>

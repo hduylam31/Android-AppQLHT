@@ -8,7 +8,7 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -178,6 +178,8 @@ const UnlockFolderSecret = () => {
             className="self-end mt-3"
             onPress={() => {
               navigation.navigate("ResetPassFolderSecret");
+              setPasswordUnlock("");
+              setShowPass(false);
             }}
           >
             <Text className="font-light italic text-sm text-right underline text-white">

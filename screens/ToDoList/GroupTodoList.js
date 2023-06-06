@@ -100,7 +100,10 @@ const GroupTodoList = () => {
 
   async function saveGroupName() {
     if (nameSaveWorkGroup === "") {
-      Alert.alert("Thông báo", "Tên nhóm công việc không được bỏ trống");
+      Alert.alert(
+        "Thêm nhóm công việc không thành công",
+        "Tên nhóm công việc không được bỏ trống"
+      );
     } else {
       await TodolistService.saveGroupName(nameSaveWorkGroup);
       loadGroupNames();
@@ -152,6 +155,14 @@ const GroupTodoList = () => {
   };
 
   console.log("selectedIds: ", selectedIds);
+
+  useEffect(() => {
+    if (selectedIds.length === data.length) {
+      setIsCheckSelectAll(true);
+    } else {
+      setIsCheckSelectAll(false);
+    }
+  }, [selectedIds]);
 
   async function changeToAnotherGroup(groupName) {
     console.log(groupName);

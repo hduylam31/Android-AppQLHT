@@ -23,6 +23,7 @@ import * as Animatable from "react-native-animatable";
 import TodolistService from "../../service/TodolistService";
 import { SelectCountry } from "react-native-element-dropdown";
 import BottomBar from "../BottomBar";
+import { favicon } from "../../assets";
 
 function toMinutes(time) {
   if (time === "") {
@@ -306,13 +307,19 @@ const ToDoListScreen = () => {
   // Hiển thị phần mở rộng
   const [showExtends, setShowExtends] = useState(false);
   const [showExtendsSort, setShowExtendsSort] = useState(false);
-  const [selectedCategorySort, setSelectedCategorySort] = useState();
+  const [selectedCategorySort, setSelectedCategorySort] = useState("");
 
   const [showMultiCheck, setShowMultiCheck] = useState(false);
   const [isCheckSelectAll, setIsCheckSelectAll] = useState(false);
-  const [showSaveWorkGroup, setShowSaveWorkGroup] = useState(false);
-  const [nameSaveWorkGroup, setNameSaveWorkGroup] = useState();
   const [selectedIds, setSelectedIds] = useState([]);
+
+  useEffect(() => {
+    if (selectedIds.length === todos.length) {
+      setIsCheckSelectAll(true);
+    } else {
+      setIsCheckSelectAll(false);
+    }
+  }, [selectedIds]);
 
   const toggleCheckBox = (id) => {
     console.log("id", id);
@@ -331,15 +338,8 @@ const ToDoListScreen = () => {
       }
     }
   };
+  console.log("selectedIds.length", selectedIds.length);
   console.log("aid", selectedIds);
-
-  useEffect(() => {
-    if (selectedIds.length === todos.length) {
-      setIsCheckSelectAll(true);
-    } else {
-      setIsCheckSelectAll(false);
-    }
-  }, [selectedIds]);
 
   useEffect(() => {
     if (showMultiCheck) {
@@ -394,202 +394,202 @@ const ToDoListScreen = () => {
   return (
     <SafeAreaView className="flex-1">
       {/* Header */}
-      <View className=" bg-[#3A4666] h-[8%]">
-        <View className={` py-3 pl-4 ${showMultiCheck ? "pr-4" : "pr-1"}`}>
-          <View className="justify-between items-center flex-row">
-            {showMultiCheck ? (
-              <View>
-                <TouchableOpacity
-                  className="items-center justify-center w-8 h-8"
-                  onPress={() => {
-                    setIsCheckSelectAll(!isCheckSelectAll);
-                    toggleCheckBox("all");
-                  }}
-                >
-                  {isCheckSelectAll ? (
-                    <Ionicons name="checkmark-circle" size={22} color="white" />
-                  ) : (
-                    <Ionicons name="ellipse-outline" size={22} color="white" />
-                  )}
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View className="w-7 h-7"></View>
-            )}
-            {showMultiCheck ? (
-              selectedIds.length > 0 ? (
-                <Text className="text-white text-xl font-medium text-center">
-                  Đã chọn {selectedIds.length}
-                </Text>
-              ) : (
-                <Text className="text-white text-xl font-medium text-center">
-                  Chọn công việc
-                </Text>
-              )
-            ) : (
-              <Text className="text-white text-[22px] font-semibold text-center">
-                Danh sách công việc
-              </Text>
-            )}
-            {showMultiCheck ? (
-              <TouchableOpacity
-                onPress={() => {
-                  toggleCheckBox("reset");
-                }}
-              >
-                <MaterialCommunityIcons name="check" size={28} color="white" />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={() => setShowExtends(true)}>
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={28}
-                  color="white"
-                />
-              </TouchableOpacity>
-            )}
-
-            {/* Mở rộng 3 chấm */}
-            <Modal
-              visible={showExtends}
-              transparent={true}
-              animationType="slide-up"
-              onRequestClose={() => setShowExtends(false)}
-            >
-              <TouchableOpacity
-                style={{
-                  flex: 1,
-                  backgroundColor: "rgba(0,0,0,0.4)",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-end",
-                  paddingRight: 15,
-                  paddingTop: 60,
-                }}
-                onPress={() => setShowExtends(false)}
-              >
-                <View className="w-52 h-36 bg-white rounded-lg">
-                  <TouchableOpacity
-                    onPress={() => {
-                      setShowMultiCheck(true);
-                      setShowExtends(false);
-                    }}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <Text className="ml-7">Chọn công việc</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setShowExtendsSort(true)}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <MaterialCommunityIcons
-                      name="chevron-right"
-                      size={28}
-                      color="black"
-                    />
-                    <Text>Sắp xếp theo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("GroupTodoList", {
-                        paramMoveData: "NoteMoveData",
-                        usingGroupName: groupName,
-                      });
-                    }}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <Text className="ml-7">Nhóm công việc</Text>
-                  </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
-            </Modal>
-
-            {/* Mở rộng phần sắp xếp */}
-            <Modal
-              visible={showExtendsSort}
-              transparent={true}
-              animationType="slide-up"
-              onRequestClose={() => {
-                setShowExtendsSort(false);
-                setShowExtends(false);
+      <View
+        className={`bg-[#3A4666] h-[8%] justify-between items-center flex-row pl-4 ${
+          showMultiCheck ? "pr-4" : "pr-1"
+        }`}
+      >
+        {showMultiCheck ? (
+          <View>
+            <TouchableOpacity
+              className="items-center justify-center"
+              onPress={() => {
+                setIsCheckSelectAll(!isCheckSelectAll);
+                toggleCheckBox("all");
               }}
             >
+              {isCheckSelectAll ? (
+                <Ionicons name="checkmark-circle" size={20} color="white" />
+              ) : (
+                <Ionicons name="ellipse-outline" size={20} color="white" />
+              )}
+            </TouchableOpacity>
+            <Text className="text-white text-[10px]">Tất cả</Text>
+          </View>
+        ) : (
+          <View className="w-4 h-4"></View>
+        )}
+        {showMultiCheck ? (
+          selectedIds.length > 0 ? (
+            <Text className="text-white text-xl font-medium text-center">
+              Đã chọn {selectedIds.length}
+            </Text>
+          ) : (
+            <Text className="text-white text-xl font-medium text-center">
+              Chọn công việc
+            </Text>
+          )
+        ) : (
+          <Text className="text-white text-[22px] font-semibold text-center">
+            Danh sách công việc
+          </Text>
+        )}
+        {showMultiCheck ? (
+          <TouchableOpacity
+            onPress={() => {
+              toggleCheckBox("reset");
+            }}
+          >
+            <MaterialCommunityIcons name="check" size={28} color="white" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => setShowExtends(true)}>
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              size={28}
+              color="white"
+            />
+          </TouchableOpacity>
+        )}
+
+        {/* Mở rộng 3 chấm */}
+        <Modal
+          visible={showExtends}
+          transparent={true}
+          animationType="slide-up"
+          onRequestClose={() => setShowExtends(false)}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              backgroundColor: "rgba(0,0,0,0.4)",
+              justifyContent: "flex-start",
+              alignItems: "flex-end",
+              paddingRight: 15,
+              paddingTop: 60,
+            }}
+            onPress={() => setShowExtends(false)}
+          >
+            <View className="w-52 h-36 bg-white rounded-lg">
               <TouchableOpacity
-                style={{
-                  flex: 1,
-                  backgroundColor: "rgba(0,0,0,0.4)",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-end",
-                  paddingRight: 15,
-                  paddingTop: 110,
-                }}
                 onPress={() => {
-                  setShowExtendsSort(false);
+                  setShowMultiCheck(true);
                   setShowExtends(false);
                 }}
+                className="flex-1 flex-row justify-start items-center"
               >
-                <View className="w-52 h-48 bg-white rounded-lg">
-                  <TouchableOpacity
-                    onPress={() => setShowExtendsSort(false)}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    <MaterialCommunityIcons
-                      name="chevron-down"
-                      size={28}
-                      color="black"
-                    />
-                    <Text>Sắp xếp theo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleSortTime}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    {selectedCategorySort === "SortTime" ? (
-                      <MaterialCommunityIcons
-                        name="circle-medium"
-                        size={28}
-                        color="black"
-                      />
-                    ) : (
-                      <View className="w-7 h-7"></View>
-                    )}
-                    <Text>Thứ tự giờ thông báo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleSortAZ}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    {selectedCategorySort === "SortAZ" ? (
-                      <MaterialCommunityIcons
-                        name="circle-medium"
-                        size={28}
-                        color="black"
-                      />
-                    ) : (
-                      <View className="w-7 h-7"></View>
-                    )}
-                    <Text>Thứ tự tiêu để từ A-Z</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleSortZA}
-                    className="flex-1 flex-row justify-start items-center"
-                  >
-                    {selectedCategorySort === "SortZA" ? (
-                      <MaterialCommunityIcons
-                        name="circle-medium"
-                        size={28}
-                        color="black"
-                      />
-                    ) : (
-                      <View className="w-7 h-7"></View>
-                    )}
-                    <Text>Thứ tự tiêu để từ Z-A</Text>
-                  </TouchableOpacity>
-                </View>
+                <Text className="ml-7">Chọn công việc</Text>
               </TouchableOpacity>
-            </Modal>
-          </View>
-          {showMultiCheck && <Text className="text-white text-xs">Tất cả</Text>}
-        </View>
+              <TouchableOpacity
+                onPress={() => setShowExtendsSort(true)}
+                className="flex-1 flex-row justify-start items-center"
+              >
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={28}
+                  color="black"
+                />
+                <Text>Sắp xếp theo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("GroupTodoList", {
+                    paramMoveData: "NoteMoveData",
+                    usingGroupName: groupName,
+                  });
+                }}
+                className="flex-1 flex-row justify-start items-center"
+              >
+                <Text className="ml-7">Nhóm công việc</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
+        {/* Mở rộng phần sắp xếp */}
+        <Modal
+          visible={showExtendsSort}
+          transparent={true}
+          animationType="slide-up"
+          onRequestClose={() => {
+            setShowExtendsSort(false);
+            setShowExtends(false);
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              backgroundColor: "rgba(0,0,0,0.4)",
+              justifyContent: "flex-start",
+              alignItems: "flex-end",
+              paddingRight: 15,
+              paddingTop: 110,
+            }}
+            onPress={() => {
+              setShowExtendsSort(false);
+              setShowExtends(false);
+            }}
+          >
+            <View className="w-52 h-48 bg-white rounded-lg">
+              <TouchableOpacity
+                onPress={() => setShowExtendsSort(false)}
+                className="flex-1 flex-row justify-start items-center"
+              >
+                <MaterialCommunityIcons
+                  name="chevron-down"
+                  size={28}
+                  color="black"
+                />
+                <Text>Sắp xếp theo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleSortTime}
+                className="flex-1 flex-row justify-start items-center"
+              >
+                {selectedCategorySort === "SortTime" ? (
+                  <MaterialCommunityIcons
+                    name="circle-medium"
+                    size={28}
+                    color="black"
+                  />
+                ) : (
+                  <View className="w-7 h-7"></View>
+                )}
+                <Text>Thứ tự giờ thông báo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleSortAZ}
+                className="flex-1 flex-row justify-start items-center"
+              >
+                {selectedCategorySort === "SortAZ" ? (
+                  <MaterialCommunityIcons
+                    name="circle-medium"
+                    size={28}
+                    color="black"
+                  />
+                ) : (
+                  <View className="w-7 h-7"></View>
+                )}
+                <Text>Thứ tự tiêu để từ A-Z</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleSortZA}
+                className="flex-1 flex-row justify-start items-center"
+              >
+                {selectedCategorySort === "SortZA" ? (
+                  <MaterialCommunityIcons
+                    name="circle-medium"
+                    size={28}
+                    color="black"
+                  />
+                ) : (
+                  <View className="w-7 h-7"></View>
+                )}
+                <Text>Thứ tự tiêu để từ Z-A</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       </View>
       <View className="flex-1 bg-[#F1F5F9]">
         <View className="flex-row items-center justify-end space-x-3 pr-2">
@@ -615,7 +615,7 @@ const ToDoListScreen = () => {
           />
         </View>
         {/* Công việc đã hòan thành */}
-        <Text className="text-base font-semibold ml-[5%] my-[3%]">
+        <Text className="text-base font-semibold ml-[5%] my-[2%]">
           Hoàn thành
         </Text>
         <View
@@ -693,7 +693,7 @@ const ToDoListScreen = () => {
           onPress={() => {
             navigation.navigate("TodoList_Add", { groupName });
           }}
-          className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          className="w-[90%] h-[5.5%] absolute bottom-[2%] ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 5, height: 5 },

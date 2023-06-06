@@ -334,33 +334,35 @@ const CalendarMain = () => {
           elevation: 10,
         }}
       >
-        <Animatable.View animation="slideInLeft" delay={index * 10}>
-          <View className="h-[52px] flex-row">
-            <View className={"w-[12%] flex ml-[3%]"}>
-              <Text className={"text-sm font-normal "}>{item.timeString}</Text>
-            </View>
-            <View
-              className={`w-1 h-[80%] mx-[3%] my-1 ${
-                item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
-              }`}
-            ></View>
-            <View className="w-[70%] flex-row">
-              <Text
-                numberOfLines={2}
-                ellipsizeMode="tail"
-                className={"text-base font-normal"}
-              >
-                {item.title}
-              </Text>
-              <View className={"mt-1 ml-1"}>
-                {!item.isNotified && (
-                  <MaterialCommunityIcons
-                    name="bell-off-outline"
-                    size={14}
-                    color="black"
-                  />
-                )}
-              </View>
+        <Animatable.View
+          className="h-[52px] flex-row"
+          animation="slideInLeft"
+          delay={index * 10}
+        >
+          <View className={"w-[12%] flex ml-[3%]"}>
+            <Text className={"text-sm font-normal "}>{item.timeString}</Text>
+          </View>
+          <View
+            className={`w-1 h-[80%] mx-[3%] my-1 ${
+              item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
+            }`}
+          ></View>
+          <View className="w-[70%] flex-row">
+            <Text
+              numberOfLines={2}
+              ellipsizeMode="tail"
+              className={"text-base font-normal"}
+            >
+              {item.title}
+            </Text>
+            <View className={"mt-1 ml-1"}>
+              {!item.isNotified && (
+                <MaterialCommunityIcons
+                  name="bell-off-outline"
+                  size={14}
+                  color="black"
+                />
+              )}
             </View>
           </View>
         </Animatable.View>
@@ -376,10 +378,12 @@ const CalendarMain = () => {
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
-        <View className={`bg-[#3A4666] ${showSearchBar ? "h-14" : "h-[30%]"}`}>
+        <View
+          className={`bg-[#3A4666] ${showSearchBar ? "h-[60px]" : "h-[30%]"}`}
+        >
           <View
-            className={`flex-row justify-between items-center py-3 pl-4 ${
-              showSearchBar ? "pr-4" : "pr-1"
+            className={`flex-row justify-between items-center pl-4 ${
+              showSearchBar ? "pr-4 flex-1" : "pr-1 h-[26%]"
             }`}
           >
             {showSearchBar ? (
@@ -388,11 +392,11 @@ const CalendarMain = () => {
                   setShowSearchBar(false);
                   setFilterData(calendar);
                 }}
-                className="pr-2"
+                className="pr-1"
               >
                 <MaterialCommunityIcons
                   name="arrow-left"
-                  size={32}
+                  size={28}
                   color="white"
                 />
               </TouchableOpacity>
@@ -400,51 +404,66 @@ const CalendarMain = () => {
               <View className="flex-row">
                 {/* Chỗ để icon moodle */}
                 {isMoodleActive === 0 ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("Login_Moodle");
-                    }}
-                  >
-                    <Animatable.Image
-                      animation="fadeIn"
-                      easing="ease-in-out"
-                      source={MoodleIcon}
-                    />
-                  </TouchableOpacity>
-                ) : isMoodleActive === 1 ? (
-                  <TouchableOpacity onPress={AlertLogoutMoodle}>
-                    <Animatable.Image
-                      animation="fadeIn"
-                      easing="ease-in-out"
-                      source={MoodleIcon}
-                    />
-                    <View className="absolute right-0 bottom-0">
-                      <AntDesign name="checkcircle" size={10} color="green" />
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity onPress={AlertErrorMoodle}>
-                    <Animatable.Image
-                      animation="fadeIn"
-                      easing="ease-in-out"
-                      source={MoodleIcon}
-                    />
-                    <View className="absolute right-0 bottom-0">
-                      <AntDesign
-                        name="exclamationcircle"
-                        size={10}
-                        color="#FBB500"
+                  <>
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("Login_Moodle");
+                      }}
+                    >
+                      <Animatable.Image
+                        animation="fadeIn"
+                        easing="ease-in-out"
+                        source={MoodleIcon}
                       />
-                    </View>
-                  </TouchableOpacity>
+                    </TouchableOpacity>
+                    <View className="w-4 h-7"></View>
+                  </>
+                ) : isMoodleActive === 1 ? (
+                  <>
+                    <TouchableOpacity onPress={AlertLogoutMoodle}>
+                      <Animatable.Image
+                        animation="fadeIn"
+                        easing="ease-in-out"
+                        source={MoodleIcon}
+                      />
+                      <View className="absolute right-0 bottom-0">
+                        <AntDesign name="checkcircle" size={10} color="green" />
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity className="justify-center items-center w-5 h-7 ml-2">
+                      <MaterialCommunityIcons
+                        name="bell-ring-outline"
+                        size={22}
+                        color="white"
+                      />
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  <>
+                    <TouchableOpacity onPress={AlertErrorMoodle}>
+                      <Animatable.Image
+                        animation="fadeIn"
+                        easing="ease-in-out"
+                        source={MoodleIcon}
+                      />
+                      <View className="absolute right-0 bottom-0">
+                        <AntDesign
+                          name="exclamationcircle"
+                          size={10}
+                          color="#FBB500"
+                        />
+                      </View>
+                    </TouchableOpacity>
+                    <View className="w-4 h-7"></View>
+                  </>
                 )}
               </View>
             )}
 
             {showSearchBar ? (
-              <View className="flex-row justify-between items-center bg-white rounded-xl px-2">
+              <View className="flex-row justify-between items-center bg-white rounded-xl pr-2 flex-1">
                 <TextInput
-                  className="pl-2 bg-white w-[80%] rounded-xl h-8"
+                  className="pl-2 bg-white w-[90%] rounded-xl h-7"
                   placeholder="Tìm kiếm"
                   value={search}
                   onChangeText={(text) => searchFilter(text)}
@@ -460,12 +479,14 @@ const CalendarMain = () => {
                 />
               </View>
             ) : (
-              <Text className="text-white text-[22px] font-semibold">Lịch</Text>
+              <Text className="text-white text-[22px] font-semibold text-center">
+                Lịch
+              </Text>
             )}
 
             {/* Chỗ để iconSearch */}
             {showSearchBar ? (
-              <View></View>
+              <View className="w-7 h-7"></View>
             ) : (
               <View className="flex-row justify-between items-center">
                 <TouchableOpacity
@@ -628,7 +649,7 @@ const CalendarMain = () => {
             onPress={() => {
               navigation.navigate("Calendar_Add", { selectedDay });
             }}
-            className="w-[90%] h-10 absolute bottom-5 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+            className="w-[90%] h-[5.5%] absolute bottom-[2%] ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
             style={{
               shadowColor: "#000000",
               shadowOffset: { width: 5, height: 5 },

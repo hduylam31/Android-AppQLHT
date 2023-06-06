@@ -89,22 +89,23 @@ const ResetPassFolderSecret = () => {
     <SafeAreaView className="bg-[#3A4666] flex-1">
       <View className="p-4 flex-row justify-between items-center mt-10">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={32} color="white" />
+          <AntDesign name="arrowleft" size={28} color="white" />
         </TouchableOpacity>
-        <MaterialCommunityIcons name="folder-lock" size={32} color="white" />
+        <MaterialCommunityIcons name="folder-lock" size={28} color="white" />
         <View className="h-8 w-8"></View>
       </View>
       <View className="justify-center items-center px-4">
-        <Text className="text-[#FFFFFF] text-3xl font-bold">
+        <Text className="text-[#FFFFFF] text-[22px] font-semibold">
           Thư mục bảo mật
         </Text>
-        <Text className="text-[#FFFFFF] text-base font-light mt-[25%]">
+        <Text className="text-[#FFFFFF] text-lg mt-[25%]">
           Thiết lập lại mật mã
         </Text>
         <View className="w-full h-60 bg-white mt-[5%] rounded-2xl p-4">
           <TextInput
             placeholder="Mật khẩu tài khoản"
             autoCapitalize="none"
+            secureTextEntry={true}
             value={accountPassword}
             onChangeText={(password) => setAccountPassword(password)}
             className=" bg-white pl-4 border-b-[#9A999B] border-b-2 flex-1"
@@ -113,6 +114,7 @@ const ResetPassFolderSecret = () => {
             placeholder="Mật mã mới"
             autoCapitalize="none"
             value={newPassword}
+            secureTextEntry={true}
             onChangeText={(password) => setNewPassword(password)}
             className=" bg-white pl-4 border-b-[#9A999B] border-b-2 flex-1"
           ></TextInput>
@@ -120,6 +122,7 @@ const ResetPassFolderSecret = () => {
             placeholder="Nhập lại mật mã mới"
             autoCapitalize="none"
             value={repassword}
+            secureTextEntry={true}
             onChangeText={(repassword) => setRepassword(repassword)}
             className=" bg-white pl-4 border-b-[#9A999B] border-b-2 mb-8 flex-1"
           ></TextInput>

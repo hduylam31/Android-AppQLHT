@@ -116,7 +116,6 @@ const CalendarExtendMoodleEvent = () => {
               </Text>
             </View>
             <View className="w-8 h-8"></View>
-
             {/* Phần tiêu đề */}
           </View>
         </View>
