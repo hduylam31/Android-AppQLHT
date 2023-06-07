@@ -51,6 +51,7 @@ const NoteListFolderSecret = () => {
     } catch (error) {
       console.log(error);
     }
+    setSelectedIds([]);
   };
   useEffect(() => {
     loadNoteList();

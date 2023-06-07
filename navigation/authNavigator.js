@@ -31,7 +31,7 @@ import CalendarExtendTimeNoti from "../screens/Calendar/CalendarExtendTimeNoti";
 import CalendarExtendTurnOnOffNoti from "../screens/Calendar/CalendarExtendTurnOnOffNoti";
 import CalendarExtendMoodleEvent from "../screens/Calendar/CalendarExtendMoodleEvent";
 import GroupTodoList from "../screens/ToDoList/GroupTodoList";
-import GroupTodoListEdit from "../screens/ToDoList/GroupTodoListEdit";
+
 import NoteListFolderSecret from "../screens/NoteList/NoteListFolderSecret";
 import UnlockFolderSecret from "../screens/NoteList/UnlockFolderSecret";
 import ChangePassFolderSecret from "../screens/NoteList/ChangePassFolderSecret";
@@ -253,14 +253,7 @@ export default function AuthStack() {
           ...TransitionPresets.RevealFromBottomAndroid,
         }}
       />
-      <Auth.Screen
-        name="GroupTodoListEdit"
-        component={GroupTodoListEdit}
-        option={{
-          headerShown: false,
-          ...TransitionPresets.RevealFromBottomAndroid,
-        }}
-      />
+
       <Auth.Screen
         name="NoteListFolderSecret"
         component={NoteListFolderSecret}

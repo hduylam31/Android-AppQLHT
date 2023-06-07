@@ -215,7 +215,7 @@ const Calendar_Add = () => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
                 name="arrow-left"
-                size={30}
+                size={28}
                 color="white"
               />
             </TouchableOpacity>
@@ -234,7 +234,7 @@ const Calendar_Add = () => {
           </View>
         </View>
         <ScrollView className=" bg-[#F1F5F9]">
-          <View className="px-5 pt-[4%] space-y-2">
+          <View className="px-4 pt-[4%] space-y-2">
             <View className="flex-row">
               <Text className="text-base">Tiêu đề</Text>
               <Text className="text-base text-red-600"> (*)</Text>

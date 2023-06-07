@@ -353,7 +353,7 @@ const ScheduleMain = () => {
       <Animatable.View
         animation="flipInX"
         delay={index * 10}
-        className="mx-[5%] my-[3%] bg-white rounded-xl flex-1 flex-row content-center"
+        className="mx-4 my-[3%] bg-white rounded-xl flex-1 flex-row content-center"
         style={{
           shadowColor: "#000000",
           shadowOffset: { width: 10, height: 10 },
@@ -455,7 +455,7 @@ const ScheduleMain = () => {
             </View>
           </View>
           {!selectedTab && (
-            <View className="bg-white mt-6 h-[35%] w-[90%] ml-[5%] rounded-xl px-4 flex-row justify-between items-center">
+            <View className="bg-white mt-6 h-[35%] mx-4 rounded-xl px-4 flex-row justify-between items-center">
               {dayOfWeek.map((day) => (
                 <TouchableOpacity
                   key={day}

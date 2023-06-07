@@ -227,7 +227,7 @@ const TodoList_Edit = () => {
         </View>
 
         <ScrollView className="bg-[#F1F5F9]">
-          <View className="px-5 pt-[4%] space-y-2">
+          <View className="px-4 pt-[4%] space-y-2">
             <View className="flex-row">
               <Text className="text-base">Tiêu đề</Text>
               <Text className="text-base text-red-600"> (*)</Text>

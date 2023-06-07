@@ -45,22 +45,15 @@ const ChangePassFolderSecret = () => {
         "Không thể thay đổi mật mã",
         "Nhập lại Mật mã không được để trống"
       );
-    } else if (newPassword.length < 6) {
-      Alert.alert("Không thể thay đổi mật mã", "Mật mã phải trên 6 kí tự");
-    } else if (!specialCharacterRegex.test(newPassword)) {
+    } else if (
+      newPassword.length < 6 &&
+      !specialCharacterRegex.test(newPassword) &&
+      !uppercaseRegex.test(newPassword) &&
+      !lowercaseRegex.test(newPassword)
+    ) {
       Alert.alert(
         "Không thể thay đổi mật mã",
-        "Mật mã phải mật khẩu chứa ít nhất một ký tự đặc biệt"
-      );
-    } else if (!uppercaseRegex.test(newPassword)) {
-      Alert.alert(
-        "Không thể thay đổi mật mã",
-        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết hoa"
-      );
-    } else if (!lowercaseRegex.test(newPassword)) {
-      Alert.alert(
-        "Không thể thay đổi mật mã",
-        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết thường"
+        "Mật mã phải trên 6 kí tự, chứa ít nhất một ký tự đặc biệt, một ký tự viết hoa, một ký tự viết thường"
       );
     } else if (newPassword !== repassword) {
       Alert.alert("Không thể thay đổi mật mã", "Nhập lại mật mã không khớp");

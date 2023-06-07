@@ -65,22 +65,15 @@ const UnlockFolderSecret = () => {
         "Không thể thiết lập mật mã",
         "Nhập lại Mật mã không được để trống"
       );
-    } else if (password.length < 6) {
-      Alert.alert("Không thể thiết lập mật mã", "Mật mã phải trên 6 kí tự");
-    } else if (!specialCharacterRegex.test(password)) {
+    } else if (
+      password.length < 6 &&
+      !specialCharacterRegex.test(password) &&
+      !uppercaseRegex.test(password) &&
+      !lowercaseRegex.test(password)
+    ) {
       Alert.alert(
-        "Không thể thiết lập mật mã",
-        "Mật mã phải mật khẩu chứa ít nhất một ký tự đặc biệt"
-      );
-    } else if (!uppercaseRegex.test(password)) {
-      Alert.alert(
-        "Không thể thiết lập mật mã",
-        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết hoa"
-      );
-    } else if (!lowercaseRegex.test(password)) {
-      Alert.alert(
-        "Không thể thiết lập mật mã",
-        "Mật mã phải mật khẩu chứa ít nhất một ký tự viết thường"
+        "Không thể thay đổi mật mã",
+        "Mật mã phải trên 6 kí tự, chứa ít nhất một ký tự đặc biệt, một ký tự viết hoa, một ký tự viết thường"
       );
     } else if (password !== repassword) {
       Alert.alert("Không thể thiết lập mật mã", "Nhập lại mật mã không khớp");

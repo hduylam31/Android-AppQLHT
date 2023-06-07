@@ -31,6 +31,8 @@ const NoteListMain = () => {
 
   // thay loadCalendar thanh loadNoteList 2 useEffect phia duoi
   const loadNoteList = async () => {
+    setShowMultiCheck(false);
+    setSelectedIds([]);
     try {
       const notelist = await NoteService.loadNoteData();
       const notSecretData = notelist.filter((item) => !item.isSecret);
@@ -205,6 +207,29 @@ const NoteListMain = () => {
     setSelectedIds([]);
   }
 
+  const AlertCreatPass = () => {
+    Alert.alert(
+      "Bạn chưa thiết lập mật mã",
+      "Bạn có muốn tạo mật mã thư mục bảo mật không?",
+      [
+        {
+          text: "Đồng ý",
+          onPress: () => {
+            navigation.navigate("UnlockFolderSecret", {
+              secretPassword,
+            });
+          },
+        },
+        {
+          text: "Hủy",
+          onPress: () => {
+            toggleCheckBox("reset");
+          },
+        },
+      ]
+    );
+  };
+
   const AlertSecret = () => {
     if (selectedIds.length > 0) {
       Alert.alert(
@@ -213,7 +238,13 @@ const NoteListMain = () => {
         [
           {
             text: "Đồng ý",
-            onPress: moveToSecretFolder,
+            onPress: () => {
+              if (secretPassword === "") {
+                AlertCreatPass();
+              } else {
+                setShowUnlockSecretFolder(true);
+              }
+            },
           },
           {
             text: "Hủy",
@@ -227,6 +258,41 @@ const NoteListMain = () => {
       Alert.alert("Thông báo", "Vui lòng chọn ít nhất một ghi chú");
     }
   };
+
+  const [showUnlockSecretFolder, setShowUnlockSecretFolder] = useState(false);
+  const [passwordUnlock, setPasswordUnlock] = useState("");
+
+  async function openSecretFolder() {
+    if (passwordUnlock === "") {
+      Alert.alert("Không thể di chuyển thư mục", "Vui lòng nhập mật mã!", [
+        {
+          text: "Đồng ý",
+          onPress: () => {
+            setPasswordUnlock("");
+            setShowUnlockSecretFolder(true);
+          },
+        },
+      ]);
+    } else if (passwordUnlock != "") {
+      const isAuth = await NoteService.login(passwordUnlock, secretPassword);
+      console.log("isAuth: ", isAuth);
+      if (isAuth) {
+        moveToSecretFolder();
+        setPasswordUnlock("");
+        setShowMultiCheck(false);
+      } else {
+        Alert.alert("Không thể di chuyển thư mục", "Sai mật mã!", [
+          {
+            text: "Đồng ý",
+            onPress: () => {
+              setPasswordUnlock("");
+              setShowUnlockSecretFolder(true);
+            },
+          },
+        ]);
+      }
+    }
+  }
 
   const handleSortAZ = () => {
     const sortedNote2 = data.sort((a, b) => {
@@ -767,6 +833,72 @@ const NoteListMain = () => {
               Thêm ghi chú
             </Text>
           </TouchableOpacity>
+        )}
+        {/* Nhập pass chuyển vào thư mục bảo mật */}
+        {showUnlockSecretFolder && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.4)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View className="bg-white justify-center items-center rounded-xl p-5">
+              <Text className="text-lg font-bold text-[#3A4666]">
+                Mở khóa thư mục bảo mật
+              </Text>
+              <TextInput
+                placeholder="Nhập mật mã"
+                className="bg-[#FFFFFF] w-64 px-4 py-3 text-base resize-none border-b-[#9A999B] border-b-2 mt-2 mb-8"
+                value={passwordUnlock}
+                onChangeText={(text) => setPasswordUnlock(text)}
+              ></TextInput>
+              <View className="flex-row justify-between items-center space-x-5">
+                <TouchableOpacity
+                  className="w-[35%] justify-center items-center rounded-xl bg-white"
+                  style={{
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 5, height: 5 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 5,
+                    elevation: 5,
+                  }}
+                  onPress={() => {
+                    toggleCheckBox("reset");
+                    setPasswordUnlock("");
+                    setShowUnlockSecretFolder(false);
+                  }}
+                >
+                  <Text className="font-semibold text-base text-[#3A4666]">
+                    Thoát
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="w-[35%] justify-center items-center rounded-xl bg-[#3A4666]"
+                  style={{
+                    shadowColor: "#000000",
+                    shadowOffset: { width: 5, height: 5 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 5,
+                    elevation: 5,
+                  }}
+                  onPress={() => {
+                    openSecretFolder();
+                    setShowUnlockSecretFolder(false);
+                  }}
+                >
+                  <Text className="font-semibold text-base text-white">
+                    Di chuyển
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
         )}
       </SafeAreaView>
     </TouchableWithoutFeedback>

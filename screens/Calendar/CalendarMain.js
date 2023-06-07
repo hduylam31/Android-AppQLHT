@@ -189,33 +189,29 @@ const CalendarMain = () => {
       }}
     >
       <Animatable.View animation="slideInLeft" delay={index * 10}>
-        <View className="flex-row py-1 px-2 justify-between items-center">
-          <View className={"ml-[3%]"}>
-            <Text className={"text-sm font-normal "}>{item.timeString}</Text>
-          </View>
+        <View className="flex-row py-1 px-4 justify-between items-center space-x-2">
+          <Text className={"text-sm font-normal "}>{item.timeString}</Text>
           <View
             className={`w-1 h-[80%] ${
               item.isMoodle === "true" ? "bg-[#FF0101]" : "bg-[#24b929]"
             }`}
           ></View>
-          <View className="w-[75%] flex-row">
-            <Text
-              numberOfLines={2}
-              ellipsizeMode="tail"
-              className={"text-base font-normal"}
-            >
-              {item.title}
-            </Text>
-            <View className={"mt-1 ml-1"}>
-              {!item.isNotified && (
-                <MaterialCommunityIcons
-                  name="bell-off-outline"
-                  size={14}
-                  color="black"
-                />
-              )}
-            </View>
-          </View>
+          <Text
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            className={"text-base font-normal flex-1"}
+          >
+            {item.title}
+            {!item.isNotified ? (
+              <MaterialCommunityIcons
+                name="bell-off-outline"
+                size={16}
+                color="black"
+              />
+            ) : (
+              <View className="w-4 h-4"></View>
+            )}
+          </Text>
         </View>
       </Animatable.View>
       <View className="w-[94%] ml-[3%] h-[2px] bg-[#f3f2f4]"></View>
@@ -649,7 +645,7 @@ const CalendarMain = () => {
             onPress={() => {
               navigation.navigate("Calendar_Add", { selectedDay });
             }}
-            className="w-[90%] h-[5.5%] absolute bottom-[2%] ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+            className="w-[90%] h-[5.5%] absolute bottom-[2%] ml-[5%] bg-[#3A4666] rounded-2xl items-center justify-center"
             style={{
               shadowColor: "#000000",
               shadowOffset: { width: 5, height: 5 },

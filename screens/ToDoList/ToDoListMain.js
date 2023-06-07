@@ -54,6 +54,8 @@ const ToDoListScreen = () => {
 
   const loadTodolist = async () => {
     console.log("load load load........");
+    setSelectedIds([]);
+    setShowMultiCheck(false);
     const todolistInfo = await TodolistService.loadTodolist();
     if (todolistInfo != null) {
       const usingTodolists = todolistInfo.usingTodolists;
@@ -61,7 +63,6 @@ const ToDoListScreen = () => {
       setGroupName(todolistInfo.usingGroupName);
       console.log("todolist2: ", todolistInfo);
     }
-    setSelectedIds([]);
   };
 
   useEffect(() => {
@@ -209,7 +210,7 @@ const ToDoListScreen = () => {
           )}
           <CategoryView label={item.category} />
           <View className="w-[70%]">
-            <View className="flex-row">
+            <View className="flex-row justify-start items-center">
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -217,15 +218,16 @@ const ToDoListScreen = () => {
               >
                 {item.title}
               </Text>
-              <View className={"mt-1 ml-1"}>
-                {item.isNotified && (
+
+              {item.isNotified && (
+                <View className="ml-1">
                   <MaterialCommunityIcons
                     name="bell-ring-outline"
                     size={16}
                     color="black"
                   />
-                )}
-              </View>
+                </View>
+              )}
             </View>
 
             <Text className={"text-xs font-normal"}>{item.hour}</Text>
@@ -598,7 +600,7 @@ const ToDoListScreen = () => {
 
         {/* Công việc hiện có  */}
         <View
-          className="w-[90%] h-[38%] bg-white rounded-2xl mx-[5%] mt-4"
+          className="h-[38%] bg-white rounded-2xl mx-4 mt-4"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 10, height: 10 },
@@ -615,11 +617,9 @@ const ToDoListScreen = () => {
           />
         </View>
         {/* Công việc đã hòan thành */}
-        <Text className="text-base font-semibold ml-[5%] my-[2%]">
-          Hoàn thành
-        </Text>
+        <Text className="text-base font-semibold ml-4 my-[2%]">Hoàn thành</Text>
         <View
-          className="w-[90%] h-[38%] bg-white rounded-2xl mx-[5%]"
+          className="h-[38%] bg-white rounded-2xl mx-4"
           style={{
             shadowColor: "#000000",
             shadowOffset: { width: 10, height: 10 },

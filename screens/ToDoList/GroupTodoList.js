@@ -35,6 +35,7 @@ const GroupTodoList = () => {
     const groupNames = await TodolistService.loadGroupNames();
     setData(groupNames);
     console.log("groupNames: ", groupNames);
+    setSelectedIds([]);
   }
   useEffect(() => {
     loadGroupNames();

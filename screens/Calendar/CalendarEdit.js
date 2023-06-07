@@ -24,7 +24,7 @@ const LockedView = ({ isMoodle, children }) => {
   return (
     <View
       pointerEvents={isMoodle === "false" ? "auto" : "none"}
-      className="px-5 pt-[4%] space-y-2"
+      className="px-4 pt-[4%] space-y-2"
     >
       {children}
     </View>
@@ -236,7 +236,7 @@ const Calendar_Edit = () => {
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
+        <View className="bg-[#3A4666] h-[60px]">
           <View className="flex-row justify-between items-center p-4">
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
@@ -259,12 +259,12 @@ const Calendar_Edit = () => {
               <TouchableOpacity onPress={AlertDelete}>
                 <MaterialCommunityIcons
                   name="trash-can-outline"
-                  size={30}
+                  size={28}
                   color="white"
                 />
               </TouchableOpacity>
             ) : (
-              <View className="w-8 h-8"></View>
+              <View className="w-7 h-7"></View>
             )}
           </View>
         </View>

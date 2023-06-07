@@ -114,10 +114,10 @@ const Schedule_Add = () => {
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
+        <View className="bg-[#3A4666] h-[60px]">
           <View className="flex-row justify-between items-center p-4">
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <AntDesign name="arrowleft" size={30} color="white" />
+              <AntDesign name="arrowleft" size={28} color="white" />
             </TouchableOpacity>
             <View>
               <Text className="text-white text-xl font-medium">
@@ -130,7 +130,7 @@ const Schedule_Add = () => {
           </View>
         </View>
         <ScrollView className="bg-[#F1F5F9]">
-          <View className="px-5 pt-[4%] space-y-2">
+          <View className="px-4 pt-[4%] space-y-2">
             <View className="flex-row">
               <Text className="text-base">Tiêu đề</Text>
               <Text className="text-base text-red-600"> (*)</Text>
