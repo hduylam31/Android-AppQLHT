@@ -37,9 +37,12 @@ const Calendar_Edit = () => {
   const [content, setContent] = useState("");
   const [isNotified, setIsNotified] = useState("");
 
-  const [date, setDate] = React.useState(new Date());
-  const [mode, setMode] = React.useState("date");
-  const [show, setShow] = React.useState(false);
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
+
+  const [showDate, setShowDate] = useState(false);
+  const [showTime, setShowTime] = useState(false);
+
   const [textDate, setDateText] = React.useState(
     new Date().toLocaleDateString()
   );
@@ -52,6 +55,74 @@ const Calendar_Edit = () => {
       headerShown: false,
     });
   });
+
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShowDate(Platform.OS === "ios");
+
+    setDate(currentDate);
+    console.log("currentDate", currentDate);
+    let tempDate = new Date(currentDate);
+    let fDate;
+
+    if (tempDate.getDate() < 10 && tempDate.getMonth() < 10) {
+      fDate =
+        "0" +
+        tempDate.getDate() +
+        "/0" +
+        (tempDate.getMonth() + 1) +
+        "/" +
+        tempDate.getFullYear();
+    } else if (tempDate.getDate() < 10 && tempDate.getMonth() > 10) {
+      fDate =
+        "0" +
+        tempDate.getDate() +
+        "/" +
+        (tempDate.getMonth() + 1) +
+        "/" +
+        tempDate.getFullYear();
+    } else if (tempDate.getMonth() < 10) {
+      fDate =
+        tempDate.getDate() +
+        "/0" +
+        (tempDate.getMonth() + 1) +
+        "/" +
+        tempDate.getFullYear();
+    } else {
+      fDate =
+        tempDate.getDate() +
+        "/" +
+        (tempDate.getMonth() + 1) +
+        "/" +
+        tempDate.getFullYear();
+    }
+
+    setDateText(fDate);
+
+    console.log(fDate + " (" + fTime + ")");
+  };
+
+  const onChangeTime = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShowTime(Platform.OS === "ios");
+    setTime(currentDate);
+    console.log("currentDate", currentDate);
+    let tempDate = new Date(currentDate);
+
+    if (tempDate.getHours() < 10 && tempDate.getMinutes() < 10) {
+      fTime = "0" + tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else if (tempDate.getHours() < 10) {
+      fTime = "0" + tempDate.getHours() + ":" + tempDate.getMinutes();
+    } else if (tempDate.getMinutes() < 10) {
+      fTime = tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else {
+      fTime = tempDate.getHours() + ":" + tempDate.getMinutes();
+    }
+
+    setTimeDate(fTime);
+
+    console.log(fDate + " (" + fTime + ")");
+  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -78,11 +149,6 @@ const Calendar_Edit = () => {
     setTimeDate(fTime);
 
     console.log(fDate + " (" + fTime + ")");
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
   };
 
   const handlePress = () => {
@@ -232,6 +298,9 @@ const Calendar_Edit = () => {
   console.log("cus", customTimeNoti);
   console.log("number", numberTimeNoti);
 
+  const [timeEvent, setTimeEvent] = useState("5");
+  const [categoryTime, setCategoryTime] = useState("2");
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -297,7 +366,7 @@ const Calendar_Edit = () => {
                   <Text className="text-base text-red-600"> (*)</Text>
                 </View>
                 <TouchableOpacity
-                  onPress={() => showMode("date")}
+                  onPress={() => setShowDate(true)}
                   className=" bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3"
                   style={{
                     shadowColor: "#000000",
@@ -325,7 +394,7 @@ const Calendar_Edit = () => {
                   <Text className="text-base text-red-600"> (*)</Text>
                 </View>
                 <TouchableOpacity
-                  onPress={() => showMode("time")}
+                  onPress={() => setShowTime(true)}
                   className="bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3 "
                   style={{
                     shadowColor: "#000000",
@@ -348,19 +417,30 @@ const Calendar_Edit = () => {
                 </TouchableOpacity>
               </View>
 
-              {show && (
+              {showDate && (
                 <DateTimePicker
                   testID="dateTimePicker"
                   value={date}
-                  mode={mode}
+                  mode="date"
                   is24Hour={true}
                   display="default"
-                  onChange={onChange}
+                  onChange={onChangeDate}
+                />
+              )}
+
+              {showTime && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={time}
+                  mode="time"
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChangeTime}
                 />
               )}
             </View>
           </LockedView>
-          <View className="px-5">
+          <View className="px-4">
             <Text className="text-base mt-2">Bật thông báo</Text>
             <View className="items-start" pointerEvents="auto">
               <Switch
@@ -373,6 +453,62 @@ const Calendar_Edit = () => {
             </View>
             {item.isMoodle === "false" ? (
               <>
+                <Text className="text-base mb-2">Thời lượng</Text>
+                <View className="flex-row justify-between items-center space-x-[2%] mb-2">
+                  <TextInput
+                    keyboardType="numeric"
+                    className=" bg-[#FFFFFF] px-4 py-2 rounded-lg w-[49%] text-base"
+                    style={{
+                      shadowColor: "#000000",
+                      shadowOffset: { width: 10, height: 10 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 10,
+                    }}
+                    value={timeEvent}
+                    onChangeText={(text) => setTimeEvent(text)}
+                  ></TextInput>
+                  <Dropdown
+                    style={{
+                      backgroundColor: "#FFFFFF",
+                      height: 48,
+                      borderRadius: 8,
+                      shadowColor: "#000000",
+                      shadowOffset: { width: 10, height: 10 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 10,
+                      flex: 1,
+                    }}
+                    containerStyle={{
+                      borderRadius: 8,
+                    }}
+                    itemContainerStyle={{
+                      borderRadius: 8,
+                      height: 48,
+                    }}
+                    itemTextStyle={{
+                      height: 48,
+                    }}
+                    placeholderStyle={{
+                      fontSize: 16,
+                      paddingLeft: 16,
+                      color: "#C7C7CD",
+                    }}
+                    selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+                    iconStyle={{ marginRight: 16 }}
+                    data={DataCategoriTimeNoti}
+                    maxHeight={200}
+                    labelField="key"
+                    valueField="value"
+                    placeholder="Thời gian thông báo"
+                    value={categoryTime}
+                    onChange={(item) => {
+                      setCategoryTime(item.value);
+                    }}
+                  />
+                </View>
+
                 <Text className="text-base mb-2">Thời gian thông báo</Text>
                 <Dropdown
                   disable={isNotified ? false : true}
@@ -418,11 +554,11 @@ const Calendar_Edit = () => {
               <View></View>
             )}
             {timeNoti === "6" && isNotified && item.isMoodle === "false" ? (
-              <View className="flex-row justify-between">
+              <View className="flex-row justify-between mt-2">
                 <TextInput
                   placeholder="Nhập số"
                   keyboardType="numeric"
-                  className="w-[48%] bg-[#FFFFFF] px-4 py-2 rounded-lg resize-none text-base"
+                  className="w-[49%] bg-[#FFFFFF] px-4 py-2 rounded-lg resize-none text-base"
                   style={{
                     shadowColor: "#000000",
                     shadowOffset: { width: 10, height: 10 },
@@ -437,7 +573,7 @@ const Calendar_Edit = () => {
                   style={{
                     backgroundColor: "#FFFFFF",
                     height: 48,
-                    width: "48%",
+                    width: "49%",
                     borderRadius: 8,
                     shadowColor: "#000000",
                     shadowOffset: { width: 10, height: 10 },
@@ -480,7 +616,9 @@ const Calendar_Edit = () => {
             <Text className="text-base mt-2">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-52 bg-[#FFFFFF] px-4 pt-4 mt-2 text-base rounded-lg resize-none"
+              className={`w-[100%] ${
+                item.isMoodle === "true" ? "h-60" : "h-36"
+              } bg-[#FFFFFF] px-4 pt-4 mt-2 text-base rounded-lg resize-none`}
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },

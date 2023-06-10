@@ -391,7 +391,7 @@ const NoteListMain = () => {
         <View
           className={`bg-[#3A4666] justify-between items-center flex-row pl-4 ${
             !showMultiCheck && !showSearchBar ? "pr-1" : "pr-4"
-          } ${showSearchBar ? "h-[60px]" : "h-[8%]"}`}
+          } ${showSearchBar || showUnlockSecretFolder ? "h-[60px]" : "h-[8%]"}`}
         >
           {showMultiCheck && !showSearchBar ? (
             <View>
@@ -408,9 +408,8 @@ const NoteListMain = () => {
                   <Ionicons name="ellipse-outline" size={20} color="white" />
                 )}
               </TouchableOpacity>
-              {showMultiCheck && (
-                <Text className="text-white text-[10px]">Tất cả</Text>
-              )}
+
+              <Text className="text-white text-[10px]">Tất cả</Text>
             </View>
           ) : !showMultiCheck && showSearchBar ? (
             <TouchableOpacity
@@ -813,7 +812,7 @@ const NoteListMain = () => {
               </Text>
             </TouchableOpacity>
           </View>
-        ) : !showMultiCheck && showSearchBar ? (
+        ) : (!showMultiCheck && showSearchBar) || showUnlockSecretFolder ? (
           <View></View>
         ) : (
           <TouchableOpacity

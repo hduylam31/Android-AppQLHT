@@ -103,7 +103,7 @@ const CalendarExtendTimeNoti = () => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
                 name="arrow-left"
-                size={32}
+                size={28}
                 color="white"
               />
             </TouchableOpacity>
@@ -112,7 +112,7 @@ const CalendarExtendTimeNoti = () => {
                 Thời gian thông báo
               </Text>
             </View>
-            <View className="w-8 h-8"></View>
+            <View className="w-7 h-7"></View>
 
             {/* Phần tiêu đề */}
           </View>

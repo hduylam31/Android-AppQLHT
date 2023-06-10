@@ -209,7 +209,11 @@ const CalendarMain = () => {
                 color="black"
               />
             ) : (
-              <View className="w-4 h-4"></View>
+              <MaterialCommunityIcons
+                name="bell-off-outline"
+                size={16}
+                color="white"
+              />
             )}
           </Text>
         </View>
@@ -519,7 +523,7 @@ const CalendarMain = () => {
                 }}
                 onPress={() => setShowExtends(false)}
               >
-                <View className="w-52 h-36 bg-white rounded-lg">
+                <View className="w-52 h-48 bg-white rounded-lg">
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("CalendarExtendTimeNoti");
@@ -543,6 +547,14 @@ const CalendarMain = () => {
                     className="flex-1 flex-row justify-start items-center"
                   >
                     <Text className="ml-7">Xem tất cả sự kiện moodle</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("CalendarFree");
+                    }}
+                    className="flex-1 flex-row justify-start items-center"
+                  >
+                    <Text className="ml-7">Gợi ý lịch rảnh</Text>
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>

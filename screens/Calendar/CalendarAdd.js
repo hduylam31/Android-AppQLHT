@@ -24,8 +24,10 @@ import { Dropdown } from "react-native-element-dropdown";
 const Calendar_Add = () => {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
+  const [time, setTime] = useState(new Date());
+
+  const [showDate, setShowDate] = useState(false);
+  const [showTime, setShowTime] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isNotified, setIsNotified] = useState(true);
@@ -35,11 +37,6 @@ const Calendar_Add = () => {
   console.log("aa", selectedDay);
   // const selectedDay = props.currentDate;
   const DaySelected = moment(selectedDay, "YYYY-MM-DD").format("DD/MM/YYYY");
-  console.log("aaa", DaySelected);
-  const getTimeCurrent = new Date().toISOString();
-  const timeString = getTimeCurrent.substring(getTimeCurrent.indexOf("T"));
-  console.log(timeString);
-  const newDate = selectedDay.concat("", timeString);
 
   const [textDate, setDateText] = useState(DaySelected);
   const [textTime, setTimeDate] = useState("00:00");
@@ -50,19 +47,15 @@ const Calendar_Add = () => {
     });
   });
 
-  const onChange = (event, selectedDate) => {
+  const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate;
-    setShow(Platform.OS === "ios");
+    setShowDate(Platform.OS === "ios");
+
     setDate(currentDate);
     console.log("currentDate", currentDate);
     let tempDate = new Date(currentDate);
     let fDate;
-    // let fDate =
-    //   tempDate.getDate() +
-    //   "/" +
-    //   (tempDate.getMonth() + 1) +
-    //   "/" +
-    //   tempDate.getFullYear();
+
     if (tempDate.getDate() < 10 && tempDate.getMonth() < 10) {
       fDate =
         "0" +
@@ -79,7 +72,7 @@ const Calendar_Add = () => {
         (tempDate.getMonth() + 1) +
         "/" +
         tempDate.getFullYear();
-    } else if (tempDate.getDate() > 10 && tempDate.getMonth() < 10) {
+    } else if (tempDate.getMonth() < 10) {
       fDate =
         tempDate.getDate() +
         "/0" +
@@ -95,6 +88,18 @@ const Calendar_Add = () => {
         tempDate.getFullYear();
     }
 
+    setDateText(fDate);
+
+    console.log(fDate + " (" + fTime + ")");
+  };
+
+  const onChangeTime = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShowTime(Platform.OS === "ios");
+    setTime(currentDate);
+    console.log("currentDate", currentDate);
+    let tempDate = new Date(currentDate);
+
     if (tempDate.getHours() < 10 && tempDate.getMinutes() < 10) {
       fTime = "0" + tempDate.getHours() + ":0" + tempDate.getMinutes();
     } else if (tempDate.getHours() < 10) {
@@ -104,15 +109,10 @@ const Calendar_Add = () => {
     } else {
       fTime = tempDate.getHours() + ":" + tempDate.getMinutes();
     }
-    setDateText(fDate);
+
     setTimeDate(fTime);
 
     console.log(fDate + " (" + fTime + ")");
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
   };
 
   const handlePress = () => {
@@ -206,6 +206,9 @@ const Calendar_Add = () => {
   console.log("cus", customTimeNoti);
   console.log("number", numberTimeNoti);
 
+  const [timeEvent, setTimeEvent] = useState("5");
+  const [categoryTime, setCategoryTime] = useState("2");
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -224,7 +227,7 @@ const Calendar_Add = () => {
                 Thêm sự kiện mới
               </Text>
             </View>
-            <View className="w-8 h-8"></View>
+            <View className="w-7 h-7"></View>
             {/* <TouchableOpacity onPress={handleAddingUserCalendar}>
               <MaterialCommunityIcons name="check" size={30} color="white" />
             </TouchableOpacity> */}
@@ -260,7 +263,7 @@ const Calendar_Add = () => {
                   <Text className="text-base text-red-600"> (*)</Text>
                 </View>
                 <TouchableOpacity
-                  onPress={() => showMode("date")}
+                  onPress={() => setShowDate(true)}
                   className=" bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3"
                   style={{
                     shadowColor: "#000000",
@@ -280,7 +283,7 @@ const Calendar_Add = () => {
                   <Text className="text-base text-red-600"> (*)</Text>
                 </View>
                 <TouchableOpacity
-                  onPress={() => showMode("time")}
+                  onPress={() => setShowTime(true)}
                   className="bg-[#FFFFFF] h-12 flex-row rounded-lg justify-between items-center px-3 "
                   style={{
                     shadowColor: "#000000",
@@ -295,27 +298,97 @@ const Calendar_Add = () => {
                 </TouchableOpacity>
               </View>
 
-              {show && (
+              {showDate && (
                 <DateTimePicker
                   testID="dateTimePicker"
-                  value={new Date(newDate)}
-                  mode={mode}
+                  value={date}
+                  mode="date"
                   is24Hour={true}
                   display="default"
-                  onChange={onChange}
+                  onChange={onChangeDate}
+                />
+              )}
+
+              {showTime && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={time}
+                  mode="time"
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChangeTime}
                 />
               )}
             </View>
-            <Text className="text-base">Bật thông báo</Text>
-            <View className="items-start">
-              <Switch
-                trackColor={{ false: "grey", true: "#3A4666" }}
-                thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
-                value={isNotified}
-                onValueChange={(newValue) => setIsNotified(newValue)}
-                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+            <View>
+              <Text className="text-base">Bật thông báo</Text>
+              <View className="items-start">
+                <Switch
+                  trackColor={{ false: "grey", true: "#3A4666" }}
+                  thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
+                  value={isNotified}
+                  onValueChange={(newValue) => setIsNotified(newValue)}
+                  style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                />
+              </View>
+              <Text className="text-base">Thời lượng</Text>
+            </View>
+
+            <View className="flex-row justify-between items-center space-x-[2%]">
+              <TextInput
+                keyboardType="numeric"
+                className=" bg-[#FFFFFF] px-4 py-2 rounded-lg w-[49%] text-base"
+                style={{
+                  shadowColor: "#000000",
+                  shadowOffset: { width: 10, height: 10 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+                  elevation: 10,
+                }}
+                value={timeEvent}
+                onChangeText={(text) => setTimeEvent(text)}
+              ></TextInput>
+              <Dropdown
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  height: 48,
+                  borderRadius: 8,
+                  shadowColor: "#000000",
+                  shadowOffset: { width: 10, height: 10 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+                  elevation: 10,
+                  flex: 1,
+                }}
+                containerStyle={{
+                  borderRadius: 8,
+                }}
+                itemContainerStyle={{
+                  borderRadius: 8,
+                  height: 48,
+                }}
+                itemTextStyle={{
+                  height: 48,
+                }}
+                placeholderStyle={{
+                  fontSize: 16,
+                  paddingLeft: 16,
+                  color: "#C7C7CD",
+                }}
+                selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+                iconStyle={{ marginRight: 16 }}
+                data={DataCategoriTimeNoti}
+                maxHeight={200}
+                labelField="key"
+                valueField="value"
+                placeholder="Thời gian thông báo"
+                value={categoryTime}
+                onChange={(item) => {
+                  setCategoryTime(item.value);
+                }}
               />
             </View>
+
             <Text className="text-base">Thời gian thông báo</Text>
             <Dropdown
               disable={isNotified ? false : true}
@@ -414,10 +487,12 @@ const Calendar_Add = () => {
               <View></View>
             )}
             {/* Nội dung phần ghi chú */}
+          </View>
+          <View className="px-4 space-y-2">
             <Text className="text-base">Ghi chú</Text>
             <TextInput
               placeholder="Nội dung"
-              className="w-[100%] h-52 bg-[#FFFFFF] px-4 pt-4 rounded-lg resize-none text-base"
+              className="h-28 bg-[#FFFFFF] px-4 pt-4 rounded-lg resize-none text-base"
               style={{
                 shadowColor: "#000000",
                 shadowOffset: { width: 10, height: 10 },
@@ -432,6 +507,7 @@ const Calendar_Add = () => {
               textAlignVertical="top"
             ></TextInput>
           </View>
+
           {/* Nút thêm */}
           <View className="h-20"></View>
           {isKeyboardShowing && (
