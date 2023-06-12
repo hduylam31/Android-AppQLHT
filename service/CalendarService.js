@@ -476,6 +476,8 @@ class CalendarService {
                   type: "4",
                   customType: "",
                   customTime: "",
+                  durationTime: "",
+                  durationType: "",
                 },
               };
               events.push(eventItem);
@@ -645,6 +647,8 @@ class CalendarService {
           type: rangeTimeInfo.type,
           customType: rangeTimeInfo.customType,
           customTime: rangeTimeInfo.customTime,
+          durationTime: rangeTimeInfo.durationTime, 
+          durationType: rangeTimeInfo.durationType
         },
       };
       await StorageUtils.pushElementToArray("userCalendar", item);

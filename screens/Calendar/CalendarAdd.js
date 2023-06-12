@@ -143,6 +143,7 @@ const Calendar_Add = () => {
       console.log("Start addingg");
       try {
         var rangeTimeInfo = {
+          time: "0", 
           type: "",
           customType: "",
           customTime: "",
@@ -175,11 +176,13 @@ const Calendar_Add = () => {
             time: rangeTime,
             type: timeNoti,
             customType: customTimeNoti,
-            customTime: numberTimeNoti,
+            customTime: numberTimeNoti
           };
         }
 
-        await CalendarService.addUserCalendar(
+        rangeTimeInfo = {...rangeTimeInfo, durationTime: timeEvent, durationType: categoryTime};
+
+        await CalendarService.addUserCalendar( 
           title,
           textDate,
           textTime,

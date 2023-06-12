@@ -173,6 +173,8 @@ const Calendar_Edit = () => {
         setCustomTimeNoti(item.rangeTimeInfo.customType);
         setNumberTimeNoti(item.rangeTimeInfo.customTime);
       }
+      setTimeEvent(item.rangeTimeInfo.durationTime);
+      setCategoryTime(item.rangeTimeInfo.durationType);
     };
     loadData();
   }, []);
