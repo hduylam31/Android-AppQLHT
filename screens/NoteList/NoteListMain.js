@@ -31,8 +31,6 @@ const NoteListMain = () => {
 
   // thay loadCalendar thanh loadNoteList 2 useEffect phia duoi
   const loadNoteList = async () => {
-    setShowMultiCheck(false);
-    setSelectedIds([]);
     try {
       const notelist = await NoteService.loadNoteData();
       const notSecretData = notelist.filter((item) => !item.isSecret);
@@ -43,6 +41,8 @@ const NoteListMain = () => {
     } catch (error) {
       console.log(error);
     }
+    setShowMultiCheck(false);
+    setSelectedIds([]);
   };
   useEffect(() => {
     loadNoteList();

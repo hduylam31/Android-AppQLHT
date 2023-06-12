@@ -14,7 +14,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { SelectList } from "react-native-dropdown-select-list";
+import { Dropdown } from "react-native-element-dropdown";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import ScheduleService from "../../service/ScheduleService";
 
 const Schedule_Edit = () => {
@@ -167,15 +168,57 @@ const Schedule_Edit = () => {
   Keyboard.addListener("keyboardDidShow", showKeyboard);
   Keyboard.addListener("keyboardDidHide", hideKeyboard);
 
-  //Xác định chiều cao TextInput Title
-  const [height, setHeight] = useState(0);
+  const [isCheckSelectOffice1, setIsCheckSelectOffice1] = useState(true);
+  const [isCheckSelectOffice2, setIsCheckSelectOffice2] = useState(false);
+  const [isCheckSelectCustom, setIsCheckSelectCustom] = useState(false);
 
-  const onContentSizeChange = (event) => {
-    const { height } = event.nativeEvent.contentSize;
-    setHeight(height);
+  const [timeStart, setTimeStart] = useState(new Date());
+  const [showTimeStart, setShowTimeStart] = useState(false);
+  const [textTimeStart, setTextTimeStart] = useState("Từ");
+
+  const [timeEnd, setTimeEnd] = useState(new Date());
+  const [showTimeEnd, setShowTimeEnd] = useState(false);
+  const [textTimeEnd, setTextTimeEnd] = useState("Đến");
+
+  const onChangeTimeStart = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShowTimeStart(Platform.OS === "ios");
+    setTimeStart(currentDate);
+
+    let tempDate = new Date(currentDate);
+
+    if (tempDate.getHours() < 10 && tempDate.getMinutes() < 10) {
+      fTime = "0" + tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else if (tempDate.getHours() < 10) {
+      fTime = "0" + tempDate.getHours() + ":" + tempDate.getMinutes();
+    } else if (tempDate.getMinutes() < 10) {
+      fTime = tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else {
+      fTime = tempDate.getHours() + ":" + tempDate.getMinutes();
+    }
+
+    setTextTimeStart(fTime);
   };
-  const newHeightTitle = height + 50;
-  const newHeightTitle2 = height + 140;
+
+  const onChangeTimeEnd = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShowTimeEnd(Platform.OS === "ios");
+    setTimeEnd(currentDate);
+
+    let tempDate = new Date(currentDate);
+
+    if (tempDate.getHours() < 10 && tempDate.getMinutes() < 10) {
+      fTime = "0" + tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else if (tempDate.getHours() < 10) {
+      fTime = "0" + tempDate.getHours() + ":" + tempDate.getMinutes();
+    } else if (tempDate.getMinutes() < 10) {
+      fTime = tempDate.getHours() + ":0" + tempDate.getMinutes();
+    } else {
+      fTime = tempDate.getHours() + ":" + tempDate.getMinutes();
+    }
+
+    setTextTimeEnd(fTime);
+  };
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -219,152 +262,304 @@ const Schedule_Edit = () => {
                 shadowOpacity: 0.5,
                 shadowRadius: 10,
                 elevation: 10,
-                height: height,
               }}
               value={title}
               onChangeText={(text) => setTitle(text)}
               multiline={true}
-              onContentSizeChange={onContentSizeChange}
+            ></TextInput>
+            <View className="flex-row">
+              <Text className="text-base">Ngày trong tuần</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
+            <Dropdown
+              style={{
+                backgroundColor: "#FFFFFF",
+                height: 48,
+                borderRadius: 8,
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+              containerStyle={{
+                borderRadius: 8,
+              }}
+              itemContainerStyle={{
+                borderRadius: 8,
+                height: 48,
+              }}
+              itemTextStyle={{
+                height: 48,
+              }}
+              placeholderStyle={{
+                fontSize: 16,
+                paddingLeft: 16,
+                color: "#C7C7CD",
+              }}
+              selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+              iconStyle={{ marginRight: 16 }}
+              search
+              searchPlaceholder="Tìm kiếm"
+              data={weekdays}
+              maxHeight={200}
+              labelField="key"
+              valueField="value"
+              placeholder="Ngày trong tuần"
+              value={DayOfWeek}
+              onChange={(item) => {
+                setDayOfWeek(item.value);
+              }}
+            />
+            <View className="flex-row">
+              <Text className="text-base">Tiết</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
+            <View className="flex-row justify-between items-center space-x-2">
+              <Dropdown
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  height: 48,
+                  borderRadius: 8,
+                  shadowColor: "#000000",
+                  shadowOffset: { width: 10, height: 10 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+                  elevation: 10,
+                  flex: 1,
+                }}
+                containerStyle={{
+                  borderRadius: 8,
+                }}
+                itemContainerStyle={{
+                  borderRadius: 8,
+                  height: 48,
+                }}
+                itemTextStyle={{
+                  height: 48,
+                }}
+                placeholderStyle={{
+                  fontSize: 16,
+                  paddingLeft: 16,
+                  color: "#C7C7CD",
+                }}
+                selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+                iconStyle={{ marginRight: 16 }}
+                search
+                searchPlaceholder="Tìm kiếm"
+                data={lessons}
+                maxHeight={200}
+                labelField="key"
+                valueField="value"
+                placeholder="Từ"
+                value={selectedLessonStart}
+                onChange={(item) => {
+                  setSelectedLessonStart(item.value);
+                }}
+              />
+              <Dropdown
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  height: 48,
+                  borderRadius: 8,
+                  shadowColor: "#000000",
+                  shadowOffset: { width: 10, height: 10 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+                  elevation: 10,
+                  flex: 1,
+                }}
+                containerStyle={{
+                  borderRadius: 8,
+                }}
+                itemContainerStyle={{
+                  borderRadius: 8,
+                  height: 48,
+                }}
+                itemTextStyle={{
+                  height: 48,
+                }}
+                placeholderStyle={{
+                  fontSize: 16,
+                  paddingLeft: 16,
+                  color: "#C7C7CD",
+                }}
+                selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
+                iconStyle={{ marginRight: 16 }}
+                search
+                searchPlaceholder="Tìm kiếm"
+                data={lessons}
+                maxHeight={200}
+                labelField="key"
+                valueField="value"
+                placeholder="Đến"
+                value={selectedLessonEnd}
+                onChange={(item) => {
+                  setSelectedLessonEnd(item.value);
+                }}
+              />
+            </View>
+            <View className="flex-row">
+              <Text className="text-base">Thời gian</Text>
+              <Text className="text-base text-red-600"> (*)</Text>
+            </View>
+            <View
+              className="bg-white py-3 px-4 rounded-xl space-y-2"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+            >
+              <View className="flex-row items-center justify-start space-x-2">
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsCheckSelectOffice1(true);
+                    setIsCheckSelectOffice2(false);
+                    setIsCheckSelectCustom(false);
+                  }}
+                >
+                  {isCheckSelectOffice1 ? (
+                    <MaterialCommunityIcons
+                      name="circle-slice-8"
+                      size={20}
+                      color="black"
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="circle-outline"
+                      size={20}
+                      color="black"
+                    />
+                  )}
+                </TouchableOpacity>
+                <Text className="text-base">Giờ cơ sở 1</Text>
+              </View>
+              <View className="flex-row items-center justify-start space-x-2">
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsCheckSelectOffice1(false);
+                    setIsCheckSelectOffice2(true);
+                    setIsCheckSelectCustom(false);
+                  }}
+                >
+                  {isCheckSelectOffice2 ? (
+                    <MaterialCommunityIcons
+                      name="circle-slice-8"
+                      size={20}
+                      color="black"
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="circle-outline"
+                      size={20}
+                      color="black"
+                    />
+                  )}
+                </TouchableOpacity>
+                <Text className="text-base">Giờ cơ sở 2</Text>
+              </View>
+
+              <View className="flex-row items-center justify-start space-x-2">
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsCheckSelectOffice1(false);
+                    setIsCheckSelectOffice2(false);
+                    setIsCheckSelectCustom(true);
+                  }}
+                >
+                  {isCheckSelectCustom ? (
+                    <MaterialCommunityIcons
+                      name="circle-slice-8"
+                      size={20}
+                      color="black"
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="circle-outline"
+                      size={20}
+                      color="black"
+                    />
+                  )}
+                </TouchableOpacity>
+                <Text className="text-base">Tùy chỉnh</Text>
+              </View>
+              {isCheckSelectCustom ? (
+                <View className="flex-row justify-between items-center space-x-2">
+                  <TouchableOpacity
+                    onPress={() => setShowTimeStart(true)}
+                    className="bg-white py-[6px] rounded-lg justify-center items-center border-[1px] border-[#E0E0E0] flex-1"
+                  >
+                    <Text className="text-base">{textTimeStart}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => setShowTimeEnd(true)}
+                    className="bg-white py-[6px] rounded-lg justify-center items-center border-[1px] border-[#E0E0E0] flex-1"
+                  >
+                    <Text className="text-base">{textTimeEnd}</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <></>
+              )}
+              {showTimeStart ? (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={timeStart}
+                  mode="time"
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChangeTimeStart}
+                />
+              ) : showTimeEnd ? (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={timeEnd}
+                  mode="time"
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChangeTimeEnd}
+                />
+              ) : (
+                <></>
+              )}
+            </View>
+
+            <Text className="text-base">Địa điểm</Text>
+            <TextInput
+              placeholder="Địa điểm"
+              className="w-[100%] bg-[#FFFFFF] px-4 py-3 rounded-lg text-base resize-none"
+              style={{
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
+              }}
+              value={location}
+              onChangeText={(text) => setLocation(text)}
+              multiline={true}
             ></TextInput>
 
-            <View className="space-y-2 top-44">
-              <Text className="text-base">Địa điểm</Text>
-              <TextInput
-                placeholder="Địa điểm"
-                className="w-[100%] bg-[#FFFFFF] px-4 py-3 rounded-lg text-base resize-none"
-                style={{
-                  shadowColor: "#000000",
-                  shadowOffset: { width: 10, height: 10 },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 10,
-                  elevation: 10,
-                }}
-                value={location}
-                onChangeText={(text) => setLocation(text)}
-                multiline={true}
-              ></TextInput>
-            </View>
-            <View className="space-y-2 top-44">
-              <Text className="text-base">Ghi chú</Text>
-              <TextInput
-                placeholder="Nội dung"
-                className="w-[100%] h-56 bg-[#FFFFFF] px-4 pt-4 text-base rounded-lg resize-none"
-                style={{
-                  shadowColor: "#000000",
-                  shadowOffset: { width: 10, height: 10 },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 10,
-                  elevation: 10,
-                }}
-                multiline={true}
-                value={note}
-                numberOfLines={4}
-                onChangeText={(text) => setNote(text)}
-                textAlignVertical="top"
-              ></TextInput>
-            </View>
-
-            <View
-              className="space-y-2 absolute ml-[5%] w-full z-50"
+            <Text className="text-base">Ghi chú</Text>
+            <TextInput
+              placeholder="Nội dung"
+              className="w-[100%] py-3 bg-[#FFFFFF] px-4 pt-4 text-base rounded-lg resize-none"
               style={{
-                top: newHeightTitle,
+                shadowColor: "#000000",
+                shadowOffset: { width: 10, height: 10 },
+                shadowOpacity: 0.5,
+                shadowRadius: 10,
+                elevation: 10,
               }}
-            >
-              <View className="flex-row">
-                <Text className="text-base">Ngày trong tuần</Text>
-                <Text className="text-base text-red-600"> (*)</Text>
-              </View>
-              <View>
-                <SelectList
-                  data={weekdays}
-                  value={DayOfWeek}
-                  setSelected={setDayOfWeek}
-                  placeholder={DayOfWeek}
-                  notFoundText="Không tìm thấy kết quả"
-                  searchPlaceholder="Tìm kiếm"
-                  maxHeight={200}
-                  inputStyles={{ fontSize: 16, lineHeight: 24 }}
-                  boxStyles={{
-                    height: 48,
-                    borderWidth: 0,
-                    backgroundColor: "#FFFFFF",
-                    shadowColor: "#000000",
-                    shadowOffset: { width: 10, height: 10 },
-                    shadowOpacity: 0.5,
-                    shadowRadius: 10,
-                    elevation: 10,
-                  }}
-                  dropdownStyles={{
-                    backgroundColor: "#FFFFFF",
-                  }}
-                />
-              </View>
-            </View>
-            <View
-              className="space-y-2 absolute ml-[5%] w-full z-0"
-              style={{
-                top: newHeightTitle2,
-              }}
-            >
-              <View className="flex-row">
-                <Text className="text-base">Tiết</Text>
-                <Text className="text-base text-red-600"> (*)</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <View className="w-[45%]">
-                  <SelectList
-                    data={lessons}
-                    value={selectedLessonStart}
-                    setSelected={setSelectedLessonStart}
-                    placeholder={selectedLessonStart}
-                    notFoundText="Không tìm thấy kết quả"
-                    searchPlaceholder="Tìm kiếm"
-                    maxHeight={200}
-                    inputStyles={{ fontSize: 16, lineHeight: 24 }}
-                    boxStyles={{
-                      height: 48,
-                      borderWidth: 0,
-                      backgroundColor: "#FFFFFF",
-                      shadowColor: "#000000",
-                      shadowOffset: { width: 10, height: 10 },
-                      shadowOpacity: 0.5,
-                      shadowRadius: 10,
-                      elevation: 10,
-                    }}
-                    dropdownStyles={{
-                      backgroundColor: "#FFFFFF",
-                    }}
-                  />
-                </View>
-                <View className="w-[45%]">
-                  <SelectList
-                    data={lessons}
-                    value={selectedLessonEnd}
-                    setSelected={setSelectedLessonEnd}
-                    placeholder={selectedLessonEnd}
-                    notFoundText="Không tìm thấy kết quả"
-                    searchPlaceholder="Tìm kiếm"
-                    maxHeight={200}
-                    inputStyles={{ fontSize: 16, lineHeight: 24 }}
-                    boxStyles={{
-                      height: 48,
-                      borderWidth: 0,
-                      backgroundColor: "#FFFFFF",
-                      shadowColor: "#000000",
-                      shadowOffset: { width: 10, height: 10 },
-                      shadowOpacity: 0.5,
-                      shadowRadius: 10,
-                      elevation: 10,
-                    }}
-                    dropdownStyles={{
-                      backgroundColor: "#FFFFFF",
-                    }}
-                  />
-                </View>
-              </View>
-            </View>
+              multiline={true}
+              value={note}
+              onChangeText={(text) => setNote(text)}
+            ></TextInput>
+            <View className="h-12"></View>
           </View>
-          <View className="h-52"></View>
           {isKeyboardShowing && (
             <TouchableOpacity
               onPress={handleUpdateSchedule}
