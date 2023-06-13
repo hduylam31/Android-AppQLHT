@@ -212,7 +212,28 @@ const Calendar_Add = () => {
   console.log("cus", customTimeNoti);
   console.log("number", numberTimeNoti);
 
-  const [timeEvent, setTimeEvent] = useState("5");
+  const startHour = selectedItem
+    ? parseInt(selectedItem.timeStart.split(":")[0])
+    : 0;
+  const startMinute = selectedItem
+    ? parseInt(selectedItem.timeStart.split(":")[1])
+    : 0;
+  const endHour = selectedItem
+    ? parseInt(selectedItem.timeEnd.split(":")[0])
+    : 0;
+  const endMinute = selectedItem
+    ? parseInt(selectedItem.timeEnd.split(":")[1])
+    : 0;
+
+  const hourDiff = (
+    endHour -
+    startHour +
+    (endMinute - startMinute) / 60
+  ).toString();
+
+  console.log("hourDiff", hourDiff);
+
+  const [timeEvent, setTimeEvent] = useState(hourDiff);
   const [categoryTime, setCategoryTime] = useState("2");
 
   return (
@@ -330,6 +351,7 @@ const Calendar_Add = () => {
             <View className="flex-row justify-between items-center space-x-[2%]">
               <TextInput
                 keyboardType="numeric"
+                maxLength={15}
                 className=" bg-[#FFFFFF] px-4 py-[10px] rounded-lg w-[49%] text-base"
                 style={{
                   shadowColor: "#000000",
