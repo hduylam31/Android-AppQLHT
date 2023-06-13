@@ -124,33 +124,6 @@ const Calendar_Edit = () => {
     console.log(fDate + " (" + fTime + ")");
   };
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios");
-    setDate(currentDate);
-
-    let tempDate = new Date(currentDate);
-    let fDate =
-      tempDate.getDate() +
-      "/" +
-      (tempDate.getMonth() + 1) +
-      "/" +
-      tempDate.getFullYear();
-    if (tempDate.getHours() < 10 && tempDate.getMinutes() < 10) {
-      fTime = "0" + tempDate.getHours() + ":0" + tempDate.getMinutes();
-    } else if (tempDate.getHours() < 10) {
-      fTime = "0" + tempDate.getHours() + ":" + tempDate.getMinutes();
-    } else if (tempDate.getMinutes() < 10) {
-      fTime = tempDate.getHours() + ":0" + tempDate.getMinutes();
-    } else {
-      fTime = tempDate.getHours() + ":" + tempDate.getMinutes();
-    }
-    setDateText(fDate);
-    setTimeDate(fTime);
-
-    console.log(fDate + " (" + fTime + ")");
-  };
-
   const handlePress = () => {
     Keyboard.dismiss();
   };
@@ -441,25 +414,13 @@ const Calendar_Edit = () => {
                 />
               )}
             </View>
-          </LockedView>
-          <View className="px-4">
-            <Text className="text-base mt-2">Bật thông báo</Text>
-            <View className="items-start" pointerEvents="auto">
-              <Switch
-                trackColor={{ false: "grey", true: "#3A4666" }}
-                thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
-                value={isNotified}
-                onValueChange={(newValue) => setIsNotified(newValue)}
-                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
-              />
-            </View>
             {item.isMoodle === "false" ? (
               <>
-                <Text className="text-base mb-2">Thời lượng</Text>
+                <Text className="text-base my-2">Thời lượng</Text>
                 <View className="flex-row justify-between items-center space-x-[2%] mb-2">
                   <TextInput
                     keyboardType="numeric"
-                    className=" bg-[#FFFFFF] px-4 py-2 rounded-lg w-[49%] text-base"
+                    className=" bg-[#FFFFFF] px-4 py-[10px] rounded-lg w-[49%] text-base"
                     style={{
                       shadowColor: "#000000",
                       shadowOffset: { width: 10, height: 10 },
@@ -510,7 +471,26 @@ const Calendar_Edit = () => {
                     }}
                   />
                 </View>
+              </>
+            ) : (
+              <></>
+            )}
+          </LockedView>
 
+          <View className="px-4">
+            <Text className="text-base">Bật thông báo</Text>
+            <View className="items-start" pointerEvents="auto">
+              <Switch
+                trackColor={{ false: "grey", true: "#3A4666" }}
+                thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
+                value={isNotified}
+                onValueChange={(newValue) => setIsNotified(newValue)}
+                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+              />
+            </View>
+
+            {item.isMoodle === "false" ? (
+              <>
                 <Text className="text-base mb-2">Thời gian thông báo</Text>
                 <Dropdown
                   disable={isNotified ? false : true}
@@ -553,7 +533,7 @@ const Calendar_Edit = () => {
                 />
               </>
             ) : (
-              <View></View>
+              <></>
             )}
             {timeNoti === "6" && isNotified && item.isMoodle === "false" ? (
               <View className="flex-row justify-between mt-2">

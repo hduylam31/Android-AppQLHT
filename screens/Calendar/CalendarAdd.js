@@ -34,12 +34,18 @@ const Calendar_Add = () => {
 
   const route = useRoute();
   const selectedDay = route.params.selectedDay;
+
+  const selectedItem = route.params?.selectedItem;
   console.log("aa", selectedDay);
+  console.log("selectedItem", selectedItem);
   // const selectedDay = props.currentDate;
-  const DaySelected = moment(selectedDay, "YYYY-MM-DD").format("DD/MM/YYYY");
+  const DaySelected = selectedItem
+    ? selectedItem.date
+    : moment(selectedDay, "YYYY-MM-DD").format("DD/MM/YYYY");
+  const TimeSelected = selectedItem ? selectedItem.timeStart : "00:00";
 
   const [textDate, setDateText] = useState(DaySelected);
-  const [textTime, setTimeDate] = useState("00:00");
+  const [textTime, setTimeDate] = useState(TimeSelected);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -209,7 +215,28 @@ const Calendar_Add = () => {
   console.log("cus", customTimeNoti);
   console.log("number", numberTimeNoti);
 
-  const [timeEvent, setTimeEvent] = useState("5");
+  const startHour = selectedItem
+    ? parseInt(selectedItem.timeStart.split(":")[0])
+    : 0;
+  const startMinute = selectedItem
+    ? parseInt(selectedItem.timeStart.split(":")[1])
+    : 0;
+  const endHour = selectedItem
+    ? parseInt(selectedItem.timeEnd.split(":")[0])
+    : 0;
+  const endMinute = selectedItem
+    ? parseInt(selectedItem.timeEnd.split(":")[1])
+    : 0;
+
+  const hourDiff = (
+    endHour -
+    startHour +
+    (endMinute - startMinute) / 60
+  ).toString();
+
+  console.log("hourDiff", hourDiff);
+
+  const [timeEvent, setTimeEvent] = useState(hourDiff);
   const [categoryTime, setCategoryTime] = useState("2");
 
   return (
@@ -323,24 +350,12 @@ const Calendar_Add = () => {
                 />
               )}
             </View>
-            <View>
-              <Text className="text-base">Bật thông báo</Text>
-              <View className="items-start">
-                <Switch
-                  trackColor={{ false: "grey", true: "#3A4666" }}
-                  thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
-                  value={isNotified}
-                  onValueChange={(newValue) => setIsNotified(newValue)}
-                  style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
-                />
-              </View>
-              <Text className="text-base">Thời lượng</Text>
-            </View>
-
+            <Text className="text-base">Thời lượng</Text>
             <View className="flex-row justify-between items-center space-x-[2%]">
               <TextInput
                 keyboardType="numeric"
-                className=" bg-[#FFFFFF] px-4 py-2 rounded-lg w-[49%] text-base"
+                maxLength={15}
+                className=" bg-[#FFFFFF] px-4 py-[10px] rounded-lg w-[49%] text-base"
                 style={{
                   shadowColor: "#000000",
                   shadowOffset: { width: 10, height: 10 },
@@ -391,8 +406,20 @@ const Calendar_Add = () => {
                 }}
               />
             </View>
+            <View>
+              <Text className="text-base">Bật thông báo</Text>
+              <View className="items-start">
+                <Switch
+                  trackColor={{ false: "grey", true: "#3A4666" }}
+                  thumbColor={isNotified ? "#f4f3f4" : "#f4f3f4"}
+                  value={isNotified}
+                  onValueChange={(newValue) => setIsNotified(newValue)}
+                  style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                />
+              </View>
+              <Text className="text-base">Thời gian thông báo</Text>
+            </View>
 
-            <Text className="text-base">Thời gian thông báo</Text>
             <Dropdown
               disable={isNotified ? false : true}
               style={{

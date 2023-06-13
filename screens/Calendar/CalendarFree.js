@@ -7,6 +7,7 @@ import {
   ScrollView,
   Switch,
   TextInput,
+  FlatList,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -25,7 +26,14 @@ const CalendarFree = () => {
     });
   });
 
-  const [title, setTitle] = useState("");
+  const Data = [
+    { id: "1", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+    { id: "2", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+    { id: "3", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+    { id: "4", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+    { id: "5", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+  ];
+
   const [timeEvent, setTimeEvent] = useState("5");
   const [categoryTime, setCategoryTime] = useState("2");
 
@@ -177,7 +185,30 @@ const CalendarFree = () => {
 
     setTextDateEnd(fDate);
   };
-
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  renderItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        className={`h-12 justify-center items-start px-2 ${
+          index === selectedIndex ? "bg-yellow-300" : "bg-white"
+        } `}
+        onPress={() => setSelectedIndex(index)}
+      >
+        <Text className="font-medium text-base">{item.date}</Text>
+        <Text>
+          {item.timeStart} - {item.timeEnd}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+  const handleAddButtonCalendar = () => {
+    setShowResultSearch(false);
+    if (selectedIndex !== -1) {
+      const selectedItem = Data[selectedIndex];
+      console.log("Mục đã chọn:", selectedItem);
+      navigation.navigate("Calendar_Add", { selectedItem });
+    }
+  };
   return (
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -507,7 +538,7 @@ const CalendarFree = () => {
             <View className="bg-white w-[80%] p-3 rounded-xl space-y-2">
               <View className="flex-row justify-between items-center">
                 <View className="w-6 h-6"></View>
-                <Text className="text-center text-base font-medium">
+                <Text className="text-center text-lg font-semibold">
                   Lịch rảnh
                 </Text>
                 <TouchableOpacity onPress={() => setShowResultSearch(false)}>
@@ -518,9 +549,15 @@ const CalendarFree = () => {
                   />
                 </TouchableOpacity>
               </View>
-
+              <View className="h-48">
+                <FlatList
+                  data={Data}
+                  keyExtractor={(item) => item.id.toString()}
+                  renderItem={this.renderItem}
+                />
+              </View>
               <TouchableOpacity
-                onPress={() => setShowResultSearch(false)}
+                onPress={handleAddButtonCalendar}
                 className="py-2 justify-center items-center rounded-xl bg-[#3A4666]"
                 style={{
                   shadowColor: "#000000",

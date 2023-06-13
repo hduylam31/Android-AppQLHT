@@ -1,4 +1,4 @@
-import { lessons, weekdays } from "./DataOfDropDown";
+import { lessons, weekdays, lessonsLT, lessonsNVC } from "./DataOfDropDown";
 import {
   View,
   Text,
@@ -168,22 +168,57 @@ const Schedule_Edit = () => {
   Keyboard.addListener("keyboardDidShow", showKeyboard);
   Keyboard.addListener("keyboardDidHide", hideKeyboard);
 
-  const [isCheckSelectOffice1, setIsCheckSelectOffice1] = useState(true);
-  const [isCheckSelectOffice2, setIsCheckSelectOffice2] = useState(false);
+  const [isCheckSelectOfficeLT, setIsCheckSelectOfficeLT] = useState(true);
+  const [isCheckSelectOfficeNVC, setIsCheckSelectOfficeNVC] = useState(false);
   const [isCheckSelectCustom, setIsCheckSelectCustom] = useState(false);
+  const [timeStart, setTimeStart] = useState("");
+  const [timeEnd, setTimeEnd] = useState("");
 
-  const [timeStart, setTimeStart] = useState(new Date());
+  const handleSelection = (start, end) => {
+    if (isCheckSelectOfficeLT) {
+      const filteredData = lessonsLT.filter(
+        (item) => Number(item.key) >= start && Number(item.key) <= end
+      );
+
+      const timeStart = filteredData.length > 0 ? filteredData[0].time : "";
+      const timeEnd =
+        filteredData.length > 0
+          ? filteredData[filteredData.length - 1].time
+          : "";
+      setTimeStart(timeStart);
+      setTimeEnd(timeEnd);
+    } else if (isCheckSelectOfficeNVC) {
+      const filteredData = lessonsNVC.filter(
+        (item) => Number(item.key) >= start && Number(item.key) <= end
+      );
+
+      const timeStart = filteredData.length > 0 ? filteredData[0].time : "";
+      const timeEnd =
+        filteredData.length > 0
+          ? filteredData[filteredData.length - 1].time
+          : "";
+      setTimeStart(timeStart);
+      setTimeEnd(timeEnd);
+    } else if (isCheckSelectCustom) {
+      setTimeStart(textTimeStart);
+      setTimeEnd(textTimeEnd);
+    }
+  };
+  console.log("timeStart:", timeStart);
+  console.log("timeEnd:", timeEnd);
+
+  const [timeStartCus, setTimeStartCus] = useState(new Date());
   const [showTimeStart, setShowTimeStart] = useState(false);
   const [textTimeStart, setTextTimeStart] = useState("Từ");
 
-  const [timeEnd, setTimeEnd] = useState(new Date());
+  const [timeEndCus, setTimeEndCus] = useState(new Date());
   const [showTimeEnd, setShowTimeEnd] = useState(false);
   const [textTimeEnd, setTextTimeEnd] = useState("Đến");
 
   const onChangeTimeStart = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShowTimeStart(Platform.OS === "ios");
-    setTimeStart(currentDate);
+    setTimeStartCus(currentDate);
 
     let tempDate = new Date(currentDate);
 
@@ -203,7 +238,7 @@ const Schedule_Edit = () => {
   const onChangeTimeEnd = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShowTimeEnd(Platform.OS === "ios");
-    setTimeEnd(currentDate);
+    setTimeEndCus(currentDate);
 
     let tempDate = new Date(currentDate);
 
@@ -416,12 +451,12 @@ const Schedule_Edit = () => {
               <View className="flex-row items-center justify-start space-x-2">
                 <TouchableOpacity
                   onPress={() => {
-                    setIsCheckSelectOffice1(true);
-                    setIsCheckSelectOffice2(false);
+                    setIsCheckSelectOfficeLT(true);
+                    setIsCheckSelectOfficeNVC(false);
                     setIsCheckSelectCustom(false);
                   }}
                 >
-                  {isCheckSelectOffice1 ? (
+                  {isCheckSelectOfficeLT ? (
                     <MaterialCommunityIcons
                       name="circle-slice-8"
                       size={20}
@@ -435,17 +470,17 @@ const Schedule_Edit = () => {
                     />
                   )}
                 </TouchableOpacity>
-                <Text className="text-base">Giờ cơ sở 1</Text>
+                <Text className="text-base">Giờ cơ sở Linh Trung</Text>
               </View>
               <View className="flex-row items-center justify-start space-x-2">
                 <TouchableOpacity
                   onPress={() => {
-                    setIsCheckSelectOffice1(false);
-                    setIsCheckSelectOffice2(true);
+                    setIsCheckSelectOfficeLT(false);
+                    setIsCheckSelectOfficeNVC(true);
                     setIsCheckSelectCustom(false);
                   }}
                 >
-                  {isCheckSelectOffice2 ? (
+                  {isCheckSelectOfficeNVC ? (
                     <MaterialCommunityIcons
                       name="circle-slice-8"
                       size={20}
@@ -459,14 +494,14 @@ const Schedule_Edit = () => {
                     />
                   )}
                 </TouchableOpacity>
-                <Text className="text-base">Giờ cơ sở 2</Text>
+                <Text className="text-base">Giờ cơ sở NVC</Text>
               </View>
 
               <View className="flex-row items-center justify-start space-x-2">
                 <TouchableOpacity
                   onPress={() => {
-                    setIsCheckSelectOffice1(false);
-                    setIsCheckSelectOffice2(false);
+                    setIsCheckSelectOfficeLT(false);
+                    setIsCheckSelectOfficeNVC(false);
                     setIsCheckSelectCustom(true);
                   }}
                 >
@@ -507,7 +542,7 @@ const Schedule_Edit = () => {
               {showTimeStart ? (
                 <DateTimePicker
                   testID="dateTimePicker"
-                  value={timeStart}
+                  value={timeStartCus}
                   mode="time"
                   is24Hour={true}
                   display="default"
@@ -516,7 +551,7 @@ const Schedule_Edit = () => {
               ) : showTimeEnd ? (
                 <DateTimePicker
                   testID="dateTimePicker"
-                  value={timeEnd}
+                  value={timeEndCus}
                   mode="time"
                   is24Hour={true}
                   display="default"
