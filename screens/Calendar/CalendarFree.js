@@ -30,6 +30,8 @@ const CalendarFree = () => {
     { id: "1", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
     { id: "2", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
     { id: "3", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+    { id: "4", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+    { id: "5", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
   ];
 
   const [timeEvent, setTimeEvent] = useState("5");
@@ -192,7 +194,7 @@ const CalendarFree = () => {
         } `}
         onPress={() => setSelectedIndex(index)}
       >
-        <Text className="font-semibold text-base">{item.date}</Text>
+        <Text className="font-medium text-base">{item.date}</Text>
         <Text>
           {item.timeStart} - {item.timeEnd}
         </Text>
@@ -536,7 +538,7 @@ const CalendarFree = () => {
             <View className="bg-white w-[80%] p-3 rounded-xl space-y-2">
               <View className="flex-row justify-between items-center">
                 <View className="w-6 h-6"></View>
-                <Text className="text-center text-base font-medium">
+                <Text className="text-center text-lg font-semibold">
                   Lịch rảnh
                 </Text>
                 <TouchableOpacity onPress={() => setShowResultSearch(false)}>
