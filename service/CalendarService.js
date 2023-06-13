@@ -19,6 +19,7 @@ import * as he from "he";
 import * as BackgroundFetch from "expo-background-fetch";
 import Constants from "../domain/Constants";
 import StorageUtils from "./StorageUtils";
+import ScheduleService from "./ScheduleService";
 
 class CalendarService {
   static async isMoodleActive() {
@@ -931,6 +932,30 @@ class CalendarService {
       return {
         moodleNotiConfig: userDoc.data().moodleNotiConfig,
       };
+    } catch (error) {
+      console.log("saveNotiConfig: ", error);
+    }
+  }
+
+  static async findFreeCalendar(info) {
+
+    try {
+      const duration = info.duration;
+      const fromTime = info.fromTime;
+      const toTime = info.toTime;
+      const fromDay = info.fromDay;
+      const toDay = info.toDay;
+      const isMoodleCond = info.isMoodleCond;
+      const isTKBCond = info.isTKBCond;
+      //===============================================
+      var result = [];
+      var calendarList = await this.loadCalendarData();
+      calendarList = calendarList.map(item => {
+        return {"date": item.dateString, "fromTime": item}
+      })
+      var tkbList = await ScheduleService.loadScheduleData();
+
+
     } catch (error) {
       console.log("saveNotiConfig: ", error);
     }
