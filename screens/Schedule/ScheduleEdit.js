@@ -234,7 +234,7 @@ const Schedule_Edit = () => {
       setTimeStart(timeStart);
       setTimeEnd(timeEnd);
     } else if (isCheckSelectOfficeNVC) {
-      const filteredData = lessonsNVC.filter(
+      const filteredData = lessonsNVC.filter( 
         (item) => Number(item.key) >= start && Number(item.key) <= end
       );
 

@@ -162,6 +162,7 @@ const Calendar_Edit = () => {
       console.log("Start update");
       try {
         var rangeTimeInfo = {
+          time: "0", 
           type: "",
           customType: "",
           customTime: "",
@@ -198,6 +199,8 @@ const Calendar_Edit = () => {
           };
         }
 
+        rangeTimeInfo = {...rangeTimeInfo, durationTime: timeEvent, durationType: categoryTime};
+
         const newItem = {
           id: item.id,
           title,
@@ -209,7 +212,7 @@ const Calendar_Edit = () => {
           isMoodle: item.isMoodle,
           rangeTimeInfo,
         };
-        await CalendarService.updateUserCalendar(newItem, item);
+        await CalendarService.updateUserCalendar(newItem, item); 
         navigation.navigate("BottomBar", {
           screen: "Lịch",
           params: {

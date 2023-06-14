@@ -27,14 +27,15 @@ const CalendarFree = () => {
     });
   });
 
-  const Data = [
-    { id: "1", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
-    { id: "2", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
-    { id: "3", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
-    { id: "4", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
-    { id: "5", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
-  ];
+  // var Data = [
+  //   { id: "1", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+  //   { id: "2", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+  //   { id: "3", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+  //   { id: "4", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
+  //   { id: "5", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" }, 
+  // ];
 
+  const [Data, setData] = useState([]);
   const [timeEvent, setTimeEvent] = useState("5");
   const [categoryTime, setCategoryTime] = useState("2");
 
@@ -211,7 +212,7 @@ const CalendarFree = () => {
     }
   };
 
-  function filterSearch(){
+  async function filterSearch(){
     console.log("==================NEED TO DO VALIDATE BELOW HERE========================\n")
     var durationTime = parseInt(timeEvent);
     if(categoryTime == "1"){
@@ -222,7 +223,7 @@ const CalendarFree = () => {
       durationTime = durationTime*60*60*24;
     }  
     console.log("Thời lượng: ", durationTime); 
-    var fromTime, toTime, fromDate, toDate;
+    var fromTime, toTime, fromDate, toDate;     
     if(isCheckSelectAllDay){    
       fromTime = "00:00"; 
       toTime = "00:00";
@@ -233,14 +234,16 @@ const CalendarFree = () => {
     fromDate = textDateStart;
     toDate = textDateEnd;
     
-    console.log("Khoảng thời gian tìm kiếm: ", fromTime, toTime);
+    console.log("Khoảng thời gian tìm kiếm: ", fromTime, toTime); 
     console.log("Ngày tìm kiếm: ", fromDate, textDateEnd);
     console.log("Bỏ qua ngày có moodle: ", isCheckMoodle);  
     console.log("Bỏ qua ngày có TKB: ", isCheckTKB);
-    CalendarService.findFreeCalendar(durationTime, fromTime, toTime, fromDate, toDate, isCheckMoodle, isCheckTKB);
-    // setShowResultSearch(true); 
+    var filterData = await CalendarService.findFreeCalendar(durationTime, fromTime, toTime, fromDate, toDate, isCheckMoodle, isCheckTKB);
+    setData(filterData);
+    console.log("filterData: ", filterData);
+    setShowResultSearch(true);  
   }
-
+ 
   return (
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -278,9 +281,9 @@ const CalendarFree = () => {
                   shadowRadius: 10,
                   elevation: 10,
                 }}
-                value={timeEvent}
+                value={timeEvent} 
                 onChangeText={(text) => setTimeEvent(text)}
-              ></TextInput>
+              ></TextInput>   
               <Dropdown
                 style={{
                   backgroundColor: "#FFFFFF",

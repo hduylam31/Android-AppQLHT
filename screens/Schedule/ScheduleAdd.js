@@ -123,7 +123,7 @@ const Schedule_Add = () => {
 
   const handleSelection = (start, end) => {
     if (isCheckSelectOfficeLT) {
-      const filteredData = lessonsLT.filter(
+      const filteredData = lessonsLT.filter( 
         (item) => Number(item.key) >= start && Number(item.key) <= end
       );
 

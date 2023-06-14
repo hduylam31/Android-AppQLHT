@@ -744,6 +744,8 @@ class CalendarService {
         type: elm.rangeTimeInfo.type,
         customType: elm.rangeTimeInfo.customType,
         customTime: elm.rangeTimeInfo.customTime,
+        durationTime: elm.rangeTimeInfo.durationTime,
+        durationType: elm.rangeTimeInfo.durationType
       },
     };
     await StorageUtils.updateElementInArray("userCalendar", updatedData);
@@ -998,24 +1000,158 @@ class CalendarService {
     });
   }
 
+  static async normalizedTKB(tkbList){
+    return tkbList.map(item => {
+      var currentTimeRange = {
+        fromTime: item.lessonInfo.timeStart + ":00",
+        toTime: item.lessonInfo.timeEnd + ":00",
+        dayOfWeek: item.DayOfWeek
+      };
+      return currentTimeRange;
+    })
+  }
+
+  static async hasOverlap(time1, time2) {
+    return (time1.fromTime <= time2.toTime) && (time1.toTime >= time2.fromTime);
+  }
+
+  static async subtractTime(timeRequest, calendarTime){
+    const result = [];
+
+    timeRequest = timeRequest.sort((a,b) => a.fromTime - b.fromTime);
+    calendarTime = calendarTime.sort((a,b) => a.fromTime - b.fromTime);
+    
+    timeRequest.forEach(timeReq => {
+      const timeRanges = [];
+      var left = timeReq.fromTime;
+      var right;
+      
+      calendarTime.forEach(userTime => {
+        if(timeReq.date == userTime.date && this.hasOverlap(timeReq, userTime)){
+          if (timeReq.fromTime > userTime.fromTime && timeReq.fromTime < userTime.toTime) {
+            timeRanges.push({
+              date: timeReq.date,
+              fromTime: timeReq.fromTime,
+              toTime: userTime.fromTime,
+              dayOfWeek: timeReq.dayOfWeek
+            });
+            left = userTime.fromTime;
+          } else{
+            right = userTime.fromTime;
+            if(right > left){
+              timeRanges.push({
+                date: timeReq.date,
+                fromTime: left,
+                toTime: right,
+                dayOfWeek: timeReq.dayOfWeek
+              });
+            }
+            left = userTime.toTime > left ? userTime.toTime: left;
+          }
+        }
+      })
+
+      if (timeRanges.length > 0) {
+        // Thêm các khoảng thời gian vào kết quả
+        result.push(...timeRanges);
+        if(left < timeReq.toTime){
+          result.push({
+              date: timeReq.date,
+              fromTime: left,
+              toTime: timeReq.toTime,
+              dayOfWeek: timeReq.dayOfWeek 
+            });
+        }
+      } else{
+        result.push(timeReq);
+      }
+
+    })
+    return result;
+  }
+
+  static async fusionCalendarWithTKB(tkbList, userList, timeRequest){
+    const result = [...userList];
+    timeRequest.forEach(timeReq => {
+      const date = DateTimeUtils.convertToDate(timeReq.date);
+      const dayOfWeek = timeReq.dayOfWeek;
+      tkbList.forEach(item => {
+        if(item.dayOfWeek == dayOfWeek){
+          var fromTimeText = item.fromTime;
+          var fromTime  = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(fromTimeText.substring(0, 2)), parseInt(fromTimeText.substring(3, 5)), parseInt(fromTimeText.substring(6, 8)));
+          var toTimeText = item.toTime;
+          var toTime  = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(toTimeText.substring(0, 2)), parseInt(toTimeText.substring(3, 5)), parseInt(toTimeText.substring(6, 8)));
+          var itemResult = {
+            date: timeReq.date,
+            dayOfWeek: dayOfWeek,
+            fromTime: fromTime,
+            toTime: toTime
+          }
+          result.push(itemResult);
+        }
+      })
+    })
+    return result;
+  }
+
   static async findFreeCalendar(durationTime, fromTime, toTime, fromDate, toDate, isCheckMoodle, isCheckTKB) {
     try {
       var result = [];
       //===============================================
       var timeRequest = this.getTimeRange(fromTime, toTime, fromDate, toDate)._j;
-      console.log("TimeRequest: ", timeRequest);
+      console.log("TimeRequest: ", timeRequest.map(item => {
+        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
+      }));
 
       var calendarList = await this.loadCalendarData();
       var normCalendar = await this.normalizedCalendar(calendarList);
       var userCalendar = normCalendar.filter(item => item.isMoodle == "false");
-      var moodleCalendar = normCalendar.filter(item => item.isMoodle == "true");
-      console.log("normCalendar: ", normCalendar);
-
       
-      // calendarList = calendarList.map(item => {
-      //   return {"date": item.dateString, "fromTime": item}
-      // })
-      // var tkbList = await ScheduleService.loadScheduleData();
+      console.log("normCalendar: ", normCalendar.map(item => {
+        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
+      }))
+
+      if(!isCheckTKB){
+        var tkbList = await ScheduleService.loadScheduleData();
+        var tkbNorm = await this.normalizedTKB(tkbList);
+        userCalendar = await this.fusionCalendarWithTKB(tkbNorm, userCalendar, timeRequest);
+
+        console.log("userCalendar with TKB: ", userCalendar.map(item => {
+          return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
+        }))
+      }
+
+      var subtractCalendar = await this.subtractTime(timeRequest, userCalendar);
+      console.log("subtractCalendar: ", subtractCalendar.map(item => {
+        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
+      }));
+
+
+
+      var filterWithDuration = subtractCalendar.filter(item => item.toTime.getTime() - item.fromTime.getTime() >= durationTime*1000);
+      console.log("filterWithDuration: ", filterWithDuration.map(item => {
+        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
+      }));
+
+      if(isCheckMoodle){
+        var moodleCalendar = normCalendar.filter(item => item.isMoodle == "true");
+        var moodleDates =  moodleCalendar.map(item => item.date);
+        filterWithDuration = filterWithDuration.filter(item => !moodleDates.includes(item.date));
+      }
+
+      console.log("filterWithDuration if CheckMoodle: ", filterWithDuration.map(item => {
+        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
+      }));
+
+      return filterWithDuration.map((item, index) => {
+        return {
+          id: index, 
+          date: item.date,
+          timeStart: item.fromTime.toLocaleTimeString().substring(0,5), 
+          timeEnd: item.toTime.toLocaleTimeString().substring(0,5)
+        } 
+      });
+      
     } catch (error) {
       console.log("saveNotiConfig: ", error);
     }
