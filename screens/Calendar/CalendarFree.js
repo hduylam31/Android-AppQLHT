@@ -17,6 +17,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CalendarService from "../../service/CalendarService";
 
 const CalendarFree = () => {
   const navigation = useNavigation();
@@ -209,6 +210,37 @@ const CalendarFree = () => {
       navigation.navigate("Calendar_Add", { selectedItem });
     }
   };
+
+  function filterSearch(){
+    console.log("==================NEED TO DO VALIDATE BELOW HERE========================\n")
+    var durationTime = parseInt(timeEvent);
+    if(categoryTime == "1"){
+      durationTime = durationTime*60;
+    } else if(categoryTime == "2"){
+      durationTime = durationTime*60*60;
+    } else{
+      durationTime = durationTime*60*60*24;
+    }  
+    console.log("Thời lượng: ", durationTime); 
+    var fromTime, toTime, fromDate, toDate;
+    if(isCheckSelectAllDay){    
+      fromTime = "00:00"; 
+      toTime = "00:00";
+    } else{
+      fromTime = textTimeStart;
+      toTime = textTimeEnd;
+    }
+    fromDate = textDateStart;
+    toDate = textDateEnd;
+    
+    console.log("Khoảng thời gian tìm kiếm: ", fromTime, toTime);
+    console.log("Ngày tìm kiếm: ", fromDate, textDateEnd);
+    console.log("Bỏ qua ngày có moodle: ", isCheckMoodle);  
+    console.log("Bỏ qua ngày có TKB: ", isCheckTKB);
+    CalendarService.findFreeCalendar(durationTime, fromTime, toTime, fromDate, toDate, isCheckMoodle, isCheckTKB);
+    // setShowResultSearch(true); 
+  }
+
   return (
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -217,8 +249,8 @@ const CalendarFree = () => {
           <View className="flex-row justify-between items-center p-4">
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
-                name="arrow-left"
-                size={28}
+                name="arrow-left" 
+                size={28}          
                 color="white"
               />
             </TouchableOpacity>
@@ -508,7 +540,7 @@ const CalendarFree = () => {
           </View>
         </ScrollView>
         <TouchableOpacity
-          onPress={() => setShowResultSearch(true)}
+          onPress={() => filterSearch()}
           className="w-[90%] h-10 absolute bottom-14 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
           style={{
             shadowColor: "#000000",

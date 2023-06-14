@@ -20,6 +20,7 @@ import * as BackgroundFetch from "expo-background-fetch";
 import Constants from "../domain/Constants";
 import StorageUtils from "./StorageUtils";
 import ScheduleService from "./ScheduleService";
+import DateTimeUtils from "./DateTimeUtils";
 
 class CalendarService {
   static async isMoodleActive() {
@@ -937,25 +938,84 @@ class CalendarService {
     }
   }
 
-  static async findFreeCalendar(info) {
+  static async getTimeRange(fromTimeText, toTimeText, fromDateText, toDateText){
+    var fromDate = DateTimeUtils.convertToDate(fromDateText);
+    var toDate = DateTimeUtils.convertToDate(toDateText);
 
+    var timeRanges = [];
+
+    var currentDate = new Date(fromDate);
+    while (currentDate <= toDate) {
+      var fromTime = fromTimeText === '00:00' ? '06:00:00' : fromTimeText + ":00";
+      var toTime = toTimeText === '00:00' ? '23:59:59' : toTimeText + ":00";
+      var currentTimeRange = {
+        date: currentDate.toLocaleDateString(),
+        fromTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), parseInt(fromTime.substring(0, 2)), parseInt(fromTime.substring(3, 5)), parseInt(fromTime.substring(6, 8))),
+        toTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), parseInt(toTime.substring(0, 2)), parseInt(toTime.substring(3, 5)), parseInt(toTime.substring(6, 8))),
+        dayOfWeek: DateTimeUtils.getDayOfWeek(currentDate)
+        
+      };
+
+      timeRanges.push(currentTimeRange);
+      // Move to the next day
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return timeRanges;
+  }
+
+  static async normalizedCalendar(calendarList){
+    return calendarList.map(item => {
+      var date = new Date(item.dateString);
+      var fromTimeText = item.timeString + ":00";
+      var fromTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(fromTimeText.substring(0, 2)), parseInt(fromTimeText.substring(3, 5)), parseInt(fromTimeText.substring(6, 8)));
+      var limitTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+
+      var durationSecond;
+      var durationType = item.rangeTimeInfo.durationType;
+      var durationTime = parseInt(item.rangeTimeInfo.durationTime);
+      if(durationType == "1"){
+        durationSecond = durationTime*60;
+      } else if(durationType == "2"){
+        durationSecond = durationTime*60*60;
+      } else if(durationType == "3"){
+        durationSecond = durationTime*60*60*24;
+      }
+      var toTime = new Date(fromTime.getTime() + durationSecond*1000);
+      if(toTime > limitTime){
+        toTime = limitTime;
+      }
+
+      var currentTimeRange = {
+        date: date.toLocaleDateString(),
+        fromTime: fromTime,
+        toTime: toTime,
+        dayOfWeek: DateTimeUtils.getDayOfWeek(date),
+        isMoodle: item.isMoodle
+      };
+
+      return currentTimeRange;
+    });
+  }
+
+  static async findFreeCalendar(durationTime, fromTime, toTime, fromDate, toDate, isCheckMoodle, isCheckTKB) {
     try {
-      const duration = info.duration;
-      const fromTime = info.fromTime;
-      const toTime = info.toTime;
-      const fromDay = info.fromDay;
-      const toDay = info.toDay;
-      const isMoodleCond = info.isMoodleCond;
-      const isTKBCond = info.isTKBCond;
-      //===============================================
       var result = [];
+      //===============================================
+      var timeRequest = this.getTimeRange(fromTime, toTime, fromDate, toDate)._j;
+      console.log("TimeRequest: ", timeRequest);
+
       var calendarList = await this.loadCalendarData();
-      calendarList = calendarList.map(item => {
-        return {"date": item.dateString, "fromTime": item}
-      })
-      var tkbList = await ScheduleService.loadScheduleData();
+      var normCalendar = await this.normalizedCalendar(calendarList);
+      var userCalendar = normCalendar.filter(item => item.isMoodle == "false");
+      var moodleCalendar = normCalendar.filter(item => item.isMoodle == "true");
+      console.log("normCalendar: ", normCalendar);
 
-
+      
+      // calendarList = calendarList.map(item => {
+      //   return {"date": item.dateString, "fromTime": item}
+      // })
+      // var tkbList = await ScheduleService.loadScheduleData();
     } catch (error) {
       console.log("saveNotiConfig: ", error);
     }
