@@ -49,6 +49,7 @@ class ScheduleService{
             lessonEnd: data.selectedLessonEnd,
             location: data.location,
             note: data.note,
+            lessonInfo: data.lessonInfo
           };
           //Storage
           await StorageUtils.pushElementToArray('scheduleList', item);
@@ -80,6 +81,7 @@ class ScheduleService{
           DayOfWeek: elm.DayOfWeek,
           location: elm.location,
           note: elm.note,
+          lessonInfo: elm.lessonInfo
         };
         await StorageUtils.updateElementInArray('scheduleList', updatedData);
         try {

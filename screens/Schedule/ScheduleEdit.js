@@ -37,19 +37,54 @@ const Schedule_Edit = () => {
     c_location,
     c_note,
     dayLessonMap,
+    c_lessonInfo
   } = route.params;
 
   useEffect(() => {
     const loadData = () => {
+      console.log("Load data");
       setTitle(c_title);
       setDayOfWeek(c_DayOfWeek);
       setSelectedLessonStart(c_lessonStart);
       setSelectedLessonEnd(c_lessonEnd);
       setLocation(c_location);
       setNote(c_note);
+      
+      switch(c_lessonInfo.type){
+        case 1:
+          setIsCheckSelectOfficeLT(true);
+          setIsCheckSelectOfficeNVC(false);
+          setIsCheckSelectCustom(false);
+          setTimeStart(c_lessonInfo.timeStart);
+          setTimeEnd(c_lessonInfo.timeEnd);
+          break;
+        case 2:
+          setIsCheckSelectOfficeLT(false);
+          setIsCheckSelectOfficeNVC(true);
+          setIsCheckSelectCustom(false);
+          setTimeStart(c_lessonInfo.timeStart);
+          setTimeEnd(c_lessonInfo.timeEnd);
+          break; 
+        case 3:
+          setIsCheckSelectOfficeLT(false);
+          setIsCheckSelectOfficeNVC(false);
+          setIsCheckSelectCustom(true);   
+          setTextTimeStart(c_lessonInfo.timeStart);
+          setTextTimeEnd(c_lessonInfo.timeEnd);
+      }
     };
     loadData();
   }, []);
+
+  useEffect(() => {
+    console.log("haha1");
+    handleSelection(selectedLessonStart, selectedLessonEnd);
+  }, [selectedLessonStart, selectedLessonEnd]);
+
+  useEffect(() => {
+    console.log("hahaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    handleSelection(selectedLessonStart, selectedLessonEnd);
+  }, [isCheckSelectOfficeLT, isCheckSelectOfficeNVC])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -98,6 +133,15 @@ const Schedule_Edit = () => {
       } else {
         console.log("Start update");
         try {
+          var lessonInfo;
+          if(isCheckSelectCustom){
+            lessonInfo = {"timeStart": textTimeStart, "timeEnd": textTimeEnd, "type": 3};
+          } else if(isCheckSelectOfficeLT){
+            lessonInfo = {"timeStart": timeStart, "timeEnd": timeEnd, "type": 1};
+          } else if(isCheckSelectOfficeNVC){
+            lessonInfo = {"timeStart": timeStart, "timeEnd": timeEnd, "type": 2};
+          } 
+          console.log("lessonInfo: ", lessonInfo);
           await ScheduleService.updateSchedule({
             c_id,
             title,
@@ -106,6 +150,7 @@ const Schedule_Edit = () => {
             DayOfWeek,
             location,
             note,
+            lessonInfo
           });
           navigation.navigate("BottomBar", {
             screen: "TKB",
@@ -175,6 +220,7 @@ const Schedule_Edit = () => {
   const [timeEnd, setTimeEnd] = useState("");
 
   const handleSelection = (start, end) => {
+    console.log("haha2");
     if (isCheckSelectOfficeLT) {
       const filteredData = lessonsLT.filter(
         (item) => Number(item.key) >= start && Number(item.key) <= end
@@ -204,8 +250,38 @@ const Schedule_Edit = () => {
       setTimeEnd(textTimeEnd);
     }
   };
-  console.log("timeStart:", timeStart);
-  console.log("timeEnd:", timeEnd);
+
+  const handleSelection2 = (start, end, isCheckSelectOfficeLT, isCheckSelectOfficeNVC, isCheckSelectCustom) => {
+    console.log("haha2");
+    if (isCheckSelectOfficeLT) {
+      const filteredData = lessonsLT.filter(
+        (item) => Number(item.key) >= start && Number(item.key) <= end
+      );
+
+      const timeStart = filteredData.length > 0 ? filteredData[0].time : "";
+      const timeEnd =
+        filteredData.length > 0
+          ? filteredData[filteredData.length - 1].time
+          : "";
+      setTimeStart(timeStart);
+      setTimeEnd(timeEnd);
+    } else if (isCheckSelectOfficeNVC) {
+      const filteredData = lessonsNVC.filter(
+        (item) => Number(item.key) >= start && Number(item.key) <= end
+      );
+
+      const timeStart = filteredData.length > 0 ? filteredData[0].time : "";
+      const timeEnd =
+        filteredData.length > 0
+          ? filteredData[filteredData.length - 1].time
+          : "";
+      setTimeStart(timeStart);
+      setTimeEnd(timeEnd);
+    } else if (isCheckSelectCustom) {
+      setTimeStart(textTimeStart);
+      setTimeEnd(textTimeEnd);
+    }
+  };
 
   const [timeStartCus, setTimeStartCus] = useState(new Date());
   const [showTimeStart, setShowTimeStart] = useState(false);
@@ -454,6 +530,7 @@ const Schedule_Edit = () => {
                     setIsCheckSelectOfficeLT(true);
                     setIsCheckSelectOfficeNVC(false);
                     setIsCheckSelectCustom(false);
+                    handleSelection2(selectedLessonStart, selectedLessonEnd, true, false, false);
                   }}
                 >
                   {isCheckSelectOfficeLT ? (
@@ -478,6 +555,7 @@ const Schedule_Edit = () => {
                     setIsCheckSelectOfficeLT(false);
                     setIsCheckSelectOfficeNVC(true);
                     setIsCheckSelectCustom(false);
+                    handleSelection2(selectedLessonStart, selectedLessonEnd, false, true, false);
                   }}
                 >
                   {isCheckSelectOfficeNVC ? (

@@ -338,7 +338,7 @@ const ScheduleMain = () => {
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Schedule_Edit", {
+        navigation.navigate("Schedule_Edit", { 
           c_id: item.id,
           c_title: item.title,
           c_DayOfWeek: item.DayOfWeek,
@@ -347,6 +347,7 @@ const ScheduleMain = () => {
           c_location: item.location,
           c_note: item.note,
           dayLessonMap,
+          c_lessonInfo: item.lessonInfo
         });
       }}
     >

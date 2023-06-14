@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
@@ -67,6 +67,14 @@ const Schedule_Add = () => {
       } else {
         console.log("Start addingg");
         try {
+          var lessonInfo;
+          if(isCheckSelectCustom){
+            lessonInfo = {"timeStart": textTimeStart, "timeEnd": textTimeEnd, "type": 3};
+          } else if(isCheckSelectOfficeLT){
+            lessonInfo = {"timeStart": timeStart, "timeEnd": timeEnd, "type": 1};
+          } else if(isCheckSelectOfficeNVC){
+            lessonInfo = {"timeStart": timeStart, "timeEnd": timeEnd, "type": 2};
+          } 
           await ScheduleService.addSchedule({
             title,
             DayOfWeek,
@@ -74,6 +82,7 @@ const Schedule_Add = () => {
             selectedLessonEnd,
             location,
             note,
+            lessonInfo
           });
           navigation.navigate("BottomBar", {
             screen: "TKB",
@@ -106,6 +115,11 @@ const Schedule_Add = () => {
   const [isCheckSelectCustom, setIsCheckSelectCustom] = useState(false);
   const [timeStart, setTimeStart] = useState("");
   const [timeEnd, setTimeEnd] = useState("");
+
+  useEffect(() => {
+    console.log("haha");
+    handleSelection(selectedLessonStart, selectedLessonEnd);
+  }, [isCheckSelectOfficeLT, isCheckSelectOfficeNVC, selectedLessonStart, selectedLessonEnd])
 
   const handleSelection = (start, end) => {
     if (isCheckSelectOfficeLT) {
