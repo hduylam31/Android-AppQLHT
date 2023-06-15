@@ -20,6 +20,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
 import moment from "moment";
 import { Dropdown } from "react-native-element-dropdown";
+import { useEffect } from "react";
 
 const Calendar_Add = () => {
   const navigation = useNavigation();
@@ -36,6 +37,8 @@ const Calendar_Add = () => {
   const selectedDay = route.params.selectedDay;
 
   const selectedItem = route.params?.selectedItem;
+  const c_timeEvent = route.params?.timeEvent;
+  const c_categoryTime = route.params?.categoryTime;
   console.log("aa", selectedDay);
   console.log("selectedItem", selectedItem);
   // const selectedDay = props.currentDate;
@@ -43,6 +46,15 @@ const Calendar_Add = () => {
     ? selectedItem.date
     : moment(selectedDay, "YYYY-MM-DD").format("DD/MM/YYYY");
   const TimeSelected = selectedItem ? selectedItem.timeStart : "00:00";
+
+  useEffect(() => {
+      if(c_timeEvent != undefined){
+        setTimeEvent(c_timeEvent);
+      }
+      if(c_categoryTime != undefined){
+        setCategoryTime(c_categoryTime);
+      }
+  },[])
 
   const [textDate, setDateText] = useState(DaySelected);
   const [textTime, setTimeDate] = useState(TimeSelected);
@@ -228,15 +240,8 @@ const Calendar_Add = () => {
     ? parseInt(selectedItem.timeEnd.split(":")[1])
     : 0;
 
-  const hourDiff = (
-    endHour -
-    startHour +
-    (endMinute - startMinute) / 60
-  ).toString();
 
-  console.log("hourDiff", hourDiff);
-
-  const [timeEvent, setTimeEvent] = useState(hourDiff);
+  const [timeEvent, setTimeEvent] = useState("1");
   const [categoryTime, setCategoryTime] = useState("2");
 
   return (

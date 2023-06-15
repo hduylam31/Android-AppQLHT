@@ -208,7 +208,7 @@ const CalendarFree = () => {
     if (selectedIndex !== -1) {
       const selectedItem = Data[selectedIndex];
       console.log("Mục đã chọn:", selectedItem);
-      navigation.navigate("Calendar_Add", { selectedItem });
+      navigation.navigate("Calendar_Add", { selectedItem, timeEvent, categoryTime});
     }
   };
 
@@ -239,11 +239,11 @@ const CalendarFree = () => {
     console.log("Bỏ qua ngày có moodle: ", isCheckMoodle);  
     console.log("Bỏ qua ngày có TKB: ", isCheckTKB);
     var filterData = await CalendarService.findFreeCalendar(durationTime, fromTime, toTime, fromDate, toDate, isCheckMoodle, isCheckTKB);
-    setData(filterData);
+    setData(filterData); 
     console.log("filterData: ", filterData);
     setShowResultSearch(true);  
   }
- 
+    
   return (
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
