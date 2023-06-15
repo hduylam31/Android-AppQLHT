@@ -1011,8 +1011,42 @@ class CalendarService {
     })
   }
 
-  static async hasOverlap(time1, time2) {
-    return (time1.fromTime <= time2.toTime) && (time1.toTime >= time2.fromTime);
+  static checkOverlap(time1, time2) {
+    const fromTime1 = time1.fromTime;
+    const toTime1 = time1.toTime;
+    const fromTime2 = time2.fromTime;
+    const toTime2 = time2.toTime;
+  
+    if (
+      (fromTime1 >= fromTime2 && fromTime1 <= toTime2) ||
+      (toTime1 >= fromTime2 && toTime1 <= toTime2) ||
+      (fromTime2 >= fromTime1 && fromTime2 <= toTime1) ||
+      (fromTime1 <= fromTime2 && toTime1 >= toTime2) ||
+      (fromTime2 <= fromTime1 && toTime2 >= toTime1)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  static async mergeOverlappingTimes(times) {
+    // Sắp xếp các khoảng thời gian theo thứ tự tăng dần của fromTime
+    const sortedTimes = [...times].sort((a, b) => a.fromTime - b.fromTime);
+  
+    const mergedTimes = [];
+    let currentMerge = sortedTimes[0];
+    for (let i = 1; i < sortedTimes.length; i++) {
+      const current = sortedTimes[i];
+      if (current.fromTime <= currentMerge.toTime) {
+        currentMerge.toTime = currentMerge.toTime > current.toTime? currentMerge.toTime : current.toTime;
+      } else {
+        mergedTimes.push(currentMerge);
+        currentMerge = current;
+      }
+    }
+    mergedTimes.push(currentMerge);
+    console.log("mergedTimes: ",mergedTimes);
+    return mergedTimes;
   }
 
   static async subtractTime(timeRequest, calendarTime){
@@ -1029,15 +1063,9 @@ class CalendarService {
       calendarTime.forEach(userTime => {
         if(timeReq.date == userTime.date){ 
           if (timeReq.fromTime > userTime.fromTime && timeReq.fromTime < userTime.toTime) {
-            timeRanges.push({
-              date: timeReq.date,
-              fromTime: timeReq.fromTime,
-              toTime: userTime.fromTime,
-              dayOfWeek: timeReq.dayOfWeek
-            });
-            left = userTime.fromTime;
+            left = userTime.toTime;
           } else{
-            right = userTime.fromTime;
+            right = userTime.fromTime > timeReq.toTime ? timeReq.toTime : userTime.fromTime; 
             if(right > left){
               timeRanges.push({
                 date: timeReq.date,
@@ -1048,13 +1076,13 @@ class CalendarService {
             }
             left = userTime.toTime > left ? userTime.toTime: left;
           }
-        }
+        } 
       })
 
       if (timeRanges.length > 0) {
         // Thêm các khoảng thời gian vào kết quả
         result.push(...timeRanges);
-        if(left < timeReq.toTime){
+        if(left <= timeReq.toTime){
           result.push({
               date: timeReq.date,
               fromTime: left,
@@ -1094,6 +1122,11 @@ class CalendarService {
     return result;
   }
 
+  static async cleanDataForTimeColision(userCalendar){
+    userCalendar = userCalendar.sort((a,b) => a.fromTime - b.fromTime);
+
+  }
+
   static async findFreeCalendar(durationTime, fromTime, toTime, fromDate, toDate, isCheckMoodle, isCheckTKB) {
     try {
       var result = [];
@@ -1127,9 +1160,14 @@ class CalendarService {
         userCalendar = await this.fusionCalendarWithTKB(tkbNorm, userCalendar, timeRequest);
 
         console.log("userCalendar with TKB: ", userCalendar.map(item => {
-          return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
+          return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()}  
         }))
       }
+
+      userCalendar = await this.mergeOverlappingTimes(userCalendar);
+      console.log("mergeOverlappingTimes: ", userCalendar.map(item => {
+        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
+      })) 
 
       var subtractCalendar = await this.subtractTime(timeRequest, userCalendar);
       console.log("subtractCalendar: ", subtractCalendar.map(item => {
