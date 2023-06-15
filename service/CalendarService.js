@@ -951,7 +951,7 @@ class CalendarService {
       var fromTime = fromTimeText === '00:00' ? '06:00:00' : fromTimeText + ":00";
       var toTime = toTimeText === '00:00' ? '23:59:59' : toTimeText + ":00";
       var currentTimeRange = {
-        date: currentDate.toLocaleDateString(),
+        date: DateTimeUtils.dateToText(currentDate), 
         fromTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), parseInt(fromTime.substring(0, 2)), parseInt(fromTime.substring(3, 5)), parseInt(fromTime.substring(6, 8))),
         toTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), parseInt(toTime.substring(0, 2)), parseInt(toTime.substring(3, 5)), parseInt(toTime.substring(6, 8))),
         dayOfWeek: DateTimeUtils.getDayOfWeek(currentDate)
@@ -989,7 +989,7 @@ class CalendarService {
       }
 
       var currentTimeRange = {
-        date: date.toLocaleDateString(),
+        date: DateTimeUtils.dateToText(date), 
         fromTime: fromTime,
         toTime: toTime,
         dayOfWeek: DateTimeUtils.getDayOfWeek(date),
@@ -1020,14 +1020,14 @@ class CalendarService {
 
     timeRequest = timeRequest.sort((a,b) => a.fromTime - b.fromTime);
     calendarTime = calendarTime.sort((a,b) => a.fromTime - b.fromTime);
-    
+
     timeRequest.forEach(timeReq => {
       const timeRanges = [];
       var left = timeReq.fromTime;
       var right;
       
       calendarTime.forEach(userTime => {
-        if(timeReq.date == userTime.date && this.hasOverlap(timeReq, userTime)){
+        if(timeReq.date == userTime.date){ 
           if (timeReq.fromTime > userTime.fromTime && timeReq.fromTime < userTime.toTime) {
             timeRanges.push({
               date: timeReq.date,
@@ -1111,6 +1111,16 @@ class CalendarService {
         return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
       }))
 
+      if(isCheckMoodle){
+        var moodleCalendar = normCalendar.filter(item => item.isMoodle == "true");
+        var moodleDates =  moodleCalendar.map(item => item.date);
+        userCalendar = userCalendar.filter(item => !moodleDates.includes(item.date));
+      }
+
+      console.log("userCalendar if CheckMoodle: ", userCalendar.map(item => {
+        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
+      }));
+
       if(!isCheckTKB){
         var tkbList = await ScheduleService.loadScheduleData();
         var tkbNorm = await this.normalizedTKB(tkbList);
@@ -1124,22 +1134,10 @@ class CalendarService {
       var subtractCalendar = await this.subtractTime(timeRequest, userCalendar);
       console.log("subtractCalendar: ", subtractCalendar.map(item => {
         return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
-      }));
-
-
+      })); 
 
       var filterWithDuration = subtractCalendar.filter(item => item.toTime.getTime() - item.fromTime.getTime() >= durationTime*1000);
       console.log("filterWithDuration: ", filterWithDuration.map(item => {
-        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
-      }));
-
-      if(isCheckMoodle){
-        var moodleCalendar = normCalendar.filter(item => item.isMoodle == "true");
-        var moodleDates =  moodleCalendar.map(item => item.date);
-        filterWithDuration = filterWithDuration.filter(item => !moodleDates.includes(item.date));
-      }
-
-      console.log("filterWithDuration if CheckMoodle: ", filterWithDuration.map(item => {
         return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
       }));
 
@@ -1147,8 +1145,8 @@ class CalendarService {
         return {
           id: index, 
           date: item.date,
-          timeStart: item.fromTime.toLocaleTimeString().substring(0,5), 
-          timeEnd: item.toTime.toLocaleTimeString().substring(0,5)
+          timeStart: DateTimeUtils.converToHourAndMinute(item.fromTime),
+          timeEnd: DateTimeUtils.converToHourAndMinute(item.toTime)
         } 
       });
       

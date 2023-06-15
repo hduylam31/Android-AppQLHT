@@ -36,6 +36,22 @@ class DateTimeUtils{
         const dayIndex = date.getDay();
         return daysOfWeek[dayIndex];
     }
+
+    // Date -> 09:32
+    static converToHourAndMinute(currentDate){
+        const hours = currentDate.getHours();
+        const minutes = currentDate.getMinutes();
+
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        return formattedTime;
+    }
+
+    static dateToText(date){
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
 }
 
 export default DateTimeUtils;
