@@ -68,13 +68,17 @@ const Schedule_Add = () => {
         console.log("Start addingg");
         try {
           var lessonInfo;
-          if(isCheckSelectCustom){
-            lessonInfo = {"timeStart": textTimeStart, "timeEnd": textTimeEnd, "type": 3};
-          } else if(isCheckSelectOfficeLT){
-            lessonInfo = {"timeStart": timeStart, "timeEnd": timeEnd, "type": 1};
-          } else if(isCheckSelectOfficeNVC){
-            lessonInfo = {"timeStart": timeStart, "timeEnd": timeEnd, "type": 2};
-          } 
+          if (isCheckSelectCustom) {
+            lessonInfo = {
+              timeStart: textTimeStart,
+              timeEnd: textTimeEnd,
+              type: 3,
+            };
+          } else if (isCheckSelectOfficeLT) {
+            lessonInfo = { timeStart: timeStart, timeEnd: timeEnd, type: 1 };
+          } else if (isCheckSelectOfficeNVC) {
+            lessonInfo = { timeStart: timeStart, timeEnd: timeEnd, type: 2 };
+          }
           await ScheduleService.addSchedule({
             title,
             DayOfWeek,
@@ -82,7 +86,7 @@ const Schedule_Add = () => {
             selectedLessonEnd,
             location,
             note,
-            lessonInfo
+            lessonInfo,
           });
           navigation.navigate("BottomBar", {
             screen: "TKB",
@@ -119,12 +123,19 @@ const Schedule_Add = () => {
   useEffect(() => {
     console.log("haha");
     handleSelection(selectedLessonStart, selectedLessonEnd);
-  }, [isCheckSelectOfficeLT, isCheckSelectOfficeNVC, selectedLessonStart, selectedLessonEnd])
+  }, [
+    isCheckSelectOfficeLT,
+    isCheckSelectOfficeNVC,
+    selectedLessonStart,
+    selectedLessonEnd,
+  ]);
 
   const handleSelection = (start, end) => {
     if (isCheckSelectOfficeLT) {
-      const filteredData = lessonsLT.filter( 
-        (item) => Number(item.key) >= start && Number(item.key) <= end
+      const filteredData = lessonsLT.filter(
+        (item) =>
+          Number(item.key) >= Number(start) &&
+          Number(item.key) <= Number(end) + 1
       );
 
       const timeStart = filteredData.length > 0 ? filteredData[0].time : "";
@@ -136,7 +147,9 @@ const Schedule_Add = () => {
       setTimeEnd(timeEnd);
     } else if (isCheckSelectOfficeNVC) {
       const filteredData = lessonsNVC.filter(
-        (item) => Number(item.key) >= start && Number(item.key) <= end
+        (item) =>
+          Number(item.key) >= Number(start) &&
+          Number(item.key) <= Number(end) + 1
       );
 
       const timeStart = filteredData.length > 0 ? filteredData[0].time : "";

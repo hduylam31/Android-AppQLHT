@@ -165,7 +165,7 @@ const ScheduleMain = () => {
     console.log("onpressLessonOfDay", onpressLessonOfDay);
   };
 
-  checkNumberStart = (a, lessonStartNumber, lessonEndNumber) => {
+  checkNumberStart = (a, lessonStartNumber) => {
     if (lessonStartNumber % 1 === 0) {
       a = lessonStartNumber * 2 - 1;
       return a;
@@ -175,14 +175,9 @@ const ScheduleMain = () => {
     }
   };
 
-  checkNumberEnd = (b, lessonStartNumber, lessonEndNumber) => {
-    if (lessonEndNumber % 1 === 0) {
-      b = lessonEndNumber * 2;
-      return b;
-    } else {
-      b = Math.trunc(lessonEndNumber) * 2 - 1;
-      return b;
-    }
+  checkNumberEnd = (b, lessonEndNumber) => {
+    b = lessonEndNumber * 2;
+    return b;
   };
 
   //let backgroundColorBefore = 0;
@@ -197,8 +192,8 @@ const ScheduleMain = () => {
       const lessonEndNumber = Number(item.lessonEnd);
       const titleItem = item.title;
 
-      const a = checkNumberStart(a, lessonStartNumber, lessonEndNumber);
-      const b = checkNumberEnd(b, lessonStartNumber, lessonEndNumber);
+      const a = checkNumberStart(a, lessonStartNumber);
+      const b = checkNumberEnd(b, lessonEndNumber);
 
       if (a <= rowIndex && rowIndex <= b) {
         if (titleItem != undefined) {
@@ -338,7 +333,7 @@ const ScheduleMain = () => {
   renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Schedule_Edit", { 
+        navigation.navigate("Schedule_Edit", {
           c_id: item.id,
           c_title: item.title,
           c_DayOfWeek: item.DayOfWeek,
@@ -347,7 +342,7 @@ const ScheduleMain = () => {
           c_location: item.location,
           c_note: item.note,
           dayLessonMap,
-          c_lessonInfo: item.lessonInfo
+          c_lessonInfo: item.lessonInfo,
         });
       }}
     >

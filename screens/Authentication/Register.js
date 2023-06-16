@@ -58,7 +58,12 @@ const Register = () => {
               password
             );
             if (status) {
-              navigation.navigate("Login");
+              Alert.alert("Đăng kí thành công", "Trở về trang đăng nhập", [
+                {
+                  text: "Đồng ý",
+                  onPress: () => navigation.navigate("Login"),
+                },
+              ]);
             }
           }
         }
