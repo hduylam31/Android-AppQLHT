@@ -1,4 +1,4 @@
-import { DataTimeNoti, DataCategoriTimeNoti } from "./DataOfDropDown";
+import { DataTimeNoti, DataCategoriTime } from "./DataOfDropDown";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Switch,
   TextInput,
   FlatList,
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -18,6 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarService from "../../service/CalendarService";
+import moment from "moment";
 
 const CalendarFree = () => {
   const navigation = useNavigation();
@@ -32,7 +34,7 @@ const CalendarFree = () => {
   //   { id: "2", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
   //   { id: "3", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
   //   { id: "4", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
-  //   { id: "5", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" }, 
+  //   { id: "5", date: "20/05/2022", timeStart: "10:00", timeEnd: "11:00" },
   // ];
 
   const [Data, setData] = useState([]);
@@ -208,42 +210,77 @@ const CalendarFree = () => {
     if (selectedIndex !== -1) {
       const selectedItem = Data[selectedIndex];
       console.log("Mục đã chọn:", selectedItem);
-      navigation.navigate("Calendar_Add", { selectedItem, timeEvent, categoryTime});
+      navigation.navigate("Calendar_Add", {
+        selectedItem,
+        timeEvent,
+        categoryTime,
+      });
     }
   };
 
-  async function filterSearch(){
-    console.log("==================NEED TO DO VALIDATE BELOW HERE========================\n")
-    var durationTime = parseInt(timeEvent);
-    if(categoryTime == "1"){
-      durationTime = durationTime*60;
-    } else if(categoryTime == "2"){
-      durationTime = durationTime*60*60;
-    } else{
-      durationTime = durationTime*60*60*24;
-    }  
-    console.log("Thời lượng: ", durationTime); 
-    var fromTime, toTime, fromDate, toDate;     
-    if(isCheckSelectAllDay){    
-      fromTime = "00:00"; 
-      toTime = "00:00";
-    } else{
-      fromTime = textTimeStart;
-      toTime = textTimeEnd;
+  async function filterSearch() {
+    const convertedDateStart = moment(textDateStart, "DD/MM/YYYY");
+    const convertedDateEnd = moment(textDateEnd, "DD/MM/YYYY");
+    const convertedTimeStart = moment(textTimeStart, "HH:mm");
+    const convertedTimeEnd = moment(textTimeEnd, "HH:mm");
+    if (convertedTimeEnd.isBefore(convertedTimeStart)) {
+      Alert.alert(
+        "Tìm kiếm không thành công",
+        "Thời gian kết thúc phải lớn hơn thời gian bắt đầu"
+      );
+    } else if (convertedDateEnd.isBefore(convertedDateStart)) {
+      Alert.alert(
+        "Tìm kiếm không thành công",
+        "Ngày kết thúc phải lớn hơn ngày bắt đầu"
+      );
+    } else if (textDateStart === "Từ" || textDateEnd === "Đến") {
+      Alert.alert(
+        "Tìm kiếm không thành công",
+        "Khoảng ngày tìm kiếm không được để trống"
+      );
+    } else {
+      console.log(
+        "==================NEED TO DO VALIDATE BELOW HERE========================\n"
+      );
+      var durationTime = parseInt(timeEvent);
+      if (categoryTime == "1") {
+        durationTime = durationTime * 60;
+      } else if (categoryTime == "2") {
+        durationTime = durationTime * 60 * 60;
+      } else {
+        durationTime = durationTime * 60 * 60 * 24;
+      }
+      console.log("Thời lượng: ", durationTime);
+      var fromTime, toTime, fromDate, toDate;
+      if (isCheckSelectAllDay) {
+        fromTime = "00:00";
+        toTime = "00:00";
+      } else {
+        fromTime = textTimeStart;
+        toTime = textTimeEnd;
+      }
+      fromDate = textDateStart;
+      toDate = textDateEnd;
+
+      console.log("Khoảng thời gian tìm kiếm: ", fromTime, toTime);
+      console.log("Ngày tìm kiếm: ", fromDate, textDateEnd);
+      console.log("Bỏ qua ngày có moodle: ", isCheckMoodle);
+      console.log("Bỏ qua ngày có TKB: ", isCheckTKB);
+      var filterData = await CalendarService.findFreeCalendar(
+        durationTime,
+        fromTime,
+        toTime,
+        fromDate,
+        toDate,
+        isCheckMoodle,
+        isCheckTKB
+      );
+      setData(filterData);
+      console.log("filterData: ", filterData);
+      setShowResultSearch(true);
     }
-    fromDate = textDateStart;
-    toDate = textDateEnd;
-    
-    console.log("Khoảng thời gian tìm kiếm: ", fromTime, toTime); 
-    console.log("Ngày tìm kiếm: ", fromDate, textDateEnd);
-    console.log("Bỏ qua ngày có moodle: ", isCheckMoodle);  
-    console.log("Bỏ qua ngày có TKB: ", isCheckTKB);
-    var filterData = await CalendarService.findFreeCalendar(durationTime, fromTime, toTime, fromDate, toDate, isCheckMoodle, isCheckTKB);
-    setData(filterData); 
-    console.log("filterData: ", filterData);
-    setShowResultSearch(true);  
   }
-    
+
   return (
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
@@ -252,8 +289,8 @@ const CalendarFree = () => {
           <View className="flex-row justify-between items-center p-4">
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons
-                name="arrow-left" 
-                size={28}          
+                name="arrow-left"
+                size={28}
                 color="white"
               />
             </TouchableOpacity>
@@ -281,9 +318,9 @@ const CalendarFree = () => {
                   shadowRadius: 10,
                   elevation: 10,
                 }}
-                value={timeEvent} 
+                value={timeEvent}
                 onChangeText={(text) => setTimeEvent(text)}
-              ></TextInput>   
+              ></TextInput>
               <Dropdown
                 style={{
                   backgroundColor: "#FFFFFF",
@@ -313,7 +350,7 @@ const CalendarFree = () => {
                 }}
                 selectedTextStyle={{ fontSize: 16, paddingLeft: 16 }}
                 iconStyle={{ marginRight: 16 }}
-                data={DataCategoriTimeNoti}
+                data={DataCategoriTime}
                 maxHeight={200}
                 labelField="key"
                 valueField="value"
@@ -517,28 +554,7 @@ const CalendarFree = () => {
               </TouchableOpacity>
               <Text className="text-base">Không kiểm tra TKB</Text>
             </View>
-            <View className="flex-row items-center justify-start space-x-4">
-              <TouchableOpacity
-                onPress={() => {
-                  setIsCheckWeekend(!isCheckWeekend);
-                }}
-              >
-                {isCheckWeekend ? (
-                  <MaterialCommunityIcons
-                    name="checkbox-outline"
-                    size={22}
-                    color="black"
-                  />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="checkbox-blank-outline"
-                    size={22}
-                    color="black"
-                  />
-                )}
-              </TouchableOpacity>
-              <Text className="text-base">Ưu tiên ngày cuối tuần</Text>
-            </View>
+
             <View className="h-2"></View>
           </View>
         </ScrollView>

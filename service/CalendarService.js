@@ -649,8 +649,8 @@ class CalendarService {
           type: rangeTimeInfo.type,
           customType: rangeTimeInfo.customType,
           customTime: rangeTimeInfo.customTime,
-          durationTime: rangeTimeInfo.durationTime, 
-          durationType: rangeTimeInfo.durationType
+          durationTime: rangeTimeInfo.durationTime,
+          durationType: rangeTimeInfo.durationType,
         },
       };
       await StorageUtils.pushElementToArray("userCalendar", item);
@@ -745,7 +745,7 @@ class CalendarService {
         customType: elm.rangeTimeInfo.customType,
         customTime: elm.rangeTimeInfo.customTime,
         durationTime: elm.rangeTimeInfo.durationTime,
-        durationType: elm.rangeTimeInfo.durationType
+        durationType: elm.rangeTimeInfo.durationType,
       },
     };
     await StorageUtils.updateElementInArray("userCalendar", updatedData);
@@ -940,7 +940,12 @@ class CalendarService {
     }
   }
 
-  static async getTimeRange(fromTimeText, toTimeText, fromDateText, toDateText){
+  static async getTimeRange(
+    fromTimeText,
+    toTimeText,
+    fromDateText,
+    toDateText
+  ) {
     var fromDate = DateTimeUtils.convertToDate(fromDateText);
     var toDate = DateTimeUtils.convertToDate(toDateText);
 
@@ -948,14 +953,28 @@ class CalendarService {
 
     var currentDate = new Date(fromDate);
     while (currentDate <= toDate) {
-      var fromTime = fromTimeText === '00:00' ? '06:00:00' : fromTimeText + ":00";
-      var toTime = toTimeText === '00:00' ? '23:59:59' : toTimeText + ":00";
+      var fromTime =
+        fromTimeText === "00:00" ? "06:00:00" : fromTimeText + ":00";
+      var toTime = toTimeText === "00:00" ? "23:59:59" : toTimeText + ":00";
       var currentTimeRange = {
-        date: DateTimeUtils.dateToText(currentDate), 
-        fromTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), parseInt(fromTime.substring(0, 2)), parseInt(fromTime.substring(3, 5)), parseInt(fromTime.substring(6, 8))),
-        toTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), parseInt(toTime.substring(0, 2)), parseInt(toTime.substring(3, 5)), parseInt(toTime.substring(6, 8))),
-        dayOfWeek: DateTimeUtils.getDayOfWeek(currentDate)
-        
+        date: DateTimeUtils.dateToText(currentDate),
+        fromTime: new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate(),
+          parseInt(fromTime.substring(0, 2)),
+          parseInt(fromTime.substring(3, 5)),
+          parseInt(fromTime.substring(6, 8))
+        ),
+        toTime: new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate(),
+          parseInt(toTime.substring(0, 2)),
+          parseInt(toTime.substring(3, 5)),
+          parseInt(toTime.substring(6, 8))
+        ),
+        dayOfWeek: DateTimeUtils.getDayOfWeek(currentDate),
       };
 
       timeRanges.push(currentTimeRange);
@@ -966,49 +985,63 @@ class CalendarService {
     return timeRanges;
   }
 
-  static async normalizedCalendar(calendarList){
-    return calendarList.map(item => {
+  static async normalizedCalendar(calendarList) {
+    return calendarList.map((item) => {
       var date = new Date(item.dateString);
       var fromTimeText = item.timeString + ":00";
-      var fromTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(fromTimeText.substring(0, 2)), parseInt(fromTimeText.substring(3, 5)), parseInt(fromTimeText.substring(6, 8)));
-      var limitTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+      var fromTime = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        parseInt(fromTimeText.substring(0, 2)),
+        parseInt(fromTimeText.substring(3, 5)),
+        parseInt(fromTimeText.substring(6, 8))
+      );
+      var limitTime = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        23,
+        59,
+        59
+      );
 
       var durationSecond;
       var durationType = item.rangeTimeInfo.durationType;
       var durationTime = parseInt(item.rangeTimeInfo.durationTime);
-      if(durationType == "1"){
-        durationSecond = durationTime*60;
-      } else if(durationType == "2"){
-        durationSecond = durationTime*60*60;
-      } else if(durationType == "3"){
-        durationSecond = durationTime*60*60*24;
+      if (durationType == "1") {
+        durationSecond = durationTime * 60;
+      } else if (durationType == "2") {
+        durationSecond = durationTime * 60 * 60;
+      } else if (durationType == "3") {
+        durationSecond = durationTime * 60 * 60 * 24;
       }
-      var toTime = new Date(fromTime.getTime() + durationSecond*1000);
-      if(toTime > limitTime){
+      var toTime = new Date(fromTime.getTime() + durationSecond * 1000);
+      if (toTime > limitTime) {
         toTime = limitTime;
       }
 
       var currentTimeRange = {
-        date: DateTimeUtils.dateToText(date), 
+        date: DateTimeUtils.dateToText(date),
         fromTime: fromTime,
         toTime: toTime,
         dayOfWeek: DateTimeUtils.getDayOfWeek(date),
-        isMoodle: item.isMoodle
+        isMoodle: item.isMoodle,
       };
 
       return currentTimeRange;
     });
   }
 
-  static async normalizedTKB(tkbList){
-    return tkbList.map(item => {
+  static async normalizedTKB(tkbList) {
+    return tkbList.map((item) => {
       var currentTimeRange = {
         fromTime: item.lessonInfo.timeStart + ":00",
         toTime: item.lessonInfo.timeEnd + ":00",
-        dayOfWeek: item.DayOfWeek
+        dayOfWeek: item.DayOfWeek,
       };
       return currentTimeRange;
-    })
+    });
   }
 
   static checkOverlap(time1, time2) {
@@ -1016,7 +1049,7 @@ class CalendarService {
     const toTime1 = time1.toTime;
     const fromTime2 = time2.fromTime;
     const toTime2 = time2.toTime;
-  
+
     if (
       (fromTime1 >= fromTime2 && fromTime1 <= toTime2) ||
       (toTime1 >= fromTime2 && toTime1 <= toTime2) ||
@@ -1031,163 +1064,259 @@ class CalendarService {
 
   static async mergeOverlappingTimes(times) {
     // Sắp xếp các khoảng thời gian theo thứ tự tăng dần của fromTime
+    if (times.length == 0) return times;
     const sortedTimes = [...times].sort((a, b) => a.fromTime - b.fromTime);
-  
+
     const mergedTimes = [];
     let currentMerge = sortedTimes[0];
     for (let i = 1; i < sortedTimes.length; i++) {
       const current = sortedTimes[i];
       if (current.fromTime <= currentMerge.toTime) {
-        currentMerge.toTime = currentMerge.toTime > current.toTime? currentMerge.toTime : current.toTime;
+        currentMerge.toTime =
+          currentMerge.toTime > current.toTime
+            ? currentMerge.toTime
+            : current.toTime;
       } else {
         mergedTimes.push(currentMerge);
         currentMerge = current;
       }
     }
     mergedTimes.push(currentMerge);
-    console.log("mergedTimes: ",mergedTimes);
+    console.log("mergedTimes: ", mergedTimes);
     return mergedTimes;
   }
 
-  static async subtractTime(timeRequest, calendarTime){
+  static async subtractTime(timeRequest, calendarTime) {
     const result = [];
 
-    timeRequest = timeRequest.sort((a,b) => a.fromTime - b.fromTime);
-    calendarTime = calendarTime.sort((a,b) => a.fromTime - b.fromTime);
+    timeRequest = timeRequest.sort((a, b) => a.fromTime - b.fromTime);
+    calendarTime = calendarTime.sort((a, b) => a.fromTime - b.fromTime);
 
-    timeRequest.forEach(timeReq => {
+    timeRequest.forEach((timeReq) => {
       const timeRanges = [];
       var left = timeReq.fromTime;
       var right;
-      
-      calendarTime.forEach(userTime => {
-        if(timeReq.date == userTime.date){ 
-          if (timeReq.fromTime > userTime.fromTime && timeReq.fromTime < userTime.toTime) {
+
+      calendarTime.forEach((userTime) => {
+        if (timeReq.date == userTime.date) {
+          if (
+            timeReq.fromTime > userTime.fromTime &&
+            timeReq.fromTime < userTime.toTime
+          ) {
             left = userTime.toTime;
-          } else{
-            right = userTime.fromTime > timeReq.toTime ? timeReq.toTime : userTime.fromTime; 
-            if(right > left){
+          } else {
+            right =
+              userTime.fromTime > timeReq.toTime
+                ? timeReq.toTime
+                : userTime.fromTime;
+            if (right > left) {
               timeRanges.push({
                 date: timeReq.date,
                 fromTime: left,
                 toTime: right,
-                dayOfWeek: timeReq.dayOfWeek
+                dayOfWeek: timeReq.dayOfWeek,
               });
             }
-            left = userTime.toTime > left ? userTime.toTime: left;
+            left = userTime.toTime > left ? userTime.toTime : left;
           }
-        } 
-      })
+        }
+      });
 
       if (timeRanges.length > 0) {
         // Thêm các khoảng thời gian vào kết quả
         result.push(...timeRanges);
-        if(left <= timeReq.toTime){
+        if (left <= timeReq.toTime) {
           result.push({
-              date: timeReq.date,
-              fromTime: left,
-              toTime: timeReq.toTime,
-              dayOfWeek: timeReq.dayOfWeek 
-            });
+            date: timeReq.date,
+            fromTime: left,
+            toTime: timeReq.toTime,
+            dayOfWeek: timeReq.dayOfWeek,
+          });
         }
-      } else{
+      } else {
         result.push(timeReq);
       }
-
-    })
+    });
     return result;
   }
 
-  static async fusionCalendarWithTKB(tkbList, userList, timeRequest){
+  static async fusionCalendarWithTKB(tkbList, userList, timeRequest) {
     const result = [...userList];
-    timeRequest.forEach(timeReq => {
+    timeRequest.forEach((timeReq) => {
       const date = DateTimeUtils.convertToDate(timeReq.date);
       const dayOfWeek = timeReq.dayOfWeek;
-      tkbList.forEach(item => {
-        if(item.dayOfWeek == dayOfWeek){
+      tkbList.forEach((item) => {
+        if (item.dayOfWeek == dayOfWeek) {
           var fromTimeText = item.fromTime;
-          var fromTime  = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(fromTimeText.substring(0, 2)), parseInt(fromTimeText.substring(3, 5)), parseInt(fromTimeText.substring(6, 8)));
+          var fromTime = new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            parseInt(fromTimeText.substring(0, 2)),
+            parseInt(fromTimeText.substring(3, 5)),
+            parseInt(fromTimeText.substring(6, 8))
+          );
           var toTimeText = item.toTime;
-          var toTime  = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(toTimeText.substring(0, 2)), parseInt(toTimeText.substring(3, 5)), parseInt(toTimeText.substring(6, 8)));
+          var toTime = new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            parseInt(toTimeText.substring(0, 2)),
+            parseInt(toTimeText.substring(3, 5)),
+            parseInt(toTimeText.substring(6, 8))
+          );
           var itemResult = {
             date: timeReq.date,
             dayOfWeek: dayOfWeek,
             fromTime: fromTime,
-            toTime: toTime
-          }
+            toTime: toTime,
+          };
           result.push(itemResult);
         }
-      })
-    })
+      });
+    });
     return result;
   }
 
-  static async cleanDataForTimeColision(userCalendar){
-    userCalendar = userCalendar.sort((a,b) => a.fromTime - b.fromTime);
-
+  static async cleanDataForTimeColision(userCalendar) {
+    userCalendar = userCalendar.sort((a, b) => a.fromTime - b.fromTime);
   }
 
-  static async findFreeCalendar(durationTime, fromTime, toTime, fromDate, toDate, isCheckMoodle, isCheckTKB) {
+  static async findFreeCalendar(
+    durationTime,
+    fromTime,
+    toTime,
+    fromDate,
+    toDate,
+    isCheckMoodle,
+    isCheckTKB
+  ) {
     try {
       var result = [];
       //===============================================
-      var timeRequest = this.getTimeRange(fromTime, toTime, fromDate, toDate)._j;
-      console.log("TimeRequest: ", timeRequest.map(item => {
-        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
-      }));
+      var timeRequest = this.getTimeRange(
+        fromTime,
+        toTime,
+        fromDate,
+        toDate
+      )._j;
+      console.log(
+        "TimeRequest: ",
+        timeRequest.map((item) => {
+          return {
+            ...item,
+            fromTime: item.fromTime.toLocaleTimeString(),
+            toTime: item.toTime.toLocaleTimeString(),
+          };
+        })
+      );
 
       var calendarList = await this.loadCalendarData();
       var normCalendar = await this.normalizedCalendar(calendarList);
-      var userCalendar = normCalendar.filter(item => item.isMoodle == "false");
-      
-      console.log("normCalendar: ", normCalendar.map(item => {
-        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
-      }))
+      var userCalendar = normCalendar.filter(
+        (item) => item.isMoodle == "false"
+      );
 
-      if(isCheckMoodle){
-        var moodleCalendar = normCalendar.filter(item => item.isMoodle == "true");
-        var moodleDates =  moodleCalendar.map(item => item.date);
-        userCalendar = userCalendar.filter(item => !moodleDates.includes(item.date));
+      console.log(
+        "normCalendar: ",
+        normCalendar.map((item) => {
+          return {
+            ...item,
+            fromTime: item.fromTime.toLocaleTimeString(),
+            toTime: item.toTime.toLocaleTimeString(),
+          };
+        })
+      );
+
+      if (isCheckMoodle) {
+        var moodleCalendar = normCalendar.filter(
+          (item) => item.isMoodle == "true"
+        );
+        var moodleDates = moodleCalendar.map((item) => item.date);
+        userCalendar = userCalendar.filter(
+          (item) => !moodleDates.includes(item.date)
+        );
       }
 
-      console.log("userCalendar if CheckMoodle: ", userCalendar.map(item => {
-        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
-      }));
+      console.log(
+        "userCalendar if CheckMoodle: ",
+        userCalendar.map((item) => {
+          return {
+            ...item,
+            fromTime: item.fromTime.toLocaleTimeString(),
+            toTime: item.toTime.toLocaleTimeString(),
+          };
+        })
+      );
 
-      if(!isCheckTKB){
+      if (!isCheckTKB) {
         var tkbList = await ScheduleService.loadScheduleData();
         var tkbNorm = await this.normalizedTKB(tkbList);
-        userCalendar = await this.fusionCalendarWithTKB(tkbNorm, userCalendar, timeRequest);
+        userCalendar = await this.fusionCalendarWithTKB(
+          tkbNorm,
+          userCalendar,
+          timeRequest
+        );
 
-        console.log("userCalendar with TKB: ", userCalendar.map(item => {
-          return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()}  
-        }))
+        console.log(
+          "userCalendar with TKB: ",
+          userCalendar.map((item) => {
+            return {
+              ...item,
+              fromTime: item.fromTime.toLocaleTimeString(),
+              toTime: item.toTime.toLocaleTimeString(),
+            };
+          })
+        );
       }
 
       userCalendar = await this.mergeOverlappingTimes(userCalendar);
-      console.log("mergeOverlappingTimes: ", userCalendar.map(item => {
-        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
-      })) 
+      console.log(
+        "mergeOverlappingTimes: ",
+        userCalendar.map((item) => {
+          return {
+            ...item,
+            fromTime: item.fromTime.toLocaleTimeString(),
+            toTime: item.toTime.toLocaleTimeString(),
+          };
+        })
+      );
 
       var subtractCalendar = await this.subtractTime(timeRequest, userCalendar);
-      console.log("subtractCalendar: ", subtractCalendar.map(item => {
-        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
-      })); 
+      console.log(
+        "subtractCalendar: ",
+        subtractCalendar.map((item) => {
+          return {
+            ...item,
+            fromTime: item.fromTime.toLocaleTimeString(),
+            toTime: item.toTime.toLocaleTimeString(),
+          };
+        })
+      );
 
-      var filterWithDuration = subtractCalendar.filter(item => item.toTime.getTime() - item.fromTime.getTime() >= durationTime*1000);
-      console.log("filterWithDuration: ", filterWithDuration.map(item => {
-        return {...item, fromTime: item.fromTime.toLocaleTimeString(), toTime: item.toTime.toLocaleTimeString()} 
-      }));
+      var filterWithDuration = subtractCalendar.filter(
+        (item) =>
+          item.toTime.getTime() - item.fromTime.getTime() >= durationTime * 1000
+      );
+      console.log(
+        "filterWithDuration: ",
+        filterWithDuration.map((item) => {
+          return {
+            ...item,
+            fromTime: item.fromTime.toLocaleTimeString(),
+            toTime: item.toTime.toLocaleTimeString(),
+          };
+        })
+      );
 
       return filterWithDuration.map((item, index) => {
         return {
-          id: index, 
+          id: index,
           date: item.date,
           timeStart: DateTimeUtils.converToHourAndMinute(item.fromTime),
-          timeEnd: DateTimeUtils.converToHourAndMinute(item.toTime)
-        } 
+          timeEnd: DateTimeUtils.converToHourAndMinute(item.toTime),
+        };
       });
-      
     } catch (error) {
       console.log("saveNotiConfig: ", error);
     }

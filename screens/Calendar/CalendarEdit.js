@@ -162,7 +162,7 @@ const Calendar_Edit = () => {
       console.log("Start update");
       try {
         var rangeTimeInfo = {
-          time: "0", 
+          time: "0",
           type: "",
           customType: "",
           customTime: "",
@@ -199,7 +199,11 @@ const Calendar_Edit = () => {
           };
         }
 
-        rangeTimeInfo = {...rangeTimeInfo, durationTime: timeEvent, durationType: categoryTime};
+        rangeTimeInfo = {
+          ...rangeTimeInfo,
+          durationTime: timeEvent,
+          durationType: categoryTime,
+        };
 
         const newItem = {
           id: item.id,
@@ -212,7 +216,7 @@ const Calendar_Edit = () => {
           isMoodle: item.isMoodle,
           rangeTimeInfo,
         };
-        await CalendarService.updateUserCalendar(newItem, item); 
+        await CalendarService.updateUserCalendar(newItem, item);
         navigation.navigate("BottomBar", {
           screen: "Lịch",
           params: {
@@ -467,7 +471,7 @@ const Calendar_Edit = () => {
                     maxHeight={200}
                     labelField="key"
                     valueField="value"
-                    placeholder="Thời gian thông báo"
+                    placeholder="Thời gian"
                     value={categoryTime}
                     onChange={(item) => {
                       setCategoryTime(item.value);

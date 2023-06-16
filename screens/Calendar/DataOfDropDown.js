@@ -12,3 +12,7 @@ export const DataCategoriTimeNoti = [
   { key: "Giờ", value: "2" },
   { key: "Ngày", value: "3" },
 ];
+export const DataCategoriTime = [
+  { key: "Phút", value: "1" },
+  { key: "Giờ", value: "2" },
+];
