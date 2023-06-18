@@ -129,32 +129,30 @@ const NoteList_Edit = () => {
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
-          <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity onPress={handleUpdateNoteList}>
-              <AntDesign name="arrowleft" size={30} color="white" />
-            </TouchableOpacity>
-            <View>
-              <Text className="text-white text-xl font-medium">
-                Cập nhật ghi chú
-              </Text>
-            </View>
-            {isKeyboardShowing ? (
-              <TouchableOpacity
-                onPress={() => richText.current?.dismissKeyboard()}
-              >
-                <MaterialCommunityIcons name="check" size={30} color="white" />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={AlertDelete}>
-                <MaterialCommunityIcons
-                  name="trash-can-outline"
-                  size={30}
-                  color="white"
-                />
-              </TouchableOpacity>
-            )}
+        <View className="bg-[#3A4666] h-14 flex-row justify-between items-center px-4">
+          <TouchableOpacity onPress={handleUpdateNoteList}>
+            <AntDesign name="arrowleft" size={28} color="white" />
+          </TouchableOpacity>
+          <View>
+            <Text className="text-white text-xl font-medium">
+              Cập nhật ghi chú
+            </Text>
           </View>
+          {isKeyboardShowing ? (
+            <TouchableOpacity
+              onPress={() => richText.current?.dismissKeyboard()}
+            >
+              <MaterialCommunityIcons name="check" size={28} color="white" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={AlertDelete}>
+              <MaterialCommunityIcons
+                name="trash-can-outline"
+                size={28}
+                color="white"
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <View className="p-2 border-b-2 border-b-[#9A999B] bg-white">

@@ -17,6 +17,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { Dropdown } from "react-native-element-dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ScheduleService from "../../service/ScheduleService";
+import moment from "moment";
 
 const Schedule_Edit = () => {
   const navigation = useNavigation();
@@ -98,6 +99,8 @@ const Schedule_Edit = () => {
 
   const handleUpdateSchedule = async () => {
     console.log("Lesson Validate");
+    const convertedTimeStart = moment(textTimeStart, "HH:mm");
+    const convertedTimeEnd = moment(textTimeEnd, "HH:mm");
     if (title === "") {
       Alert.alert("Lỗi cập nhật thông tin", "Vui lòng nhập môn học");
     } else if (DayOfWeek === "") {
@@ -114,6 +117,22 @@ const Schedule_Edit = () => {
       );
     } else if (Number(selectedLessonStart) >= Number(selectedLessonEnd)) {
       alert("Tiết bắt đầu phải bé hơn tiết kết thúc");
+    } else if (
+      isCheckSelectCustom &&
+      convertedTimeEnd.isBefore(convertedTimeStart)
+    ) {
+      Alert.alert(
+        "Thêm không thành công",
+        "Thời gian kết thúc phải lớn hơn thời gian bắt đầu"
+      );
+    } else if (
+      isCheckSelectCustom &&
+      (textTimeStart === "Từ" || textTimeEnd === "Đến")
+    ) {
+      Alert.alert(
+        "Tìm kiếm không thành công",
+        "Thời gian thêm không được để trống"
+      );
     } else {
       const removedCurrentLessonMap =
         await ScheduleService.removeCurrentLessonPair(
@@ -352,32 +371,25 @@ const Schedule_Edit = () => {
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
-          <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <AntDesign name="arrowleft" size={28} color="white" />
-            </TouchableOpacity>
-            <View>
-              <Text className="text-white text-xl font-medium">
-                Cập nhật TKB
-              </Text>
-            </View>
-
-            <TouchableOpacity onPress={AlertDelete}>
-              <MaterialCommunityIcons
-                name="trash-can-outline"
-                size={28}
-                color="white"
-              />
-            </TouchableOpacity>
-
-            {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên
-          {/* Phần tiêu đề */}
+        <View className="bg-[#3A4666] h-14 flex-row justify-between items-center px-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <AntDesign name="arrowleft" size={28} color="white" />
+          </TouchableOpacity>
+          <View>
+            <Text className="text-white text-xl font-medium">Cập nhật TKB</Text>
           </View>
+
+          <TouchableOpacity onPress={AlertDelete}>
+            <MaterialCommunityIcons
+              name="trash-can-outline"
+              size={28}
+              color="white"
+            />
+          </TouchableOpacity>
         </View>
 
         <ScrollView className="bg-[#F1F5F9]">
-          <View className="px-4 pt-[4%] space-y-2">
+          <View className="px-4 pt-2 space-y-2">
             <View className="flex-row">
               <Text className="text-base">Tiêu đề</Text>
               <Text className="text-base text-red-600"> (*)</Text>

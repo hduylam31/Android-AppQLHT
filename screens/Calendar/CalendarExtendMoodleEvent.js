@@ -101,7 +101,7 @@ const CalendarExtendMoodleEvent = () => {
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
+        <View className="bg-[#3A4666] h-14">
           <View className="flex-row justify-between items-center p-4">
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <MaterialCommunityIcons

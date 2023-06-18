@@ -98,25 +98,20 @@ const CalendarExtendTimeNoti = () => {
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
-          <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <MaterialCommunityIcons
-                name="arrow-left"
-                size={28}
-                color="white"
-              />
-            </TouchableOpacity>
-            <View>
-              <Text className="text-white text-xl font-medium">
-                Thời gian thông báo
-              </Text>
-            </View>
-            <View className="w-7 h-7"></View>
-
-            {/* Phần tiêu đề */}
+        <View className="bg-[#3A4666] h-14 flex-row justify-between items-center px-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons name="arrow-left" size={28} color="white" />
+          </TouchableOpacity>
+          <View>
+            <Text className="text-white text-xl font-medium">
+              Thời gian thông báo
+            </Text>
           </View>
+          <View className="w-7 h-7"></View>
+
+          {/* Phần tiêu đề */}
         </View>
+
         <ScrollView className=" bg-[#F1F5F9]">
           {/* Thời gian thông báo sự kiện moodle */}
           <View className="px-5 pt-[4%] space-y-2">

@@ -150,28 +150,27 @@ const NoteList_Add = () => {
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
-          <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity onPress={handleAddingUserNoteList}>
-              <AntDesign name="arrowleft" size={30} color="white" />
-            </TouchableOpacity>
-            <View>
-              <Text className="text-white text-xl font-medium">
-                Thêm ghi chú mới
-              </Text>
-            </View>
-
-            {isKeyboardShowing ? (
-              <TouchableOpacity
-                onPress={() => richText.current?.dismissKeyboard()}
-              >
-                <MaterialCommunityIcons name="check" size={30} color="white" />
-              </TouchableOpacity>
-            ) : (
-              <View className="w-8 h-8"></View>
-            )}
+        <View className="bg-[#3A4666] h-14 flex-row justify-between items-center px-4">
+          <TouchableOpacity onPress={handleAddingUserNoteList}>
+            <AntDesign name="arrowleft" size={28} color="white" />
+          </TouchableOpacity>
+          <View>
+            <Text className="text-white text-xl font-medium">
+              Thêm ghi chú mới
+            </Text>
           </View>
+
+          {isKeyboardShowing ? (
+            <TouchableOpacity
+              onPress={() => richText.current?.dismissKeyboard()}
+            >
+              <MaterialCommunityIcons name="check" size={28} color="white" />
+            </TouchableOpacity>
+          ) : (
+            <View className="w-7 h-7"></View>
+          )}
         </View>
+
         <View className="p-2 border-b-2 border-b-[#9A999B] bg-white">
           <TextInput
             placeholder="Tiêu đề"

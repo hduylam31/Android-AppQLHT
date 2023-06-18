@@ -378,9 +378,7 @@ const CalendarMain = () => {
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
-        <View
-          className={`bg-[#3A4666] ${showSearchBar ? "h-[60px]" : "h-[30%]"}`}
-        >
+        <View className={`bg-[#3A4666] ${showSearchBar ? "h-14" : "h-[30%]"}`}>
           <View
             className={`flex-row justify-between items-center pl-4 ${
               showSearchBar ? "pr-4 flex-1" : "pr-1 h-[26%]"

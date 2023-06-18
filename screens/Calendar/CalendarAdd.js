@@ -48,13 +48,13 @@ const Calendar_Add = () => {
   const TimeSelected = selectedItem ? selectedItem.timeStart : "00:00";
 
   useEffect(() => {
-      if(c_timeEvent != undefined){
-        setTimeEvent(c_timeEvent);
-      }
-      if(c_categoryTime != undefined){
-        setCategoryTime(c_categoryTime);
-      }
-  },[])
+    if (c_timeEvent != undefined) {
+      setTimeEvent(c_timeEvent);
+    }
+    if (c_categoryTime != undefined) {
+      setCategoryTime(c_categoryTime);
+    }
+  }, []);
 
   const [textDate, setDateText] = useState(DaySelected);
   const [textTime, setTimeDate] = useState(TimeSelected);
@@ -161,7 +161,7 @@ const Calendar_Add = () => {
       console.log("Start addingg");
       try {
         var rangeTimeInfo = {
-          time: "0", 
+          time: "0",
           type: "",
           customType: "",
           customTime: "",
@@ -194,13 +194,17 @@ const Calendar_Add = () => {
             time: rangeTime,
             type: timeNoti,
             customType: customTimeNoti,
-            customTime: numberTimeNoti
+            customTime: numberTimeNoti,
           };
         }
 
-        rangeTimeInfo = {...rangeTimeInfo, durationTime: timeEvent, durationType: categoryTime};
+        rangeTimeInfo = {
+          ...rangeTimeInfo,
+          durationTime: timeEvent,
+          durationType: categoryTime,
+        };
 
-        await CalendarService.addUserCalendar( 
+        await CalendarService.addUserCalendar(
           title,
           textDate,
           textTime,
@@ -240,7 +244,6 @@ const Calendar_Add = () => {
     ? parseInt(selectedItem.timeEnd.split(":")[1])
     : 0;
 
-
   const [timeEvent, setTimeEvent] = useState("1");
   const [categoryTime, setCategoryTime] = useState("2");
 
@@ -248,29 +251,24 @@ const Calendar_Add = () => {
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
-          <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <MaterialCommunityIcons
-                name="arrow-left"
-                size={28}
-                color="white"
-              />
-            </TouchableOpacity>
-            <View>
-              <Text className="text-white text-xl font-medium">
-                Thêm sự kiện mới
-              </Text>
-            </View>
-            <View className="w-7 h-7"></View>
-            {/* <TouchableOpacity onPress={handleAddingUserCalendar}>
+        <View className="bg-[#3A4666] h-14 flex-row justify-between items-center px-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons name="arrow-left" size={28} color="white" />
+          </TouchableOpacity>
+          <View>
+            <Text className="text-white text-xl font-medium">
+              Thêm sự kiện mới
+            </Text>
+          </View>
+          <View className="w-7 h-7"></View>
+          {/* <TouchableOpacity onPress={handleAddingUserCalendar}>
               <MaterialCommunityIcons name="check" size={30} color="white" />
             </TouchableOpacity> */}
 
-            {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên
+          {/* Phần tử rỗng để căn chỉnh phần tử thứ hai với phần tử đầu tiên
         {/* Phần tiêu đề */}
-          </View>
         </View>
+
         <ScrollView className=" bg-[#F1F5F9]">
           <View className="px-4 pt-[4%] space-y-2">
             <View className="flex-row">

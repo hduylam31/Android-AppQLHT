@@ -397,7 +397,7 @@ const ToDoListScreen = () => {
     <SafeAreaView className="flex-1">
       {/* Header */}
       <View
-        className={`bg-[#3A4666] h-[8%] justify-between items-center flex-row pl-4 ${
+        className={`bg-[#3A4666] h-14 justify-between items-center flex-row pl-4 ${
           showMultiCheck ? "pr-4" : "pr-1"
         }`}
       >

@@ -287,38 +287,33 @@ const Calendar_Edit = () => {
     <TouchableWithoutFeedback onPress={handlePress}>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-[60px]">
-          <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+        <View className="bg-[#3A4666] h-14 flex-row justify-between items-center px-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons name="arrow-left" size={28} color="white" />
+          </TouchableOpacity>
+          {item.isMoodle === "false" ? (
+            <Text className="text-white text-xl font-medium">
+              Cập nhật sự kiện
+            </Text>
+          ) : (
+            <Text className="text-white text-xl font-medium">
+              Xem thông tin sự kiện
+            </Text>
+          )}
+
+          {item.isMoodle === "false" ? (
+            <TouchableOpacity onPress={AlertDelete}>
               <MaterialCommunityIcons
-                name="arrow-left"
+                name="trash-can-outline"
                 size={28}
                 color="white"
               />
             </TouchableOpacity>
-            {item.isMoodle === "false" ? (
-              <Text className="text-white text-xl font-medium">
-                Cập nhật sự kiện
-              </Text>
-            ) : (
-              <Text className="text-white text-xl font-medium">
-                Xem thông tin sự kiện
-              </Text>
-            )}
-
-            {item.isMoodle === "false" ? (
-              <TouchableOpacity onPress={AlertDelete}>
-                <MaterialCommunityIcons
-                  name="trash-can-outline"
-                  size={28}
-                  color="white"
-                />
-              </TouchableOpacity>
-            ) : (
-              <View className="w-7 h-7"></View>
-            )}
-          </View>
+          ) : (
+            <View className="w-7 h-7"></View>
+          )}
         </View>
+
         <ScrollView className="bg-[#F1F5F9]">
           <LockedView isMoodle={item.isMoodle}>
             <View className="flex-row">

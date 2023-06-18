@@ -389,9 +389,9 @@ const NoteListMain = () => {
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
         <View
-          className={`bg-[#3A4666] justify-between items-center flex-row pl-4 ${
+          className={`bg-[#3A4666] justify-between items-center flex-row h-14 pl-4 ${
             !showMultiCheck && !showSearchBar ? "pr-1" : "pr-4"
-          } ${showSearchBar || showUnlockSecretFolder ? "h-[60px]" : "h-[8%]"}`}
+          } `}
         >
           {showMultiCheck && !showSearchBar ? (
             <View>
@@ -854,6 +854,8 @@ const NoteListMain = () => {
               <TextInput
                 placeholder="Nhập mật mã"
                 className="bg-[#FFFFFF] w-64 px-4 py-3 text-base resize-none border-b-[#9A999B] border-b-2 mt-2 mb-8"
+                autoCapitalize="none"
+                secureTextEntry
                 value={passwordUnlock}
                 onChangeText={(text) => setPasswordUnlock(text)}
               ></TextInput>

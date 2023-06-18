@@ -199,28 +199,7 @@ const Login = () => {
                       Quên mật khẩu
                     </Text>
                   </TouchableOpacity>
-                  <View className="flex-row space-x-3 items-center justify-center">
-                    <View className="w-[25%] h-[1px] bg-[#F8F7FA]">
-                      <AntDesign name="arrowleft" size={40} />
-                    </View>
-                    <Text className="text-base" style={{ color: "white" }}>
-                      Hoặc đăng nhập với
-                    </Text>
-                    <View className="w-[25%] h-[1px] bg-[#F8F7FA] items-center"></View>
-                  </View>
-                  <View className="self-center w-[40%] h-[10%] bg-[#F8F7FA] mt-[10%] rounded-2xl flex-row justify-center items-center space-x-4">
-                    <TouchableOpacity>
-                      <View>
-                        <Animatable.Image source={Face} />
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <View>
-                        <Animatable.Image source={Google} />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                  <View className="flex-row self-center space-x-2">
+                  <View className="flex-row self-center space-x-2 ">
                     <Text className="text-sm text-white">
                       Bạn chưa có tài khoản ?
                     </Text>

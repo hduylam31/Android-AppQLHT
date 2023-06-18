@@ -230,7 +230,7 @@ const GroupTodoList = () => {
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
         <View
-          className={`bg-[#3A4666] justify-between items-center flex-row pl-4 h-[60px] ${
+          className={`bg-[#3A4666] justify-between items-center flex-row pl-4 h-14 ${
             showMultiCheck ? "pr-4" : "pr-1"
           }`}
         >

@@ -58,24 +58,18 @@ const CalendarExtendTurnOnOffNoti = () => {
     <TouchableWithoutFeedback>
       {/* Thanh bar tiêu đề và điều hướng */}
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
-          <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <MaterialCommunityIcons
-                name="arrow-left"
-                size={28}
-                color="white"
-              />
-            </TouchableOpacity>
-            <View>
-              <Text className="text-white text-xl font-medium">
-                Bật/Tắt thông báo
-              </Text>
-            </View>
-            <View className="w-7 h-7"></View>
-
-            {/* Phần tiêu đề */}
+        <View className="bg-[#3A4666] h-14 flex-row justify-between items-center px-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons name="arrow-left" size={28} color="white" />
+          </TouchableOpacity>
+          <View>
+            <Text className="text-white text-xl font-medium">
+              Bật/Tắt thông báo
+            </Text>
           </View>
+          <View className="w-7 h-7"></View>
+
+          {/* Phần tiêu đề */}
         </View>
         <ScrollView className=" bg-[#F1F5F9]">
           <View className="w-full mt-5 h-24 bg-white rounded-lg">

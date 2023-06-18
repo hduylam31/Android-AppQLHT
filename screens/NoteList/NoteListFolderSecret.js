@@ -277,7 +277,7 @@ const NoteListFolderSecret = () => {
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-[8%]">
+        <View className="bg-[#3A4666] h-14">
           <View
             className={`flex-row justify-between items-center py-3 pl-4 ${
               showMultiCheck ? "pr-4" : "pr-1"

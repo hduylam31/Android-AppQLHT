@@ -51,8 +51,8 @@ const ForgotPassword = () => {
           className="w-30 h-30 absolute top-20 right-2"
         />
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <View className="mt-10 ml-[3%] w-10 h-10">
-            <AntDesign name="arrowleft" size={40} color="white" />
+          <View className="mt-10 ml-[3%] w-7 h-7">
+            <AntDesign name="arrowleft" size={28} color="white" />
           </View>
         </TouchableOpacity>
         <View className="mt-[23%]">
