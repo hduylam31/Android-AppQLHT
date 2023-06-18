@@ -144,8 +144,8 @@ const Schedule_Edit = () => {
       const isLessonNotConflict = await ScheduleService.dayLessonValidate(
         removedCurrentLessonMap,
         DayOfWeek,
-        Number(selectedLessonStart),
-        Number(selectedLessonEnd)
+        Number(selectedLessonStart)-1,
+        Number(selectedLessonEnd) 
       );
       if (!isLessonNotConflict) {
         alert("Vi phạm tiết đã có");

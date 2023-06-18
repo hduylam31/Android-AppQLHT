@@ -79,7 +79,7 @@ const Schedule_Add = () => {
       const isLessonNotConflict = await ScheduleService.dayLessonValidate(
         dayLessonMap,
         DayOfWeek,
-        Number(selectedLessonStart),
+        Number(selectedLessonStart) -1,
         Number(selectedLessonEnd)
       );
       if (!isLessonNotConflict) {
