@@ -145,7 +145,7 @@ const Schedule_Edit = () => {
         removedCurrentLessonMap,
         DayOfWeek,
         Number(selectedLessonStart)-1,
-        Number(selectedLessonEnd) 
+        Number(selectedLessonEnd) +1
       );
       if (!isLessonNotConflict) {
         alert("Vi phạm tiết đã có");

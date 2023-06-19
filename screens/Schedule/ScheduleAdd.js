@@ -80,7 +80,7 @@ const Schedule_Add = () => {
         dayLessonMap,
         DayOfWeek,
         Number(selectedLessonStart) -1,
-        Number(selectedLessonEnd)
+        Number(selectedLessonEnd) +1
       );
       if (!isLessonNotConflict) {
         Alert.alert("Lỗi thêm thông tin", "Vi phạm tiết đã có");
