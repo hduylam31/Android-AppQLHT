@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/IconApp.png",
+        "foregroundImage": "./assets/368_in_512.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.trisan.AppLearningManager"

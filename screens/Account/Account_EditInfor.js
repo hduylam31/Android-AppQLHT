@@ -61,17 +61,12 @@ const Account_EditInfor = () => {
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       <SafeAreaView className="flex-1">
-        <View className="bg-[#3A4666] h-15">
-          <View className="flex-row justify-between items-center p-4">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <MaterialCommunityIcons
-                name="arrow-left"
-                size={28}
-                color="white"
-              />
-            </TouchableOpacity>
-          </View>
+        <View className="bg-[#3A4666] h-14 flex-row justify-between items-center px-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons name="arrow-left" size={28} color="white" />
+          </TouchableOpacity>
         </View>
+
         <ScrollView className="bg-[#F1F5F9]">
           <View className="px-5 pt-[4%] space-y-2 mt-14">
             <Text className="text-base">Họ và tên</Text>
@@ -107,26 +102,27 @@ const Account_EditInfor = () => {
               editable={false}
             ></TextInput>
           </View>
+          <View className="h-5"></View>
           {/* Button thêm */}
-          <TouchableOpacity
-            onPress={handleSaveAccountInfo}
-            className="bg-[#3A4666] rounded-2xl flex items-center justify-center mt-[440px] mb-6 h-10 w-[90%] ml-[5%]"
-            style={{
-              shadowColor: "#000000",
-              shadowOffset: { width: 10, height: 10 },
-              shadowOpacity: 0.5,
-              shadowRadius: 10,
-              elevation: 10,
-            }}
-          >
-            <Text className="text-white text-center font-bold text-base">
-              Lưu
-            </Text>
-          </TouchableOpacity>
         </ScrollView>
         <View className="w-24 h-24 bg-[#A4AAB8] rounded-full justify-center items-center absolute top-5 left-[38%]">
           <MaterialCommunityIcons name="account" size={80} color="white" />
         </View>
+        <TouchableOpacity
+          onPress={handleSaveAccountInfo}
+          className="w-[90%] h-10 absolute bottom-6 ml-[5%] bg-[#3A4666] rounded-2xl flex items-center justify-center"
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: { width: 10, height: 10 },
+            shadowOpacity: 0.5,
+            shadowRadius: 10,
+            elevation: 10,
+          }}
+        >
+          <Text className="text-white text-center font-bold text-base">
+            Lưu
+          </Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

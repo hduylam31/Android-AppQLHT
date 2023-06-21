@@ -456,7 +456,7 @@ const Schedule_Edit = () => {
               <Text className="text-base">Tiết</Text>
               <Text className="text-base text-red-600"> (*)</Text>
             </View>
-            <View className="flex-row justify-between items-center space-x-2">
+            <View className="flex-row  space-x-2">
               <Dropdown
                 style={{
                   backgroundColor: "#FFFFFF",

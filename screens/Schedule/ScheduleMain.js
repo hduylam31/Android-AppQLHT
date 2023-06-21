@@ -413,7 +413,7 @@ const ScheduleMain = () => {
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1">
         <View className="h-[30%] bg-[#3A4666]">
-          <View className="flex-row justify-between items-center h-[26%] pl-4 pr-1">
+          <View className="flex-row justify-between items-center h-14 pl-4 pr-1 ">
             <View className="w-4 h-4 "></View>
             <Text className="text-white text-[22px] font-semibold">
               Thời khóa biểu
