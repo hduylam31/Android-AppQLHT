@@ -481,7 +481,7 @@ const ScheduleMain = () => {
           )}
         </View>
         {selectedTab && (
-          <View className="absolute w-full top-32 h-[80%]">
+          <View className="absolute w-full bottom-10 h-[80%] ">
             <View
               style={{
                 padding: 12,
@@ -549,20 +549,19 @@ const ScheduleMain = () => {
                 </View>
               </View>
             </View>
-            <View>
-              <FlatList
-                data={data.filter(
-                  (ScheduleData) =>
-                    ScheduleData.DayOfWeek === onpressDay &&
-                    Number(ScheduleData.lessonStart) <=
-                      Number(onpressLessonOfDay) &&
-                    Number(ScheduleData.lessonEnd) + 0.5 >=
-                      Number(onpressLessonOfDay)
-                )}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={this.renderItem}
-              />
-            </View>
+
+            <FlatList
+              data={data.filter(
+                (ScheduleData) =>
+                  ScheduleData.DayOfWeek === onpressDay &&
+                  Number(ScheduleData.lessonStart) <=
+                    Number(onpressLessonOfDay) &&
+                  Number(ScheduleData.lessonEnd) + 0.5 >=
+                    Number(onpressLessonOfDay)
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={this.renderItem}
+            />
           </View>
         )}
 

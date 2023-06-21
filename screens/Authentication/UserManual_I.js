@@ -10,7 +10,16 @@ import {
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Manual_I, Manual_II, Manual_III, Manual_IV } from "../../assets";
+import {
+  Manual_I,
+  Manual_II,
+  Manual_III,
+  Manual_IV,
+  Manual_V,
+  Manual_VI,
+  Manual_VII,
+  Manual_VIII,
+} from "../../assets";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
@@ -23,32 +32,41 @@ const slides = [
   {
     id: "1",
     image: Manual_I,
-    title: "Lịch",
   },
   {
     id: "2",
     image: Manual_II,
-    title: "Thời khóa biểu",
   },
   {
     id: "3",
     image: Manual_III,
-    title: "Danh sách công việc",
   },
   {
     id: "4",
     image: Manual_IV,
-    title: "Thời khóa biểu",
+  },
+  {
+    id: "5",
+    image: Manual_V,
+  },
+  {
+    id: "6",
+    image: Manual_VI,
+  },
+  {
+    id: "7",
+    image: Manual_VII,
+  },
+  {
+    id: "8",
+    image: Manual_VIII,
   },
 ];
 
 const Slide = ({ item }) => {
   return (
     <View style={{ alignItems: "center" }}>
-      <View>
-        <Text style={styles.title}>{item?.title}</Text>
-      </View>
-      <Image source={item?.image} style={{ height: "90%", width }} />
+      <Image source={item?.image} style={{ height: "87%", width }} />
     </View>
   );
 };
@@ -99,7 +117,7 @@ const UserManual_I = () => {
     return (
       <View
         style={{
-          height: height * 0.2,
+          height: height * 0.13,
           justifyContent: "space-between",
           paddingHorizontal: 10,
         }}
@@ -109,7 +127,7 @@ const UserManual_I = () => {
           style={{
             flexDirection: "row",
             justifyContent: "center",
-            marginTop: 40,
+            marginTop: 20,
           }}
         >
           {/* Render indicator */}
@@ -130,7 +148,7 @@ const UserManual_I = () => {
         {/* Render buttons */}
         <View style={{ marginBottom: 20 }}>
           {currentSlideIndex == slides.length - 1 ? (
-            <View style={{ height: 50 }}>
+            <View style={{ height: 42 }}>
               {/* Press bắt đầu ở đây */}
               {isOpen && (
                 <TouchableOpacity
@@ -243,7 +261,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     flex: 1,
-    height: 50,
+    height: 42,
     borderRadius: 5,
     backgroundColor: "#FE8668",
     justifyContent: "center",
