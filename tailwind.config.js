@@ -12,6 +12,9 @@ module.exports = {
       colors: {
         "color-primary": "#23ACCD",
       },
+      height: {
+        128: "32rem",
+      },
     },
   },
   plugins: [],

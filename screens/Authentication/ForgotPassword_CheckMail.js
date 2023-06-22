@@ -9,7 +9,7 @@ import {
 import React, { useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
-import { forgotpw } from "../assets";
+import { forgotpw } from "../../assets";
 import * as Animatable from "react-native-animatable";
 
 const ForgotPassword_CheckMail = () => {
@@ -27,7 +27,7 @@ const ForgotPassword_CheckMail = () => {
           <AntDesign name="arrowleft" size={40} color="white" />
         </View> */}
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <View className="mt-[7%] ml-[3%] w-10 h-10">
+        <View className="mt-10 ml-[3%] w-10 h-10">
           <AntDesign name="arrowleft" size={40} color="white" />
         </View>
       </TouchableOpacity>
@@ -43,7 +43,7 @@ const ForgotPassword_CheckMail = () => {
       <View className="mt-10 space-y-5">
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("ForgotPassword_ChangePass");
+            navigation.navigate("Login");
           }}
         >
           <Animatable.View
@@ -58,18 +58,10 @@ const ForgotPassword_CheckMail = () => {
               elevation: 5,
             }}
           >
-            <Text className="text-base font-bold">Mở ứng dụng email</Text>
+            <Text className="text-[#3A4666] text-base font-bold">
+              Quay lại trang đăng nhập
+            </Text>
           </Animatable.View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Login");
-          }}
-          className="justify-center items-center"
-        >
-          <Text className="text-base font-bold text-white">
-            Bỏ qua, bạn sẽ xác nhận sau
-          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

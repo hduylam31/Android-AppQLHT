@@ -5,11 +5,13 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { GetStartedImage } from "../assets";
+import { GetStartedImage } from "../../assets";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 
-const GetStarted = () => {
+const GetStarted = (props) => {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
@@ -18,6 +20,25 @@ const GetStarted = () => {
     });
   }, []);
 
+  // const [appLaunched, setAppLaunched] = useState(false);
+
+  // useEffect(() => {
+  //   AsyncStorage.getItem("appLaunchedFirst")
+  //     .then((value) => {
+  //       if (value !== null) {
+  //         setAppLaunched(true);
+  //         navigation.navigate("Login");
+  //       }
+  //     })
+  //     .catch((error) => console.log(error));
+  // }, []);
+
+  // useEffect(() => {
+  //   AsyncStorage.setItem("appLaunchedFirst", "true")
+  //     .then(() => console.log("App launched"))
+  //     .catch((error) => console.log(error));
+  // }, []);
+  // if (appLaunched) {
   return (
     <SafeAreaView className="flex-1 justify-between bg-[#23ACCD] pt-36">
       <View className="w-full h-[40%]">
@@ -40,13 +61,14 @@ const GetStarted = () => {
         </Text>
       </View>
       <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Login");
-        }}
+        onPress={props.onDismiss}
+        // onPress={() => {
+        //   navigation.navigate("UserManual_I", { param1: "isNotOpen" });
+        // }}
         className="bg-[#FE8668] rounded-tl-3xl ml-[55%] flex items-center justify-center w-48 h-24 "
       >
         <Text className="text-[#3A4666] text-center font-bold text-2xl w-full">
-          Get Started
+          Bắt đầu
         </Text>
       </TouchableOpacity>
     </SafeAreaView>
