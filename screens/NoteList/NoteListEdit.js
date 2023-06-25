@@ -64,7 +64,7 @@ const NoteList_Edit = () => {
         title,
         note,
         createdDay: c_item.createdDay,
-        isLoved: c_item.isLoved,
+        isLoved: c_item.isLoved,  
         isSecret: c_item.isSecret,
       });
       navigation.navigate("BottomBar", {
@@ -73,6 +73,19 @@ const NoteList_Edit = () => {
           screenNoteList: "EditToMain",
         },
       });
+
+      if (!c_item.isSecret) {
+        navigation.navigate("BottomBar", {
+          screen: "Ghi chú",
+          params: {
+            screenNoteList: "AddToMain",
+          },
+        });
+      } else {
+        navigation.navigate("NoteListFolderSecret", {
+          screenNoteList: "AddToMain",
+        });
+      }
     } catch (error) {
       console.log("Fail due to: ", error);
     }

@@ -31,12 +31,24 @@ class NoteService{
         if(noteList != null){
           return JSON.parse(noteList);
         }
-
+        
         const user = auth.currentUser;
         const docRef = doc(firestore, "notelist", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          const jsonObject = docSnap.data().notelist;
+          var jsonObject = docSnap.data().notelist;
+          jsonObject = await Promise.all(jsonObject.map(item => {
+            if(item.isSecret){
+              const title = SecurityUtils.decrypt2(item.title, user.uid)._j;
+              console.log("title: ", title);
+              const note = SecurityUtils.decrypt2(item.note, user.uid)._j;
+              console.log("note: ", note);
+              return {...item, note: note, title: title}
+            } else{
+              return item;
+            }
+          }))
+          console.log("jsonObject: ", jsonObject)
           AsyncStorage.setItem('noteList', JSON.stringify(jsonObject));
           return jsonObject;
         } else {
@@ -49,7 +61,7 @@ class NoteService{
         const user = auth.currentUser;
         const documentId = generateUUID(6);
         const nowDate = DateTimeUtils.getNow();
-        const item = {
+        var item = {
             id: documentId,
             title: title,
             note: note,
@@ -59,6 +71,11 @@ class NoteService{
             isSecret: isSecret
         };
         await StorageUtils.pushElementToArray("noteList", item);
+        if(isSecret){
+          const eTitle = await SecurityUtils.encrypt2(title, user.uid);
+          const eNote = await SecurityUtils.encrypt2(note, user.uid);
+          item = {...item, title: eTitle, note: eNote};
+        }
 
         const userRef = doc(collection(firestore, 'notelist'), user.uid);
         const userDoc = await getDoc(userRef);
@@ -73,7 +90,7 @@ class NoteService{
     static async updateNote(elm) {
         const user = auth.currentUser;
         const nowDate = DateTimeUtils.getNow();
-        const updatedData = {
+        var updatedData = {
           id: elm.c_id,
           title: elm.title,
           note: elm.note,
@@ -84,6 +101,12 @@ class NoteService{
         };
         console.log("Update element: ", updatedData);
         await StorageUtils.updateElementInArray('noteList', updatedData);
+        if(elm.isSecret){
+          const eTitle = await SecurityUtils.encrypt2(elm.title, user.uid);
+          const eNote = await SecurityUtils.encrypt2(elm.note, user.uid);
+          updatedData = {...updatedData, title: eTitle, note: eNote};
+        }
+
         try {
           const userRef = doc(collection(firestore, "notelist"), user.uid);
           const userDoc = await getDoc(userRef);
@@ -143,6 +166,7 @@ class NoteService{
         const userDoc = await getDoc(userRef);
         const noteList = userDoc.data().notelist;
         const updatedNoteList = noteList.map(item => {
+          var temp;
           if(ids.includes(item.id)){
             return {...item, isLoved: !item.isLoved}
           }else{
@@ -165,13 +189,27 @@ class NoteService{
         const userRef = doc(collection(firestore, 'notelist'), user.uid);
         const userDoc = await getDoc(userRef);
         const noteList = userDoc.data().notelist;
-        const updatedNoteList = noteList.map(item => {
+        const updatedNoteList = await Promise.all(noteList.map(item => {
           if(ids.includes(item.id)){
-            return {...item, isSecret: !item.isSecret}
+            var temp = {...item, isSecret: !item.isSecret}
+            console.log("temp1: ", temp);
+            if(temp.isSecret){
+              const eTitle = SecurityUtils.encrypt2(item.title, user.uid)._j;
+              const eNote = SecurityUtils.encrypt2(item.note, user.uid)._j;
+              temp = {...temp, title: eTitle, note: eNote};
+            }else{
+              const eTitle = SecurityUtils.decrypt2(item.title, user.uid)._j;
+              const eNote = SecurityUtils.decrypt2(item.note, user.uid)._j;
+              temp = {...temp, title: eTitle, note: eNote};
+            }
+            console.log("temp2: ", temp);
+            return temp;
           }else{
             return item;
           }
-        });
+
+        }));
+        console.log("updatedNoteList: ", updatedNoteList);
         updateDoc(userRef, { notelist: updatedNoteList }, {merge: true});
         console.log("update okk");
         } catch (error) {

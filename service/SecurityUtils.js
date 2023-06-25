@@ -1,3 +1,4 @@
+import CryptoES from 'crypto-es';
 import * as Crypto from 'expo-crypto';
 
 class SecurityUtils{
@@ -24,7 +25,20 @@ class SecurityUtils{
     static async compareHash(password, rawSalt, hashPassword) {
         const encrypt = this.encrypt(password, rawSalt);
         return encrypt === hashPassword;
-      }
+    }
+
+    static async encrypt2(content, rawSalt){
+        const encrypted = CryptoES.AES.encrypt(content, rawSalt).toString();
+        console.log("encrypted: ", encrypted);
+        return encrypted;
+    }
+
+    static async decrypt2(eContent, rawSalt){
+        var C = require("crypto-js");
+        const decrypt = CryptoES.AES.decrypt(eContent, rawSalt).toString(C.enc.Utf8);
+        console.log("decrypted: ", decrypt);
+        return decrypt;
+    }
 }
 
 export default SecurityUtils;
