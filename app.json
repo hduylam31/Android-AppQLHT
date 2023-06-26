@@ -2,7 +2,7 @@
   "expo": {
     "name": "AppLearningManager",
     "slug": "AppLearningManager",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/IconApp.png",
     "userInterfaceStyle": "light",
@@ -22,14 +22,18 @@
         "foregroundImage": "./assets/368_in_512.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.trisan.AppLearningManager"
+      "package": "com.trisan.AppLearningManager",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "99358243-cb8f-470f-9ada-13e7ae9580e9"
+        "projectId": "a93e7f6b-455e-4cb4-bd5a-70e97289f37a"
       }
     },
     "androidStatusBar": {

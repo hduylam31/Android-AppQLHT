@@ -617,7 +617,13 @@ const ToDoListScreen = () => {
           />
         </View>
         {/* Công việc đã hòan thành */}
-        <Text className="text-base font-semibold ml-4 my-[2%]">Hoàn thành</Text>
+        <View className="flex-row justify-between items-center px-4 my-[2%]">
+          <Text className="text-base font-semibold">Hoàn thành</Text>
+          <TouchableOpacity className="mr-4">
+            <MaterialCommunityIcons name="reload" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+
         <View
           className="h-[38%] bg-white rounded-2xl mx-4"
           style={{

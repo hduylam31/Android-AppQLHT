@@ -547,20 +547,20 @@ class CalendarService {
         let type;
         const isMoodle = record.isMoodle;
         if (isMoodle === "true") {
-          dots = [{ color: "red" }];
+          dots = [{ color: "green" }];
           type = 0;
         } else {
-          dots = [{ color: "green" }];
+          dots = [{ color: "blue" }];
           type = 1;
         }
 
         if (markedDateJson[date]) {
           const oldType = markedDateJson[date].type;
           if (oldType !== 2 && oldType !== type) {
-            dots = [{ color: "red" }, { color: "green" }];
+            dots = [{ color: "green" }, { color: "blue" }];
             type = 2;
           } else if (oldType === 2) {
-            dots = [{ color: "red" }, { color: "green" }];
+            dots = [{ color: "green" }, { color: "blue" }];
             type = 2;
           }
         }
