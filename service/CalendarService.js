@@ -550,17 +550,17 @@ class CalendarService {
           dots = [{ color: "green" }];
           type = 0;
         } else {
-          dots = [{ color: "blue" }];
+          dots = [{ color: "#F224AC" }];
           type = 1;
         }
 
         if (markedDateJson[date]) {
           const oldType = markedDateJson[date].type;
           if (oldType !== 2 && oldType !== type) {
-            dots = [{ color: "green" }, { color: "blue" }];
+            dots = [{ color: "green" }, { color: "#F224AC" }];
             type = 2;
           } else if (oldType === 2) {
-            dots = [{ color: "green" }, { color: "blue" }];
+            dots = [{ color: "green" }, { color: "#F224AC" }];
             type = 2;
           }
         }
