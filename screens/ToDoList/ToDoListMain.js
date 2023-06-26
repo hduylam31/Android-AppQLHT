@@ -56,7 +56,7 @@ const ToDoListScreen = () => {
     console.log("load load load........");
     setSelectedIds([]);
     setShowMultiCheck(false);
-    const todolistInfo = await TodolistService.loadTodolist();
+    const todolistInfo = await TodolistService.loadTodolist(); 
     if (todolistInfo != null) {
       const usingTodolists = todolistInfo.usingTodolists;
       setTodolists(usingTodolists);
@@ -393,6 +393,23 @@ const ToDoListScreen = () => {
     }
   };
 
+  function toUncompleted(){   
+    if(todos.length > 0 && todos.some(item => item.isCompleted)){
+      TodolistService.updateCompletedStatuses(todos); 
+      const updatedTodos = todos.map((todo) => {
+        if(todo.isCompleted){
+          return { ...todo, isCompleted: false };
+        }else{
+          return todo;   
+        }
+        
+      });
+      setTodos(updatedTodos);
+      setTodolists(updatedTodos);
+    }
+
+  }
+
   return (
     <SafeAreaView className="flex-1">
       {/* Header */}
@@ -619,7 +636,9 @@ const ToDoListScreen = () => {
         {/* Công việc đã hòan thành */}
         <View className="flex-row justify-between items-center px-4 my-[2%]">
           <Text className="text-base font-semibold">Hoàn thành</Text>
-          <TouchableOpacity className="mr-4">
+          <TouchableOpacity className="mr-4"
+            onPress={() => toUncompleted()}
+          >
             <MaterialCommunityIcons name="reload" size={24} color="black" />
           </TouchableOpacity>
         </View>

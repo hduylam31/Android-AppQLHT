@@ -489,6 +489,57 @@ class TodolistService {
     }
   };
 
+  static updateCompletedStatuses = async (listItems) => {
+    console.log("listItems: ", listItems);
+    var updatedTodolist =await Promise.all(listItems.map(async item => await this.updateCompletedStatusesData(item)));
+    console.log("updatedTodolist: ", updatedTodolist);
+    
+    // =====================================DB===================================
+    const user = auth.currentUser;
+    const userRef = doc(collection(firestore, "todolist"), user.uid);
+    const userDoc = await getDoc(userRef);
+    const todolist = userDoc.data().todolist;
+    const updatedTodolistDb = todolist.map((item) => {
+      var match = updatedTodolist.find(elem => elem.id == item.id); 
+      if(match == undefined) return item;
+      else return match;
+    });
+    console.log("updatedTodolistDb: ", updatedTodolistDb);
+    await AsyncStorage.setItem("todoList", JSON.stringify(updatedTodolistDb));
+    updateDoc(userRef, { todolist: updatedTodolistDb });
+
+  };
+
+  static updateCompletedStatusesData = async (c_item) => {
+    try {
+      // ==================================Notification============================
+      let identifier = "";
+      if (!c_item.isCompleted) {
+        return c_item;
+      } else {
+        // chuyển lại chưa hoành thành => Thêm thông báo nếu đang bật
+        if (c_item.isNotified) {
+          const timeArray = c_item.hour.split(":");
+          const timeInfo = {
+            hour: Number(timeArray[0]),
+            minute: Number(timeArray[1]),
+            isRepeated: true,
+          };
+          identifier = await NotificationUtils.setNotificationAndGetIdentifer(
+            c_item.title,
+            c_item.text,
+            timeInfo
+          );
+        }
+      }
+      return {...c_item, isCompleted: !c_item.isCompleted, identifier: identifier}
+      
+    } catch (error) {
+      console.log("update completed status: ", error);
+      return {};
+    }
+  }
+
   static async updateTodolistAsync(updatedTodolist) {
     const user = auth.currentUser;
     const userRef = doc(firestore, "todolist", user.uid);
