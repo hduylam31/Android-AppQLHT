@@ -68,7 +68,7 @@ const CalendarExtendMoodleEvent = () => {
             </View>
             <View
               className={`w-1 h-[80%] mx-[3%] my-1 ${
-                item.isMoodle === "true" ? "bg-green-500" : "bg-blue-500"
+                 item.isMoodle === "true" ? "bg-[#24b929]" : "bg-[#F224AC]"
               }`}
             ></View>
             <View className="w-[70%] flex-row">
