@@ -124,7 +124,7 @@ const UnlockFolderSecret = () => {
               secureTextEntry={true}
               value={password}
               onChangeText={(password) => setPassword(password)}
-              className=" bg-white border-b-[#9A999B] border-b-2 flex-1"
+              className=" bg-white border-b-[#9A999B] border-b-2 py-2 flex-1"
             ></TextInput>
             <TextInput
               placeholder="Nhập lại mật mã"
@@ -142,7 +142,7 @@ const UnlockFolderSecret = () => {
             Thư mục bảo mật
           </Text>
           <Text className="text-[#FFFFFF] text-lg mt-[25%]">Nhập mật mã</Text>
-          <View className="h-10 w-full bg-white rounded-2xl flex-row justify-between items-center mt-5">
+          <View className="py-3 w-full bg-white rounded-2xl flex-row justify-between items-center mt-5">
             <TextInput
               placeholder="Mật mã"
               autoCapitalize="none"
@@ -151,7 +151,7 @@ const UnlockFolderSecret = () => {
               onChangeText={(passwordUnlock) =>
                 setPasswordUnlock(passwordUnlock)
               }
-              className="pl-4 w-[85%]"
+              className="pl-4 "
             ></TextInput>
 
             <TouchableOpacity
