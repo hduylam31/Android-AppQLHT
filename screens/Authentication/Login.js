@@ -162,7 +162,7 @@ const Login = () => {
                       autoCapitalize="none"
                       secureTextEntry
                       onChangeText={(text) => setPassword(text)}
-                      className=" py-4 bg-[#D9D9D9]  pl-4 rounded-2xl"
+                      className=" py-4 bg-[#D9D9D9] pl-4 rounded-2xl"
                     ></TextInput>
                     <TouchableOpacity onPress={handleLogin}>
                       <Animatable.View
