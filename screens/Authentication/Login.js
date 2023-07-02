@@ -190,7 +190,7 @@ const Login = () => {
                     }}
                   >
                     <Text className="font-light italic text-sm text-right underline mr-2 text-white">
-                      Quên mật khẩu
+                      Quên mật khẩu ?
                     </Text>
                   </TouchableOpacity>
                   <View className="flex-row self-center space-x-2 ">

@@ -176,7 +176,7 @@ const UnlockFolderSecret = () => {
             }}
           >
             <Text className="font-light italic text-sm text-right underline text-white">
-              Quên mật mã
+              Quên mật mã ?
             </Text>
           </TouchableOpacity>
         </View>
