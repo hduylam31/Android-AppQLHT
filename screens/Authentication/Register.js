@@ -94,11 +94,11 @@ const Register = () => {
               className="w-30 h-30 absolute top-20 right-2"
             />
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <View className="w-10 h-10 mt-10 ml-[3%]">
-                <AntDesign name="arrowleft" size={40} color="white" />
+              <View className="mt-4 ml-4">
+                <AntDesign name="arrowleft" size={32} color="white" />
               </View>
             </TouchableOpacity>
-            <View className="mt-5">
+            <View className="mt-10">
               <Text className="text-white font-bold text-4xl ml-6">
                 Xin chào!
               </Text>
@@ -108,10 +108,10 @@ const Register = () => {
             </View>
           </View>
           <TouchableOpacity
-            className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-[50%] flex items-center justify-center"
+            className="w-[80%] h-[50px] ml-[10%] bg-[#FE8668] rounded-2xl mt-[50%] flex items-center justify-center"
             onPress={handleRegister}
           >
-            <Text className="text-[#3A4666] text-center font-bold text-xl">
+            <Text className="text-[#3A4666] text-center font-bold text-lg">
               Đăng kí
             </Text>
           </TouchableOpacity>
@@ -119,37 +119,33 @@ const Register = () => {
             onPress={() => {
               navigation.navigate("Login");
             }}
-            className="w-[80%] h-14 ml-[10%] bg-[#CECECE] rounded-2xl mt-5 flex items-center justify-center"
+            className="w-[80%] h-[50px] ml-[10%] bg-[#CECECE] rounded-2xl mt-5 flex items-center justify-center"
           >
-            <Text className="text-[#9E9090] text-center font-bold text-xl">
+            <Text className="text-[#3A4666] text-center font-bold text-lg">
               Đăng nhập
             </Text>
           </TouchableOpacity>
-          <View className="w-[90%] h-80 bg-white rounded-2xl mx-[5%] top-56 flex justify-center items-center absolute">
-            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 mb-[3%]">
+
+          <View className="w-[90%] h-72 bg-white rounded-2xl mx-[5%] top-56 px-4 py-4 absolute">
+            <TextInput
+              className="bg-white pl-4 border-b-[#9A999B] border-b-2 flex-1 "
+              placeholder="Họ và tên"
+              autoCapitalize="none"
+              value={name}
+              onChangeText={(name) => setName(name)}
+            ></TextInput>
+
+            <TextInput
+              className="bg-white pl-4 border-b-[#9A999B] border-b-2 flex-1"
+              placeholder="Email"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={(email) => setEmail(email)}
+            ></TextInput>
+
+            <View className="bg-white px-4 border-b-[#9A999B] border-b-2 flex-1 flex-row justify-between items-center">
               <TextInput
-                className="text-lg pl-4"
-                placeholderTextColor="#9A999B"
-                placeholder="Họ và tên"
-                autoCapitalize="none"
-                value={name}
-                onChangeText={(name) => setName(name)}
-              ></TextInput>
-            </View>
-            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
-              <TextInput
-                className="text-lg pl-4"
-                placeholderTextColor="#9A999B"
-                placeholder="Email"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={(email) => setEmail(email)}
-              ></TextInput>
-            </View>
-            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%] flex-row justify-between items-center">
-              <TextInput
-                className="text-lg pl-4 w-[85%]"
-                placeholderTextColor="#9A999B"
+                className="w-[85%]"
                 placeholder="Mật khẩu"
                 autoCapitalize="none"
                 secureTextEntry={showPass ? false : true}
@@ -168,33 +164,32 @@ const Register = () => {
                 )}
               </TouchableOpacity>
             </View>
-            <View className="w-[85%] h-[12%] border-b-[#9A999B] border-b-2 my-[3%]">
-              <View className="flex-row justify-between items-center">
-                <TextInput
-                  className="text-lg pl-4 w-[85%]"
-                  placeholderTextColor="#9A999B"
-                  placeholder="Nhập lại mật khẩu"
-                  secureTextEntry={showRepass ? false : true}
-                  autoCapitalize="none"
-                  value={repassword}
-                  onChangeText={(value) =>
-                    validateAndSet(value, password, setrePassword)
-                  }
-                ></TextInput>
-                <TouchableOpacity
-                  onPress={() => {
-                    setShowRepass(!showRepass);
-                  }}
-                >
-                  {showRepass ? (
-                    <Ionicons name="eye-outline" size={28} color="black" />
-                  ) : (
-                    <Ionicons name="eye-off-outline" size={28} color="black" />
-                  )}
-                </TouchableOpacity>
-              </View>
-              <Text className="mt-4 text-red-500">{validationMessage}</Text>
+            <View className="bg-white px-4 border-b-[#9A999B] border-b-2 flex-1 flex-row justify-between items-center">
+              <TextInput
+                className="w-[85%]"
+                placeholder="Nhập lại mật khẩu"
+                secureTextEntry={showRepass ? false : true}
+                autoCapitalize="none"
+                value={repassword}
+                onChangeText={(value) =>
+                  validateAndSet(value, password, setrePassword)
+                }
+              ></TextInput>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowRepass(!showRepass);
+                }}
+              >
+                {showRepass ? (
+                  <Ionicons name="eye-outline" size={28} color="black" />
+                ) : (
+                  <Ionicons name="eye-off-outline" size={28} color="black" />
+                )}
+              </TouchableOpacity>
             </View>
+            <Text className="mt-4 self-center text-red-500">
+              {validationMessage}
+            </Text>
           </View>
         </ScrollView>
       </SafeAreaView>

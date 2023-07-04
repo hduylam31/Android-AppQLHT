@@ -10,7 +10,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react"; 
+import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { moodleLogin } from "../../assets";
 import { AntDesign } from "@expo/vector-icons";
@@ -25,13 +25,13 @@ const Login_Moodle = () => {
   const [password, setPassword] = React.useState("");
 
   const handleLogin = async () => {
-    const status = await CalendarService.processLoginMoodle(username, password); 
+    const status = await CalendarService.processLoginMoodle(username, password);
     if (username === "") {
       Alert.alert("Kết nối không thành công", "Vui lòng nhập tên tài khoản");
     } else if (password === "") {
       Alert.alert("Kết nối không thành công", "Vui lòng nhập mật khẩu");
-    } else if (status === 1) { 
-      //1 = ok, 0 = sai mật khẩu, -1 = lỗi 
+    } else if (status === 1) {
+      //1 = ok, 0 = sai mật khẩu, -1 = lỗi
       navigation.navigate("BottomBar", {
         screen: "Lịch",
         params: {
@@ -100,7 +100,7 @@ const Login_Moodle = () => {
             <Animatable.View
               easing="ease-in-out"
               iterationCount={"infinite"}
-              className="w-[85%] h-[35%] items-center justify-center bg-[#FE8668] self-center rounded-2xl mt-[10%]"
+              className="w-[80%] h-[50px] items-center justify-center bg-[#FE8668] self-center rounded-2xl mt-[10%]"
               style={{
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
@@ -109,7 +109,7 @@ const Login_Moodle = () => {
                 elevation: 5,
               }}
             >
-              <Text className="text-[#3A4666] text-center font-bold text-xl">
+              <Text className="text-[#3A4666] text-center font-bold text-lg">
                 Kết nối
               </Text>
             </Animatable.View>

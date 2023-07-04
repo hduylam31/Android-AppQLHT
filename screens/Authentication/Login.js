@@ -146,35 +146,29 @@ const Login = () => {
                   style={{ marginLeft: 20 }}
                 />
               </View>
-              <View
-                className="flex-1 bg-[#FE8668] mt-4 "
-                style={{ borderTopLeftRadius: 40, borderTopRightRadius: 40 }}
-              >
-                <View
-                  className="flex-1 bg-[#3A4666] mt-2 space-y-[4%] h-full"
-                  style={{ borderTopLeftRadius: 47, borderTopRightRadius: 47 }}
-                >
-                  <View className="self-center w-[85%] h-[300px] bg-[#F8F7FA] mt-[10%] rounded-2xl space-y-4 justify-center">
+              <View className="flex-1 bg-[#FE8668] mt-4 rounded-t-[40px]">
+                <View className="flex-1 bg-[#3A4666] mt-2 space-y-4 h-full rounded-t-[47px] px-5">
+                  <View className="bg-[#F8F7FA] mt-[15%] rounded-2xl px-5 py-8 space-y-4">
                     <TextInput
                       placeholder="Email"
                       value={email}
                       onChangeText={(text) => setEmail(text)}
                       autoCapitalize="none"
-                      className="w-72 h-16 bg-[#D9D9D9] mt-[20%] self-center pl-4 rounded-2xl"
+                      className="py-4 bg-[#D9D9D9] pl-4 rounded-2xl"
                     ></TextInput>
                     <TextInput
                       placeholder="Mật khẩu"
                       value={Password}
                       autoCapitalize="none"
-                      onChangeText={(text) => setPassword(text)}
                       secureTextEntry
-                      className="w-72 h-16 bg-[#D9D9D9] self-center pl-4 rounded-2xl"
+                      onChangeText={(text) => setPassword(text)}
+                      className=" py-4 bg-[#D9D9D9] pl-4 rounded-2xl"
                     ></TextInput>
                     <TouchableOpacity onPress={handleLogin}>
                       <Animatable.View
                         easing="ease-in-out"
                         iterationCount={"infinite"}
-                        className="w-[80%] h-[45%] items-center justify-center bg-[#FE8668] self-center rounded-2xl mt-[2%]"
+                        className="w-[80%] h-[50px] items-center justify-center bg-[#FE8668] self-center rounded-2xl mt-[2%]"
                         style={{
                           shadowColor: "#000",
                           shadowOffset: { width: 0, height: 2 },
@@ -195,8 +189,8 @@ const Login = () => {
                       navigation.navigate("ForgotPassword");
                     }}
                   >
-                    <Text className="font-light italic text-sm text-right underline mr-8 text-white">
-                      Quên mật khẩu
+                    <Text className="font-light italic text-sm text-right underline mr-2 text-white">
+                      Quên mật khẩu ?
                     </Text>
                   </TouchableOpacity>
                   <View className="flex-row self-center space-x-2 ">

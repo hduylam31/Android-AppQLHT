@@ -193,7 +193,7 @@ const CalendarMain = () => {
           <Text className={"text-sm font-normal "}>{item.timeString}</Text>
           <View
             className={`w-1 h-[80%] ${
-               item.isMoodle === "true" ? "bg-[#24b929]" : "bg-[#F224AC]"
+              item.isMoodle === "true" ? "bg-[#24b929]" : "bg-[#F224AC]"
             }`}
           ></View>
           <Text
@@ -427,13 +427,6 @@ const CalendarMain = () => {
                       <View className="absolute right-0 bottom-0">
                         <AntDesign name="checkcircle" size={10} color="green" />
                       </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity className="justify-center items-center w-5 h-7 ml-2">
-                      <MaterialCommunityIcons
-                        name="bell-ring-outline"
-                        size={22}
-                        color="white"
-                      />
                     </TouchableOpacity>
                   </>
                 ) : (

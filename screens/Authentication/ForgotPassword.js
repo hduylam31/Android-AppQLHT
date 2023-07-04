@@ -50,10 +50,11 @@ const ForgotPassword = () => {
           source={ClockImage}
           className="w-30 h-30 absolute top-20 right-2"
         />
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <View className="mt-10 ml-[3%] w-7 h-7">
-            <AntDesign name="arrowleft" size={28} color="white" />
-          </View>
+        <TouchableOpacity
+          className="mt-10 ml-4"
+          onPress={() => navigation.goBack()}
+        >
+          <AntDesign name="arrowleft" size={32} color="white" />
         </TouchableOpacity>
         <View className="mt-[23%]">
           <Text className="text-white font-bold text-3xl ml-7">
@@ -64,23 +65,21 @@ const ForgotPassword = () => {
             email có hướng dẫn đặt lại mật khẩu của bạn
           </Text>
         </View>
-        <View className="w-[90%] h-28 bg-white rounded-2xl mx-[5%] mt-5 flex justify-center items-center">
-          <View className="w-[85%] h-[30%] border-b-[#9A999B] border-b-2">
-            <TextInput
-              className="text-lg pl-4"
-              placeholderTextColor="#9A999B"
-              placeholder="Email"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={(email) => setEmail(email)}
-            ></TextInput>
-          </View>
+        <View className="w-[90%] bg-white rounded-2xl mx-[5%] mt-5 py-2 px-4">
+          <TextInput
+            className="bg-white pl-4 py-2 "
+            placeholderTextColor="#9A999B"
+            placeholder="Email"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={(email) => setEmail(email)}
+          ></TextInput>
         </View>
         <TouchableOpacity
           onPress={handleResetEmail}
-          className="w-[80%] h-14 ml-[10%] bg-[#FE8668] rounded-2xl mt-5 flex items-center justify-center"
+          className="w-[80%] h-[50px] ml-[10%] bg-[#FE8668] rounded-2xl mt-10 flex items-center justify-center"
         >
-          <Text className="text-[#3A4666] text-center font-bold text-xl">
+          <Text className="text-[#3A4666] text-center font-bold text-lg">
             Gửi hướng dẫn
           </Text>
         </TouchableOpacity>
